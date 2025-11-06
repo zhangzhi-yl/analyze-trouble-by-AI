@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.Cabinet_BOM_changeMxMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PMS_CABINET_BOM_CHANGEMX
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.CABINET_BOM_ID,	
+		f.MAT_BASIC_ID,	
+		f.MAT_NAME,	
+		f.MAT_CODE,	
+		f.MAT_CLASS,	
+		f.MAT_SPECS,	
+		f.MAT_MAIN_UNIT,	
+		f.MAT_BRAND,	
+		f.BOM_COUNT,	
+		f.UP_LIMIT,	
+		f.DOWM_LIMIT,	
+		f.MAT_CATEGRAY,	
+		f.Cabinet_Assembly_Detail_ID,	
+		f.FSTATE,	
+		f.REMARK,	
+		f.If_Purchase,	
+		f.FAudit_State,	
+		f.Change_Duty,	
+		f.FORDER,	
+		f.CG_COUNT,	
+		f.FVersion,	
+		f.FChange,	
+		f.Cabinet_BOM_changeMx_ID,	
+		f.FRelation_ID,	
+		f.BOM_COUNT_NEW,	
+		f.MAT_CATEGRAY_NEW,	
+		f.FChangeState,
+		f.Change_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		CABINET_BOM_ID,	
+		MAT_BASIC_ID,	
+		MAT_NAME,	
+		MAT_CODE,	
+		MAT_CLASS,	
+		MAT_SPECS,	
+		MAT_MAIN_UNIT,	
+		MAT_BRAND,	
+		BOM_COUNT,	
+		UP_LIMIT,	
+		DOWM_LIMIT,	
+		MAT_CATEGRAY,	
+		Cabinet_Assembly_Detail_ID,	
+		FSTATE,	
+		REMARK,	
+		If_Purchase,	
+		FAudit_State,	
+		Change_Duty,	
+		FORDER,	
+		CG_COUNT,	
+		FVersion,	
+		FChange,	
+		Cabinet_BOM_changeMx_ID,	
+		FRelation_ID,	
+		BOM_COUNT_NEW,	
+		MAT_CATEGRAY_NEW,	
+		FChangeState,
+		Change_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{CABINET_BOM_ID},	
+		#{MAT_BASIC_ID},	
+		#{MAT_NAME},	
+		#{MAT_CODE},	
+		#{MAT_CLASS},	
+		#{MAT_SPECS},	
+		#{MAT_MAIN_UNIT},	
+		#{MAT_BRAND},	
+		#{BOM_COUNT},	
+		#{UP_LIMIT},	
+		#{DOWM_LIMIT},	
+		#{MAT_CATEGRAY},	
+		#{Cabinet_Assembly_Detail_ID},	
+		#{FSTATE},	
+		#{REMARK},	
+		#{If_Purchase},	
+		#{FAudit_State},	
+		#{Change_Duty},	
+		#{FORDER},	
+		#{CG_COUNT},	
+		#{FVersion},	
+		#{FChange},	
+		#{Cabinet_BOM_changeMx_ID},	
+		#{FRelation_ID},	
+		#{BOM_COUNT_NEW},	
+		#{MAT_CATEGRAY_NEW},	
+		#{FChangeState},
+		#{Change_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+	insert into PMS_Cabinet_BOM_changeMx
+(
+Cabinet_BOM_changeMx_ID,
+Change_ID,
+CABINET_BOM_ID,
+MAT_BASIC_ID,
+MAT_NAME,
+MAT_CODE,
+MAT_CLASS,
+MAT_SPECS,
+MAT_MAIN_UNIT,
+MAT_BRAND,
+Cabinet_Assembly_Detail_ID,
+FSTATE,
+REMARK,
+Change_Duty,
+FVersion,
+BOM_COUNT,
+
+MAT_CATEGRAY,
+BOM_COUNT_NEW,
+MAT_CATEGRAY_NEW,
+FChangeState
+) 
+select 
+		LOWER(replace(NEWID(),'-','')),
+		#{Change_ID},
+		isnull(f1.CABINET_BOM_ID,f2.CABINET_BOM_ID) CABINET_BOM_ID,
+		isnull(f1.MAT_BASIC_ID,f2.MAT_BASIC_ID) MAT_BASIC_ID,	
+		isnull(f1.MAT_NAME,f2.MAT_NAME) MAT_NAME,	
+		isnull(f1.MAT_CODE,f2.MAT_CODE) MAT_CODE,	
+		isnull(f1.MAT_CLASS,f2.MAT_CLASS) MAT_CLASS,
+		isnull(f1.MAT_SPECS,f2.MAT_SPECS) MAT_SPECS,		
+		isnull(f1.MAT_MAIN_UNIT,f2.MAT_MAIN_UNIT) MAT_MAIN_UNIT,		
+		isnull(f1.MAT_BRAND,f2.MAT_BRAND) MAT_BRAND,		
+		isnull(f1.Cabinet_Assembly_Detail_ID,f2.Cabinet_Assembly_Detail_ID) Cabinet_Assembly_Detail_ID,
+    isnull(f2.FSTATE,f1.FSTATE) FSTATE,	
+    f2.REMARK,	
+		f2.Change_Duty,		
+		f2.FVersion,	
+		isnull(f1.BOM_COUNT,0) BOM_COUNT,f1.MAT_CATEGRAY,
+		isnull(f2.BOM_COUNT,0) BOM_COUNT_NEW,f2.MAT_CATEGRAY MAT_CATEGRAY_NEW,
+		case when f1.MAT_BASIC_ID is null then '新增' when f2.MAT_BASIC_ID is null then '删除' when (f1.BOM_COUNT != f2.BOM_COUNT or f1.MAT_CATEGRAY != f2.MAT_CATEGRAY) then '修改' else '不变' end FChangeState
+from 
+(select * from PMS_Cabinet_BOM_change where 1=1
+and Cabinet_Assembly_Detail_ID=#{Cabinet_Assembly_Detail_ID} and MAT_BASIC_ID is not null and MAT_BASIC_ID !='') f1
+FULL OUTER JOIN 
+(select * from PMS_Cabinet_BOM where 1=1
+and Cabinet_Assembly_Detail_ID=#{Cabinet_Assembly_Detail_ID} and MAT_BASIC_ID is not null and MAT_BASIC_ID !='') f2
+on (f1.Cabinet_Assembly_Detail_ID=f2.Cabinet_Assembly_Detail_ID and f1.MAT_BASIC_ID= f2.MAT_BASIC_ID)
+
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CABINET_BOM_CHANGEMX_ID = #{CABINET_BOM_CHANGEMX_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CABINET_BOM_ID = #{CABINET_BOM_ID},
+			MAT_BASIC_ID = #{MAT_BASIC_ID},
+			MAT_NAME = #{MAT_NAME},
+			MAT_CODE = #{MAT_CODE},
+			MAT_CLASS = #{MAT_CLASS},
+			MAT_SPECS = #{MAT_SPECS},
+			MAT_MAIN_UNIT = #{MAT_MAIN_UNIT},
+			MAT_BRAND = #{MAT_BRAND},
+			BOM_COUNT = #{BOM_COUNT},
+			UP_LIMIT = #{UP_LIMIT},
+			DOWM_LIMIT = #{DOWM_LIMIT},
+			MAT_CATEGRAY = #{MAT_CATEGRAY},
+			Cabinet_Assembly_Detail_ID = #{Cabinet_Assembly_Detail_ID},
+			FSTATE = #{FSTATE},
+			REMARK = #{REMARK},
+			If_Purchase = #{If_Purchase},
+			FAudit_State = #{FAudit_State},
+			Change_Duty = #{Change_Duty},
+			FORDER = #{FORDER},
+			CG_COUNT = #{CG_COUNT},
+			FVersion = #{FVersion},
+			FChange = #{FChange},
+			Cabinet_BOM_changeMx_ID = #{Cabinet_BOM_changeMx_ID},
+			FRelation_ID = #{FRelation_ID},
+			BOM_COUNT_NEW = #{BOM_COUNT_NEW},
+			MAT_CATEGRAY_NEW = #{MAT_CATEGRAY_NEW},
+			CABINET_BOM_CHANGEMX_ID = CABINET_BOM_CHANGEMX_ID
+		where 
+			CABINET_BOM_CHANGEMX_ID = #{CABINET_BOM_CHANGEMX_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.CABINET_BOM_CHANGEMX_ID = #{CABINET_BOM_CHANGEMX_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+		and f.Change_ID = #{pd.Change_ID}
+		[fhstart] order by FChangeState [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CABINET_BOM_CHANGEMX_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.QualityInspectionPlanInspectionDetailsMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		KM_QualityInspectionPlanInspectionDetails
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.SortKey,	
+		f.QIPlanID,	
+		f.QIItemID,	
+		f.StandardType,	
+		f.ToleranceType,	
+		f.FRetain,	
+		f.StandardValue,	
+		f.UpperDeviation,	
+		f.LowerDeviation,	
+		f.FMinimum,	
+		f.FMaximum,	
+		f.FUnit,	
+		f.BreakdownOfBadReasons,
+		f.BadnessReasonLevel,	
+		f.FCustomer,	
+		f.FormulaValue,	
+		f.FExplanation,	
+		f.BadLevel,
+		f.QualityInspectionPlanInspectionDetails_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		SortKey,	
+		QIPlanID,	
+		QIItemID,	
+		StandardType,	
+		ToleranceType,	
+		FRetain,	
+		StandardValue,	
+		UpperDeviation,	
+		LowerDeviation,	
+		FMinimum,	
+		FMaximum,	
+		FUnit,	
+		BreakdownOfBadReasons,	
+		BadnessReasonLevel,
+		FCustomer,	
+		FormulaValue,	
+		FExplanation,	
+		BadLevel,
+		QualityInspectionPlanInspectionDetails_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{SortKey},	
+		#{QIPlanID},	
+		#{QIItemID},	
+		#{StandardType},	
+		#{ToleranceType},	
+		#{FRetain},	
+		#{StandardValue},	
+		#{UpperDeviation},	
+		#{LowerDeviation},	
+		#{FMinimum},	
+		#{FMaximum},	
+		#{FUnit},	
+		#{BreakdownOfBadReasons},	
+		#{BadnessReasonLevel},
+		#{FCustomer},	
+		#{FormulaValue},	
+		#{FExplanation},	
+		#{BadLevel},
+		#{QualityInspectionPlanInspectionDetails_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QualityInspectionPlanInspectionDetails_ID = #{QualityInspectionPlanInspectionDetails_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			SortKey = #{SortKey},
+			QIPlanID = #{QIPlanID},
+			QIItemID = #{QIItemID},
+			StandardType = #{StandardType},
+			ToleranceType = #{ToleranceType},
+			FRetain = #{FRetain},
+			StandardValue = #{StandardValue},
+			UpperDeviation = #{UpperDeviation},
+			LowerDeviation = #{LowerDeviation},
+			FMinimum = #{FMinimum},
+			FMaximum = #{FMaximum},
+			FUnit = #{FUnit},
+			BreakdownOfBadReasons = #{BreakdownOfBadReasons},
+			BadnessReasonLevel = #{BadnessReasonLevel},
+			FCustomer = #{FCustomer},
+			FormulaValue = #{FormulaValue},
+			FExplanation = #{FExplanation},
+			BadLevel = #{BadLevel},
+			QualityInspectionPlanInspectionDetails_ID = QualityInspectionPlanInspectionDetails_ID
+		where 
+			QualityInspectionPlanInspectionDetails_ID = #{QualityInspectionPlanInspectionDetails_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.QualityInspectionPlanInspectionDetails_ID = #{QualityInspectionPlanInspectionDetails_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		d1.NAME BreakdownOfBadReasonsNAME,
+		d2.NAME BadnessReasonLevelNAME
+		from 
+		<include refid="tableName"></include> f
+		left join SYS_DICTIONARIES d1 on f.BreakdownOfBadReasons = d1.DICTIONARIES_ID
+		left join SYS_DICTIONARIES d2 on f.BadnessReasonLevel = d2.DICTIONARIES_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+		[fhstart] order by cast(f.SortKey as int) [fhend]
+	</select>
+	
+	<!-- 根据主表ID查询质检方案明细列表     范贺男，暂用于质检任务明细新增 -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		FName,
+		d1.NAME BreakdownOfBadReasonsNAME,
+		d2.NAME BadnessReasonLevelNAME
+		from 
+		<include refid="tableName"></include> f
+		left join KM_QualityInspectionItems g 
+		on f.QIItemID = g.QualityInspectionItems_ID
+		left join SYS_DICTIONARIES d1 on f.BreakdownOfBadReasons = d1.DICTIONARIES_ID
+		left join SYS_DICTIONARIES d2 on f.BadnessReasonLevel = d2.DICTIONARIES_ID
+		where f.QIPlanID = #{QIPlanID}
+		order by cast(f.SortKey as int) <!-- 排序值排序   升序-->
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QualityInspectionPlanInspectionDetails_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<update id="editSortKey" parameterType="pd">
+		update 
+			<include refid="tableName"></include>
+		set
+			SortKey = #{NewSortKey}
+		where
+			QualityInspectionPlanInspectionDetails_ID = #{QualityInspectionPlanInspectionDetails_ID} and SortKey = #{SortKey}
+	
+	
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.TakeStock_Task_ExecuteMapper">
+	
+	<!-- 盘点任务执行 -->
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_TakeStock_Task_Execute
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.TakeStock_Task_Execute_ID,	
+		f.FEntryID,	
+		f.Warehouse_ID,	
+		f.Seat_ID,	
+		f.TakeStock_Task_ID,	
+		f.Material_ID,	
+		f.TakeStock_Count,	
+		f.TakeStock_Task_PersonID,	
+		f.TakeStock_Task_Time,	
+		f.IfFEntryClose,	
+		f.FExplanation,	
+		f.DifferenceOrder_NUM,	
+		f.TakeStock_Task_Material_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		TakeStock_Task_Execute_ID,	
+		FEntryID,	
+		Warehouse_ID,	
+		Seat_ID,	
+		TakeStock_Task_ID,	
+		Material_ID,	
+		TakeStock_Count,	
+		TakeStock_Task_PersonID,	
+		TakeStock_Task_Time,	
+		IfFEntryClose,	
+		FExplanation,	
+		DifferenceOrder_NUM,
+		TakeStock_Task_Material_ID	
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TakeStock_Task_Execute_ID},	
+		#{FEntryID},	
+		#{Warehouse_ID},	
+		#{Seat_ID},	
+		#{TakeStock_Task_ID},	
+		#{Material_ID},	
+		#{TakeStock_Count},	
+		#{TakeStock_Task_PersonID},	
+		#{TakeStock_Task_Time},	
+		#{IfFEntryClose},	
+		#{FExplanation},	
+		#{DifferenceOrder_NUM},	
+		#{TakeStock_Task_Material_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TakeStock_Task_Execute_ID = #{TakeStock_Task_Execute_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			Warehouse_ID = #{Warehouse_ID},
+			Seat_ID = #{Seat_ID},
+			FExplanation = #{FExplanation}
+		where 
+			TakeStock_Task_Execute_ID = #{TakeStock_Task_Execute_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT
+			f.TakeStock_Task_Material_ID,
+			f.TakeStock_Task_Execute_ID,
+			f.TakeStock_Task_ID,
+			f.FEntryID,       --行号
+			c.FNAME FWarehouse, -- 仓库名称
+				f.Warehouse_ID,
+			f.Seat_ID Seat_IDID,
+			d.FNAME Seat_ID,--库位名称
+			e.MAT_NAME Material_ID, -- 物料名称
+			f.TakeStock_Count,  --  数量
+			a.NAME  TakeStock_Task_PersonID, -- 盘点人
+			f.TakeStock_Task_Time, --  盘点时间
+			case when f.IfFEntryClose = 1 then '是' else '否' end IfFEntryClose,--是否行关闭
+			f.FExplanation,--描述
+			f.DifferenceOrder_NUM   --差异单批号
+		FROM
+			MM_TakeStock_Task_Execute f
+		LEFT JOIN OA_STAFF a on f.TakeStock_Task_PersonID = a.STAFF_ID --关联人员表 审核人
+		LEFT JOIN MWMS_WH_WAREHOUSE c on f.Warehouse_ID = c.WH_WAREHOUSE_ID -- 关联仓库
+		LEFT JOIN MWMS_WH_STORAGEAREA d on f.Seat_ID = d.WH_STORAGEAREA_ID -- 关联仓位
+		LEFT JOIN MBASE_MAT_BASIC e on f.Material_ID = e.MAT_BASIC_ID  -- 关联物料
+		where 
+			f.TakeStock_Task_Execute_ID = #{TakeStock_Task_Execute_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT
+			f.TakeStock_Task_Material_ID,
+			f.TakeStock_Task_Execute_ID,
+			f.TakeStock_Task_ID,
+			f.FEntryID,       --行号
+			c.FNAME FWarehouse, -- 仓库名称
+			f.Warehouse_ID,
+			f.Seat_ID Seat_IDID,
+			d.FNAME Seat_ID,--库位名称
+			e.MAT_NAME Material_ID, -- 物料名称
+			f.TakeStock_Count,  --  数量
+			a.NAME  TakeStock_Task_PersonID, -- 盘点人
+			f.TakeStock_Task_Time, --  盘点时间
+			case when f.IfFEntryClose = 1 then '是' else '否' end IfFEntryClose,--是否行关闭
+			f.FExplanation,--描述
+			f.DifferenceOrder_NUM   --差异单批号
+		FROM
+			MM_TakeStock_Task_Execute f
+		LEFT JOIN OA_STAFF a on f.TakeStock_Task_PersonID = a.STAFF_ID --关联人员表 审核人
+		LEFT JOIN MWMS_WH_WAREHOUSE c on f.Warehouse_ID = c.WH_WAREHOUSE_ID -- 关联仓库
+		LEFT JOIN MWMS_WH_STORAGEAREA d on f.Seat_ID = d.WH_STORAGEAREA_ID -- 关联仓位
+		LEFT JOIN MBASE_MAT_BASIC e on f.Material_ID = e.MAT_BASIC_ID  -- 关联物料
+		where 1=1 and f.TakeStock_Task_Material_ID = #{pd.TakeStock_Task_Material_ID}
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		SELECT
+			f.TakeStock_Task_Material_ID,
+			f.TakeStock_Task_Execute_ID,
+			f.TakeStock_Task_ID,
+			f.FEntryID,       --行号
+			c.FNAME FWarehouse, -- 仓库名称
+				f.Warehouse_ID,
+			f.Seat_ID Seat_IDID,
+			d.FNAME Seat_ID,--库位名称
+			e.MAT_NAME Material_ID, -- 物料名称
+			f.TakeStock_Count,  --  数量
+			a.NAME  TakeStock_Task_PersonID, -- 盘点人
+			f.TakeStock_Task_Time, --  盘点时间
+			case when f.IfFEntryClose = 1 then '是' else '否' end IfFEntryClose,--是否行关闭
+			f.FExplanation,--描述
+			f.DifferenceOrder_NUM   --差异单批号
+		FROM
+			MM_TakeStock_Task_Execute f
+		LEFT JOIN OA_STAFF a on f.TakeStock_Task_PersonID = a.STAFF_ID --关联人员表 审核人
+		LEFT JOIN MWMS_WH_WAREHOUSE c on f.Warehouse_ID = c.WH_WAREHOUSE_ID -- 关联仓库
+		LEFT JOIN MWMS_WH_STORAGEAREA d on f.Seat_ID = d.WH_STORAGEAREA_ID -- 关联仓位
+		LEFT JOIN MBASE_MAT_BASIC e on f.Material_ID = e.MAT_BASIC_ID  -- 关联物料
+		where f.TakeStock_Task_Material_ID = #{TakeStock_Task_Material_ID}
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TakeStock_Task_Execute_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 根据物料ID 从盘点任务物料明细表中获取数据  判断当前扫码的物料是否存在于盘点任务物料明细表中 -->
+	<select id="getMaterial" parameterType="pd" resultType="pd">
+		select top 1
+			f.TakeStock_Task_ID,	
+			f.FEntryID,	
+			f.Material_ID,	
+			f.Repertory_Count,	
+			f.IfFEntryClose,	
+			f.TakeStock_Task_Material_ID
+		from 
+			MM_TakeStock_Task_Material f 
+		where 
+			f.Material_ID = #{Material_ID} and f.TakeStock_Task_ID=#{TakeStock_Task_ID}
+	</select>
+	<select id="getEntryID" parameterType="pd" resultType="Integer">
+		select count(*) num from MM_TakeStock_Task_Execute where TakeStock_Task_Material_ID = #{TakeStock_Task_Material_ID}
+	</select>
+	<!-- 盘点任务完成 -->
+	<update id="FinishTakeStock" parameterType="pd">
+		update
+			MM_TakeStock_Task
+		set
+			TakeStock_Task_Status = '完成'
+		where 
+			TakeStock_Task_ID = #{TakeStock_Task_ID}
+	</update>
+	<update id="CloseHang" parameterType="pd">
+		update 
+			<include refid="tableName"></include>
+		set
+			IfFEntryClose = 0
+		where 
+			TakeStock_Task_Execute_ID = #{TakeStock_Task_Execute_ID}
+	</update>
+	<!-- 手机端列表 -->
+	<select id="AppList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		SELECT
+			f.TakeStock_Task_Material_ID,
+			f.TakeStock_Task_Execute_ID,
+			f.TakeStock_Task_ID,
+			f.FEntryID,       --行号
+			c.FNAME FWarehouse, -- 仓库名称
+			f.Warehouse_ID,
+			f.Seat_ID Seat_IDID,
+			d.FNAME Seat_ID,--库位名称
+			e.MAT_NAME Material_ID, -- 物料名称
+			f.TakeStock_Count,  --  数量
+			a.NAME  TakeStock_Task_PersonID, -- 盘点人
+			f.TakeStock_Task_Time, --  盘点时间
+			case when f.IfFEntryClose = 1 then '是' else '否' end IfFEntryClose,--是否行关闭
+			f.FExplanation,--描述
+			f.DifferenceOrder_NUM   --差异单批号
+		FROM
+			MM_TakeStock_Task_Execute f
+		LEFT JOIN OA_STAFF a on f.TakeStock_Task_PersonID = a.STAFF_ID --关联人员表 审核人
+		LEFT JOIN MWMS_WH_WAREHOUSE c on f.Warehouse_ID = c.WH_WAREHOUSE_ID -- 关联仓库
+		LEFT JOIN MWMS_WH_STORAGEAREA d on f.Seat_ID = d.WH_STORAGEAREA_ID -- 关联仓位
+		LEFT JOIN MBASE_MAT_BASIC e on f.Material_ID = e.MAT_BASIC_ID  -- 关联物料
+		where 1=1 and f.TakeStock_Task_Material_ID = #{pd.TakeStock_Task_Material_ID}
+	</select>
+</mapper>

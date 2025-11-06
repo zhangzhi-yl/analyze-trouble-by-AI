@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.ProjectFileMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOMP_PROJECTFILE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PLANINSTANCE_ID,	
+		f.FEPNAME,	
+		f.FEPROJECTCODE,	
+		f.FPFFILENAME,	
+		f.FPFFILETYPE,	
+		f.FPFREMARK,	
+		f.FPFFILEPATH,	
+		f.FCREATOR,	
+		f.FCTIME,	
+		f.FLATESTMODIFY,	
+		f.FMODIFYTIME,	
+		f.PROJECTFILE_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PLANINSTANCE_ID,	
+		FEPNAME,	
+		FEPROJECTCODE,	
+		FPFFILENAME,	
+		FPFFILETYPE,	
+		FPFREMARK,	
+		FPFFILEPATH,	
+		FCREATOR,	
+		FCTIME,	
+		FLATESTMODIFY,	
+		FMODIFYTIME,	
+		PROJECTFILE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PLANINSTANCE_ID},	
+		#{FEPNAME},	
+		#{FEPROJECTCODE},	
+		#{FPFFILENAME},	
+		#{FPFFILETYPE},	
+		#{FPFREMARK},	
+		#{FPFFILEPATH},	
+		#{FCREATOR},	
+		#{FCTIME},	
+		#{FLATESTMODIFY},	
+		#{FMODIFYTIME},	
+		#{PROJECTFILE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROJECTFILE_ID = #{PROJECTFILE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FEPNAME = #{FEPNAME},
+			FEPROJECTCODE = #{FEPROJECTCODE},
+			FPFFILENAME = #{FPFFILENAME},
+			FPFFILETYPE = #{FPFFILETYPE},
+			FPFREMARK = #{FPFREMARK},
+			FPFFILEPATH = #{FPFFILEPATH},
+			FLATESTMODIFY = #{FLATESTMODIFY},
+			FMODIFYTIME = #{FMODIFYTIME},
+			PROJECTFILE_ID = PROJECTFILE_ID
+		where 
+			PROJECTFILE_ID = #{PROJECTFILE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PROJECTFILE_ID = #{PROJECTFILE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FEPNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FEPROJECTCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.FPFFILENAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROJECTFILE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

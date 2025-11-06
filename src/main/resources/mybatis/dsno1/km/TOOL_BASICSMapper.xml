@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.TOOL_BASICSMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		KM_TOOL_BASICS
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FType,	
+		f.Tool_Number,	
+		f.Tool_Name,	
+		f.FSTATE,	
+		f.FSpectification,	
+		f.FPrice,	
+		f.FActive_Date,	
+		f.FInspect_Cycle,	
+		f.FNext_Inspect_Date,	
+		f.FStore_Keeper,	
+		f.FScrap_Explain,	
+		f.FDESCRIBE,	
+		f.FCreatePerson,	
+		f.FCreateTime,	
+		f.FReservedOne,	
+		f.FReservedTwo,	
+		f.FReservedThree,	
+		f.FReservedFour,	
+		f.FReservedFive,	
+		f.TOOL_BASICS_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		FType,	
+		Tool_Number,	
+		Tool_Name,	
+		FSTATE,	
+		FSpectification,	
+		FPrice,	
+		FActive_Date,	
+		FInspect_Cycle,	
+		FNext_Inspect_Date,	
+		FStore_Keeper,	
+		FScrap_Explain,	
+		FDESCRIBE,	
+		FCreatePerson,	
+		FCreateTime,	
+		FReservedOne,	
+		FReservedTwo,	
+		FReservedThree,	
+		FReservedFour,	
+		FReservedFive,	
+		TOOL_BASICS_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FType},	
+		#{Tool_Number},	
+		#{Tool_Name},	
+		#{FSTATE},	
+		#{FSpectification},	
+		#{FPrice},	
+		#{FActive_Date},	
+		#{FInspect_Cycle},	
+		#{FNext_Inspect_Date},	
+		#{FStore_Keeper},	
+		#{FScrap_Explain},	
+		#{FDESCRIBE},	
+		#{FCreatePerson},	
+		#{FCreateTime},	
+		#{FReservedOne},	
+		#{FReservedTwo},	
+		#{FReservedThree},	
+		#{FReservedFour},	
+		#{FReservedFive},	
+		#{TOOL_BASICS_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TOOL_BASICS_ID = #{TOOL_BASICS_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FType = #{FType},
+			Tool_Number = #{Tool_Number},
+			Tool_Name = #{Tool_Name},
+			FSTATE = #{FSTATE},
+			FSpectification = #{FSpectification},
+			FPrice = #{FPrice},
+			FActive_Date = #{FActive_Date},
+			FInspect_Cycle = #{FInspect_Cycle},
+			FNext_Inspect_Date = #{FNext_Inspect_Date},
+			FStore_Keeper = #{FStore_Keeper},
+			FScrap_Explain = #{FScrap_Explain},
+			FDESCRIBE = #{FDESCRIBE},
+			FCreatePerson = #{FCreatePerson},
+			FCreateTime = #{FCreateTime},
+			FReservedOne = #{FReservedOne},
+			FReservedTwo = #{FReservedTwo},
+			FReservedThree = #{FReservedThree},
+			FReservedFour = #{FReservedFour},
+			FReservedFive = #{FReservedFive},
+			TOOL_BASICS_ID = TOOL_BASICS_ID
+		where 
+			TOOL_BASICS_ID = #{TOOL_BASICS_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.NAME FTypeName 
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.FType = f1.DICTIONARIES_ID
+		where 
+			f.TOOL_BASICS_ID = #{TOOL_BASICS_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FTypeName,
+		CASE WHEN f.FSTATE='闲置' THEN '1' WHEN f.FState='占用' THEN '2'  ELSE '3' END AS STATE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.FType = f1.DICTIONARIES_ID
+		where 1=1
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.Tool_Name LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.Tool_Number LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FSTATE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FSpectification LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.TYPE!= null and pd.TYPE != ''"><!-- 关键词检索 -->
+			and
+				(
+					f1.NAME LIKE '%'+ #{pd.TYPE}+'%'
+				)
+		</if>
+		<if test="pd.STATE!= null and pd.STATE != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FSTATE LIKE '%'+ #{pd.STATE}+'%'
+				)
+		</if>
+		[fhstart] ORDER BY STATE,FCreateTime DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TOOL_BASICS_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 更新工器具管理状态-->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FSTATE = #{FSTATE},
+			FScrap_Explain = #{FScrap_Explain}
+		where 
+			TOOL_BASICS_ID = #{TOOL_BASICS_ID}
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

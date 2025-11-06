@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.WH_StorageAreaMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MWMS_WH_STORAGEAREA
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.WH_STORAGEAREA_ID,	
+		f.FCODE,	
+		f.FNAME,	
+		f.FATTRIBUTE,	
+		f.FTYPE,	
+		f.NEGATIVE_STOCK_WHETHER,	
+		f.FAREA,	
+		f.FHEAD,	
+		f.HEAD_PHONE,	
+		f.PROHIBIT_WHETHER,	
+		f.WC_WORKCENTER_ID,	
+		f.WH_WAREHOUSE_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		WH_STORAGEAREA_ID,	
+		FCODE,	
+		FNAME,	
+		FATTRIBUTE,	
+		FTYPE,	
+		NEGATIVE_STOCK_WHETHER,	
+		FAREA,	
+		FHEAD,	
+		HEAD_PHONE,	
+		PROHIBIT_WHETHER,	
+		WC_WORKCENTER_ID,	
+		WH_WAREHOUSE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WH_STORAGEAREA_ID},	
+		#{FCODE},	
+		#{FNAME},	
+		#{FATTRIBUTE},	
+		#{FTYPE},	
+		#{NEGATIVE_STOCK_WHETHER},	
+		#{FAREA},	
+		#{FHEAD},	
+		#{HEAD_PHONE},	
+		#{PROHIBIT_WHETHER},	
+		#{WC_WORKCENTER_ID},	
+		#{WH_WAREHOUSE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WH_STORAGEAREA_ID = #{WH_STORAGEAREA_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FATTRIBUTE = #{FATTRIBUTE},
+			FTYPE = #{FTYPE},
+			NEGATIVE_STOCK_WHETHER = #{NEGATIVE_STOCK_WHETHER},
+			FAREA = #{FAREA},
+			FHEAD = #{FHEAD},
+			HEAD_PHONE = #{HEAD_PHONE},
+			PROHIBIT_WHETHER = #{PROHIBIT_WHETHER},
+			WC_WORKCENTER_ID = #{WC_WORKCENTER_ID},	
+			WH_WAREHOUSE_ID = #{WH_WAREHOUSE_ID}
+		where 
+			WH_STORAGEAREA_ID = #{WH_STORAGEAREA_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,
+		wh.FNAME WH_WAREHOUSE_NAME,wh.FCODE WH_WAREHOUSE_CODE,
+		wc.FNAME WC_WORKCENTER_NAME,wc.FCODE WC_WORKCENTER_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MWMS_WH_WAREHOUSE wh ON f.WH_WAREHOUSE_ID=wh.WH_WAREHOUSE_ID 
+		LEFT JOIN MDM_WC_WORKCENTER wc ON f.WC_WORKCENTER_ID=wc.WC_WORKCENTER_ID 
+		where 
+			f.WH_STORAGEAREA_ID = #{WH_STORAGEAREA_ID}
+	</select>
+	
+	<!-- 通过FCODE获取数据 -->
+	<select id="findByFCODE" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FCODE = #{pd.FCODE}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FCODE = #{FCODE} 
+		<if test="WH_STORAGEAREA_ID != null and WH_STORAGEAREA_ID != ''"><!-- 库区id -->
+			and f.WH_STORAGEAREA_ID &lt;&gt; #{WH_STORAGEAREA_ID}
+		</if>
+	</select>
+	
+	<!-- 根据仓库ID查询库区总数  -->
+	<select id="findCountByWareHouse" parameterType="pd" resultType="pd">
+		select 
+			count(*) zs 
+		from 
+			<include refid="tableName"></include>
+		where 
+			WH_WAREHOUSE_ID  = #{WH_WAREHOUSE_ID}
+	</select>
+	
+	<!-- 根据工作中心ID查询库区总数  -->
+	<select id="findCountByWorkCenter" parameterType="pd" resultType="pd">
+		select 
+			count(*) zs 
+		from 
+			<include refid="tableName"></include>
+		where 
+			WC_WORKCENTER_ID  = #{WC_WORKCENTER_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		wh.FNAME WH_WAREHOUSE_NAME,wh.FCODE WH_WAREHOUSE_CODE,
+		wc.FNAME WC_WORKCENTER_NAME,wc.FCODE WC_WORKCENTER_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MWMS_WH_WAREHOUSE wh ON f.WH_WAREHOUSE_ID=wh.WH_WAREHOUSE_ID 
+		LEFT JOIN MDM_WC_WORKCENTER wc ON f.WC_WORKCENTER_ID=wc.WC_WORKCENTER_ID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FNAME != null and pd.FNAME != ''"><!-- 名称 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.FNAME}+'%' 
+				)
+		</if>
+		<if test="pd.FCODE != null and pd.FCODE != ''"><!-- 代码 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{pd.FCODE}+'%'
+				)
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 类型 -->
+			and
+				(
+					f.FTYPE LIKE '%'+ #{pd.FTYPE}+'%'
+				)
+		</if>
+		<if test="pd.PROHIBIT_WHETHER != null and pd.PROHIBIT_WHETHER != ''"><!-- 是否禁用 -->
+			and
+				(
+					f.PROHIBIT_WHETHER = #{pd.PROHIBIT_WHETHER}
+				)
+		</if>
+		<if test="pd.WH_WAREHOUSE_ID != null and pd.WH_WAREHOUSE_ID != ''"><!-- 仓库ID -->
+			and
+				(
+					f.WH_WAREHOUSE_ID = #{pd.WH_WAREHOUSE_ID}
+				)
+		</if>
+		<if test="pd.WC_WORKCENTER_ID != null and pd.WC_WORKCENTER_ID != ''"><!-- 工作中心ID -->
+			and
+				(
+					f.WC_WORKCENTER_ID = #{pd.WC_WORKCENTER_ID}
+				)
+		</if>
+		[fhstart] ORDER BY f.FCODE [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		wh.FNAME WH_WAREHOUSE_NAME,wh.FCODE WH_WAREHOUSE_CODE,
+		wc.FNAME WC_WORKCENTER_NAME,wc.FCODE WC_WORKCENTER_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MWMS_WH_WAREHOUSE wh ON f.WH_WAREHOUSE_ID=wh.WH_WAREHOUSE_ID 
+		LEFT JOIN MDM_WC_WORKCENTER wc ON f.WC_WORKCENTER_ID=wc.WC_WORKCENTER_ID 
+	</select>
+	
+	<!-- 库区列表（是否禁用，下拉选用） -->
+	<select id="storageAreaList" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		wh.FNAME WH_WAREHOUSE_NAME,wh.FCODE WH_WAREHOUSE_CODE,
+		wc.FNAME WC_WORKCENTER_NAME,wc.FCODE WC_WORKCENTER_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MWMS_WH_WAREHOUSE wh ON f.WH_WAREHOUSE_ID=wh.WH_WAREHOUSE_ID 
+		LEFT JOIN MDM_WC_WORKCENTER wc ON f.WC_WORKCENTER_ID=wc.WC_WORKCENTER_ID 
+		where 1=1 
+		<if test="FNAME != null and FNAME != ''"><!-- 名称 -->
+			and ( f.FNAME LIKE '%'+ #{FNAME}+'%' )
+		</if>
+		<if test="FCODE != null and FCODE != ''"><!-- 代码 -->
+			and ( f.FCODE LIKE '%'+ #{FCODE}+'%' )
+		</if>
+		<if test="PROHIBIT_WHETHER != null and PROHIBIT_WHETHER != ''"><!-- 是否禁用 -->
+			and ( f.PROHIBIT_WHETHER = #{PROHIBIT_WHETHER} )
+		</if>
+		<if test="WH_WAREHOUSE_ID != null and WH_WAREHOUSE_ID != ''"><!-- 仓库ID -->
+			and ( f.WH_WAREHOUSE_ID = #{WH_WAREHOUSE_ID} )
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WH_STORAGEAREA_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

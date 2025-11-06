@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.run.RUN_FINAL_INSPECTMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MRECIPE_RUN_FINAL_INSPECT
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.GE_MUTILIBPHNEW_ID,	
+		f.FCAPTION,	
+		f.FFILETYPE,	
+		f.FGRADE,	
+		f.FRUNFDS,	
+		f.FRUNSTATE,	
+		f.FINALFDS,	
+		f.FOPERATOR,	
+		f.FEXECUT_TIME,	
+		f.PRO_BATCH_NO,	
+		f.FIS_END,	
+		f.FIFQUALIFIDE,	
+		f.FIFCREATE,	
+		f.DOCUMENTTEMPLATE_ID,	
+		f.FSTENCIL_NAME,	
+		f.TEMBILL_EXECUTE_ID,	
+		f.PLAN_ID,	
+		f.RUN_PH_ID,	
+		f.RUN_UP_ID,	
+		f.RUN_O_ID,	
+		f.RUN_P_ID,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.LAST_MODIFIER,
+		f.LAST_MODIFIED_TIME,
+		f.RUN_FINAL_INSPECT_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		GE_MUTILIBPHNEW_ID,	
+		FCAPTION,	
+		FFILETYPE,	
+		FGRADE,	
+		FRUNFDS,	
+		FRUNSTATE,	
+		FINALFDS,	
+		FOPERATOR,	
+		FEXECUT_TIME,	
+		PRO_BATCH_NO,	
+		FIS_END,	
+		FIFQUALIFIDE,	
+		FIFCREATE,	
+		DOCUMENTTEMPLATE_ID,	
+		FSTENCIL_NAME,	
+		TEMBILL_EXECUTE_ID,	
+		PLAN_ID,	
+		RUN_PH_ID,	
+		RUN_UP_ID,	
+		RUN_O_ID,	
+		RUN_P_ID,	
+		FCREATOR,	
+		CREATE_TIME,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		LAST_MODIFIER,
+		LAST_MODIFIED_TIME,
+		RUN_FINAL_INSPECT_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{GE_MUTILIBPHNEW_ID},	
+		#{FCAPTION},	
+		#{FFILETYPE},	
+		#{FGRADE},	
+		#{FRUNFDS},	
+		#{FRUNSTATE},	
+		#{FINALFDS},	
+		#{FOPERATOR},	
+		#{FEXECUT_TIME},	
+		#{PRO_BATCH_NO},	
+		#{FIS_END},	
+		#{FIFQUALIFIDE},	
+		#{FIFCREATE},	
+		#{DOCUMENTTEMPLATE_ID},	
+		#{FSTENCIL_NAME},	
+		#{TEMBILL_EXECUTE_ID},	
+		#{PLAN_ID},	
+		#{RUN_PH_ID},	
+		#{RUN_UP_ID},	
+		#{RUN_O_ID},	
+		#{RUN_P_ID},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},
+		#{LAST_MODIFIER},
+		#{LAST_MODIFIED_TIME},	
+		#{RUN_FINAL_INSPECT_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+		1=1
+		<choose>
+                <when test="TYPE != null and TYPE == 'GE_MUTILIBPHNEW'">
+                    and GE_MUTILIBPHNEW_ID=#{GE_MUTILIBPHNEW_ID}
+                </when>
+                 <when test="TYPE != null and TYPE == 'ge_bytearray/addPH'">
+                   and
+				   RUN_PH_ID =#{RUN_PH_ID}
+                </when>
+                 <when test="TYPE != null and TYPE == 'ge_bytearray/addO'">
+                   and
+				   RUN_O_ID =#{RUN_O_ID}
+                </when>
+                 <when test="TYPE != null and TYPE == 'ge_bytearray/addUP'">
+                   and
+				   RUN_UP_ID =#{RUN_UP_ID}
+                </when>
+                 <when test="TYPE != null and TYPE == 'new'">
+				and RUN_P_ID=#{RUN_P_ID}
+				</when>
+                <otherwise>
+                and RUN_FINAL_INSPECT_ID = #{RUN_FINAL_INSPECT_ID}
+                </otherwise>
+         </choose>
+		
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			GE_MUTILIBPHNEW_ID = #{GE_MUTILIBPHNEW_ID},
+			FCAPTION = #{FCAPTION},
+			FFILETYPE = #{FFILETYPE},
+			FGRADE = #{FGRADE},
+			FRUNFDS = #{FRUNFDS},
+			FRUNSTATE = #{FRUNSTATE},
+			FINALFDS = #{FINALFDS},
+			FOPERATOR = #{FOPERATOR},
+			FEXECUT_TIME = #{FEXECUT_TIME},
+			PRO_BATCH_NO = #{PRO_BATCH_NO},
+			FIS_END = #{FIS_END},
+			FIFQUALIFIDE = #{FIFQUALIFIDE},
+			FIFCREATE = #{FIFCREATE},
+			DOCUMENTTEMPLATE_ID = #{DOCUMENTTEMPLATE_ID},
+			FSTENCIL_NAME = #{FSTENCIL_NAME},
+			TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID},
+			PLAN_ID = #{PLAN_ID},
+			RUN_PH_ID = #{RUN_PH_ID},
+			RUN_UP_ID = #{RUN_UP_ID},
+			RUN_O_ID = #{RUN_O_ID},
+			RUN_P_ID = #{RUN_P_ID},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			LAST_MODIFIER = #{LAST_MODIFIER},
+		    LAST_MODIFIED_TIME = #{LAST_MODIFIED_TIME},	
+			RUN_FINAL_INSPECT_ID = RUN_FINAL_INSPECT_ID
+		where 
+			RUN_FINAL_INSPECT_ID = #{RUN_FINAL_INSPECT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+			<choose>
+                <when test="GE_MUTILIBPHNEW_ID != null and GE_MUTILIBPHNEW_ID != ''">
+                    and f.GE_MUTILIBPHNEW_ID=#{GE_MUTILIBPHNEW_ID}
+                </when>
+                
+                <otherwise>
+                	and f.RUN_FINAL_INSPECT_ID = #{RUN_FINAL_INSPECT_ID}
+                </otherwise>
+         </choose> 
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			RUN_FINAL_INSPECT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 修改时间戳 -->
+	<update id="editTime" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FEXTEND1 = #{FEXTEND1},
+			LAST_MODIFIER = #{LAST_MODIFIER},
+		    LAST_MODIFIED_TIME = #{LAST_MODIFIED_TIME}
+		where 
+			RUN_FINAL_INSPECT_ID = #{RUN_FINAL_INSPECT_ID}
+	</update>
+	<!-- YY 356703572 -->
+</mapper>

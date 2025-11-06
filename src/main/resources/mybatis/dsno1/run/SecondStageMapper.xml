@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.run.SecondStageMapper">
+	<!-- 获取开始节点ID -->
+	<select id="getStartNodeId" parameterType="pd" resultType="pd">
+		SELECT NODE_ID,SUBPLAN_ID FROM AT_NEWPLAN_BOM_FLOW WHERE RUN_O_ID =
+		#{RUN_O_ID}
+		AND NODE_TYPE='start round' AND
+		MASTERPLAN_ID=#{MASTERPLAN_ID}
+	</select>
+	<!-- 正在执行中和待执行数量 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		SELECT *
+		FROM AT_NEWPLAN_BOM_FLOW WHERE NODE_ID in(
+		SELECT BEGIN_NODE FROM
+		AT_NEWPLAN_BOM_FLOW WHERE END_NODE in(
+		SELECT END_NODE FROM
+		AT_NEWPLAN_BOM_FLOW WHERE BEGIN_NODE = #{BEGIN_NODE}
+		AND
+		MASTERPLAN_ID=#{MASTERPLAN_ID}
+		) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+		)
+		AND (EXECUTE_STATE='执行中' or EXECUTE_STATE='待执行') AND
+		MASTERPLAN_ID=#{MASTERPLAN_ID}
+		AND SUBPLAN_ID = #{SUBPLAN_ID}
+	</select>
+	<!-- 修改执行状态 -->
+	<update id="changeState" parameterType="pd">
+		UPDATE
+		AT_NEWPLAN_BOM_FLOW SET 	ActualEndTime=#{ActualEndTime},EXECUTE_STATE = #{EXECUTE_STATE} WHERE
+		NODE_ID
+		= #{BEGIN_NODE} AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+	</update>
+	<!-- 修改状态为未执行 -->
+	<update id="updateStateUnexecuted" parameterType="pd">
+		UPDATE
+		AT_NEWPLAN_BOM_FLOW set EXECUTE_STATE='未执行' WHERE NODE_ID in (
+		SELECT
+		BEGIN_NODE FROM AT_NEWPLAN_BOM_FLOW
+		WHERE END_NODE in (
+		SELECT END_NODE
+		FROM AT_NEWPLAN_BOM_FLOW WHERE BEGIN_NODE = #{BEGIN_NODE}
+		AND
+		MASTERPLAN_ID=#{MASTERPLAN_ID}
+		) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+		)
+		AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+	</update>
+	<!-- 根据开始节点id查询所有下一步节点 -->
+	<select id="findNextNodes" parameterType="pd" resultType="pd">
+		SELECT
+		ph1.* FROM (
+		SELECT * FROM AT_NEWPLAN_BOM_FLOW WHERE NODE_ID in(
+		SELECT
+		END_NODE FROM
+		AT_NEWPLAN_BOM_FLOW WHERE BEGIN_NODE = #{BEGIN_NODE} AND
+		MASTERPLAN_ID=#{MASTERPLAN_ID}
+		) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+		)ph1 where 1=1
+		AND SUBPLAN_ID = #{SUBPLAN_ID}
+
+	</select>
+	<!-- 获取一级节点ID -->
+	<select id="getONodeId" parameterType="pd" resultType="pd">
+		SELECT
+		NODE_ID FROM AT_MASTER_PLAN_FLOW WHERE MASTER_PLAN_FLOW_ID =
+		#{RUN_O_ID}
+	</select>
+	<!-- 修改PH级节点执行中 -->
+	<update id="changePhState" parameterType="pd">
+		UPDATE
+		AT_NEWPLAN_BOM_FLOW set EXECUTE_STATE =#{EXECUTE_STATE} WHERE
+		NEWPLAN_BOM_FLOW=#{NEWPLAN_BOM_FLOW}
+	</update>
+	<!-- 修改数据运行状态、执行人、当前操作用户、执行进入时间 -->
+	<update id="updateState" parameterType="pd">
+		update
+		AT_NEWPLAN_BOM_FLOW
+		set
+		FRUN_STATE = #{FRUN_STATE},
+		FOPERATOR =
+		#{FOPERATOR},
+		FUSERNAME = #{FUSERNAME},
+		EXECUTE_TIME = #{EXECUTE_TIME},
+		TIME_STAMP = #{TIME_STAMP}
+		where
+		NODE_NO = #{BEGIN_NODE} and
+		MASTERPLAN_ID = #{MASTERPLAN_ID}
+	</update>
+
+	<!-- 下发时查出来所有的任务的一级工序节点 -->
+	<select id="findStartTask" parameterType="pd" resultType="pd">
+		SELECT ph1.* FROM(
+			SELECT * FROM AT_NEWPLAN_BOM_FLOW WHERE NODE_ID in(
+				SELECT END_NODE FROM AT_NEWPLAN_BOM_FLOW WHERE BEGIN_NODE in(
+					SELECT NODE_ID FROM AT_NEWPLAN_BOM_FLOW WHERE RUN_O_ID in(
+						SELECT MASTER_PLAN_FLOW_ID FROM AT_MASTER_PLAN_FLOW WHERE NODE_ID in(
+							SELECT END_NODE FROM AT_MASTER_PLAN_FLOW WHERE BEGIN_NODE in(
+								SELECT NODE_ID FROM AT_MASTER_PLAN_FLOW WHERE NODE_TYPE='start round' AND
+									MASTERPLAN_ID=#{MASTERPLAN_ID}
+										) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+										) AND MASTERPLAN_ID=#{MASTERPLAN_ID} AND SUBPLAN_ID =
+									#{SUBPLAN_ID}
+							) AND NODE_TYPE='start round' AND
+						MASTERPLAN_ID=#{MASTERPLAN_ID}
+					) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+				) AND
+			MASTERPLAN_ID=#{MASTERPLAN_ID}
+		) ph1 where 1=1 AND SUBPLAN_ID = #{SUBPLAN_ID}
+	</select>
+	<!-- 下发时查出来所有的一级子工单节点 -->
+	<select id="findStartSubPlan" parameterType="pd" resultType="pd">
+		SELECT * FROM AT_MASTER_PLAN_FLOW WHERE NODE_ID in(
+			SELECT END_NODE FROM AT_MASTER_PLAN_FLOW WHERE BEGIN_NODE in(
+					SELECT NODE_ID FROM AT_MASTER_PLAN_FLOW 
+					WHERE  NODE_TYPE='start round' AND MASTERPLAN_ID=#{MASTERPLAN_ID} 
+			) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+		) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+	</select>
+	
+	<select id="findStartTaskNoStandard" parameterType="pd" resultType="pd">
+		SELECT ph1.*
+		FROM (
+			SELECT *
+			FROM AT_NEWPLAN_BOM_FLOW
+			WHERE NODE_ID IN (
+					SELECT END_NODE
+					FROM AT_NEWPLAN_BOM_FLOW
+					where 1=1  and BEGIN_NODE in (
+						SELECT NODE_ID
+						FROM AT_NEWPLAN_BOM_FLOW 
+						where 1=1 and 
+						 MASTERPLAN_ID = #{MASTERPLAN_ID}
+						AND SUBPLAN_ID = #{SUBPLAN_ID}
+						and NODE_TYPE = 'start round'
+					)
+					AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+					AND SUBPLAN_ID = #{SUBPLAN_ID}
+				)
+				AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+		) ph1
+		WHERE 1 = 1
+			AND SUBPLAN_ID = #{SUBPLAN_ID}
+	</select>
+</mapper>

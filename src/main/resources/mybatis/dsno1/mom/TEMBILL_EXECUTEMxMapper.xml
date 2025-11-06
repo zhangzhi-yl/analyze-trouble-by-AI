@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.TEMBILL_EXECUTEMxMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOM_TEMBILL_EXECUTEMX
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.CAPTION,	
+		f.FDESCRIBE,	
+		f.DESCRIPTION_DETAILS,	
+		f.DESCRIBE_TYPE,	
+		f.DESCRIPTION_CONTENT,	
+		f.DESCRIBE_CONTENT_BF,	
+		f.OTHER_DESCRIPTION_TYPE,	
+		f.OTHER_DESCRIPTION,	
+		f.RIGHT_OPTION_CONTENT,	
+		f.RIGHT_CONTENT_BF,	
+		f.SORT,	
+		f.FLASTUPDATEPEOPLE,	
+		f.FLASTUPDATETIME,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,	
+		f.FSERIAL_NUM,
+		f.FINSEPCTION,
+		f.TEMBILL_EXECUTEMX_ID,
+		f.TEMBILL_EXECUTE_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		CAPTION,	
+		FDESCRIBE,	
+		DESCRIPTION_DETAILS,	
+		DESCRIBE_TYPE,	
+		DESCRIPTION_CONTENT,	
+		DESCRIBE_CONTENT_BF,	
+		OTHER_DESCRIPTION_TYPE,	
+		OTHER_DESCRIPTION,	
+		RIGHT_OPTION_CONTENT,	
+		RIGHT_CONTENT_BF,	
+		SORT,	
+		FLASTUPDATEPEOPLE,	
+		FLASTUPDATETIME,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		FEXTEND4,	
+		FEXTEND5,
+		FSERIAL_NUM,
+		FINSEPCTION,	
+		TEMBILL_EXECUTEMX_ID,
+		TEMBILL_EXECUTE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{CAPTION},	
+		#{FDESCRIBE},	
+		#{DESCRIPTION_DETAILS},	
+		#{DESCRIBE_TYPE},	
+		#{DESCRIPTION_CONTENT},	
+		#{DESCRIBE_CONTENT_BF},	
+		#{OTHER_DESCRIPTION_TYPE},	
+		#{OTHER_DESCRIPTION},	
+		#{RIGHT_OPTION_CONTENT},	
+		#{RIGHT_CONTENT_BF},	
+		#{SORT},	
+		#{FLASTUPDATEPEOPLE},	
+		#{FLASTUPDATETIME},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{FEXTEND4},	
+		#{FEXTEND5},
+		#{FSERIAL_NUM},
+		#{FINSEPCTION},
+		#{TEMBILL_EXECUTEMX_ID},
+		#{TEMBILL_EXECUTE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEMBILL_EXECUTEMX_ID = #{TEMBILL_EXECUTEMX_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CAPTION = #{CAPTION},
+			FDESCRIBE = #{FDESCRIBE},
+			DESCRIPTION_DETAILS = #{DESCRIPTION_DETAILS},
+			DESCRIBE_TYPE = #{DESCRIBE_TYPE},
+			DESCRIPTION_CONTENT = #{DESCRIPTION_CONTENT},
+			DESCRIBE_CONTENT_BF = #{DESCRIBE_CONTENT_BF},
+			OTHER_DESCRIPTION_TYPE = #{OTHER_DESCRIPTION_TYPE},
+			OTHER_DESCRIPTION = #{OTHER_DESCRIPTION},
+			RIGHT_OPTION_CONTENT = #{RIGHT_OPTION_CONTENT},
+			RIGHT_CONTENT_BF = #{RIGHT_CONTENT_BF},
+			SORT = #{SORT},
+			FLASTUPDATEPEOPLE = #{FLASTUPDATEPEOPLE},
+			FLASTUPDATETIME = #{FLASTUPDATETIME},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FEXTEND4 = #{FEXTEND4},
+			FEXTEND5 = #{FEXTEND5},
+			FSERIAL_NUM = #{FSERIAL_NUM},
+		    FINSEPCTION = #{FINSEPCTION},
+			TEMBILL_EXECUTEMX_ID = TEMBILL_EXECUTEMX_ID
+		where 
+			TEMBILL_EXECUTEMX_ID = #{TEMBILL_EXECUTEMX_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.TEMBILL_EXECUTEMX_ID = #{TEMBILL_EXECUTEMX_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where
+			f.TEMBILL_EXECUTE_ID = #{pd.TEMBILL_EXECUTE_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.CAPTION LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FLASTUPDATEPEOPLE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] order by f.SORT [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEMBILL_EXECUTEMX_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID}
+	</select>
+	
+	<!--根据主表ID删除数据-->
+	<delete id="deleteId" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID}
+	</delete>
+	
+	<!-- 根据主表ID查询列表(全部) -->
+	<select id="listMxAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID}
+	</select>
+	
+	<!-- 更新反馈内容 -->
+	<update id="setFeedback" parameterType="pd">
+		${chatType}
+	</update>
+		<!-- 手机设备点巡检明细列表 -->
+	<select id="eqmPointInspectListMx" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where TEMBILL_EXECUTE_ID = #{pd.TEMBILL_EXECUTE_ID}
+	</select>	<!-- YY 356703572 -->
+</mapper>

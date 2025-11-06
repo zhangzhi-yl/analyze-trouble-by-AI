@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.zm.GroupMapper">
+
+    <!--表名 -->
+    <sql id="tableName">
+        ZM_GROUP
+    </sql>
+
+    <!--数据字典表名 -->
+    <sql id="dicTableName">
+        SYS_DICTIONARIES
+    </sql>
+
+    <!-- 字段 -->
+    <sql id="Field">
+        f
+        .
+        FName
+        ,
+		f.FCode,	
+		f.Workshop,	
+		f.Loop,	
+		f.Remarks,	
+		f.CreateTime,	
+		f.Creator,	
+		f.Modified,	
+		f.ModifiedTime,
+        f.FStatus,
+        f.FType,
+		f.GROUP_ID
+    </sql>
+
+    <!-- 字段用于新增 -->
+    <sql id="Field2">
+        FName
+        ,
+		FCode,	
+		Workshop,	
+		Loop,	
+		Remarks,	
+		CreateTime,	
+		Creator,	
+		Modified,	
+		ModifiedTime,
+        FStatus,
+        FType,
+		GROUP_ID
+    </sql>
+
+    <!-- 字段值 -->
+    <sql id="FieldValue">
+        #{FName}
+        ,
+        #{FCode},
+        #{Workshop},
+        #{Loop},
+        #{Remarks},
+        #{CreateTime},
+        #{Creator},
+        #{Modified},
+        #{ModifiedTime},
+        #{FStatus},
+        #{FType},
+        #{GROUP_ID}
+    </sql>
+
+    <!-- 新增-->
+    <insert id="save" parameterType="pd">
+        insert into
+        <include refid="tableName"></include>
+        (
+        <include refid="Field2"></include>
+        ) values (
+        <include refid="FieldValue"></include>
+        )
+    </insert>
+
+    <!-- 删除-->
+    <delete id="delete" parameterType="pd">
+        delete from
+        <include refid="tableName"></include>
+        where
+        GROUP_ID = #{GROUP_ID}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="pd">
+        update
+        <include refid="tableName"></include>
+        set
+        FName = #{FName},
+        FCode = #{FCode},
+        Workshop = #{Workshop},
+        Loop = #{Loop},
+        Remarks = #{Remarks},
+        Modified = #{Modified},
+        ModifiedTime = #{ModifiedTime},
+        FType = #{FType},
+        GROUP_ID = GROUP_ID
+        where
+        GROUP_ID = #{GROUP_ID}
+    </update>
+
+    <!-- 修改 -->
+    <update id="editStatus" parameterType="pd">
+        update
+        <include refid="tableName"></include>
+        set
+        FStatus = #{FStatus}
+        where
+        GROUP_ID = #{GROUP_ID}
+    </update>
+
+    <update id="editAllStatus" parameterType="list">
+        update
+        <include refid="tableName"></include>
+        set FStatus =
+        <foreach collection="list" item="item" index="index" separator=" " open="case GROUP_ID" close="end">
+            when #{item.GROUP_ID} then #{item.FStatus}
+        </foreach>
+        where GROUP_ID in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.GROUP_ID}
+        </foreach>
+    </update>
+
+    <!-- 通过ID获取数据 -->
+    <select id="findById" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        f
+        where
+        f.GROUP_ID = #{GROUP_ID}
+    </select>
+
+    <!-- 列表 -->
+    <select id="datalistPage" parameterType="page" resultType="pd">
+        select
+        <include refid="Field"></include>,a.FNAME AreaName
+        from
+        <include refid="tableName"></include>
+        f
+        left join MDM_AREA a on a.AREA_ID = f.Workshop
+        where 1=1
+        <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+            and
+            (
+            f.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+            or
+            f.FCode LIKE '%'+ #{pd.KEYWORDS}+'%'
+            )
+        </if>
+        <if test="pd.Workshop != null and pd.Workshop != ''"><!-- 关键词检索 -->
+            and f.Workshop = #{pd.Workshop}
+        </if>
+        <if test="pd.FType != null and pd.FType != ''"><!-- 关键词检索 -->
+            and f.FType = #{pd.FType}
+        </if>
+        [fhstart]ORDER BY CreateTime DESC[fhend]
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listAll" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>,a.FNAME AreaName
+        from
+        <include refid="tableName"></include>
+        f
+        left join MDM_AREA a on a.AREA_ID = f.Workshop
+        where 1=1
+        <if test="FName != null and FName != ''"><!-- 关键词检索 -->
+            and f.FCode = #{FName}
+        </if>
+        <if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+            and
+            (
+            f.FName LIKE '%'+ #{KEYWORDS}+'%'
+            or
+            f.FCode LIKE '%'+ #{KEYWORDS}+'%'
+            )
+        </if>
+        <if test="Workshop != null and Workshop != ''"><!-- 关键词检索 -->
+            and f.Workshop = #{Workshop}
+        </if>
+        ORDER BY CreateTime DESC
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="deleteAll" parameterType="String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        GROUP_ID in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- yy356703572qq(彬耶) -->
+</mapper>

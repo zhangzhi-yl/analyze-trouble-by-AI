@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.fhdb.EarlyWarningMapper">
+
+<!-- v1 陈春光 2021-5-31 创建 -->
+
+<select id="getOverduedCabinetList"  parameterType="pd" resultType="pd">
+	select * from (
+		SELECT *,
+		CONVERT(NVARCHAR,
+			CASE 
+				WHEN ROUND(datediff( Day, [要求完成日期],[系统当前时间])* 100/[缓冲期],2) &gt; 100 THEN 100
+				WHEN ROUND(datediff( Day, [要求完成日期],[系统当前时间])* 100/[缓冲期],2) &lt; -100 THEN -100
+				ELSE ROUND(datediff( Day, [要求完成日期],[系统当前时间])* 100/[缓冲期],2) END) + '%' [延期率],
+		datediff( Day, [要求完成日期],[系统当前时间]) [超期天数],
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pro.PPROJECT_MANAGER[项目经理],
+						staff1.USER_ID[项目经理英文名],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+					left join OA_STAFF staff1 on staff1.NAME = pro.PPROJECT_MANAGER 
+				) l
+			) m
+		) k 
+		)n where 1=1 and n.[预警标识] = '超期生产'
+
+</select>
+<select id="getWillOverdueCabinetList"  parameterType="pd" resultType="pd">
+select * from (
+		SELECT *,
+		CONVERT(NVARCHAR,
+			CASE 
+				WHEN ROUND(datediff( Day, [要求完成日期],[系统当前时间])* 100/[缓冲期],2) &gt; 100 THEN 100
+				WHEN ROUND(datediff( Day, [要求完成日期],[系统当前时间])* 100/[缓冲期],2) &lt; -100 THEN -100
+				ELSE ROUND(datediff( Day, [要求完成日期],[系统当前时间])* 100/[缓冲期],2) END) + '%' [延期率],
+		datediff( Day, [要求完成日期],[系统当前时间]) [超期天数],
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pro.PPROJECT_MANAGER[项目经理],
+						staff1.USER_ID[项目经理英文名],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+					left join OA_STAFF staff1 on staff1.NAME = pro.PPROJECT_MANAGER 
+				) l
+			) m
+		) k 
+		)n where 1=1 and n.[预警标识] = '即将超期'
+</select>
+<select id="getOverduePurchaseList"  parameterType="pd" resultType="pd">
+SELECT
+		mat.MAT_NAME,detail.EstimatedTimeOfArrival,staff.USER_ID,pl.FNum, DATEDIFF(
+		DAY,
+		CONVERT (VARCHAR(10), GETDATE(), 21),
+		detail.EstimatedTimeOfArrival
+	)diff
+	FROM
+		PP_PurchaseMaterialDetails detail
+		left join PP_PurchaseList pl on pl.PurchaseList_ID = detail.PurchaseID 
+		left join MBASE_MAT_BASIC mat on mat.MAT_BASIC_ID = detail.MaterialID
+		left join OA_STAFF staff on staff.STAFF_ID = pl.FMakeBillsPersoID
+	WHERE
+		1 = 1
+	AND detail.PurchaseID IN (
+		SELECT
+			PurchaseList_ID
+		FROM
+			PP_PurchaseList pl
+		WHERE
+			1 = 1
+		AND pl.FStatus &lt;&gt; '结束'
+	)
+	AND DATEDIFF(
+		DAY,
+		CONVERT (VARCHAR(10), GETDATE(), 21),
+		detail.EstimatedTimeOfArrival
+	) &lt; 0
+</select>
+<select id="getWillOverduePurchaseList"  parameterType="pd" resultType="pd">
+	SELECT
+		mat.MAT_NAME,detail.EstimatedTimeOfArrival,staff.USER_ID,pl.FNum, DATEDIFF(
+		DAY,
+		CONVERT (VARCHAR(10), GETDATE(), 21),
+		detail.EstimatedTimeOfArrival
+	)diff
+	FROM
+		PP_PurchaseMaterialDetails detail
+		left join PP_PurchaseList pl on pl.PurchaseList_ID = detail.PurchaseID 
+		left join MBASE_MAT_BASIC mat on mat.MAT_BASIC_ID = detail.MaterialID
+		left join OA_STAFF staff on staff.STAFF_ID = pl.FMakeBillsPersoID
+	WHERE
+		1 = 1
+	AND detail.PurchaseID IN (
+		SELECT
+			PurchaseList_ID
+		FROM
+			PP_PurchaseList pl
+		WHERE
+			1 = 1
+		AND pl.FStatus &lt;&gt; '结束'
+	)
+	AND DATEDIFF(
+		DAY,
+		CONVERT (VARCHAR(10), GETDATE(), 21),
+		detail.EstimatedTimeOfArrival
+	) &gt;= 0
+	AND DATEDIFF(
+		DAY,
+		CONVERT (VARCHAR(10), GETDATE(), 21),
+		detail.EstimatedTimeOfArrival
+	) &lt;= #{day}
+</select>
+<select id="getLoadedButNoBOMOrDrawingList"  parameterType="pd" resultType="pd">
+	SELECT
+		t1.Cabinet_Aliases,t1.If_Bom_Done,t1.If_Drawings_Done, project.PPROJECT_MANAGER,
+		staff.USER_ID
+	FROM
+		(
+			SELECT
+				*
+			FROM
+				PMS_Cabinet_Assembly_Detail CAD
+			WHERE
+				1 = 1
+			AND CAD.Load_Status = '是'
+			AND (
+				CAD.If_Bom_Done = '否'
+				OR CAD.If_Drawings_Done = '否'
+			)
+		) t1
+	LEFT JOIN DT_PROJECT project ON project.PROJECT_ID = t1.PROJECT_ID
+	LEFT JOIN OA_STAFF staff ON staff.NAME = project.PPROJECT_MANAGER
+</select>
+
+
+
+</mapper>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.zm.ALARMRULEMapper">
+
+    <!--表名 -->
+    <sql id="tableName">
+        ZM_ALARMRULE
+    </sql>
+
+    <!--数据字典表名 -->
+    <sql id="dicTableName">
+        SYS_DICTIONARIES
+    </sql>
+
+    <!-- 字段 -->
+    <sql id="Field">
+        f
+        .
+        LOCATION
+        ,
+		f.LOCATION_ENERGY,
+		f.EVENT_NAME,
+		f.PARAMETER,
+		f.CONDITION,
+		f.THRESHOLD,
+		f.PRIORITY,
+		f.ISENABLE,
+		f.REMARK,
+		f.CREATE_TIME,
+		f.ALARMRULE_ID,
+        f.CREATOR,
+        f.Modified,
+		f.ModifiedTime,
+        f.Param,
+        f.FType
+    </sql>
+
+    <!-- 字段用于新增 -->
+    <sql id="Field2">
+        LOCATION
+        ,
+		LOCATION_ENERGY,
+		EVENT_NAME,
+		PARAMETER,
+		CONDITION,
+		THRESHOLD,
+		PRIORITY,
+		ISENABLE,
+		REMARK,
+		CREATE_TIME,
+		ALARMRULE_ID,
+        CREATOR,
+        Modified,
+		ModifiedTime,
+        Param,
+        FType
+    </sql>
+
+    <!-- 字段值 -->
+    <sql id="FieldValue">
+        #{LOCATION}
+        ,
+        #{LOCATION_ENERGY},
+        #{EVENT_NAME},
+        #{PARAMETER},
+        #{CONDITION},
+        #{THRESHOLD},
+        #{PRIORITY},
+        #{ISENABLE},
+        #{REMARK},
+        #{CREATE_TIME},
+        #{ALARMRULE_ID},
+        #{CREATOR},
+        #{Modified},
+        #{ModifiedTime},
+        #{Param},
+        #{FType}
+    </sql>
+
+    <!-- 新增-->
+    <insert id="save" parameterType="pd">
+        insert into
+        <include refid="tableName"></include>
+        (
+        <include refid="Field2"></include>
+        ) values (
+        <include refid="FieldValue"></include>
+        )
+    </insert>
+
+    <!-- 删除-->
+    <delete id="delete" parameterType="pd">
+        delete from
+        <include refid="tableName"></include>
+        where
+        ALARMRULE_ID = #{ALARMRULE_ID}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="pd">
+        update
+        <include refid="tableName"></include>
+        set
+        LOCATION = #{LOCATION},
+        LOCATION_ENERGY = #{LOCATION_ENERGY},
+        EVENT_NAME = #{EVENT_NAME},
+        PARAMETER = #{PARAMETER},
+        CONDITION = #{CONDITION},
+        THRESHOLD = #{THRESHOLD},
+        PRIORITY = #{PRIORITY},
+        ISENABLE = #{ISENABLE},
+        REMARK = #{REMARK},
+        Modified = #{Modified},
+        ModifiedTime = #{ModifiedTime},
+        Param = #{Param},
+        FType = #{FType},
+        ALARMRULE_ID = ALARMRULE_ID
+        where
+        ALARMRULE_ID = #{ALARMRULE_ID}
+    </update>
+
+    <!-- 通过ID获取数据 -->
+    <select id="findById" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        f
+        where
+        f.ALARMRULE_ID = #{ALARMRULE_ID}
+    </select>
+
+    <!-- 列表 -->
+    <select id="datalistPage" parameterType="page" resultType="pd">
+        select
+        <include refid="Field"></include>,p.ParamName PLCName,z.ParaName ZMPLCName
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_PLC p on f.Param = p.PLC_ID
+        left join ZM_PLC z on f.Param = z.PLC_ID
+        where 1=1
+        <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+            and
+            (
+            EVENT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+            )
+        </if>
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listAll" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>,p.ParaName PLCName
+        from
+        <include refid="tableName"></include>
+        f
+        left join ZM_PLC p on f.Param = p.PLC_ID
+        where 1=1
+        <if test="KEYWORDS != null and KEYWORDS != '' and KEYWORDS != 'undefined'"><!-- 关键词检索 -->
+            and
+            (
+            EVENT_NAME LIKE '%'+ #{KEYWORDS}+'%'
+            )
+        </if>
+        <if test="PLC_ID != null and PLC_ID != '' and PLC_ID != 'undefined'"><!-- 关键词检索 -->
+            and
+            (
+            Param = #{PLC_ID}
+            )
+        </if>
+    </select>
+
+    <select id="uselist" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>,p.ParaName PLCName
+        from
+        <include refid="tableName"></include>
+        f
+        left join ZM_PLC p on f.Param = p.PLC_ID
+        where ISENABLE = '是'
+        <if test="PLC_ID != null and PLC_ID != '' and PLC_ID != 'undefined'"><!-- 关键词检索 -->
+            and
+            (
+            Param = #{PLC_ID}
+            )
+        </if>
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="deleteAll" parameterType="String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        ALARMRULE_ID in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getLoopAlarm" parameterType="pd" resultType="pd">
+        SELECT THRESHOLD,f1.SaveTable EnergyType,f1.ParamType,f1.Extend3 ParamAttribute
+        FROM ZM_alarmRule f
+        LEFT JOIN NY_PLC f1 ON f.Param = f1.PLC_ID
+        where 1=1
+        <if test="Loop_ID != null and Loop_ID != '' and Loop_ID != 'undefined'"><!-- 关键词检索 -->
+            and f1.Loop = #{Loop_ID}
+        </if>
+        <if test="EnergyType != null and EnergyType != '' and EnergyType != 'undefined'"><!-- 关键词检索 -->
+            and f1.SaveTable = #{EnergyType}
+        </if>
+        <if test="ParamType != null and ParamType != '' and ParamType != 'undefined'"><!-- 关键词检索 -->
+            and f1.ParamType = #{ParamType}
+        </if>
+    </select>
+
+    <!-- yy356703572qq(彬耶) -->
+</mapper>

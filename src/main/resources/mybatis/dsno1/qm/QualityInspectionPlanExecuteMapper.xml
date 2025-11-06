@@ -1,0 +1,829 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.qm.QualityInspectionPlanExecuteMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		QM_QualityInspectionPlanExecute
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.DataSources,	
+		f.TaskNum,	
+		f.QIPlanID,	
+		f.WorkOrderIDRel,	
+		f.WP_ID,	
+		f.MaterialID,	
+		f.QIPosition,	
+		f.FPriorityID,	
+		f.FMakeBillsPersoID,	
+		f.FMakeBillsTime,	
+		f.InspectorID,	
+		f.FBeginTime,	
+		f.FEndTime,	
+		f.JudgmentResults,	
+		f.FType,	
+		f.ExecutionStatus,	
+		f.GenerationType,	
+		f.FExplanation,	
+		f.FOperator,	
+		f.RequireEndTime,	
+		f.InspectionWarehouse,	
+		f.InspectionLocation,	
+		f.FCount,	
+		f.StockListInRel,
+		f.StockListOutRel,
+		f.RowNum,	
+		f.ProcessWorkOrderExample_ID,
+		f.QualityInspectionPlanExecute_ID,
+		f.FStation
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		DataSources,	
+		TaskNum,	
+		QIPlanID,	
+		WorkOrderIDRel,	
+		WP_ID,	
+		MaterialID,	
+		QIPosition,	
+		FPriorityID,	
+		FMakeBillsPersoID,	
+		FMakeBillsTime,	
+		InspectorID,	
+		FBeginTime,	
+		FEndTime,	
+		JudgmentResults,	
+		FType,	
+		ExecutionStatus,	
+		GenerationType,	
+		FExplanation,	
+		FOperator,	
+		RequireEndTime,	
+		InspectionWarehouse,	
+		InspectionLocation,	
+		FCount,	
+		StockListInRel,
+		StockListOutRel,
+		RowNum,	
+		ProcessWorkOrderExample_ID,
+		QualityInspectionPlanExecute_ID,
+		FStation
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{DataSources},	
+		#{TaskNum},	
+		#{QIPlanID},	
+		#{WorkOrderIDRel},	
+		#{WP_ID},	
+		#{MaterialID},	
+		#{QIPosition},	
+		#{FPriorityID},	
+		#{FMakeBillsPersoID},	
+		#{FMakeBillsTime},	
+		#{InspectorID},	
+		#{FBeginTime},	
+		#{FEndTime},	
+		#{JudgmentResults},	
+		#{FType},	
+		#{ExecutionStatus},	
+		#{GenerationType},	
+		#{FExplanation},	
+		#{FOperator},	
+		#{RequireEndTime},	
+		#{InspectionWarehouse},	
+		#{InspectionLocation},	
+		#{FCount},	
+		#{StockListInRel},
+		#{StockListOutRel},
+		#{RowNum},
+		#{ProcessWorkOrderExample_ID},
+		#{QualityInspectionPlanExecute_ID},
+		#{FStation}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			QIPlanID = #{QIPlanID},
+			WorkOrderIDRel = #{WorkOrderIDRel},
+			WP_ID = #{WP_ID},
+			MaterialID = #{MaterialID},
+			QIPosition = #{QIPosition},
+			FPriorityID = #{FPriorityID},
+			InspectorID = #{InspectorID},
+			FType = #{FType},
+			FExplanation = #{FExplanation},
+			FOperator = #{FOperator},
+			RequireEndTime = #{RequireEndTime},
+			InspectionWarehouse = #{InspectionWarehouse},
+			FCount = #{FCount},
+			FEndTime=#{FEndTime},
+			ExecutionStatus=#{ExecutionStatus},
+			JudgmentResults=#{JudgmentResults},
+			StockListInRel = #{StockListInRel},
+			StockListOutRel = #{StockListOutRel},
+			RowNum = #{RowNum},
+			ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID},
+			InspectionLocation = #{InspectionLocation},
+			FStation=#{FStation}
+		where 
+			QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID}
+	</update>
+	<select id="findByIdx" parameterType="pd" resultType="pd">
+	select gy.*,(case when FNUM=0 then '合格' else '不合格' end ) JudgmentResultsNew from 
+	(select *,
+	isnull((select count(*) from QM_QualityInspectionPlanDetailExecute where 1=1
+	and (InspectionAndJudgment!='合格' and InspectionAndJudgment!='让步接收' )
+	and QualityInspectionPlanExecute_ID=f.QualityInspectionPlanExecute_ID
+	),0) FNUM
+	FROM
+	QM_QualityInspectionPlanExecute f
+	where 
+	f.QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID}
+	) gy
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select gy.*,(case when FNUM=0 then '合格' else '不合格' end ) JudgmentResultsNew from 
+		(SELECT
+		    isnull((select count(*) from QM_QualityInspectionPlanDetailExecute where 1=1
+		    and (InspectionAndJudgment!='合格' and InspectionAndJudgment!='让步接收' )
+		    and QualityInspectionPlanExecute_ID=f.QualityInspectionPlanExecute_ID
+		    ),0) FNUM,
+		    isnull(gy3.WorkHours,0) WorkHours,
+		    isnull((select cast(sum(DATEDIFF( mi, BEGIN_TIME, END_TIME)*1.0/60 ) as NUMERIC(24,2)) FUSEHOUR from QM_O_RECORD_QualityTask 
+		    where ASSOCIATED_ID=f.QualityInspectionPlanExecute_ID and BEGIN_TIME is not null and END_TIME is not null),0) FUSEHOUR,
+			f.FStation,
+			gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,ca.Cabinet_Type,
+			f.QualityInspectionPlanExecute_ID,
+			f.DataSources,						-- 数据来源 
+			f.TaskNum,							-- 任务单号 
+			f.StockListInRel,
+			f.StockListOutRel,
+			f.RowNum,
+			f.ProcessWorkOrderExample_ID,
+			a.QIType QIType,					-- 质检类型
+			a.FName QIPlanID,					-- 质检方案 
+			a.QIMethod QIMethod,				-- 质检方式
+			a.QIMethodValue QIMethodValue,		-- 抽检比例
+			f.QIPlanID QIPlanIDID,
+			isnull(g.WorkOrderNum,'') WorkOrderNum,           --工单编号
+			unit.FCODE as UnitCode,				-- 物料单位
+			f.WorkOrderIDRel,					-- 关联工单 
+			e.MAT_NAME,							--物料名称
+			e.MAT_CODE,							--物料编码
+			f.WP_ID FName,						-- 工序 
+			f.MaterialID,						-- 物料 
+			f.QIPosition,						-- 质检位置 
+			f.FPriorityID,						-- 优先级 
+			c.NAME FMakeBillsPersoID,			-- 制单人 
+			f.FMakeBillsPersoID FMakeBillsPersoIDID,-- 制单人ID
+			f.FMakeBillsTime,					-- 制单时间 
+			b.NAME InspectorIDStaff,			-- 检验人员 
+			d.NAME InspectorIDDept,				-- 检验部门 
+			f.InspectorID, --检验人员或部门ID
+			f.FBeginTime,						-- 开始时间 
+			f.FEndTime,							-- 结束时间 
+			f.JudgmentResults,					-- 判定结果 
+			f.FType FTypeID,							-- 类型 
+			d1.NAME FType,
+			f.ExecutionStatus,					-- 执行状态 
+			f.GenerationType,					-- 生成类型 
+			f.FExplanation,						-- 描述 
+			f.FOperator,						-- 下发给人或部门 
+			f.RequireEndTime,					-- 要求完成日期 
+			f.InspectionWarehouse,				-- 检验仓库 
+			f.InspectionLocation, 				-- 检验仓位 
+			f.FCount 							-- 检验总数
+		FROM
+			QM_QualityInspectionPlanExecute f
+			LEFT JOIN KM_QualityInspectionPlan a on f.QIPlanID = a.QualityInspectionPlan_ID
+			LEFT JOIN OA_STAFF b on f.InspectorID = b.STAFF_ID
+			LEFT JOIN OA_STAFF c on f.FMakeBillsPersoID = c.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT d on f.InspectorID = d.DEPARTMENT_ID
+			LEFT JOIN MBASE_MAT_BASIC e on f.MaterialID = e.MAT_BASIC_ID
+			left join mbase_unit_info unit on unit.unit_info_id = e.MAT_MAIN_UNIT
+			LEFT JOIN PP_PlanningWorkOrder g on f.WorkOrderIDRel = g.PlanningWorkOrder_ID
+			left join SYS_DICTIONARIES d1 on f.FType = d1.DICTIONARIES_ID
+			left join
+			PMS_Cabinet_Assembly_Detail gy1 on  g.WorkOrderNum =
+			gy1.Cabinet_No
+			left join
+			DT_PROJECT gy2 on gy1.PROJECT_ID =
+			gy2.PROJECT_ID
+			left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+			LEFT JOIN PP_ProcessWorkOrderExample gy3 on f.ProcessWorkOrderExample_ID = gy3.ProcessWorkOrderExample_ID
+		where 
+			f.QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID}
+			) gy
+			where 1=1
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT
+			f.FStation,
+			f.QualityInspectionPlanExecute_ID,
+			f.DataSources,						-- 数据来源 
+			f.TaskNum,							-- 任务单号 
+			f.StockListInRel,
+			f.StockListOutRel,
+			f.RowNum,
+			f.ProcessWorkOrderExample_ID,
+			a.QIType QIType,					-- 质检类型
+			a.FName QIPlanID,					-- 质检方案 
+			a.QIMethod QIMethod,				-- 质检方式
+			a.QIMethodValue QIMethodValue,		-- 抽检比例
+			f.QIPlanID QIPlanIDID,
+			unit.FCODE as UnitCode,				-- 物料单位
+			isnull(g.WorkOrderNum,'') WorkOrderNum,           --工单编号
+			f.WorkOrderIDRel,					-- 关联工单 
+			e.MAT_NAME,							--物料名称
+			e.MAT_CODE,							--物料编码
+			f.WP_ID FName,							-- 工序 
+			f.MaterialID,						-- 物料 
+			f.QIPosition,						-- 质检位置 
+			f.FPriorityID,						-- 优先级 
+			c.NAME FMakeBillsPersoID,			-- 制单人 
+			f.FMakeBillsPersoID FMakeBillsPersoIDID,-- 制单人ID
+			f.FMakeBillsTime,					-- 制单时间 
+			b.NAME InspectorIDStaff,			-- 检验人员 
+			d.NAME InspectorIDDept,				-- 检验部门 
+			f.InspectorID, --检验人员或部门ID
+			f.FBeginTime,						-- 开始时间 
+			f.FEndTime,							-- 结束时间 
+			f.JudgmentResults,					-- 判定结果 
+			f.FType FTypeID,							-- 类型 
+			d1.NAME FType,
+			f.ExecutionStatus,					-- 执行状态 
+			f.GenerationType,					-- 生成类型 
+			f.FExplanation,						-- 描述 
+			f.FOperator							,-- 下发给人或部门 
+			f.RequireEndTime,					-- 要求完成日期 
+			f.InspectionWarehouse,				-- 检验仓库 
+			f.InspectionLocation, 				-- 检验仓位 
+			f.FCount 							-- 检验总数
+		FROM
+			QM_QualityInspectionPlanExecute f
+			LEFT JOIN KM_QualityInspectionPlan a on f.QIPlanID = a.QualityInspectionPlan_ID
+			LEFT JOIN OA_STAFF b on f.InspectorID = b.STAFF_ID
+			LEFT JOIN OA_STAFF c on f.FMakeBillsPersoID = c.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT d on f.InspectorID = d.DEPARTMENT_ID
+			LEFT JOIN MBASE_MAT_BASIC e on f.MaterialID = e.MAT_BASIC_ID
+			left join mbase_unit_info unit on unit.unit_info_id = e.MAT_MAIN_UNIT
+			LEFT JOIN PP_PlanningWorkOrder g on f.WorkOrderIDRel = g.PlanningWorkOrder_ID
+			left join SYS_DICTIONARIES d1 on f.FType = d1.DICTIONARIES_ID
+		where  1=1
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+				f.DataSources like '%' + #{pd.KEYWORDS1} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 关键词检索:任务单号 -->
+			and
+				(
+				f.TaskNum like '%' + #{pd.KEYWORDS2} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 关键词检索:质检位置 -->
+			and
+				(
+				f.QIPosition like '%' + #{pd.KEYWORDS3} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 关键词检索:质检人 -->
+			and
+				(
+				f.InspectorID like '%' + #{pd.KEYWORDS4} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != ''"><!-- 关键词检索:质检部门 -->
+			and
+				(
+				f.InspectorID like '%' + #{pd.KEYWORDS5} +'%'
+				)
+		</if>
+		<if test="pd.LastStart != null and pd.LastStart != ''"><!-- 关键词检索:需求时间 -->
+			and
+				(
+				f.RequireEndTime &gt; #{pd.LastStart} and f.RequireEndTime &lt; #{pd.LastEnd}
+				)
+		</if>
+			<if test="pd.ProcessWorkOrderExample_ID != null and pd.ProcessWorkOrderExample_ID != '' and pd.ProcessWorkOrderExample_ID != 'null'"><!-- 任务ID -->
+				and
+					(
+					f.ProcessWorkOrderExample_ID = #{pd.ProcessWorkOrderExample_ID}
+					)
+			</if>
+		[fhstart] order by f.FMakeBillsTime desc[fhend]
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPageRun" parameterType="page" resultType="pd">
+		SELECT
+			f.QualityInspectionPlanExecute_ID,
+			f.DataSources,						-- 数据来源 
+			f.TaskNum,							-- 任务单号 
+			f.StockListInRel,
+			f.StockListOutRel,
+			f.RowNum,
+			f.ProcessWorkOrderExample_ID,
+			a.QIType QIType,					-- 质检类型
+			a.FName QIPlanID,					-- 质检方案 
+			a.QIMethod QIMethod,				-- 质检方式
+			a.QIMethodValue QIMethodValue,		-- 抽检比例
+			unit.FCODE as UnitCode,				-- 物料单位
+			f.QIPlanID QIPlanIDID,
+			isnull(g.WorkOrderNum,'') WorkOrderNum,           --工单编号
+			f.WorkOrderIDRel,					-- 关联工单 
+			e.MAT_NAME,							--物料名称
+			e.MAT_CODE,							--物料编码
+			f.WP_ID FName,							-- 工序 
+			f.MaterialID,						-- 物料 
+			f.QIPosition,						-- 质检位置 
+			f.FPriorityID,						-- 优先级 
+			c.NAME FMakeBillsPersoID,			-- 制单人 
+			f.FMakeBillsPersoID FMakeBillsPersoIDID,-- 制单人ID
+			f.FMakeBillsTime,					-- 制单时间 
+			b.NAME InspectorIDStaff,			-- 检验人员 
+			d.NAME InspectorIDDept,				-- 检验部门 
+			f.InspectorID, --检验人员或部门ID
+			f.FBeginTime,						-- 开始时间 
+			f.FEndTime,							-- 结束时间 
+			f.JudgmentResults,					-- 判定结果 
+			f.FType FTypeID,							-- 类型 
+			d1.NAME FType,
+			f.ExecutionStatus,					-- 执行状态 
+			f.GenerationType,					-- 生成类型 
+			f.FExplanation,						-- 描述 
+			f.FOperator,						-- 下发给人或部门 
+			f.RequireEndTime,					-- 要求完成日期 
+			f.InspectionWarehouse,				-- 检验仓库 
+			f.InspectionLocation, 				-- 检验仓位 
+			f.FCount 							-- 检验总数
+		FROM
+			QM_QualityInspectionPlanExecute f
+			LEFT JOIN KM_QualityInspectionPlan a on f.QIPlanID = a.QualityInspectionPlan_ID
+			LEFT JOIN OA_STAFF b on f.InspectorID = b.STAFF_ID
+			LEFT JOIN OA_STAFF c on f.FMakeBillsPersoID = c.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT d on f.InspectorID = d.DEPARTMENT_ID
+			LEFT JOIN MBASE_MAT_BASIC e on f.MaterialID = e.MAT_BASIC_ID
+			left join mbase_unit_info unit on unit.unit_info_id = e.MAT_MAIN_UNIT
+			LEFT JOIN PP_PlanningWorkOrder g on f.WorkOrderIDRel = g.PlanningWorkOrder_ID
+			left join SYS_DICTIONARIES d1 on f.FType = d1.DICTIONARIES_ID
+		where  1=1 and f.ExecutionStatus = '已下发'
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+				f.DataSources like '%' + #{pd.KEYWORDS1} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 关键词检索:任务单号 -->
+			and
+				(
+				f.TaskNum like '%' + #{pd.KEYWORDS2} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 关键词检索:质检位置 -->
+			and
+				(
+				f.QIPosition like '%' + #{pd.KEYWORDS3} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 关键词检索:质检人 -->
+			and
+				(
+				f.InspectorID like '%' + #{pd.KEYWORDS4} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != ''"><!-- 关键词检索:质检部门 -->
+			and
+				(
+				f.InspectorID like '%' + #{pd.KEYWORDS5} +'%'
+				)
+		</if>
+		<if test="pd.LastStart != null and pd.LastStart != ''"><!-- 关键词检索:质检部门 -->
+			and
+				(
+				f.RequireEndTime &gt; #{pd.LastStart} and f.RequireEndTim &lt; #{pd.LastEnd}
+				)
+		</if>
+		
+		[fhstart] order by f.FMakeBillsTime desc[fhend]
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		SELECT
+			f.QualityInspectionPlanExecute_ID,
+			f.DataSources,						-- 数据来源 
+			f.TaskNum,							-- 任务单号 
+			f.StockListInRel,
+			f.StockListOutRel,
+			f.RowNum,
+			f.ProcessWorkOrderExample_ID,
+			a.QIType QIType,					-- 质检类型
+			a.FName QIPlanID,					-- 质检方案 
+			a.QIMethod QIMethod,				-- 质检方式
+			a.QIMethodValue QIMethodValue,		-- 抽检比例
+			unit.FCODE as UnitCode,				-- 物料单位
+			f.QIPlanID QIPlanIDID,
+			isnull(g.WorkOrderNum,'') WorkOrderNum,           --工单编号
+			f.WorkOrderIDRel,					-- 关联工单 
+			e.MAT_NAME,							--物料名称
+			e.MAT_CODE,							--物料编码
+			f.WP_ID FName,							-- 工序 
+			f.MaterialID,						-- 物料 
+			f.QIPosition,						-- 质检位置 
+			f.FPriorityID,						-- 优先级 
+			c.NAME FMakeBillsPersoID,			-- 制单人 
+			f.FMakeBillsPersoID FMakeBillsPersoIDID,-- 制单人ID
+			f.FMakeBillsTime,					-- 制单时间 
+			b.NAME InspectorIDStaff,			-- 检验人员 
+			d.NAME InspectorIDDept,				-- 检验部门 
+			f.InspectorID, --检验人员或部门ID
+			f.FBeginTime,						-- 开始时间 
+			f.FEndTime,							-- 结束时间 
+			f.JudgmentResults,					-- 判定结果 
+			f.FType FTypeID,							-- 类型 
+			d1.NAME FType,
+			f.ExecutionStatus,					-- 执行状态 
+			f.GenerationType,					-- 生成类型 
+			f.FExplanation,						-- 描述 
+			f.FOperator,						-- 下发给人或部门 
+			f.RequireEndTime,					-- 要求完成日期 
+			f.InspectionWarehouse,				-- 检验仓库 
+			f.InspectionLocation, 				-- 检验仓位 
+			f.FCount 							-- 检验总数
+		FROM
+			QM_QualityInspectionPlanExecute f
+			LEFT JOIN KM_QualityInspectionPlan a on f.QIPlanID = a.QualityInspectionPlan_ID
+			LEFT JOIN OA_STAFF b on f.InspectorID = b.STAFF_ID
+			LEFT JOIN OA_STAFF c on f.FMakeBillsPersoID = c.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT d on f.InspectorID = d.DEPARTMENT_ID
+			LEFT JOIN MBASE_MAT_BASIC e on f.MaterialID = e.MAT_BASIC_ID
+			left join mbase_unit_info unit on unit.unit_info_id = e.MAT_MAIN_UNIT
+			LEFT JOIN PP_PlanningWorkOrder g on f.WorkOrderIDRel = g.PlanningWorkOrder_ID
+			left join SYS_DICTIONARIES d1 on f.FType = d1.DICTIONARIES_ID
+		where  1=1
+			<if test="KEYWORDS1 != null and KEYWORDS1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+				f.DataSources like '%' + #{KEYWORDS1} +'%'
+				)
+			</if>
+			<if test="KEYWORDS2 != null and KEYWORDS2 != ''"><!-- 关键词检索:任务单号 -->
+				and
+					(
+					f.TaskNum like '%' + #{KEYWORDS2} +'%'
+					)
+			</if>
+			<if test="KEYWORDS3 != null and KEYWORDS3 != ''"><!-- 关键词检索:质检位置 -->
+				and
+					(
+					f.QIPosition like '%' + #{KEYWORDS3} +'%'
+					)
+			</if>
+			<if test="KEYWORDS4 != null and KEYWORDS4 != ''"><!-- 关键词检索:质检人 -->
+				and
+					(
+					f.InspectorID like '%' + #{KEYWORDS4} +'%'
+					)
+			</if>
+			<if test="KEYWORDS5 != null and KEYWORDS5 != ''"><!-- 关键词检索:质检部门 -->
+				and
+					(
+					f.InspectorID like '%' + #{KEYWORDS5} +'%'
+					)
+			</if>
+			<if test="LastStart != null and LastStart != ''"><!-- 关键词检索:质检部门 -->
+				and
+					(
+					f.RequireEndTime &gt; #{LastStart} and f.RequireEndTim &lt; #{f.LastEnd}
+					)
+			</if>
+			<if test="ProcessWorkOrderExample_ID != null and ProcessWorkOrderExample_ID != '' and ProcessWorkOrderExample_ID !='null' "><!-- 任务ID -->
+				and
+					(
+					f.ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID}
+					)
+			</if>
+			 order by f.FMakeBillsTime desc
+	</select>
+	<update id="goLssue" parameterType="pd">
+		update 
+		<include refid="tableName"></include>
+		set
+			ExecutionStatus = '已下发'
+		where 
+			QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID}
+	</update>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QualityInspectionPlanExecute_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 修改主表开始时间 -->
+	<update id="saveFBeginTime" parameterType="pd">
+		update
+			<include refid="tableName"></include>
+		set
+			FBeginTime = #{FBeginTime}
+		where 
+			QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID}
+	</update>
+	<!-- 修改主表结束时间 -->
+	<update id="saveFEndTime" parameterType="pd">
+		update
+			<include refid="tableName"></include>
+		set
+			FEndTime = #{FEndTime}
+		where 
+			QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID}
+	</update>
+	<select id="getGX" parameterType="pd" resultType="pd">
+		SELECT isnull(b.WPName,'') WPName,b.ProcessWorkOrderExample_ID,b.FStation FROM  
+		    PP_ProcessWorkOrderExample b
+		  WHERE b.PlanningWorkOrderID = #{PlanningWorkOrderID}
+	</select>
+	
+		<!-- 列表 -->
+	<select id="AppList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		SELECT
+			f.QualityInspectionPlanExecute_ID,
+			f.DataSources,						-- 数据来源 
+			f.TaskNum,							-- 任务单号 
+			f.StockListInRel,
+			f.StockListOutRel,
+			f.RowNum,
+			f.ProcessWorkOrderExample_ID,
+			a.FName QIPlanID,					-- 质检方案 
+			a.QIType QIType,					-- 质检类型
+			a.QIMethod QIMethod,				-- 质检方式
+			a.QIMethodValue QIMethodValue,		-- 抽检比例
+			unit.FCODE as UnitCode,				-- 物料单位
+			f.QIPlanID QIPlanIDID,
+			isnull(g.WorkOrderNum,'') WorkOrderNum,           --工单编号
+			f.WorkOrderIDRel,					-- 关联工单 
+			e.MAT_NAME,							--物料名称
+			e.MAT_CODE,							--物料编码
+			f.WP_ID,							-- 工序 
+			h.FName,
+			f.MaterialID,						-- 物料 
+			f.QIPosition,						-- 质检位置 
+			f.FPriorityID,						-- 优先级 
+			c.NAME FMakeBillsPersoID,			-- 制单人 
+			f.FMakeBillsPersoID FMakeBillsPersoIDID,-- 制单人ID
+			f.FMakeBillsTime,					-- 制单时间 
+			b.NAME InspectorIDStaff,			-- 检验人员 
+			d.NAME InspectorIDDept,				-- 检验部门 
+			f.InspectorID, --检验人员或部门ID
+			f.FBeginTime,						-- 开始时间 
+			f.FEndTime,							-- 结束时间 
+			f.JudgmentResults,					-- 判定结果 
+			f.FType FTypeID,							-- 类型 
+			d1.NAME FType,
+			f.ExecutionStatus,					-- 执行状态 
+			f.GenerationType,					-- 生成类型 
+			f.FExplanation,						-- 描述 
+			f.FOperator,						-- 下发给人或部门 
+			f.RequireEndTime,					-- 要求完成日期 
+			f.InspectionWarehouse,				-- 检验仓库 
+			f.InspectionLocation, 				-- 检验仓位 
+			f.FCount 							-- 检验总数
+		FROM
+			QM_QualityInspectionPlanExecute f
+			LEFT JOIN KM_QualityInspectionPlan a on f.QIPlanID = a.QualityInspectionPlan_ID
+			LEFT JOIN OA_STAFF b on f.InspectorID = b.STAFF_ID
+			LEFT JOIN OA_STAFF c on f.FMakeBillsPersoID = c.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT d on f.InspectorID = d.DEPARTMENT_ID
+			LEFT JOIN MBASE_MAT_BASIC e on f.MaterialID = e.MAT_BASIC_ID
+			left join mbase_unit_info unit on unit.unit_info_id = e.MAT_MAIN_UNIT
+			LEFT JOIN PP_PlanningWorkOrder g on f.WorkOrderIDRel = g.PlanningWorkOrder_ID
+			LEFT JOIN KM_ProcessDefinition h on f.WP_ID = h.ProcessDefinition_ID
+			left join SYS_DICTIONARIES d1 on f.FType = d1.DICTIONARIES_ID
+		where  1=1 and f.ExecutionStatus='已下发' and  f.QIPlanID != ''
+		<if test="pd.TaskNum != null and pd.TaskNum != ''"><!-- 关键词检索:任务单号 -->
+			and
+				(
+				f.TaskNum like '%' + #{pd.TaskNum} +'%'
+				)
+		</if>
+		<if test="pd.WorkOrderIDRel != null and pd.WorkOrderIDRel != ''"><!-- 关键词检索:关联工单 -->
+			and
+				(
+				g.WorkOrderNum like '%' + #{pd.WorkOrderIDRel} +'%'
+				)
+		</if>
+		<if test="pd.WP_ID != null and pd.WP_ID != ''"><!-- 关键词检索:工序 -->
+			and
+				(
+				h.FName like '%' + #{pd.WP_ID} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索:工序 -->
+			and
+				(
+				h.FName like '%' + #{pd.KEYWORDS} +'%'
+				or
+				f.TaskNum like '%' + #{pd.KEYWORDS} +'%'
+				or
+				g.WorkOrderNum like '%' + #{pd.KEYWORDS} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 关键词检索:质检人 -->
+			and
+				(
+				f.InspectorID = #{pd.KEYWORDS4}
+				)
+			
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != ''"><!-- 关键词检索:质检部门 -->
+			or
+				(
+				f.InspectorID = #{pd.KEYWORDS5} 
+				)
+		</if>
+	</select>
+	<select id="getJG" parameterType="pd" resultType="pd">
+		select count(*) num from QM_QualityInspectionPlanDetailExecute
+		 where QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID} and InspectionAndJudgment = '合格'
+	</select>
+	
+	<update id="editJG" parameterType="pd">
+		update QM_QualityInspectionPlanExecute 
+		set 
+			JudgmentResults = #{JudgmentResults}
+		where QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID} 
+	</update>
+	<update id="editZT" parameterType="pd">
+		update QM_QualityInspectionPlanExecute 
+		set 
+			ExecutionStatus = '已完成'
+		 where QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID} 
+	</update>
+	
+	<select id="listQI" parameterType="pd" resultType="pd">
+		SELECT
+			* 
+		FROM
+			KM_QualityInspectionPlan a
+			where a.QIType = #{QIType}
+	</select>
+	<select id="listQIMAT" parameterType="pd" resultType="pd">
+			select * from KM_QualityInspectionPlanApplicableMaterials where QIPlanID = #{QIPlanID}
+	</select>
+	
+	<!--v1 管悦 2021-07-20 柜体质检任务列表-->
+	<select id="CabinetlistPage" parameterType="page" resultType="pd">
+		select * from(SELECT
+			f.FStation,
+			gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,ca.Cabinet_Type,
+			f.QualityInspectionPlanExecute_ID,
+			f.DataSources,						-- 数据来源 
+			f.TaskNum,							-- 任务单号 
+			f.StockListInRel,
+			f.StockListOutRel,
+			f.RowNum,
+			f.ProcessWorkOrderExample_ID,
+			a.QIType QIType,					-- 质检类型
+			a.FName QIPlanID,					-- 质检方案 
+			a.QIMethod QIMethod,				-- 质检方式
+			a.QIMethodValue QIMethodValue,		-- 抽检比例
+			f.QIPlanID QIPlanIDID,
+			unit.FCODE as UnitCode,				-- 物料单位
+			isnull(g.WorkOrderNum,'') WorkOrderNum,           --工单编号
+			f.WorkOrderIDRel,					-- 关联工单 
+			e.MAT_NAME,							--物料名称
+			e.MAT_CODE,							--物料编码
+			f.WP_ID FName,							-- 工序 
+			f.MaterialID,						-- 物料 
+			f.QIPosition,						-- 质检位置 
+			f.FPriorityID,						-- 优先级 
+			c.NAME FMakeBillsPersoID,			-- 制单人 
+			f.FMakeBillsPersoID FMakeBillsPersoIDID,-- 制单人ID
+			f.FMakeBillsTime,					-- 制单时间 
+			b.NAME InspectorIDStaff,			-- 检验人员 
+			d.NAME InspectorIDDept,				-- 检验部门 
+			f.InspectorID, --检验人员或部门ID
+			f.FBeginTime,						-- 开始时间 
+			f.FEndTime,							-- 结束时间 
+			f.JudgmentResults,					-- 判定结果 
+			f.FType FTypeID,							-- 类型 
+			d1.NAME FType,
+			f.ExecutionStatus,					-- 执行状态 
+			f.GenerationType,					-- 生成类型 
+			f.FExplanation,						-- 描述 
+			f.FOperator							,-- 下发给人或部门 
+			f.RequireEndTime,					-- 要求完成日期 
+			f.InspectionWarehouse,				-- 检验仓库 
+			f.InspectionLocation, 				-- 检验仓位 
+			f.FCount, 							-- 检验总数
+			CHARINDEX(','+CONVERT(varchar(100),f.ExecutionStatus)+',',',待检,完成,') FNUM
+		FROM
+			QM_QualityInspectionPlanExecute f
+			LEFT JOIN KM_QualityInspectionPlan a on f.QIPlanID = a.QualityInspectionPlan_ID
+			LEFT JOIN OA_STAFF b on f.InspectorID = b.STAFF_ID
+			LEFT JOIN OA_STAFF c on f.FMakeBillsPersoID = c.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT d on f.InspectorID = d.DEPARTMENT_ID
+			LEFT JOIN MBASE_MAT_BASIC e on f.MaterialID = e.MAT_BASIC_ID
+			left join mbase_unit_info unit on unit.unit_info_id = e.MAT_MAIN_UNIT
+			LEFT JOIN PP_PlanningWorkOrder g on f.WorkOrderIDRel = g.PlanningWorkOrder_ID
+			left join SYS_DICTIONARIES d1 on f.FType = d1.DICTIONARIES_ID
+			left join
+			PMS_Cabinet_Assembly_Detail gy1 on  g.WorkOrderNum =
+			gy1.Cabinet_No
+			left join
+			DT_PROJECT gy2 on gy1.PROJECT_ID =
+			gy2.PROJECT_ID
+			left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+		where  1=1
+		<if test="pd.WorkOrderIDRel != null and pd.WorkOrderIDRel != ''"><!-- 本工单下上电检验工序质检记录 -->
+			and
+				(
+				f.WorkOrderIDRel =#{pd.WorkOrderIDRel}
+				and
+				d1.NAME ='上电检测' 
+				)
+		</if>
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+				f.DataSources like '%' + #{pd.KEYWORDS1} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 关键词检索:任务单号 -->
+			and
+				(
+				f.TaskNum like '%' + #{pd.KEYWORDS2} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 关键词检索:质检状态 -->
+			and
+				(
+				f.ExecutionStatus= #{pd.KEYWORDS3} 
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 关键词检索:质检人 -->
+			and
+				(
+				f.InspectorID like '%' + #{pd.KEYWORDS4} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != ''"><!-- 关键词检索:质检部门 -->
+			and
+				(
+				f.InspectorID like '%' + #{pd.KEYWORDS5} +'%'
+				)
+		</if>
+		<if test="pd.LastStart != null and pd.LastStart != ''"><!-- 关键词检索:需求时间 -->
+			and
+				(
+				f.RequireEndTime &gt; #{pd.LastStart} and f.RequireEndTim &lt; #{pd.LastEnd}
+				)
+		</if>
+			<if test="pd.ProcessWorkOrderExample_ID != null and pd.ProcessWorkOrderExample_ID != '' and pd.ProcessWorkOrderExample_ID != 'null'"><!-- 任务ID -->
+				and
+					(
+					f.ProcessWorkOrderExample_ID = #{pd.ProcessWorkOrderExample_ID}
+					)
+			</if>
+			) gy where 1=1 
+		[fhstart] order by FNUM ,f.FMakeBillsTime [fhend]
+	</select>
+</mapper>

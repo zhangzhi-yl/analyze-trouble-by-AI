@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.StandardCapacityMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		KM_STANDARDCAPACITY
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FNUM,
+		f.WPTYPE,
+		f.WP,
+		f.OUTPUTMATERIAL,
+		f.FSTATION,
+		f.INCREMENTALMODE,
+		f.STANDARDCAPACITYTYPE,
+		f.STANDARDCAPACITYVALUE,
+		f.STANDARDCAPACITYUNIT,
+		f.FVERSION,
+		f.FCREATETIME,
+		f.FSTATUS,
+		f.STANDARDCAPACITY_ID
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FNUM,
+		WPTYPE,
+		WP,
+		OUTPUTMATERIAL,
+		FSTATION,
+		INCREMENTALMODE,
+		STANDARDCAPACITYTYPE,
+		STANDARDCAPACITYVALUE,
+		STANDARDCAPACITYUNIT,
+		FVERSION,
+		FCREATETIME,
+		FSTATUS,
+		STANDARDCAPACITY_ID
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FNUM},
+		#{WPTYPE},
+		#{WP},
+		#{OUTPUTMATERIAL},
+		#{FSTATION},
+		#{INCREMENTALMODE},
+		#{STANDARDCAPACITYTYPE},
+		#{STANDARDCAPACITYVALUE},
+		#{STANDARDCAPACITYUNIT},
+		#{FVERSION},
+		#{FCREATETIME},
+		#{FSTATUS},
+		#{STANDARDCAPACITY_ID}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		STANDARDCAPACITY_ID = #{STANDARDCAPACITY_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		FNUM = #{FNUM},
+		WPTYPE = #{WPTYPE},
+		WP = #{WP},
+		OUTPUTMATERIAL = #{OUTPUTMATERIAL},
+		FSTATION = #{FSTATION},
+		INCREMENTALMODE = #{INCREMENTALMODE},
+		STANDARDCAPACITYTYPE = #{STANDARDCAPACITYTYPE},
+		STANDARDCAPACITYVALUE = #{STANDARDCAPACITYVALUE},
+		STANDARDCAPACITYUNIT = #{STANDARDCAPACITYUNIT},
+		FVERSION = #{FVERSION},
+		FCREATETIME = #{FCREATETIME},
+		FSTATUS = #{FSTATUS},
+		STANDARDCAPACITY_ID = STANDARDCAPACITY_ID
+		where
+		STANDARDCAPACITY_ID = #{STANDARDCAPACITY_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where
+		f.STANDARDCAPACITY_ID = #{STANDARDCAPACITY_ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where 1=1
+		<if test="pd.FNUM != null and pd.FNUM != ''">
+			and f.FNUM like '%'+ #{pd.FNUM}+'%'
+		</if>
+		<if test="pd.FSTATUS != null and pd.FSTATUS != ''">
+			and f.FSTATUS = #{pd.FSTATUS}
+		</if>
+		<if test="pd.WP != null and pd.WP != ''">
+			and f.WP like '%'+ #{pd.WP}+'%'
+		</if>
+		<if test="pd.OUTPUTMATERIAL != null and pd.OUTPUTMATERIAL != ''">
+			and f.OUTPUTMATERIAL like '%'+ #{pd.OUTPUTMATERIAL}+'%'
+		</if>
+		<if test="pd.FSTATION != null and pd.FSTATION != ''">
+			and f.pd.FSTATION = #{pd.FSTATION}
+		</if>
+		[fhstart] ORDER BY f.FCreateTime DESC [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+	</select>
+
+	<select id="listByStationAndWP" parameterType="String"
+		resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where 1=1
+		<if test="FSTATION != null and FSTATION != ''">
+			and f.FSTATION = #{FSTATION}
+		</if>
+		<if test="WP != null and WP != ''">
+			and f.WP = #{WP}
+		</if>
+	</select>
+	<select id="getByWP" parameterType="String"
+		resultType="pd">
+		select top 1 f.* from <include refid="tableName"></include> f where  1=1 and f.WP = #{WP}
+		</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		STANDARDCAPACITY_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

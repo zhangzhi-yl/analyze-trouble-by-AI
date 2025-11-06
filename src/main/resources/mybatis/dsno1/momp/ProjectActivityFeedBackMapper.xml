@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.yy.mapper.dsno1.momp.ProjectActivityFeedBackMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		EPM_PROFILES
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<sql id="Field">
+		f.FEPNAME,
+		f.EPROJECT_ID,
+		f.FEPROJECTCODE,
+		f.FPFFILENAME,
+		f.FPFFILETYPE,
+		f.FPFREMARK,
+		f.FPFFILEPATH,
+		f.FCREATOR,
+		f.FCTIME,
+		f.FLATESTMODIFY,
+		f.FMODIFYTIME,
+		f.FRF1,
+		f.FRF2,
+		f.FRF3,
+		f.FRF4,
+		f.ACTIVITYINSTANCE_ID,
+		f.PROFILES_ID
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FEPNAME,
+		EPROJECT_ID,
+		FEPROJECTCODE,
+		FPFFILENAME,
+		FPFFILETYPE,
+		FPFREMARK,
+		FPFFILEPATH,
+		FCREATOR,
+		FCTIME,
+		FLATESTMODIFY,
+		FMODIFYTIME,
+		FRF1,
+		FRF2,
+		FRF3,
+		FRF4,
+		ACTIVITYINSTANCE_ID,
+		PROFILES_ID
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FEPNAME},
+		#{EPROJECT_ID},
+		#{FEPROJECTCODE},
+		#{FPFFILENAME},
+		#{FPFFILETYPE},
+		#{FPFREMARK},
+		#{FPFFILEPATH},
+		#{FCREATOR},
+		#{FCTIME},
+		#{FLATESTMODIFY},
+		#{FMODIFYTIME},
+		#{FRF1},
+		#{FRF2},
+		#{FRF3},
+		#{FRF4},
+		#{ACTIVITYINSTANCE_ID},
+		#{PROFILES_ID}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		PROFILES_ID = #{PROFILES_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		FEPNAME = #{FEPNAME},
+		EPROJECT_ID = #{EPROJECT_ID},
+		FEPROJECTCODE = #{FEPROJECTCODE},
+		FPFFILENAME = #{FPFFILENAME},
+		FPFFILETYPE = #{FPFFILETYPE},
+		FPFREMARK = #{FPFREMARK},
+		FPFFILEPATH = #{FPFFILEPATH},
+		FCREATOR = #{FCREATOR},
+		FCTIME = #{FCTIME},
+		FLATESTMODIFY = #{FLATESTMODIFY},
+		FMODIFYTIME = #{FMODIFYTIME},
+		FRF1 = #{FRF1},
+		FRF2 = #{FRF2},
+		FRF3 = #{FRF3},
+		FRF4 = #{FRF4},
+		PROFILES_ID = PROFILES_ID
+		where
+		PROFILES_ID = #{PROFILES_ID}
+	</update>
+
+
+	<!-- 修改 -->
+	<update id="editActivity" parameterType="pd">
+		update
+		EPM_ACTIVITYINSTANCE		
+			set 
+			FAINAME = #{FAINAME},
+			FAIDESCRIPTION = #{FAIDESCRIPTION},
+			FAIREMARK = #{FAIREMARK},
+			FAISTATE = #{FAISTATE},
+			FAILEVEL = #{FAILEVEL},
+			FAIDUTYNAME = #{FAIDUTYNAME},
+			FAIDUTYMAN = #{FAIDUTYMAN},
+			FAISTARTTIME = #{FAISTARTTIME},
+			FAIENDTIME = #{FAIENDTIME},
+			FACTUALSTART = #{FACTUALSTART},
+			FACTUALEND = #{FACTUALEND},
+			FAIPROPERTY = #{FAIPROPERTY},
+			FAICOMRATE = #{FAICOMRATE},
+			FCHECK = #{FCHECK},	
+			ACTIVITYINSTANCE_ID = ACTIVITYINSTANCE_ID
+		where 
+			ACTIVITYINSTANCE_ID = #{ACTIVITYINSTANCE_ID}
+	</update>
+<!-- 	通过activityid查询文件数量 -->
+<select id="findFileByAcid"  parameterType="pd" resultType="pd">
+select count(1)countfilenum from EPM_PROFILES where ACTIVITYINSTANCE_ID = #{ACTIVITYINSTANCE_ID}
+</select>
+	<!-- 通过名称获取数据 -->
+	<select id="findPlanByFPINAME" parameterType="pd"
+		resultType="pd">
+		select
+		isnull(f.FPINAME,'') FPINAME ,
+		isnull(f.PLANTEMPLATE_ID,'') PLANTEMPLATE_ID,
+		isnull(f.FPTNAME,'') FPTNAME,
+		isnull(f.FPIDESCRIPTION,'')
+		FPIDESCRIPTION,
+		isnull(f.FPIREMARK,'') FPIREMARK,
+		isnull(f.FPISTATE,'')
+		FPISTATE,
+		isnull(f.FPIDUTYNAME,'') FPIDUTYNAME ,
+		isnull(f.FPIDUTYMAN,'') FPIDUTYMAN,
+		isnull(f.FPISTARTTIME,'')
+		FPISTARTTIME,
+		isnull(f.FPIENDTIME,'') FPIENDTIME,
+		isnull(f.FACTUALSTART,'') FACTUALSTART,
+		isnull(f.FACTUALEND,'')
+		FACTUALEND,
+		isnull(f.FPICOMRATE,'') FPICOMRATE,
+		isnull(f.FPICUSTOMERID,'') FPICUSTOMERID,
+		isnull(f.FPICUSTOMERNAME,'')
+		FPICUSTOMERNAME,
+		isnull(f.FPIPCHANCEID,'') FPIPCHANCEID,
+		isnull(f.FPIPCHANCENAME,'') FPIPCHANCENAME,
+		isnull(f.FPIDUTYSALEID,'')
+		FPIDUTYSALEID,
+		isnull(f.FPIDUTYSALENAME,'') FPIDUTYSALENAME ,
+		isnull(f.FPIDUTYBUSYID,'') FPIDUTYBUSYID,
+		isnull(f.FPIDUTYBUSYNAME,'')
+		FPIDUTYBUSYNAME ,
+		isnull(f.FPICONTRACTNAME,'') FPICONTRACTNAME ,
+		isnull(f.FPICONTRACTINNERID,'') FPICONTRACTINNERID ,
+		isnull(f.FCREATOR,'') FCREATOR,
+		isnull(f.FCTIME,'') FCTIME,
+		isnull(f.PLANINSTANCE_ID,'') PLANINSTANCE_ID
+		from EPM_PLANINSTANCE f where 1=1
+		<choose>
+			<when test="KEYWORDS!= null and KEYWORDS != ''"><!-- 关键词检索 -->
+				and f.FPICONTRACTNAME = #{KEYWORDS}
+			</when>
+			<otherwise>
+				and 1=2
+			</otherwise>
+		</choose>
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		isnull(t1.FHINAME,'') FHINAME,
+		isnull(t1.PHASEINSTANCE_ID,'')
+		PHASEINSTANCE_ID,
+		isnull(t1.PLANINSTANCE_ID,'') PLANINSTANCE_ID,
+		isnull(t1.FHILEVEL,'') FHILEVEL,
+		isnull(t2.FAINAME,'') FAINAME,
+		isnull(t2.FAIDESCRIPTION,'') FAIDESCRIPTION,
+		isnull(t2.FAIREMARK,'') FAIREMARK,
+		isnull(t2.FAISTATE,'') FAISTATE,
+		isnull(t2.FAILEVEL,'') FAILEVEL,
+		isnull(t2.FAIISCHECK,'') FAIISCHECK,
+		isnull(t2.FAICHECKINSID,'') FAICHECKINSID,
+		isnull(t2.FAICHECKSTATE,'') FAICHECKSTATE,
+		isnull(t2.FAIDUTYNAME,'') FAIDUTYNAME,
+		isnull(t2.FAIDUTYMAN,'') FAIDUTYMAN,
+		isnull(t2.FAISTARTTIME,'') FAISTARTTIME,
+		isnull(t2.FAIENDTIME,'') FAIENDTIME,
+		isnull(t2.FACTUALSTART,'') FACTUALSTART,
+		isnull(t2.FACTUALEND,'') FACTUALEND,
+		isnull(t2.FAIPROPERTY,'') FAIPROPERTY,
+		isnull(t2.FAICOMRATE,'') FAICOMRATE,
+		isnull(t2.PHASEINSTANCE_ID,'') PHASEINSTANCE_ID1,
+		isnull(t2.PLANINSTANCE_ID,'') PLANINSTANCE_ID1,
+		isnull(t2.FAIINPUTITEMS, '') FAIINPUTITEMS,
+		isnull(t2.FAIOUTPUTITEMS,'') FAIOUTPUTITEMS,
+		isnull(t2.FCREATOR,'') FCREATOR,
+		isnull(t2.FCTIME,'') FCTIME,
+		isnull(t2.FCHECK,'') FCHECK,
+		isnull(t3.FPINAME,'') FPINAME,
+		isnull(t3.FPICONTRACTNAME,'') FPICONTRACTNAME,
+		ISNULL(DATEDIFF(day,FAISTARTTIME,FAIENDTIME)+1, 0) FPLANTIME,
+		isnull(t2.ACTIVITYINSTANCE_ID,'') ACTIVITYINSTANCE_ID
+		from EPM_PLANINSTANCE t3 left JOIN
+		EPM_PHASEINSTANCE t1 on
+		t3.PLANINSTANCE_ID = t1.PLANINSTANCE_ID LEFT JOIN EPM_ACTIVITYINSTANCE
+		t2 ON t1.PHASEINSTANCE_ID = t2.PHASEINSTANCE_ID
+		where 1=1 
+		<if test="pd.FAIDUTYNAME != null and pd.FAIDUTYNAME != ''">
+		   and t2.FAIDUTYNAME=#{pd.FAIDUTYNAME}
+		</if>
+		<choose>
+			<when test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+				and t3.FPICONTRACTNAME = #{pd.KEYWORDS}
+			</when>
+			<otherwise>
+				and 1=2
+			</otherwise>
+		</choose>
+		[fhstart]  ORDER BY t3.FHILEVEL,FAILEVEL  [fhend]
+	</select>
+	<!-- 	查询文件信息通过id -->
+	<select id="findFileById" parameterType="pd" resultType="pd">
+		select 
+		isnull(f.FEPNAME,'') FEPNAME,	
+		isnull(f.EPROJECT_ID,'') EPROJECT_ID,	
+		isnull(f.FEPROJECTCODE,'') FEPROJECTCODE,	
+		isnull(f.FPFFILENAME,'') FPFFILENAME,	
+		isnull(f.FPFFILETYPE,'') FPFFILETYPE,	
+		isnull(f.FPFREMARK,'') FPFREMARK,	
+		isnull(f.FPFFILEPATH,'') FPFFILEPATH,	
+		isnull(f.FCREATOR,'') FCREATOR,	
+		isnull(f.FCTIME,'') FCTIME,	
+		isnull(f.FLATESTMODIFY,'') FLATESTMODIFY,	
+		isnull(f.FMODIFYTIME,'') FMODIFYTIME,	
+		isnull(f.FRF1,'') FRF1,	
+		isnull(f.FRF2,'') FRF2,	
+		isnull(f.FRF3,'') FRF3,	
+		isnull(f.FRF4,'') FRF4,	
+		isnull(f.PROFILES_ID,'') PROFILES_ID
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PROFILES_ID = #{PROFILES_ID}
+	</select>
+	<!-- 查询活动映射对象 -->
+	<select id="findActivityById" parameterType="pd" resultType="pd">
+		select
+		isnull(f.FAINAME,'') FAINAME,
+		isnull(f.FAIDESCRIPTION,'') FAIDESCRIPTION,
+		isnull(f.FAIREMARK,'') FAIREMARK,
+		isnull(f.FAISTATE,'') FAISTATE,
+		isnull(f.FAILEVEL,'') FAILEVEL,
+		isnull(f.FAIISCHECK,'') FAIISCHECK,
+		isnull(f.FAICHECKINSID, '') FAICHECKINSID,
+		isnull(f.FAICHECKSTATE,'') FAICHECKSTATE,
+		isnull(f.FAIDUTYNAME,'') FAIDUTYNAME,
+		isnull(f.FAIDUTYMAN,'') FAIDUTYMAN,
+		isnull(f.FAISTARTTIME,'') FAISTARTTIME,
+		isnull(f.FAIENDTIME,'') FAIENDTIME,
+		isnull(f.FACTUALSTART,'') FACTUALSTART,
+		isnull(f.FACTUALEND,'') FACTUALEND,
+		isnull(f.FAIPROPERTY,'') FAIPROPERTY,
+		isnull(f.FAICOMRATE,'') FAICOMRATE,
+		isnull(f.PHASEINSTANCE_ID,'') PHASEINSTANCE_ID,
+		isnull(f.PLANINSTANCE_ID,'') PLANINSTANCE_ID,
+		isnull(f.FAIINPUTITEMS, '') FAIINPUTITEMS,
+		isnull(f.FAIOUTPUTITEMS,'') FAIOUTPUTITEMS,
+		isnull(f.FCREATOR,'') FCREATOR,
+		isnull(f.FCTIME,'') FCTIME,
+		isnull(f.FCHECK,'') FCHECK,
+		isnull(f.ACTIVITYINSTANCE_ID,'') ACTIVITYINSTANCE_ID from EPM_ACTIVITYINSTANCE f
+		where
+		f.ACTIVITYINSTANCE_ID = #{ACTIVITYINSTANCE_ID}
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		isnull(f.FWPNAME,'') FWPNAME,
+		isnull(f.FWPDESCRIPTION,'') FWPDESCRIPTION,
+		isnull(f.FWPREMARK,'') FWPREMARK,
+		isnull(f.FWPSTATE,'') FWPSTATE,
+		isnull(f.ACTIVITYINSTANCE_ID,'') ACTIVITYINSTANCE_ID,
+		isnull(f.PHASEINSTANCE_ID,'') PHASEINSTANCE_ID,
+		isnull(f.PLANINSTANCE_ID,'') PLANINSTANCE_ID,
+		isnull(f.FWPFILE_NAME,'') FWPFILE_NAME,
+		isnull(f.FWPFILE_PATH,'') FWPFILE_PATH,
+		isnull(f.FWPDUTYNAME,'') FWPDUTYNAME,
+		isnull(f.FDUTYMAN,'') FDUTYMAN,
+		isnull(f.FWPSTARTTIME,'') FWPSTARTTIME,
+		isnull(f.FWPENDTIME,'') FWPENDTIME,
+		isnull(f.FACTUALSTART,'') FACTUALSTART,
+		isnull(f.FACTUALEND,'') FACTUALEND,
+		isnull(f.FWPCOMRATE,'') FWPCOMRATE,
+		isnull(f.FCREATOR,'') FCREATOR,
+		isnull(f.FCTIME,'') FCTIME,
+		isnull(f.FLASTMODIFY,'') FLASTMODIFY,
+		isnull(f.FLASTTIME,'') FLASTTIME,
+		isnull(f.FWPUSER01,'') FWPUSER01,
+		isnull(f.FWPUSER02,'') FWPUSER02,
+		isnull(f.FWPUSER03,'') FWPUSER03,
+		isnull(f.FWPUSER04,'') FWPUSER04,
+		isnull(f.FWPUSER05,'') FWPUSER05,
+		isnull(f.WORKPACKAGE_ID,'') WORKPACKAGE_ID,
+		isnull(p.FPINAME,'') FPINAME,
+		isnull(h.FHINAME, '') FHINAME,
+		isnull(a.FAINAME, '') FAINAME,
+		isnull(h.FHILEVEL, '') FHILEVEL,
+		isnull(a.FAILEVEL, '') FAILEVEL,
+		isnull(project.EPROJECT_ID, '') EPROJECT_ID,
+		isnull(project.FEPROJECTCODE, '') FEPROJECTCODE,
+		isnull(project.FEPNAME, '') FEPNAME
+		from
+		<include refid="tableName"></include>
+		f
+		LEFT JOIN EPM_PLANINSTANCE p
+		ON f.PLANINSTANCE_ID = p.PLANINSTANCE_ID
+		LEFT JOIN EPM_PHASEINSTANCE h
+		ON f.PHASEINSTANCE_ID = h.PHASEINSTANCE_ID
+		LEFT JOIN EPM_ACTIVITYINSTANCE a
+		ON f.ACTIVITYINSTANCE_ID = a.ACTIVITYINSTANCE_ID
+		LEFT JOIN EPM_EPROJECT project
+		ON p.FPICONTRACTINNERID = project.EPROJECT_ID
+		where 1=1
+		<if test="ACTIVITYINSTANCE_ID!= null and ACTIVITYINSTANCE_ID != ''">
+			and f.ACTIVITYINSTANCE_ID = #{ACTIVITYINSTANCE_ID}
+		</if>
+		<if test="PROJECT_ID!= null and PROJECT_ID != ''">
+			and project.EPROJECT_ID = #{PROJECT_ID}
+		</if>
+		<if test="FDUTYMAN!= null and FDUTYMAN != ''">
+			and f.FDUTYMAN = #{FDUTYMAN}
+		</if>
+		<if test="FWPNAME!= null and FWPNAME != ''">  <!-- 任务名称 -->
+			and f.FWPNAME LIKE '%'+#{FWPNAME}+'%'
+		</if>
+		ORDER BY f.FCTIME desc
+	</select>
+
+
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		PROFILES_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+
+
+
+
+
+	<!-- 获取我的任务数量 -->
+	<select id="getMyWorkPackageNum" parameterType="pd"
+		resultType="pd">
+		select
+		count(*) as num
+		from
+		<include refid="tableName"></include>
+		f
+		where 1=1
+		<if test="FWPNAME!= null and FWPNAME != ''"><!-- 任务名称 -->
+			and f.FWPNAME LIKE '%'+#{FWPNAME}+'%'
+		</if>
+		<if test="USERNAME!= null and USERNAME != ''"><!-- 用户名 -->
+			and f.FDUTYMAN=#{USERNAME}
+		</if>
+		<choose>
+			<when test="STATE=='未完成'">
+				and f.FWPSTATE in('创建','挂起','运行')
+			</when>
+			<when test="STATE!= null and STATE != ''">
+				and f.FWPSTATE =#{STATE}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+<select id = "findMinPhase" parameterType="pd" resultType="pd">
+				select top 1 * from EPM_PHASETEMPLATE where 1=1 
+				and PLANTEMPLATE_ID =#{PLANTEMPLATE_ID} ORDER BY FHTLEVEL
+	</select>
+	<select id = "findMaxPhase" parameterType="pd" resultType="pd">
+				select top 1 * from EPM_PHASETEMPLATE where 1=1 
+				and PLANTEMPLATE_ID =#{PLANTEMPLATE_ID} ORDER BY FHTLEVEL desc
+	</select>
+	<select id="findFACTUALSTART" parameterType="pd" resultType="pd">
+			select min(t2.FACTUALSTART)FACTUALSTART from EPM_PHASEINSTANCE t1 LEFT JOIN EPM_ACTIVITYINSTANCE t2 on t1.PHASEINSTANCE_ID=t2.PHASEINSTANCE_ID
+		where  1=1  and t1.PLANINSTANCE_ID = #{PLANINSTANCE_ID} and t1.FHINAME=#{FHTNAME} and
+		(t2.FACTUALSTART is not null and t2.FACTUALSTART !='')	
+		GROUP BY FHILEVEL  ORDER BY FHILEVEL 
+	</select>
+	<select id="findFACTUALEND" parameterType="pd" resultType="pd">
+					select max(t2.FACTUALEND)FACTUALEND from EPM_PHASEINSTANCE t1 LEFT JOIN EPM_ACTIVITYINSTANCE t2 on t1.PHASEINSTANCE_ID=t2.PHASEINSTANCE_ID
+		where  1=1 
+		and
+		(t2.FACTUALEND is not null and t2.FACTUALEND !='')	
+		 and t1.PLANINSTANCE_ID = #{PLANINSTANCE_ID} and t1.FHINAME=#{FHTNAME} GROUP BY FHILEVEL  ORDER BY FHILEVEL  
+	</select>
+	<update id="editTime">
+	update
+		EPM_PLANINSTANCE
+		set
+		FACTUALSTART = #{FACTUALSTART},
+		FACTUALEND = #{FACTUALEND}
+		where
+		PLANINSTANCE_ID = #{PLANINSTANCE_ID}
+	</update>
+
+	<select id="feedDatalistPage" parameterType="page"
+		resultType="pd">
+		select
+		isnull(f.FEPNAME,'') FEPNAME,
+		isnull(f.EPROJECT_ID,'') EPROJECT_ID,
+		isnull(f.FEPROJECTCODE,'') FEPROJECTCODE,
+		isnull(f.FPFFILENAME,'') FPFFILENAME,
+		isnull(f.FPFFILETYPE,'') FPFFILETYPE,
+		isnull(f.FPFREMARK,'') FPFREMARK,
+		isnull(f.FPFFILEPATH,'') FPFFILEPATH,
+		isnull(f.FCREATOR,'') FCREATOR,
+		isnull(f.FCTIME,'') FCTIME,
+		isnull(f.FLATESTMODIFY,'') FLATESTMODIFY,
+		isnull(f.FMODIFYTIME,'') FMODIFYTIME,
+		isnull(f.FRF1,'') FRF1,
+		isnull(f.FRF2,'') FRF2,
+		isnull(f.FRF3,'') FRF3,
+		isnull(f.FRF4,'') FRF4,
+		isnull(f.PROFILES_ID,'') PROFILES_ID,
+		isnull(f.ACTIVITYINSTANCE_ID,'') ACTIVITYINSTANCE_ID
+		from
+		EPM_PROFILES f where 1 = 1 and f.ACTIVITYINSTANCE_ID =
+		#{pd.ACTIVITYINSTANCE_ID}
+	</select>
+</mapper>

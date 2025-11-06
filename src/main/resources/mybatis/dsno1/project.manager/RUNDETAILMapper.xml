@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.dprojectManager.RUNDETAILMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		DT_RUNDETAIL
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.RDPROJECTTASK_ID,	
+		f.RDSTARTTIME,	
+		f.RDENDTIME,	
+		f.RDHOUR,	
+		f.RDNOTE,	
+		f.RDSTATE,	
+		f.RDVISIBLE,	
+		f.RDCREATOR,	
+		f.RDCREATE_TIME,	
+		f.RDLAST_MODIFIER,	
+		f.RDLAST_MODIFIED_TIME,	
+		f.RUNDETAIL_ID,
+		f.RDTYPE,
+		f.RDISOVER
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		RDPROJECTTASK_ID,	
+		RDSTARTTIME,	
+		RDENDTIME,	
+		RDHOUR,	
+		RDNOTE,	
+		RDSTATE,	
+		RDVISIBLE,	
+		RDCREATOR,	
+		RDCREATE_TIME,	
+		RDLAST_MODIFIER,	
+		RDLAST_MODIFIED_TIME,	
+		RUNDETAIL_ID,
+		RDTYPE,
+		RDISOVER
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{RDPROJECTTASK_ID},	
+		#{RDSTARTTIME},	
+		#{RDENDTIME},	
+		#{RDHOUR},	
+		#{RDNOTE},	
+		#{RDSTATE},	
+		#{RDVISIBLE},	
+		#{RDCREATOR},	
+		#{RDCREATE_TIME},	
+		#{RDLAST_MODIFIER},	
+		#{RDLAST_MODIFIED_TIME},	
+		#{RUNDETAIL_ID},
+		#{RDTYPE},
+		#{RDISOVER}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			RUNDETAIL_ID = #{RUNDETAIL_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RDPROJECTTASK_ID = #{RDPROJECTTASK_ID},
+			RDSTARTTIME = #{RDSTARTTIME},
+			RDENDTIME = #{RDENDTIME},
+			RDHOUR = #{RDHOUR},
+			RDNOTE = #{RDNOTE},
+			RDSTATE = #{RDSTATE},
+			RDTYPE=#{RDTYPE},
+			RDISOVER=#{RDISOVER},
+			RDLAST_MODIFIER = #{RDLAST_MODIFIER},
+			RDLAST_MODIFIED_TIME=#{RDLAST_MODIFIED_TIME},
+			RUNDETAIL_ID = RUNDETAIL_ID
+		where 
+			RUNDETAIL_ID = #{RUNDETAIL_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.RUNDETAIL_ID = #{RUNDETAIL_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and RDPROJECTTASK_ID=#{pd.RDPROJECTTASK_ID}
+		and RDVISIBLE='1'
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+		[fhstart] order by RDSTARTTIME [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			RUNDETAIL_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!--获得执行中明细数量 -->
+	<select id="getNum" parameterType="pd" resultType="pd">
+		select
+		isnull(count(*),0) FNUM
+		from 
+		<include refid="tableName"></include> f
+		where 
+		RDSTATE='进行中'
+		and RDVISIBLE='1'
+		and RDPROJECTTASK_ID = #{RDPROJECTTASK_ID}
+		
+	</select>
+	<!--反写执行明细结束时间 -->
+	<update id="editEndTime" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			
+			RDENDTIME = #{RDENDTIME},
+			RDHOUR = #{RDHOUR},
+			RDSTATE = #{RDSTATE},
+			RDLAST_MODIFIER = #{RDLAST_MODIFIER},
+			RDLAST_MODIFIED_TIME=#{RDLAST_MODIFIED_TIME}
+		where 
+			RDPROJECTTASK_ID = #{RDPROJECTTASK_ID}
+			and RDSTATE='进行中'
+			and RDVISIBLE='1'
+			
+	</update>
+	<!-- 查询明细进行中明细信息-->
+	<select id="findByIdN" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			RDPROJECTTASK_ID = #{RDPROJECTTASK_ID}
+			and RDSTATE='进行中'
+			and RDVISIBLE='1'
+	</select>
+	<!--反写执行明细结束时间 -->
+	<update id="editActual" parameterType="pd">
+	<choose>
+        <when test="FUPTYPE != null and FUPTYPE == 'TASK'"><!-- 项目任务反馈 -->
+update a set 
+a.PTACTUALSTARTDATE=b.PTACTUALSTARTDATE,
+a.PTACTUALENDDATE=b.PTACTUALENDDATE,
+a.PTACTUAL_HOUR=b.RDHOUR,
+a.PTNORMAL_HOUR=c.RDNORMAL_HOUR,
+a.PTOVER_HOUR=d.RDOVER_HOUR,
+a.PTFINISHPROGRESS=cast(   
+(case when isnull(a.PTPLAN_HOUR,0)=0 then 0 ELSE isnull(b.RDHOUR,0.00)/isnull(a.PTPLAN_HOUR,0.00) END)
+ as NUMERIC(12,4))*100,
+a.CURRENT_PLANNED_STATE=
+(case 
+when a.PTPLANENDDATE &lt; CONVERT(varchar(100), GETDATE(), 23) and a.PTRUNSTATE !='完成' and  isnull(b.PTACTUALENDDATE,'') ='' then '延期'
+when a.PTPLANENDDATE &lt; CONVERT(varchar(100), b.PTACTUALENDDATE, 23) then '延期'
+when a.PTPLANENDDATE &gt; CONVERT(varchar(100),b.PTACTUALENDDATE, 23)  and a.PTRUNSTATE ='完成'  then '提前完成'
+else ''
+end
+)
+from DT_PROJECTTASK a
+LEFT JOIN
+(select isnull(min(RDSTARTTIME),'') PTACTUALSTARTDATE , isnull(max(RDENDTIME),'') PTACTUALENDDATE,
+RDPROJECTTASK_ID,sum(isnull(RDHOUR,0)) RDHOUR
+from DT_RUNDETAIL where RDPROJECTTASK_ID =#{PROJECTTASK_ID} and RDVISIBLE='1' GROUP BY RDPROJECTTASK_ID) b
+on a.PROJECTTASK_ID=b.RDPROJECTTASK_ID
+LEFT JOIN
+(select 
+RDPROJECTTASK_ID,sum(isnull(RDHOUR,0)) RDNORMAL_HOUR
+from DT_RUNDETAIL where RDPROJECTTASK_ID =#{PROJECTTASK_ID} and RDVISIBLE='1' and RDISOVER='否' GROUP BY RDPROJECTTASK_ID) c
+on a.PROJECTTASK_ID=c.RDPROJECTTASK_ID
+LEFT JOIN
+(
+select RDPROJECTTASK_ID,sum(isnull(RDHOUR,0)) RDOVER_HOUR
+from DT_RUNDETAIL where RDPROJECTTASK_ID =#{PROJECTTASK_ID} and RDVISIBLE='1' and RDISOVER='是' GROUP BY RDPROJECTTASK_ID) d
+on a.PROJECTTASK_ID=d.RDPROJECTTASK_ID
+where 1=1
+and a.PROJECTTASK_ID =#{PROJECTTASK_ID}
+		</when>
+        <when test="FUPTYPE != null and FUPTYPE == 'STAFFPLAN'"><!-- 人员计划 -->
+update a set 
+a.SPACTUAL_HOUR=b.PTACTUAL_HOUR,
+a.SPNORMAL_HOUR=c.RDNORMAL_HOUR,
+a.SPOVER_HOUR=d.RDOVER_HOUR,
+a.REAL_SATRT_TIME=b.ACTUALSTARTDATE,
+a.REAL_END_TIME=b.ACTUALENDDATE,
+a.STAFFPLAN_TYPE=
+(case 
+when b.PAUSENUM =b.TOTALNUM  and b.TOTALNUM !=0 then '暂停'
+when b.FINISHNUM = b.TOTALNUM and b.TOTALNUM !=0 then '完成'
+when b.RUNNUM &gt;0 then '执行中'
+else a.STAFFPLAN_TYPE
+end
+),
+a.NOW_PLAN_TYPE=
+(case 
+when a.NEW_PLAN_END_TIME &lt; CONVERT(varchar(10), GETDATE(), 23) and a.STAFFPLAN_TYPE !='完成' and  isnull(b.ACTUALENDDATE,'') ='' then '延期'
+when a.NEW_PLAN_END_TIME &lt; CONVERT(varchar(10), b.ACTUALENDDATE, 23) then '延期'
+when a.NEW_PLAN_END_TIME &gt; CONVERT(varchar(10),b.ACTUALENDDATE, 23)  and a.STAFFPLAN_TYPE ='完成'  then '提前完成'
+else ''
+end
+)
+from DT_STAFFPLAN a
+LEFT JOIN
+(select
+sum(isnull(PTACTUAL_HOUR,0)) PTACTUAL_HOUR, 
+isnull(min(PTACTUALSTARTDATE),'') ACTUALSTARTDATE , isnull(max(PTACTUALENDDATE),'') ACTUALENDDATE,PTSTAFFPLAN_ID,
+isnull((select count(*) from DT_PROJECTTASK m where m.PTSTAFFPLAN_ID =#{STAFFPLAN_ID} and PTVISIBLE='1' and m.PTRUNSTATE='执行中'),0) RUNNUM,
+isnull((select count(*) from DT_PROJECTTASK m where m.PTSTAFFPLAN_ID =#{STAFFPLAN_ID} and PTVISIBLE='1' and m.PTRUNSTATE='暂停'),0) PAUSENUM,
+isnull((select count(*) from DT_PROJECTTASK m where m.PTSTAFFPLAN_ID =#{STAFFPLAN_ID} and PTVISIBLE='1' and m.PTRUNSTATE='完成'),0) FINISHNUM,
+isnull((select count(*) from DT_PROJECTTASK m where m.PTSTAFFPLAN_ID =#{STAFFPLAN_ID} and PTVISIBLE='1' ),0) TOTALNUM
+from DT_PROJECTTASK where PTSTAFFPLAN_ID =#{STAFFPLAN_ID} and PTVISIBLE='1' GROUP BY PTSTAFFPLAN_ID) b
+on a.STAFFPLAN_ID=b.PTSTAFFPLAN_ID
+LEFT JOIN
+(select
+sum(isnull(PTNORMAL_HOUR,0)) RDNORMAL_HOUR,PTSTAFFPLAN_ID
+from DT_PROJECTTASK where PTSTAFFPLAN_ID =#{STAFFPLAN_ID} and PTVISIBLE='1' GROUP BY PTSTAFFPLAN_ID) c
+on a.STAFFPLAN_ID=c.PTSTAFFPLAN_ID
+LEFT JOIN
+(select
+sum(isnull(PTOVER_HOUR,0)) RDOVER_HOUR,PTSTAFFPLAN_ID
+from DT_PROJECTTASK where PTSTAFFPLAN_ID =#{STAFFPLAN_ID} and PTVISIBLE='1' GROUP BY PTSTAFFPLAN_ID) d
+on a.STAFFPLAN_ID=d.PTSTAFFPLAN_ID
+where 1=1
+and a.STAFFPLAN_ID =#{STAFFPLAN_ID}
+		</when>
+        <when test="FUPTYPE != null and FUPTYPE == 'DEPTPLAN'"><!-- 部门计划 -->
+update a set 
+a.DPACTUAL_HOUR=b.SPACTUAL_HOUR,
+a.DPNORMAL_HOUR=c.RDNORMAL_HOUR,
+a.DPOVER_HOUR=d.RDOVER_HOUR,
+a.REAL_SATRT_TIME=b.ACTUALSTARTDATE,
+a.REAL_END_TIME=b.ACTUALENDDATE,
+a.RUNTYPE=
+(case 
+when b.PAUSENUM =b.TOTALNUM  and b.TOTALNUM !=0 then '暂停'
+when b.FINISHNUM = b.TOTALNUM and b.TOTALNUM !=0 then '完成'
+when b.RUNNUM &gt;0 then '执行中'
+else a.RUNTYPE
+end
+),
+a.NOW_PLAN_TYPE=
+(case 
+when a.NEW_PLAN_END_TIME &lt; CONVERT(varchar(10), GETDATE(), 23) and a.RUNTYPE !='完成' and  isnull(b.ACTUALENDDATE,'') ='' then '延期'
+when a.NEW_PLAN_END_TIME &lt; CONVERT(varchar(10), b.ACTUALENDDATE, 23) then '延期'
+when a.NEW_PLAN_END_TIME &gt; CONVERT(varchar(10),b.ACTUALENDDATE, 23)  and a.RUNTYPE ='完成'  then '提前完成'
+else ''
+end
+)
+from DT_DEPPLAN a
+LEFT JOIN
+(select 
+sum(isnull(SPACTUAL_HOUR,0)) SPACTUAL_HOUR, 
+isnull(min(REAL_SATRT_TIME),'') ACTUALSTARTDATE , isnull(max(REAL_END_TIME),'') ACTUALENDDATE,DEPPLAN_ID,
+isnull((select count(*) from DT_STAFFPLAN m where m.DEPPLAN_ID =#{DEPPLAN_ID} and VISIABLE='1' and m.YL3 != '无' and m.STAFFPLAN_TYPE='执行中'),0) RUNNUM,
+isnull((select count(*) from DT_STAFFPLAN m where m.DEPPLAN_ID =#{DEPPLAN_ID} and VISIABLE='1' and m.YL3 != '无' and m.STAFFPLAN_TYPE='暂停'),0) PAUSENUM,
+isnull((select count(*) from DT_STAFFPLAN m where m.DEPPLAN_ID =#{DEPPLAN_ID} and VISIABLE='1' and m.YL3 != '无' and m.STAFFPLAN_TYPE='完成'),0) FINISHNUM,
+isnull((select count(*) from DT_STAFFPLAN m where m.DEPPLAN_ID =#{DEPPLAN_ID} and VISIABLE='1' and m.YL3 != '无' ),0) TOTALNUM
+from DT_STAFFPLAN where DEPPLAN_ID =#{DEPPLAN_ID} and VISIABLE='1' and YL3 != '无' GROUP BY DEPPLAN_ID) b
+on a.DEPPLAN_ID=b.DEPPLAN_ID
+LEFT JOIN
+(select 
+sum(isnull(SPNORMAL_HOUR,0)) RDNORMAL_HOUR,DEPPLAN_ID
+from DT_STAFFPLAN where DEPPLAN_ID =#{DEPPLAN_ID} and VISIABLE='1' and YL3 != '无' GROUP BY DEPPLAN_ID) c
+on a.DEPPLAN_ID=b.DEPPLAN_ID
+LEFT JOIN
+(select 
+sum(isnull(SPOVER_HOUR,0)) RDOVER_HOUR,DEPPLAN_ID
+from DT_STAFFPLAN where DEPPLAN_ID =#{DEPPLAN_ID} and VISIABLE='1' and YL3 != '无' GROUP BY DEPPLAN_ID) d
+on a.DEPPLAN_ID=b.DEPPLAN_ID
+where 1=1
+and a.DEPPLAN_ID =#{DEPPLAN_ID}
+		</when>
+        <when test="FUPTYPE != null and FUPTYPE == 'PROPLAN'"><!-- 项目计划 -->
+update a set 
+a.PPACTUAL_HOUR=b.DPACTUAL_HOUR,
+a.PPNORMAL_HOUR=c.RDNORMAL_HOUR,
+a.PPOVER_HOUR=d.RDOVER_HOUR,
+a.REAL_SATRT_TIME=b.ACTUALSTARTDATE,
+a.REAL_END_TIME=b.ACTUALENDDATE,
+a.YL2=
+(case 
+when b.PAUSENUM =b.TOTALNUM  and b.TOTALNUM !=0 then '暂停'
+when b.FINISHNUM = b.TOTALNUM and b.TOTALNUM !=0 then '完成'
+when b.RUNNUM &gt;0 then '执行中'
+else a.YL2
+end
+),
+a.NOW_PLAN_TYPE=
+(case 
+when a.NEW_PLAN_END_TIME &lt; CONVERT(varchar(10), GETDATE(), 23) and a.YL2 !='完成' and  isnull(b.ACTUALENDDATE,'') ='' then '延期'
+when a.NEW_PLAN_END_TIME &lt; CONVERT(varchar(10), b.ACTUALENDDATE, 23) then '延期'
+when a.NEW_PLAN_END_TIME &gt; CONVERT(varchar(10),b.ACTUALENDDATE, 23)  and a.YL2 ='完成'  then '提前完成'
+else ''
+end
+)
+from DT_PRO_PLAN a
+LEFT JOIN
+(select 
+sum(isnull(DPACTUAL_HOUR,0)) DPACTUAL_HOUR, 
+isnull(min(REAL_SATRT_TIME),'') ACTUALSTARTDATE , isnull(max(REAL_END_TIME),'') ACTUALENDDATE,PRO_PLAN_ID,
+isnull((select count(*) from DT_DEPPLAN m where m.PRO_PLAN_ID =#{PRO_PLAN_ID} and VISIABLE='1' and m.RUNTYPE='执行中'),0) RUNNUM,
+isnull((select count(*) from DT_DEPPLAN m where m.PRO_PLAN_ID =#{PRO_PLAN_ID} and VISIABLE='1' and m.RUNTYPE='暂停'),0) PAUSENUM,
+isnull((select count(*) from DT_DEPPLAN m where m.PRO_PLAN_ID =#{PRO_PLAN_ID} and VISIABLE='1' and m.RUNTYPE='完成'),0) FINISHNUM,
+isnull((select count(*) from DT_DEPPLAN m where m.PRO_PLAN_ID =#{PRO_PLAN_ID} and VISIABLE='1' ),0) TOTALNUM
+from DT_DEPPLAN where PRO_PLAN_ID =#{PRO_PLAN_ID} and VISIABLE='1' GROUP BY PRO_PLAN_ID) b
+on a.PRO_PLAN_ID=b.PRO_PLAN_ID
+LEFT JOIN
+(select 
+sum(isnull(DPNORMAL_HOUR,0)) RDNORMAL_HOUR, PRO_PLAN_ID 
+from DT_DEPPLAN where PRO_PLAN_ID =#{PRO_PLAN_ID} and VISIABLE='1' GROUP BY PRO_PLAN_ID) c
+on a.PRO_PLAN_ID=c.PRO_PLAN_ID
+LEFT JOIN
+(select 
+sum(isnull(DPOVER_HOUR,0)) RDOVER_HOUR, PRO_PLAN_ID 
+from DT_DEPPLAN where PRO_PLAN_ID =#{PRO_PLAN_ID} and VISIABLE='1' GROUP BY PRO_PLAN_ID) d
+on a.PRO_PLAN_ID=d.PRO_PLAN_ID
+where 1=1
+and a.PRO_PLAN_ID =#{PRO_PLAN_ID}
+		</when>
+        <otherwise>            
+        </otherwise>
+     </choose>
+
+			
+	</update>
+	<update id="upVisible" parameterType="pd">
+		update  
+		<include refid="tableName"></include>
+		set RDVISIBLE = '0'
+		where 
+			RUNDETAIL_ID = #{RUNDETAIL_ID}
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

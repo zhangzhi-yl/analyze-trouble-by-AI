@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.PlanInstanceMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		EPM_PLANINSTANCE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		isnull(f.FPINAME,'')	FPINAME	,
+		isnull(f.PLANTEMPLATE_ID,'')	PLANTEMPLATE_ID,
+		isnull(f.FPTNAME,'')	FPTNAME,
+		isnull(f.FPIDESCRIPTION,'')	FPIDESCRIPTION,
+		isnull(f.FPIREMARK,'')	FPIREMARK,
+		isnull(f.FPISTATE,'')	FPISTATE,
+		isnull(f.FPIDUTYNAME,'')	FPIDUTYNAME	,
+		isnull(f.FPIDUTYMAN,'')	 FPIDUTYMAN,
+		isnull(f.FPISTARTTIME,'')	FPISTARTTIME,
+		isnull(f.FPIENDTIME,'')	 FPIENDTIME,
+		isnull(f.FACTUALSTART,'')	FACTUALSTART,
+		isnull(f.FACTUALEND,'')	 FACTUALEND,
+		isnull(f.FPICOMRATE,'')	 FPICOMRATE,
+		isnull(f.FPICUSTOMERID,'')	FPICUSTOMERID,
+		isnull(f.FPICUSTOMERNAME,'')	FPICUSTOMERNAME,
+		isnull(f.FPIPCHANCEID,'') 	FPIPCHANCEID,
+		isnull(f.FPIPCHANCENAME,'') 	FPIPCHANCENAME,
+		isnull(f.FPIDUTYSALEID,'')	 FPIDUTYSALEID,
+		isnull(f.FPIDUTYSALENAME,'')	FPIDUTYSALENAME	,
+		isnull(f.FPIDUTYBUSYID,'')	 FPIDUTYBUSYID,
+		isnull(f.FPIDUTYBUSYNAME,'')	FPIDUTYBUSYNAME	,
+		isnull(f.FPICONTRACTNAME,'')	FPICONTRACTNAME	,
+		isnull(f.FPICONTRACTINNERID,'') 	FPICONTRACTINNERID	,
+		isnull(f.FCREATOR,'')	FCREATOR,
+		isnull(f.FCTIME,'')	 FCTIME,
+		isnull(f.PLANINSTANCE_ID,'')	PLANINSTANCE_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FPINAME,	
+		PLANTEMPLATE_ID,	
+		FPTNAME,	
+		FPIDESCRIPTION,	
+		FPIREMARK,	
+		FPISTATE,	
+		FPIDUTYNAME,	
+		FPIDUTYMAN,	
+		FPISTARTTIME,	
+		FPIENDTIME,	
+		FACTUALSTART,	
+		FACTUALEND,	
+		FPICOMRATE,	
+		FPICUSTOMERID,	
+		FPICUSTOMERNAME,	
+		FPIPCHANCEID,	
+		FPIPCHANCENAME,	
+		FPIDUTYSALEID,	
+		FPIDUTYSALENAME,	
+		FPIDUTYBUSYID,	
+		FPIDUTYBUSYNAME,	
+		FPICONTRACTNAME,	
+		FPICONTRACTINNERID,	
+		FCREATOR,	
+		FCTIME,	
+		PLANINSTANCE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FPINAME},	
+		#{PLANTEMPLATE_ID},	
+		#{FPTNAME},	
+		#{FPIDESCRIPTION},	
+		#{FPIREMARK},	
+		#{FPISTATE},	
+		#{FPIDUTYNAME},	
+		#{FPIDUTYMAN},	
+		#{FPISTARTTIME},	
+		#{FPIENDTIME},	
+		#{FACTUALSTART},	
+		#{FACTUALEND},	
+		#{FPICOMRATE},	
+		#{FPICUSTOMERID},	
+		#{FPICUSTOMERNAME},	
+		#{FPIPCHANCEID},	
+		#{FPIPCHANCENAME},	
+		#{FPIDUTYSALEID},	
+		#{FPIDUTYSALENAME},	
+		#{FPIDUTYBUSYID},	
+		#{FPIDUTYBUSYNAME},	
+		#{FPICONTRACTNAME},	
+		#{FPICONTRACTINNERID},	
+		#{FCREATOR},	
+		#{FCTIME},	
+		#{PLANINSTANCE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PLANINSTANCE_ID = #{PLANINSTANCE_ID}
+	</delete>
+	<!-- 删除-->
+	<delete id="deleteJH" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			FPICONTRACTINNERID = #{FPICONTRACTINNERID}
+	</delete>
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FPINAME = #{FPINAME},
+			FPIDESCRIPTION = #{FPIDESCRIPTION},
+			FPIREMARK = #{FPIREMARK},
+			FPIDUTYNAME = #{FPIDUTYNAME},
+			FPIDUTYMAN = #{FPIDUTYMAN},
+			FPISTARTTIME = #{FPISTARTTIME},
+			FPICONTRACTNAME=#{FPICONTRACTNAME},
+			FPIENDTIME = #{FPIENDTIME},
+			FACTUALSTART = #{FACTUALSTART},
+			FACTUALEND = #{FACTUALEND},
+			FPICOMRATE = #{FPICOMRATE},
+			PLANINSTANCE_ID = PLANINSTANCE_ID
+		where 
+			PLANINSTANCE_ID = #{PLANINSTANCE_ID}
+	</update>
+	
+	
+	
+	<!-- 更新工单运行状态 -->
+	<update id="updatePlanState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FPISTATE = #{FPISTATE}	
+		where 
+			PLANINSTANCE_ID = #{PLANINSTANCE_ID}
+	</update>
+	
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PLANINSTANCE_ID = #{PLANINSTANCE_ID}
+	</select>
+	
+	<!-- 查询编号是否重复 -->
+	<select id="findBySno" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FPICONTRACTNAME = #{FPICONTRACTNAME}
+	</select>
+	
+	
+	<!-- 通过项目ID查找是否存在未归档的项目工单 ，数目大于0存在-->
+	<select id="findUsefulPlanCount" parameterType="pd" resultType="pd">
+		select 
+		   count(1) usefulPlanCount
+		from 
+		<include refid="tableName"></include> f
+		where
+	      f.FPICONTRACTINNERID= #{PLANINSTANCE_ID} and  f.FPISTATE!='归档'		
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				  f.FPINAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		[fhstart]  ORDER BY  f.FCTIME desc  [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<select id="listUserAll" parameterType="pd" resultType="pd">
+		select
+		f1.*,f2.DEPARTMENT_ID
+		from 
+		sys_user f1 
+		LEFT JOIN OA_STAFF f2 
+		on f1.USERNAME=f2.USER_ID 
+		where 1=1 
+		<if test="FDEPT!= null and FDEPT != ''"><!-- 部门检索 -->
+			and
+				(
+				  f2.DEPARTMENT_ID =#{FDEPT}
+				)
+		</if>
+		order by  DEPARTMENT_ID
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PLANINSTANCE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 修改项目经理 -->
+	<update id="editPAP" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FPIDUTYNAME = #{FPAPMNAME},
+			FPIDUTYMAN = #{FPAPMID}
+		where 
+			FPICONTRACTINNERID in ${EPROJECT_IDS}
+	</update>
+	<!-- 下发新增待办获得项目主键和编号-->
+	<select id="findXM" parameterType="pd" resultType="pd">
+		select
+		f1.FPICONTRACTINNERID,f2.FEPROJECTNUMBER
+		from 
+		EPM_PLANINSTANCE f1,EPM_EPROJECT f2
+		where 1=1
+		and 
+		f1.PLANINSTANCE_ID = #{PLANINSTANCE_ID}
+		and
+		f1.FPICONTRACTINNERID=f2.EPROJECT_ID
+	</select>
+	
+	<!-- YY 356703572 -->
+</mapper>

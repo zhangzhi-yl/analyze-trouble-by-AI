@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.MeetingInformationMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOMP_MEETINGINFORMATION
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PHASETEMPLATE_ID,	
+		isnull(f.THEME,'') THEME,	
+		isnull(f.BEGINDAY,'') BEGINDAY,	
+		isnull(f.ENDDAY,'') ENDDAY,	
+		isnull(f.LOCATION,'') LOCATION,	
+		isnull(f.FCTIME,'') FCTIME,	
+		isnull(f.TELNUMBER,'') TELNUMBER,	
+		isnull(f.ORIGINATOR,'') ORIGINATOR,	
+		isnull(f.INTERNETINVITATION,'') INTERNETINVITATION,	
+		isnull(f.COMPILINGPERSON,'') COMPILINGPERSON,	
+		isnull(f.CHECKER,'') CHECKER,	
+		isnull(f.TARGET,'') TARGET,	
+		f.MEETINGINFORMATION_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PHASETEMPLATE_ID,	
+		THEME,	
+		BEGINDAY,	
+		ENDDAY,	
+		LOCATION,	
+		FCTIME,	
+		TELNUMBER,	
+		ORIGINATOR,	
+		INTERNETINVITATION,	
+		COMPILINGPERSON,	
+		CHECKER,	
+		TARGET,	
+		MEETINGINFORMATION_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PHASETEMPLATE_ID},	
+		#{THEME},	
+		#{BEGINDAY},	
+		#{ENDDAY},	
+		#{LOCATION},	
+		#{FCTIME},	
+		#{TELNUMBER},	
+		#{ORIGINATOR},	
+		#{INTERNETINVITATION},	
+		#{COMPILINGPERSON},	
+		#{CHECKER},	
+		#{TARGET},	
+		#{MEETINGINFORMATION_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MEETINGINFORMATION_ID = #{MEETINGINFORMATION_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			THEME = #{THEME},
+			BEGINDAY = #{BEGINDAY},
+			ENDDAY = #{ENDDAY},
+			LOCATION = #{LOCATION},
+			FCTIME = #{FCTIME},
+			TELNUMBER = #{TELNUMBER},
+			ORIGINATOR = #{ORIGINATOR},
+			INTERNETINVITATION = #{INTERNETINVITATION},
+			COMPILINGPERSON = #{COMPILINGPERSON},
+			CHECKER = #{CHECKER},
+			TARGET = #{TARGET},
+			MEETINGINFORMATION_ID = MEETINGINFORMATION_ID
+		where 
+			MEETINGINFORMATION_ID = #{MEETINGINFORMATION_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.MEETINGINFORMATION_ID = #{MEETINGINFORMATION_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and f.PHASETEMPLATE_ID=#{pd.PLANINSTANCE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.THEME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.LOCATION LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.ORIGINATOR LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.COMPILINGPERSON LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.CHECKER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MEETINGINFORMATION_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.MissionTemplateMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOMP_MISSIONTEMPLATE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.MT_OTCODE,	
+		f.MT_CODE,	
+		f.MT_NAME,	
+		f.MT_DES,	
+		f.MT_STATION,	
+		f.MT_CODETYPE,	
+		f.MT_CODERANK,	
+		f.MT_INPUTJSON,	
+		f.MT_OUTPUTJSON,	
+		f.MT_CREATETIME,	
+		f.MT_CREATOR,	
+		f.MT_EDITTIME,	
+		f.MT_EDITOR
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		MT_OTCODE,	
+		MT_CODE,	
+		MT_NAME,	
+		MT_DES,	
+		MT_STATION,	
+		MT_CODETYPE,	
+		MT_CODERANK,	
+		MT_INPUTJSON,	
+		MT_OUTPUTJSON,	
+		MT_CREATETIME,	
+		MT_CREATOR,	
+		MT_EDITTIME,	
+		MT_EDITOR
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MT_OTCODE},	
+		#{MT_CODE},	
+		#{MT_NAME},	
+		#{MT_DES},	
+		#{MT_STATION},	
+		#{MT_CODETYPE},	
+		#{MT_CODERANK},	
+		#{MT_INPUTJSON},	
+		#{MT_OUTPUTJSON},	
+		#{MT_CREATETIME},	
+		#{MT_CREATOR},	
+		#{MT_EDITTIME},	
+		#{MT_EDITOR}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MT_CODE = #{MT_CODE}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MT_OTCODE = #{MT_OTCODE},
+			MT_NAME = #{MT_NAME},
+			MT_DES = #{MT_DES},
+			MT_STATION = #{MT_STATION},
+			MT_CODETYPE = #{MT_CODETYPE},
+			MT_CODERANK = #{MT_CODERANK},
+			MT_INPUTJSON = #{MT_INPUTJSON},
+			MT_OUTPUTJSON = #{MT_OUTPUTJSON},
+			MT_CREATETIME = #{MT_CREATETIME},
+			MT_CREATOR = #{MT_CREATOR},
+			MT_EDITTIME = #{MT_EDITTIME},
+			MT_EDITOR = #{MT_EDITOR},
+			MT_CODE = MT_CODE
+		where 
+			MT_CODE = #{MT_CODE}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.MT_CODE = #{MT_CODE}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 AND f.MT_OTCODE=#{pd.OT_CODE}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.MT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.MT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	<select id="listByParentId" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where  f.MT_OTCODE=#{OT_CODE}
+		ORDER BY  right(MT_OTCODE,2)
+	</select>
+	<select id="count" parameterType="pd" resultType="pd">
+			select ISNULL((max(right(MT_CODE,2))+1), 1) number  from MOMP_MISSIONTEMPLATE where MT_OTCODE=#{MT_OTCODE}
+	</select>
+	
+	<select id="countPhase" parameterType="pd" resultType="pd">
+	select count(1) as number from MOMP_PHASETEMPLATE where PT_MTCODE=#{MT_CODE}
+	</select>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MT_CODE in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- YY 356703572 -->
+</mapper>

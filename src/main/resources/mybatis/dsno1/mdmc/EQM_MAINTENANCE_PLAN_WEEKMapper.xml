@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdmc.EQM_MAINTENANCE_PLAN_WEEKMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDMC_EQM_MAINTENANCE_PLAN_WEEK
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FEQM_ID,	
+		f.FEQM_CLASS_ID,	
+		f.FRECEIPT_NUMBER,	
+		f.FWORKSHOP_ID,	
+		f.FEQM_NAME,	
+		f.FEQM_CODE,	
+		f.FMAINTENANCE_CLASS,	
+		f.FDATE1,	
+		f.FDATE2,	
+		f.FDATE3,	
+		f.FDATE4,	
+		f.FDATE5,	
+		f.FMAINTENANCE_COUNT1,	
+		f.FMAINTENANCE_COUNT2,	
+		f.FMAINTENANCE_COUNT3,	
+		f.FMAINTENANCE_COUNT4,	
+		f.FMAINTENANCE_COUNT5,	
+		f.FSTATE1,	
+		f.FSTATE2,	
+		f.FSTATE3,	
+		f.FSTATE4,	
+		f.FSTATE5,	
+		f.FBILLNO,	
+		f.FNOTE,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.LAST_MODIFIER,	
+		f.LAST_MODIFIED_TIME,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.EQM_MAINTENANCE_PLAN_WEEK_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FEQM_ID,	
+		FEQM_CLASS_ID,	
+		FRECEIPT_NUMBER,	
+		FWORKSHOP_ID,	
+		FEQM_NAME,	
+		FEQM_CODE,	
+		FMAINTENANCE_CLASS,	
+		FDATE1,	
+		FDATE2,	
+		FDATE3,	
+		FDATE4,	
+		FDATE5,	
+		FMAINTENANCE_COUNT1,	
+		FMAINTENANCE_COUNT2,	
+		FMAINTENANCE_COUNT3,	
+		FMAINTENANCE_COUNT4,	
+		FMAINTENANCE_COUNT5,	
+		FSTATE1,	
+		FSTATE2,	
+		FSTATE3,	
+		FSTATE4,	
+		FSTATE5,	
+		FBILLNO,	
+		FNOTE,	
+		FCREATOR,	
+		CREATE_TIME,	
+		LAST_MODIFIER,	
+		LAST_MODIFIED_TIME,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		EQM_MAINTENANCE_PLAN_WEEK_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FEQM_ID},	
+		#{FEQM_CLASS_ID},	
+		#{FRECEIPT_NUMBER},	
+		#{FWORKSHOP_ID},	
+		#{FEQM_NAME},	
+		#{FEQM_CODE},	
+		#{FMAINTENANCE_CLASS},	
+		#{FDATE1},	
+		#{FDATE2},	
+		#{FDATE3},	
+		#{FDATE4},	
+		#{FDATE5},	
+		#{FMAINTENANCE_COUNT1},	
+		#{FMAINTENANCE_COUNT2},	
+		#{FMAINTENANCE_COUNT3},	
+		#{FMAINTENANCE_COUNT4},	
+		#{FMAINTENANCE_COUNT5},	
+		#{FSTATE1},	
+		#{FSTATE2},	
+		#{FSTATE3},	
+		#{FSTATE4},	
+		#{FSTATE5},	
+		#{FBILLNO},	
+		#{FNOTE},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{LAST_MODIFIER},	
+		#{LAST_MODIFIED_TIME},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{EQM_MAINTENANCE_PLAN_WEEK_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_MAINTENANCE_PLAN_WEEK_ID = #{EQM_MAINTENANCE_PLAN_WEEK_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FEQM_ID = #{FEQM_ID},
+			FEQM_CLASS_ID = #{FEQM_CLASS_ID},
+			FRECEIPT_NUMBER = #{FRECEIPT_NUMBER},
+			FWORKSHOP_ID = #{FWORKSHOP_ID},
+			FEQM_NAME = #{FEQM_NAME},
+			FEQM_CODE = #{FEQM_CODE},
+			FMAINTENANCE_CLASS = #{FMAINTENANCE_CLASS},
+			FDATE1 = #{FDATE1},
+			FDATE2 = #{FDATE2},
+			FDATE3 = #{FDATE3},
+			FDATE4 = #{FDATE4},
+			FDATE5 = #{FDATE5},
+			FMAINTENANCE_COUNT1 = #{FMAINTENANCE_COUNT1},
+			FMAINTENANCE_COUNT2 = #{FMAINTENANCE_COUNT2},
+			FMAINTENANCE_COUNT3 = #{FMAINTENANCE_COUNT3},
+			FMAINTENANCE_COUNT4 = #{FMAINTENANCE_COUNT4},
+			FMAINTENANCE_COUNT5 = #{FMAINTENANCE_COUNT5},
+			FSTATE1 = #{FSTATE1},
+			FSTATE2 = #{FSTATE2},
+			FSTATE3 = #{FSTATE3},
+			FSTATE4 = #{FSTATE4},
+			FSTATE5 = #{FSTATE5},
+			FBILLNO = #{FBILLNO},
+			FNOTE = #{FNOTE},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			LAST_MODIFIER = #{LAST_MODIFIER},
+			LAST_MODIFIED_TIME = #{LAST_MODIFIED_TIME},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			EQM_MAINTENANCE_PLAN_WEEK_ID = EQM_MAINTENANCE_PLAN_WEEK_ID
+		where 
+			EQM_MAINTENANCE_PLAN_WEEK_ID = #{EQM_MAINTENANCE_PLAN_WEEK_ID}
+	</update>
+	
+	<update id="editState" parameterType="pd">
+		${strSql}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.CLASS_NAME,f2.NAME FDEPT_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join MDM_EQM_CLASS f1
+		on f.FEQM_CLASS_ID=f1.EQM_CLASS_ID
+		left join OA_DEPARTMENT f2
+		on f.FWORKSHOP_ID=f2.DEPARTMENT_ID
+		where 
+			f.EQM_MAINTENANCE_PLAN_WEEK_ID = #{EQM_MAINTENANCE_PLAN_WEEK_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.CLASS_NAME,f2.NAME FDEPT_NAME,
+		CONVERT(varchar(100), GETDATE(), 23) DATE1, 
+		CONVERT(varchar(100), DATEADD(DAY,1,GETDATE()), 23) DATE2,
+		CONVERT(varchar(100), DATEADD(DAY,2,GETDATE()), 23) DATE3,
+		CONVERT(varchar(100), DATEADD(DAY,3,GETDATE()), 23) DATE4
+		from 
+		<include refid="tableName"></include> f
+		left join MDM_EQM_CLASS f1
+		on f.FEQM_CLASS_ID=f1.EQM_CLASS_ID
+		left join OA_DEPARTMENT f2
+		on f.FWORKSHOP_ID=f2.DEPARTMENT_ID
+		where 1=1
+		<if test="pd.workshop != null and pd.workshop != ''">
+			and
+				FWORKSHOP_ID=#{pd.workshop}
+		</if>
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''.toString() and pd.KEYWORDS1 != '全'.toString()"><!-- 本单号检索 -->
+			and
+				(
+					FRECEIPT_NUMBER =#{pd.KEYWORDS1}
+					
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 设备类检索 -->
+			and
+				(
+					FEQM_CLASS_ID =#{pd.KEYWORDS2}
+					
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 设备信息检索 -->
+			and
+				(
+					FEQM_NAME like '%'+#{pd.KEYWORDS3}+'%'
+					or
+					FEQM_CODE like '%'+#{pd.KEYWORDS3}+'%'				
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 车间检索 -->
+			and
+				(
+					FWORKSHOP_ID =#{pd.KEYWORDS4}
+					
+				)
+		</if>
+		[fhstart] order by FRECEIPT_NUMBER,FWORKSHOP_ID,FEQM_CLASS_ID [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_MAINTENANCE_PLAN_WEEK_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 根据车间部门id查设备列表 -->
+	<select id="getEqmList" parameterType="pd" resultType="pd">
+		select
+		EQM_BASE_ID,FNAME,FIDENTIFY,EQM_CLASS_ID,USE_DEP
+		from 
+		MDM_EQM_BASE f
+		where 
+		1=1
+		<choose>
+                <when test="FTYPE != null and FTYPE == 'WEEK_UP'.toString()">
+                    and EQM_BASE_ID not in
+                    (
+                    select FEQM_ID from MDMC_EQM_MAINTENANCE_PLAN_WEEK f
+					where 
+					FRECEIPT_NUMBER=#{KEYWORDS1}
+					and
+					FWORKSHOP_ID=#{workshop}
+                    )
+                    and
+					USE_DEP=#{workshop}
+                </when>
+                <when test="FTYPE != null and FTYPE == 'MONTH_UP'.toString()">
+                    and EQM_BASE_ID not in
+                    (
+                    select FEQM_ID from MDMC_EQM_MAINTENANCE_PLAN_MONTH f
+					where 
+					FRECEIPT_NUMBER=#{KEYWORDS1}					
+                    )
+                </when>
+                <when test="FTYPE != null and FTYPE == 'QUARTER_UP'.toString()">
+                    and EQM_BASE_ID not in
+                    (
+                    select FEQM_ID from MDMC_EQM_MAINTENANCE_PLAN_QUARTER f
+					where 
+					FRECEIPT_NUMBER=#{KEYWORDS1}					
+                    )
+                </when>
+                <otherwise>
+                <if test="workshop != null and workshop != ''">
+				and
+				USE_DEP=#{workshop}
+				</if>
+                </otherwise>
+         </choose>
+		and USE_DEP != '' and USE_DEP is not null
+	</select>
+	<!--根据日期（2020-09）查找本月创建过周计划数量-->
+	<select id="getNUM" parameterType="pd" resultType="pd">
+		select
+		count(*) NUM
+		from 
+		MDMC_EQM_MAINTENANCE_PLAN_WEEK f
+		where 
+		FRECEIPT_NUMBER=#{month}
+		and
+		FWORKSHOP_ID=#{workshop}
+		
+	</select>
+	<!-- 周计划待选择月份列表 -->
+	<select id="getMonthList" parameterType="pd" resultType="pd">
+		select cast(YEAR(GETDATE()) as VARCHAR(4))+'-'+RIGHT('00'+CAST(FMONTH AS VARCHAR(2)),2) FMONTH
+		from MDMC_EQM_MAINTENANCE_MONTH where FMONTH 
+		not in(select cast(SUBSTRING(FRECEIPT_NUMBER,6,2) as int) 
+		from MDMC_EQM_MAINTENANCE_PLAN_WEEK where SUBSTRING(FRECEIPT_NUMBER,1,4)=cast(YEAR(GETDATE()) as VARCHAR(4)))
+	</select>
+	<!--本单号列表-->
+	<select id="getNoList" parameterType="pd" resultType="pd">
+		select FRECEIPT_NUMBER from MDMC_EQM_MAINTENANCE_PLAN_WEEK group by FRECEIPT_NUMBER
+	</select>
+	<!--设备类列表-->
+	<select id="getClassList" parameterType="pd" resultType="pd">
+		select f.FEQM_CLASS_ID,f1.CLASS_NAME 
+		from MDMC_EQM_MAINTENANCE_PLAN_WEEK f,MDM_EQM_CLASS f1  
+		where f.FEQM_CLASS_ID=f1.EQM_CLASS_ID
+		and FWORKSHOP_ID=#{workshop} 
+		group by f.FEQM_CLASS_ID,f1.CLASS_NAME 
+	</select>
+	<!--车间列表-->
+	<select id="getWsList" parameterType="pd" resultType="pd">
+		select f.FWORKSHOP_ID,f1.NAME FDEPT_NAME
+		from MDMC_EQM_MAINTENANCE_PLAN_WEEK f,OA_DEPARTMENT f1  
+		where f.FWORKSHOP_ID=f1.DEPARTMENT_ID
+		group by f.FWORKSHOP_ID,f1.NAME 
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.ICONCOLORMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		EPM_ICONCOLOR
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FUNCTION_ID,	
+		f.FTEXT,	
+		f.FURL,	
+		f.FNOTE,	
+		f.FCOLOR,	
+		f.FENGLISH,	
+		f.FCREATOR,	
+		f.FCTIME,	
+		f.FLASTMODIFY_MAN,	
+		f.FLASTMODIFY_TIME,	
+		f.ICONCOLOR_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FUNCTION_ID,	
+		FTEXT,	
+		FURL,	
+		FNOTE,	
+		FCOLOR,	
+		FENGLISH,	
+		FCREATOR,	
+		FCTIME,	
+		FLASTMODIFY_MAN,	
+		FLASTMODIFY_TIME,	
+		ICONCOLOR_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FUNCTION_ID},	
+		#{FTEXT},	
+		#{FURL},	
+		#{FNOTE},	
+		#{FCOLOR},	
+		#{FENGLISH},	
+		#{FCREATOR},	
+		#{FCTIME},	
+		#{FLASTMODIFY_MAN},	
+		#{FLASTMODIFY_TIME},	
+		#{ICONCOLOR_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ICONCOLOR_ID = #{ICONCOLOR_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FUNCTION_ID = #{FUNCTION_ID},
+			FTEXT = #{FTEXT},
+			FURL = #{FURL},
+			FNOTE = #{FNOTE},
+			FCOLOR = #{FCOLOR},
+			FENGLISH = #{FENGLISH},
+			
+			FLASTMODIFY_MAN = #{FLASTMODIFY_MAN},
+			FLASTMODIFY_TIME = #{FLASTMODIFY_TIME},
+			ICONCOLOR_ID = ICONCOLOR_ID
+		where 
+			ICONCOLOR_ID = #{ICONCOLOR_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.ICONCOLOR_ID = #{ICONCOLOR_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		isnull(f3.NAME,'') FDICNAME
+		from 
+		<include refid="tableName"></include> f
+		
+		left join SYS_DICTIONARIES f3
+		on f.FUNCTION_ID=f3.DICTIONARIES_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f3.NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					FNOTE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					FTEXT LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					FENGLISH LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					FCOLOR LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+		1=1
+		<choose>
+                <when test="FTYPEG != null and FTYPEG == 'OPTION'.toString()">
+                    and FUNCTION_ID=#{FUNCTION_ID}
+                </when>
+                
+                <otherwise>
+                	1=1
+                </otherwise>
+         </choose> 
+         order by FTEXT
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ICONCOLOR_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

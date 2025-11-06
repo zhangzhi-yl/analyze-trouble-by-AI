@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.ExceptionDefinitionMapper">
+	<!-- 
+		原作者：范贺男
+		时   间：2020-11-09
+			如果有同事需要在文件里面加SQL的话，
+			请写好注释，注明SQL的用途，设计到的功能等
+	 -->
+	<!--表名 -->
+	<sql id="tableName">
+		MM_ExceptionDefinition
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ExceptionDefinition_ID,	
+		f.IfStartUsing,	
+		f.FOperator,	
+		f.ExceptionType,	
+		f.ExceptionDefinition,	
+		f.FExplanation,	
+		f.InitialOperatorID,	
+		f.FMakeBillsPersoID,	
+		f.FTime
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		ExceptionDefinition_ID,	
+		IfStartUsing,	
+		FOperator,	
+		ExceptionType,	
+		ExceptionDefinition,	
+		FExplanation,	
+		InitialOperatorID,	
+		FMakeBillsPersoID,	
+		FTime
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ExceptionDefinition_ID},	
+		#{IfStartUsing},	
+		#{FOperator},	
+		#{ExceptionType},	
+		#{ExceptionDefinition},	
+		#{FExplanation},	
+		#{InitialOperatorID},	
+		#{FMakeBillsPersoID},	
+		#{FTime}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ExceptionDefinition_ID = #{ExceptionDefinition_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FOperator = #{FOperator}, 						 <!-- 指定给人或部门 -->
+			ExceptionType = #{ExceptionType}, 				 <!-- 异常状态 -->
+			ExceptionDefinition = #{ExceptionDefinition},	 <!-- 异常定义 -->
+			FExplanation = #{FExplanation},  				 <!-- 异常描述 -->
+			InitialOperatorID = #{InitialOperatorID} 		 <!-- 初始指定人或部门 -->
+		where 
+			ExceptionDefinition_ID = #{ExceptionDefinition_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT
+			ExceptionDefinition_ID,
+			case when f.IfStartUsing = 1 then '启用' else '停用' end IfStartUsing,			-- 是否启用 --
+			case when f.FOperator = 1 then '部门' else '人' end  FOperator,					--指定给人或部门 --
+			f.ExceptionDefinition,															-- 异常定义 --
+			f.FExplanation,																	-- 异常描述 --
+			isnull(e.NAME,'') FMakeBillsPersoID,											-- 创建人 --
+			f.FTime ,																		-- 创建时间 --
+			isnull(d.NAME,'') ExceptionType,												-- 异常类型 --
+			ExceptionType ExceptionTypeID,
+			isnull(b.NAME,'') InitialOperatorIDStaff,										-- 人员姓名 --
+			isnull(c.NAME,'') InitialOperatorIDDept	,									-- 部门名称 -->
+			InitialOperatorID
+			
+		FROM
+			MM_ExceptionDefinition f
+			LEFT JOIN OA_STAFF b ON f.InitialOperatorID = b.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT c on f.InitialOperatorID = c.DEPARTMENT_ID
+			LEFT JOIN SYS_DICTIONARIES d ON f.ExceptionType = d.DICTIONARIES_ID
+			LEFT JOIN OA_STAFF e on f.FMakeBillsPersoID = e.STAFF_ID
+		where 
+			f.ExceptionDefinition_ID = #{ExceptionDefinition_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT
+			ExceptionDefinition_ID,
+			case when f.IfStartUsing = 1 then '启用' else '停用' end IfStartUsing,			-- 是否启用 --
+			case when f.FOperator = 1 then '部门' else '人' end  FOperator,					--指定给人或部门 --
+			f.ExceptionDefinition,															-- 异常定义 --
+			f.FExplanation,																	-- 异常描述 --
+			isnull(e.NAME,'') FMakeBillsPersoID,											-- 创建人 -
+			f.FTime ,																		-- 创建时间 --
+			isnull(d.NAME,'') ExceptionType,												-- 异常类型 --
+			ExceptionType ExceptionTypeID,
+			isnull(b.NAME,'') InitialOperatorIDStaff,										-- 人员姓名 --
+			isnull(c.NAME,'') InitialOperatorIDDept	,									-- 部门名称 --
+			InitialOperatorID
+			
+		FROM
+			MM_ExceptionDefinition f
+			LEFT JOIN OA_STAFF b ON f.InitialOperatorID = b.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT c on f.InitialOperatorID = c.DEPARTMENT_ID
+			LEFT JOIN SYS_DICTIONARIES d ON f.ExceptionType = d.DICTIONARIES_ID
+			LEFT JOIN OA_STAFF e on f.FMakeBillsPersoID = e.STAFF_ID
+		where 1=1
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索 :移交给人或部门-->
+			and
+				(
+				f.FOperator = #{pd.KeyWords1} 
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索：适用异常类型 -->
+			and
+				(
+				f.ExceptionType = #{pd.KeyWords2} 
+				)
+		</if>
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索：是否启用 -->
+			and
+				(
+				f.IfStartUsing = #{pd.KeyWords3}
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索：初始处理部门 -->
+			and
+				(
+				f.InitialOperatorID = #{pd.KeyWords4} 
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索：初始处理人 -->
+			and
+				(
+				f.InitialOperatorID =  #{pd.KeyWords5} 
+				)
+		</if>
+		[fhstart]order by f.FTime desc[fhend]
+	</select>
+	<!-- 获取数据字典中的异常类型 -->
+	<select id="getExceptionType" parameterType="pd" resultType="pd">
+		select NAME,NAME_EN,BIANMA,ORDER_BY,DICTIONARIES_ID from SYS_DICTIONARIES where PARENT_ID = 'b93dcad5c7d4489eb9d4afa711450b4e'
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		SELECT
+			ExceptionDefinition_ID,
+			case when f.IfStartUsing = 1 then '启用' else '停用' end IfStartUsing,			-- 是否启用 --
+			case when f.FOperator = 1 then '部门' else '人' end  FOperator,					--指定给人或部门 --
+			f.ExceptionDefinition,															-- 异常定义 --
+			f.FExplanation,																	-- 异常描述 --
+			isnull(e.NAME,'') FMakeBillsPersoID,											-- 创建人 --
+			f.FTime ,																		-- 创建时间 --
+			isnull(d.NAME,'') ExceptionType,												-- 异常类型 --
+			ExceptionType ExceptionTypeID,
+			isnull(b.NAME,'') InitialOperatorIDStaff,										-- 人员姓名 --
+			isnull(c.NAME,'') InitialOperatorIDDept	,									-- 部门名称 --
+			InitialOperatorID
+			
+		FROM
+			MM_ExceptionDefinition f
+			LEFT JOIN OA_STAFF b ON f.InitialOperatorID = b.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT c on f.InitialOperatorID = c.DEPARTMENT_ID
+			LEFT JOIN SYS_DICTIONARIES d ON f.ExceptionType = d.DICTIONARIES_ID
+			LEFT JOIN OA_STAFF e on f.FMakeBillsPersoID = e.STAFF_ID
+		where 1=1 and f.IfStartUsing = 1
+		<if test="KeyWords6 != null and KeyWords6 != ''">
+			and 
+			(
+			f.ExceptionDefinition like '%' + #{KeyWords6} + '%'
+			)
+		</if>
+		<if test="KeyWords1 != null and KeyWords1 != ''"><!-- 关键词检索 :移交给人或部门-->
+			and
+				(
+				f.FOperator like '%' + #{KeyWords1} + '%'
+				)
+		</if>
+		<if test="KeyWords2 != null and KeyWords2 != ''"><!-- 关键词检索：适用异常类型 -->
+			and
+				(
+				f.ExceptionType like '%' + #{KeyWords2} + '%'
+				)
+		</if>
+		<if test="KeyWords3 != null and KeyWords3 != ''"><!-- 关键词检索：是否启用 -->
+			and
+				(
+				f.IfStartUsing like '%' + #{KeyWords3} + '%'
+				)
+		</if>
+		<if test="KeyWords4 != null and KeyWords4 != ''"><!-- 关键词检索：初始处理部门 -->
+			and
+				(
+				f.InitialOperatorID like '%' + #{KeyWords4} + '%'
+				)
+		</if>
+		<if test="KeyWords5 != null and KeyWords5 != ''"><!-- 关键词检索：初始处理人 -->
+			and
+				(
+				f.InitialOperatorID like '%' + #{KeyWords5} + '%'
+				)
+		</if>
+		order by f.FTime desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ExceptionDefinition_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 将异常状态设为启用 -->
+	<update id="toStartUsing" parameterType="pd">
+		update 
+			MM_ExceptionDefinition
+		set 
+			IfStartUsing = 1
+		where ExceptionDefinition_ID = #{ExceptionDefinition_ID}
+	</update>
+	<!-- 将异常状态设为停用 -->
+	<update id="toEndUsing" parameterType="pd">
+		update 
+			MM_ExceptionDefinition
+		set 
+			IfStartUsing = 0
+		where ExceptionDefinition_ID = #{ExceptionDefinition_ID}
+	</update>
+</mapper>

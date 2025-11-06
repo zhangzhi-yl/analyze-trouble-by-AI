@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.OrderTemplateMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOMP_ORDERTEMPLATE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.OT_CODE,	
+		f.OT_PRODUCTCODE,	
+		f.OT_PRODUCTNAME,	
+		f.OT_BOM,	
+		f.OT_ISFIRMBOM,	
+		f.OT_TQUANTITY,	
+		f.OT_UNIT,	
+		f.OT_USESTATUS,	
+		f.OT_CHECKSTATUS,	
+		f.OT_TQBOM,	
+		f.OT_CREATOR,	
+		f.OT_CREATETIME,	
+		f.OT_EDITTIME,	
+		f.OT_EDITOR,	
+		f.OT_ISNEEDCHECK
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		OT_CODE,	
+		OT_PRODUCTCODE,	
+		OT_PRODUCTNAME,	
+		OT_BOM,	
+		OT_ISFIRMBOM,	
+		OT_TQUANTITY,	
+		OT_UNIT,	
+		OT_USESTATUS,	
+		OT_CHECKSTATUS,	
+		OT_TQBOM,	
+		OT_CREATOR,	
+		OT_CREATETIME,	
+		OT_EDITTIME,	
+		OT_EDITOR,	
+		OT_ISNEEDCHECK
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{OT_CODE},	
+		#{OT_PRODUCTCODE},	
+		#{OT_PRODUCTNAME},	
+		#{OT_BOM},	
+		#{OT_ISFIRMBOM},	
+		#{OT_TQUANTITY},	
+		#{OT_UNIT},	
+		#{OT_USESTATUS},	
+		#{OT_CHECKSTATUS},	
+		#{OT_TQBOM},	
+		#{OT_CREATOR},	
+		#{OT_CREATETIME},	
+		#{OT_EDITTIME},	
+		#{OT_EDITOR},	
+		#{OT_ISNEEDCHECK}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			OT_CODE = #{OT_CODE}
+	</delete>
+	<select id="count" parameterType="pd" resultType="pd">
+			select ISNULL((max(right(OT_CODE,5))+1), 1) number  from MOMP_ORDERTEMPLATE
+	</select>
+	<select id="countMission" parameterType="pd" resultType="pd">
+	select count(1) as number from MOMP_MISSIONTEMPLATE where MT_OTCODE=#{OT_CODE}
+	</select>
+	<select id="" ></select>
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			
+			OT_PRODUCTCODE = #{OT_PRODUCTCODE},
+			OT_PRODUCTNAME = #{OT_PRODUCTNAME},
+			OT_BOM = #{OT_BOM},
+			OT_ISFIRMBOM = #{OT_ISFIRMBOM},
+			OT_TQUANTITY = #{OT_TQUANTITY},
+			OT_UNIT = #{OT_UNIT},
+			OT_USESTATUS = #{OT_USESTATUS},
+			OT_CHECKSTATUS = #{OT_CHECKSTATUS},
+			OT_TQBOM = #{OT_TQBOM},
+			OT_CREATOR = #{OT_CREATOR},
+			OT_CREATETIME = #{OT_CREATETIME},
+			OT_EDITTIME = #{OT_EDITTIME},
+			OT_EDITOR = #{OT_EDITOR},
+			OT_ISNEEDCHECK = #{OT_ISNEEDCHECK},
+			OT_CODE = OT_CODE
+		where 
+			OT_CODE = #{OT_CODE}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.OT_CODE = #{OT_CODE}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				
+					f.OT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' or 
+					f.OT_PRODUCTCODE LIKE '%'+ #{pd.KEYWORDS}+'%' or 
+					f.OT_PRODUCTNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+<!-- 	查询配方bom列表 -->
+	<select id="listPbom" parameterType="pd" resultType="pd">
+	select * from MDM_PBOM where parent_id='0'
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			OT_CODE in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

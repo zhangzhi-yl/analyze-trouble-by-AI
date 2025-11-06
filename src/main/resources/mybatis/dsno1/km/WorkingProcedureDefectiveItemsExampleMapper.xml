@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.WorkingProcedureDefectiveItemsExampleMapper">
+	
+	<!--工艺工序实例次品项表名 -->
+	<sql id="tableName">
+		KM_WorkingProcedureDefectiveItemsExample
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.WorkingProcedureExample_ID,	
+		f.DefectiveCategory,	
+		f.DefectiveItemName,	
+		f.WorkingProcedureDefectiveItemsExample_ID,
+		f.ProductionBOM_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		WorkingProcedureExample_ID,	
+		DefectiveCategory,	
+		DefectiveItemName,	
+		WorkingProcedureDefectiveItemsExample_ID,
+		ProductionBOM_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WorkingProcedureExample_ID},	
+		#{DefectiveCategory},	
+		#{DefectiveItemName},	
+		#{WorkingProcedureDefectiveItemsExample_ID},
+		#{ProductionBOM_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WorkingProcedureDefectiveItemsExample_ID = #{WorkingProcedureDefectiveItemsExample_ID}
+	</delete>
+	<!-- 删除次品项列表-->
+	<delete id="deleteByBomId" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProductionBOM_ID = #{ProductionBOM_ID}
+	</delete>
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			WorkingProcedureExample_ID = #{WorkingProcedureExample_ID},
+			DefectiveCategory = #{DefectiveCategory},
+			DefectiveItemName = #{DefectiveItemName},
+			ProductionBOM_ID = #{ProductionBOM_ID}
+		where 
+			WorkingProcedureDefectiveItemsExample_ID = #{WorkingProcedureDefectiveItemsExample_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.WorkingProcedureDefectiveItemsExample_ID = #{WorkingProcedureDefectiveItemsExample_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.DefectiveCategory LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.DefectiveItemName LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.WorkingProcedureExample_ID!= null and pd.WorkingProcedureExample_ID != ''"><!-- 实例工艺工序ID -->
+			and f.WorkingProcedureExample_ID = #{pd.WorkingProcedureExample_ID}
+		</if>
+		<if test="pd.ProductionBOM_ID != null and pd.ProductionBOM_ID != ''"><!-- 生产BOMID -->
+			and f.ProductionBOM_ID = #{pd.ProductionBOM_ID}
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.DefectiveCategory LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.DefectiveItemName LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="WorkingProcedureExample_ID!= null and WorkingProcedureExample_ID != ''"><!-- 实例工艺工序ID -->
+			and f.WorkingProcedureExample_ID = #{WorkingProcedureExample_ID}
+		</if>
+		<if test="ProductionBOM_ID != null and ProductionBOM_ID != ''"><!-- 生产BOMID -->
+			and f.ProductionBOM_ID = #{ProductionBOM_ID}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WorkingProcedureDefectiveItemsExample_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

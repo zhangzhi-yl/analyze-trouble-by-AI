@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.KeyCustomers.CustomerGJMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		CUS_CustomerGJ
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.CUSTOMER_NAME,	
+		f.FSTAGE,	
+		f.FTYPE,	
+		f.FCREATER,	
+		f.FCREATTIME,	
+		f.FMANAGER,	
+		f.FENDTIME,	
+		f.CUSTOMER_PHONE,	
+		f.GJTYPE,	
+		f.GJTASK,	
+		f.GJTIME,	
+		f.GJSTATE,	
+		f.FKTIME,	
+		f.FKCONTENT,	
+		f.CustomerGJ_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		CUSTOMER_NAME,	
+		FSTAGE,	
+		FTYPE,	
+		FCREATER,	
+		FCREATTIME,	
+		FMANAGER,	
+		FENDTIME,	
+		CUSTOMER_PHONE,	
+		GJTYPE,	
+		GJTASK,	
+		GJTIME,	
+		GJSTATE,	
+		FKTIME,	
+		FKCONTENT,	
+		CustomerGJ_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{CUSTOMER_NAME},	
+		#{FSTAGE},	
+		#{FTYPE},	
+		#{FCREATER},	
+		#{FCREATTIME},	
+		#{FMANAGER},	
+		#{FENDTIME},	
+		#{CUSTOMER_PHONE},	
+		#{GJTYPE},	
+		#{GJTASK},	
+		#{GJTIME},	
+		#{GJSTATE},	
+		#{FKTIME},	
+		#{FKCONTENT},	
+		#{CustomerGJ_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CustomerGJ_ID = #{CustomerGJ_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CUSTOMER_NAME = #{CUSTOMER_NAME},
+			FSTAGE = #{FSTAGE},
+			FTYPE = #{FTYPE},
+			FCREATER = #{FCREATER},
+			FCREATTIME = #{FCREATTIME},
+			FMANAGER = #{FMANAGER},
+			FENDTIME = #{FENDTIME},
+			CUSTOMER_PHONE = #{CUSTOMER_PHONE},
+			GJTYPE = #{GJTYPE},
+			GJTASK = #{GJTASK},
+			GJTIME = #{GJTIME},
+			GJSTATE = #{GJSTATE},
+			FKTIME = #{FKTIME},
+			FKCONTENT = #{FKCONTENT},
+			CustomerGJ_ID = CustomerGJ_ID
+		where 
+			CustomerGJ_ID = #{CustomerGJ_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.CustomerGJ_ID = #{CustomerGJ_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 
+		<if test="pd.FName != null and pd.FName != ''">
+			and f.CUSTOMER_NAME = #{pd.FName}
+		</if>
+		<if test="pd.CustomerJH_ID != null and pd.CustomerJH_ID != ''">
+			and f.CustomerJH_ID = #{pd.CustomerJH_ID}
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					<!-- 根据需求自己加检索条件 -->
+					f.GJTASK LIKE '%'+ #{pd.KEYWORDS}+'%'
+					<!--  or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%'  -->
+				
+				)
+		</if>
+		[fhstart] order by f.FCREATTIME desc[fhend]
+	</select>
+	<select id="listToday" parameterType="page" resultType="pd">
+		select
+		f.*
+		from 
+		CUS_CustomerGJ f
+		where
+		CONVERT(VARCHAR(10),f.GJTIME,120)= #{pd.GJTIME}
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CustomerGJ_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 上周完成跟进 -->
+	<select id="LastWeekList" parameterType="pd" resultType="pd">
+		SELECT * FROM CUS_CustomerGJ where datediff(week,GJTIME,getdate())=1 and GJSTATE = '已跟进'
+	</select>
+	<!-- 未完成跟进 -->
+	<select id="undoneList" parameterType="pd" resultType="pd">
+		SELECT * FROM CUS_CustomerGJ where  GJSTATE != '已跟进'
+	</select>
+	<!-- 本周完成跟进 -->
+	<select id="FinishList" parameterType="pd" resultType="pd">
+		SELECT * FROM CUS_CustomerGJ where datediff(week,GJTIME,getdate())=0 and GJSTATE = '已跟进'
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+	<insert id="saveWeekReport" parameterType="pd">
+		insert into CUS_WEEKREPORT
+		(
+		WEEKREPORT_ID,
+		THISWEEKFINALREPORT,
+		LASTWEEKWORKJH,
+		FCREATER,
+		FCREATTIME
+		) values (
+		#{WEEKREPORT_ID},
+		#{THISWEEKFINALREPORT},
+		#{LASTWEEKWORKJH},
+		#{FCREATER},
+		#{FCREATTIME}
+		)
+	</insert>
+</mapper>

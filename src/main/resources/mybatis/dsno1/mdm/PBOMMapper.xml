@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.PBOMMapper">
+	
+	<resultMap type="PBOM" id="pbomResultMap">
+		<id column="PBOM_ID" property="PBOM_ID"/>
+		<result column="FNAME" property="FNAME"/>
+		<result column="PARENT_ID" property="PARENT_ID"/>
+	</resultMap>
+	
+	<resultMap type="PBOMNew" id="pbomNewResultMap">
+		<id column="PBOM_ID" property="PBOM_ID"/>
+		<result column="FNAME" property="FNAME"/>
+		<result column="PARENT_ID" property="PARENT_ID"/>
+	</resultMap>
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_PBOM
+	</sql>
+	<sql id="copyTableName">
+		MDM_PBOM_copy
+	</sql>
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PRODUCT_NAME,	
+		f.AUXILIARY_UNIT,	
+		f.FNAME,	
+		f.FLEVEL,	
+		f.MAT_CODE,	
+		f.MAT_NAME,	
+		f.FQTY,	
+		f.FUNIT,	
+		f.QTY_H,	
+		f.QTY_L,	
+		f.FSPECS,	
+		f.PARENT_ID,	
+		f.PARENT_CODE,	
+		f.ROOT_NODE_CODE,	
+		f.FVERSIONS,	
+		f.FSTATE,	
+		f.STANDARD_NUMBER,	
+		f.FORWARD_NO,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.RECIPE_EXECUTION_DATE,	
+		f.FAPPROVER,	
+		f.BOM_KPI1,	
+		f.BOM_KPI2,	
+		f.BOM_KPI3,	
+		f.BOM_KPI4,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,	
+		f.ERP_CODE,
+		f.PBOM_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PRODUCT_NAME,	
+		AUXILIARY_UNIT,	
+		FNAME,	
+		FLEVEL,	
+		MAT_CODE,	
+		MAT_NAME,	
+		FQTY,	
+		FUNIT,	
+		QTY_H,	
+		QTY_L,	
+		FSPECS,	
+		PARENT_ID,	
+		PARENT_CODE,	
+		ROOT_NODE_CODE,	
+		FVERSIONS,	
+		FSTATE,	
+		STANDARD_NUMBER,	
+		FORWARD_NO,	
+		FCREATOR,	
+		CREATE_TIME,	
+		RECIPE_EXECUTION_DATE,	
+		FAPPROVER,	
+		BOM_KPI1,	
+		BOM_KPI2,	
+		BOM_KPI3,	
+		BOM_KPI4,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		FEXTEND4,	
+		FEXTEND5,
+		ERP_CODE,	
+		PBOM_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PRODUCT_NAME},	
+		#{AUXILIARY_UNIT},	
+		#{FNAME},	
+		#{FLEVEL},	
+		#{MAT_CODE},	
+		#{MAT_NAME},	
+		#{FQTY},	
+		#{FUNIT},	
+		#{QTY_H},	
+		#{QTY_L},	
+		#{FSPECS},	
+		#{PARENT_ID},	
+		#{PARENT_CODE},	
+		#{ROOT_NODE_CODE},	
+		#{FVERSIONS},	
+		#{FSTATE},	
+		#{STANDARD_NUMBER},	
+		#{FORWARD_NO},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{RECIPE_EXECUTION_DATE},	
+		#{FAPPROVER},	
+		#{BOM_KPI1},	
+		#{BOM_KPI2},	
+		#{BOM_KPI3},	
+		#{BOM_KPI4},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{FEXTEND4},	
+		#{FEXTEND5},
+		#{ERP_CODE},		
+		#{PBOM_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PBOM_ID = #{PBOM_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PRODUCT_NAME = #{PRODUCT_NAME},
+			AUXILIARY_UNIT = #{AUXILIARY_UNIT},
+			FNAME = #{FNAME},
+			FLEVEL = #{FLEVEL},
+			MAT_CODE = #{MAT_CODE},
+			MAT_NAME = #{MAT_NAME},
+			FQTY = #{FQTY},
+			FUNIT = #{FUNIT},
+			QTY_H = #{QTY_H},
+			QTY_L = #{QTY_L},
+			FSPECS = #{FSPECS},
+			PARENT_ID = #{PARENT_ID},
+			PARENT_CODE = #{PARENT_CODE},
+			ROOT_NODE_CODE = #{ROOT_NODE_CODE},
+			FVERSIONS = #{FVERSIONS},
+			FSTATE = #{FSTATE},
+			STANDARD_NUMBER = #{STANDARD_NUMBER},
+			FORWARD_NO = #{FORWARD_NO},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			RECIPE_EXECUTION_DATE = #{RECIPE_EXECUTION_DATE},
+			FAPPROVER = #{FAPPROVER},
+			BOM_KPI1 = #{BOM_KPI1},
+			BOM_KPI2 = #{BOM_KPI2},
+			BOM_KPI3 = #{BOM_KPI3},
+			BOM_KPI4 = #{BOM_KPI4},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FEXTEND4 = #{FEXTEND4},
+			FEXTEND5 = #{FEXTEND5},
+			ERP_CODE = #{ERP_CODE},
+			PBOM_ID = PBOM_ID
+		where 
+			PBOM_ID = #{PBOM_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.FNAME FUNITNAME,f2.FNAME AUXILIARY_UNITNAME
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_UNIT_INFO f1 on f.FUNIT=f1.UNIT_INFO_ID
+		left join MBASE_UNIT_INFO f2 on f.AUXILIARY_UNIT=f2.UNIT_INFO_ID
+		where 
+			f.PBOM_ID = #{PBOM_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.FNAME FUNITNAME,f2.FNAME AUXILIARY_UNITNAME
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_UNIT_INFO f1 on f.FUNIT=f1.UNIT_INFO_ID
+		left join MBASE_UNIT_INFO f2 on f.AUXILIARY_UNIT=f2.UNIT_INFO_ID
+		where 1=1
+		<if test="pd.PBOM_ID!= null and pd.PBOM_ID != ''"><!-- 检索 -->
+			<if test="pd.FLAST!= null and pd.FLAST == 'FLAST'"><!-- 是否是最后一级 -->
+				and f.PBOM_ID = #{pd.PBOM_ID}
+			</if>
+			<if test="pd.FLAST == null or pd.FLAST == ''"><!-- 是否是最后一级 -->
+				and f.PARENT_ID = #{pd.PBOM_ID}
+			</if>
+			
+		</if>
+		
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				   f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or
+				   f.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				   or
+				   f.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				   or
+				   f.FSPECS LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] order by f.CREATE_TIME [fhend] 
+	</select>
+	
+	<!-- 通过ID获取其子级列表 -->
+	<select id="listByParentId" parameterType="pd" resultMap="pbomResultMap">
+		select 
+		f.PRODUCT_NAME,	
+		f.AUXILIARY_UNIT,	
+		f.FLEVEL,	
+		f.MAT_CODE,	
+		f.FQTY,	
+		f.FUNIT,	
+		f.QTY_H,	
+		f.QTY_L,	
+		f.FSPECS,	
+		f.PARENT_ID,	
+		f.PARENT_CODE,	
+		f.ROOT_NODE_CODE,	
+		f.FVERSIONS,	
+		f.FSTATE,	
+		f.STANDARD_NUMBER,	
+		f.FORWARD_NO,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.RECIPE_EXECUTION_DATE,	
+		f.FAPPROVER,	
+		f.BOM_KPI1,	
+		f.BOM_KPI2,	
+		f.BOM_KPI3,	
+		f.BOM_KPI4,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,	
+		<choose>
+		<when test="parentId == '0'.toString"><!-- 判断是否是顶级 是取名称+版本号 -->
+			 <!-- f.FNAME+'('+f.FVERSIONS+')' as FNAME,  -->
+			<!-- f.FNAME+'('+convert(nvarchar,f.FQTY)+isnull(f1.FNAME,'')+')' as FNAME, -->
+			f.FNAME+'('+isnull(f.MAT_CODE,'')+')' as FNAME,
+		</when>
+		<otherwise><!-- 判断是否是顶级 不是取物料名称 -->
+			f.FNAME+'('+isnull(f.MAT_CODE,'')+')' as FNAME,
+		</otherwise>
+	   </choose> 
+		f.PBOM_ID,
+		isnull((select count(*)  from <include refid="tableName"></include> f22 where PARENT_ID=f.PBOM_ID),0) FSUBNUM
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_UNIT_INFO f1 on f.FUNIT=f1.UNIT_INFO_ID
+		where 
+			f.PARENT_ID = #{parentId}
+		   <if test="KEYWORDS!= null and KEYWORDS!= 'VUENULL'">
+			and 
+			(
+			f.FNAME like '%'+ #{KEYWORDS} +'%'  
+			or
+			f.MAT_NAME like '%'+ #{KEYWORDS} +'%'  
+			or
+			f.MAT_CODE like '%'+ #{KEYWORDS} +'%' 
+			 or
+			f.FSPECS LIKE '%'+ #{KEYWORDS}+'%' 
+			)
+		   </if>
+		 	<if test="GYPBOM_ID!= null and GYPBOM_ID!= '' and parentId=='0'.toString">
+			and f.PBOM_ID = #{GYPBOM_ID} 
+		   	</if>
+			order by f.FNAME  
+	</select>
+	<!-- 通过ID获取其子级列表 -->
+	<select id="listByParentIdNew" parameterType="pd" resultMap="pbomNewResultMap">
+		select 
+		f.PRODUCT_NAME,	
+		f.AUXILIARY_UNIT,	
+		f.FLEVEL,	
+		f.MAT_CODE,	
+		f.FQTY,	
+		f.FUNIT,	
+		f.QTY_H,	
+		f.QTY_L,	
+		f.FSPECS,	
+		f.PARENT_ID,	
+		f.PARENT_CODE,	
+		f.ROOT_NODE_CODE,	
+		f.FVERSIONS,	
+		f.FSTATE,	
+		f.STANDARD_NUMBER,	
+		f.FORWARD_NO,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.RECIPE_EXECUTION_DATE,	
+		f.FAPPROVER,	
+		f.BOM_KPI1,	
+		f.BOM_KPI2,	
+		f.BOM_KPI3,	
+		f.BOM_KPI4,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,	
+		<choose>
+		<when test="parentId == '0'.toString"><!-- 判断是否是顶级 是取名称+版本号 -->
+			 <!-- f.FNAME+'('+f.FVERSIONS+')' as FNAME,  -->
+			 f.FNAME+'('+convert(nvarchar,f.FQTY)+f.FUNIT+')' as FNAME, 
+		</when>
+		<otherwise><!-- 判断是否是顶级 不是取物料名称 -->
+			f.MAT_NAME as FNAME,
+		</otherwise>
+	   </choose> 
+		f.PBOM_ID
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PARENT_ID = #{parentId}
+		   <if test="KEYWORDS!= null and KEYWORDS!= 'VUENULL'">
+			and f.FNAME like '%'+ #{KEYWORDS} +'%'  
+		   </if>
+		 	<if test="GYPBOM_ID!= null and GYPBOM_ID!= '' and parentId=='0'.toString">
+			and f.PBOM_ID = #{GYPBOM_ID} 
+		   	</if>
+			order by f.FNAME  
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 更新配方版本号 -->
+	<update id="editVersions" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FVERSIONS = #{FVERSIONS}
+		where 
+			FEXTEND1 = #{FEXTEND1}
+	</update>
+	
+	<!-- 更新配方发布状态 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FEXTEND2 = #{FEXTEND2}
+		where 
+			FEXTEND1 = #{FEXTEND1}
+	</update>
+	<!-- YY356703572(袁野) -->
+	
+	<!--通过顶级ID查询列表 -->
+	<select id="listAllId" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where FEXTEND1 = #{FEXTEND1}
+	</select>
+	
+	<!-- 归档配方-->
+	<insert id="saveGD" parameterType="pd">
+		insert into 
+	  MDM_PBOM_GD
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!--通过顶级ID查询列表 -->
+	<select id="listAllCopy" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 
+		<if test="FEXTEND1 != null and FEXTEND1 != ''">
+			and f.FEXTEND1 = #{FEXTEND1}
+		</if>
+		<if test="PBOM_ID!= null and PBOM_ID != ''"><!-- 检索 -->
+			and f.PARENT_ID = #{PBOM_ID}
+		</if>
+		order by f.MAT_CODE,CREATE_TIME desc
+	</select>
+	
+		<!-- 新增copy数据 -->
+	<insert id="savecopy" parameterType="pd">
+		insert into 
+	<include refid="copyTableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	<!-- 更新PBOM_ID，PARENT_ID，根据bomId -->
+	<update id="updateBomIdAndPid" parameterType="pd">
+		update
+		<include refid="copyTableName"></include>
+		set 
+			PBOM_ID = #{NEW_PBOM_ID}
+		where 
+			PBOM_ID = #{PBOM_ID};
+			
+		update
+		<include refid="copyTableName"></include>
+		set 
+			PARENT_ID = #{NEW_PBOM_ID}
+		where 
+			PARENT_ID = #{PBOM_ID};
+	</update>
+	<!-- 查询复制bom列表(全部) -->
+	<select id="copylistAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="copyTableName"></include> f 
+		where 1=1 
+		<if test="FEXTEND1 != null and FEXTEND1 != ''">
+			and f.FEXTEND1 = #{FEXTEND1}
+		</if>
+	</select>
+	<!-- 删除复制bom列表,根据根节点id-->
+	<delete id="deletecopylistAll" parameterType="pd">
+		delete from
+		<include refid="copyTableName"></include>
+		where 
+			FEXTEND1 = #{FEXTEND1}
+	</delete>
+	
+	<!-- 更新子级根节点和层次 -->
+	<update id="updateRoot" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FLEVEL = #{FLEVEL},
+			FEXTEND1 = #{FEXTEND1},
+			ROOT_NODE_CODE = #{ROOT_NODE_CODE}
+		where 
+			PBOM_ID = #{PBOM_ID}
+	</update>
+	<!-- 更换母件-更新本级父级节点和层次 -->
+	<update id="updateParent" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FLEVEL = #{FLEVEL},
+			FEXTEND1 = #{FEXTEND1},
+			PARENT_CODE = #{PARENT_CODE},
+			PARENT_ID = #{PARENT_ID},
+			ROOT_NODE_CODE = #{ROOT_NODE_CODE}
+		where 
+			PBOM_ID = #{PBOM_ID}
+	</update>
+</mapper>

@@ -1,0 +1,4511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.PlanningWorkOrderMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		PP_PlanningWorkOrder
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FCustomer,
+		f.WorkOrderType,
+		f.SalesOrderDetailID,
+		f.WorkOrderNum,
+		f.OutputMaterial,
+		f.OutputMaterialID,
+		f.FSpecifications,
+		f.FCount,
+		f.BatchNumType,
+		f.BatchNum,
+		f.FPriorityID,
+		f.PlannedBeginTime,
+		f.PlannedEndTime,
+		f.ActualBeginTime,
+		f.ActualEndTime,
+		f.WorkOrderBeginTime,
+		f.WorkOrderEndTime,
+		f.PlannerType,
+		f.FPlannerID,
+		f.ProductionSupervisorType,
+		f.ProductionSupervisorID,
+		f.ProductionSupervisorName,
+		f.ProductionBOM_ID,
+		f.ProcessType,
+		f.ProcessName,
+		f.FExplanation,
+		f.FStatus,
+		f.ScheduleSchedule,
+		f.DistributionProgress,
+		f.WorkOrderCreateTime,
+		f.FPlanner,
+		f.CreateMRIF,
+		f.CreateMRStatus,
+		f.NODE_ID,
+		f.MasterWorkOrder_ID,
+		f.MasterWorkOrderNum,
+		f.ProcessTypeKey,
+		f.StandardType,
+		f.WokType,
+		f.InitWokNum,
+		f.ProcessRoute_ID,
+		f.ProcessRoute_Name,
+		
+		
+		f.PlanningWorkOrder_ID,
+		isnull(f.progress,0) progress
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FCustomer,
+		WorkOrderType,
+		SalesOrderDetailID,
+		WorkOrderNum,
+		OutputMaterial,
+		OutputMaterialID,
+		FSpecifications,
+		FCount,
+		BatchNumType,
+		BatchNum,
+		FPriorityID,
+		PlannedBeginTime,
+		PlannedEndTime,
+		ActualBeginTime,
+		ActualEndTime,
+		WorkOrderBeginTime,
+		WorkOrderEndTime,
+		PlannerType,
+		FPlannerID,
+		ProductionSupervisorType,
+		ProductionSupervisorID,
+		ProductionSupervisorName,
+		ProductionBOM_ID,
+		ProcessType,
+		ProcessName,
+		FExplanation,
+		FStatus,
+		ScheduleSchedule,
+		DistributionProgress,
+		WorkOrderCreateTime,
+		FPlanner,
+		CreateMRIF,
+		CreateMRStatus,
+		NODE_ID,
+		MasterWorkOrder_ID,
+		MasterWorkOrderNum,
+		ProcessTypeKey,
+		StandardType,
+		WokType,
+		InitWokNum,
+		ProcessRoute_ID,
+		ProcessRoute_Name,
+		PlanningWorkOrder_ID,
+		progress
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FCustomer},
+		#{WorkOrderType},
+		#{SalesOrderDetailID},
+		#{WorkOrderNum},
+		#{OutputMaterial},
+		#{OutputMaterialID},
+		#{FSpecifications},
+		#{FCount},
+		#{BatchNumType},
+		#{BatchNum},
+		#{FPriorityID},
+		#{PlannedBeginTime},
+		#{PlannedEndTime},
+		#{ActualBeginTime},
+		#{ActualEndTime},
+		#{WorkOrderBeginTime},
+		#{WorkOrderEndTime},
+		#{PlannerType},
+		#{FPlannerID},
+		#{ProductionSupervisorType},
+		#{ProductionSupervisorID},
+		#{ProductionSupervisorName},
+		#{ProductionBOM_ID},
+		#{ProcessType},
+		#{ProcessName},
+		#{FExplanation},
+		#{FStatus},
+		#{ScheduleSchedule},
+		#{DistributionProgress},
+		#{WorkOrderCreateTime},
+		#{FPlanner},
+		#{CreateMRIF},
+		#{CreateMRStatus},
+		#{NODE_ID},
+		#{MasterWorkOrder_ID},
+		#{MasterWorkOrderNum},
+		#{ProcessTypeKey},
+		#{StandardType},
+		#{WokType},
+		#{InitWokNum},
+		#{ProcessRoute_ID},
+		#{ProcessRoute_Name},
+		#{PlanningWorkOrder_ID},
+		'0'
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		PlanningWorkOrder_ID = #{PlanningWorkOrder_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		FCustomer = #{FCustomer},
+		WorkOrderType = #{WorkOrderType},
+		SalesOrderDetailID = #{SalesOrderDetailID},
+		ProductionBOM_ID =
+		#{ProductionBOM_ID},
+		WorkOrderNum =
+		#{WorkOrderNum},
+		OutputMaterial =
+		#{OutputMaterial},
+		OutputMaterialID = #{OutputMaterialID},
+		FSpecifications =
+		#{FSpecifications},
+		FCount =
+		#{FCount},
+		BatchNumType =
+		#{BatchNumType},
+		BatchNum = #{BatchNum},
+		FPriorityID = #{FPriorityID},
+		PlannedBeginTime =
+		#{PlannedBeginTime},
+		PlannedEndTime =
+		#{PlannedEndTime},
+		ActualBeginTime=#{ActualBeginTime},
+		ActualEndTime=#{ActualEndTime},		
+		WorkOrderBeginTime = #{WorkOrderBeginTime},
+		WorkOrderEndTime = #{WorkOrderEndTime},		
+		PlannerType =
+		#{PlannerType},
+		FPlannerID
+		= #{FPlannerID},
+		ProductionSupervisorType =
+		#{ProductionSupervisorType},
+		ProductionSupervisorID =
+		#{ProductionSupervisorID},
+		ProductionSupervisorName =
+		#{ProductionSupervisorName},
+		ProcessType =
+		#{ProcessType},
+		ProcessName =
+		#{ProcessName},
+		FExplanation =
+		#{FExplanation},
+		FStatus = #{FStatus},
+		ScheduleSchedule =
+		#{ScheduleSchedule},
+		DistributionProgress =
+		#{DistributionProgress},
+		WorkOrderCreateTime = #{WorkOrderCreateTime},
+		FPlanner = #{FPlanner},
+		CreateMRIF = #{CreateMRIF},
+		CreateMRStatus =
+		#{CreateMRStatus},
+		NODE_ID =
+		#{NODE_ID},
+		MasterWorkOrder_ID =
+		#{MasterWorkOrder_ID},
+		MasterWorkOrderNum = #{MasterWorkOrderNum},
+		ProcessTypeKey =
+		#{ProcessTypeKey},
+		StandardType = #{StandardType},
+		WokType = #{WokType},
+		InitWokNum = #{InitWokNum},
+		
+		ProcessRoute_ID = #{ProcessRoute_ID},
+		ProcessRoute_Name = #{ProcessRoute_Name},
+		progress=#{progress},
+		PlanningWorkOrder_ID =
+		PlanningWorkOrder_ID
+		where
+		PlanningWorkOrder_ID =
+		#{PlanningWorkOrder_ID}
+	
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT
+		'A' as FTYPE,pwo.PlanningWorkOrder_ID id,
+		ca.Cabinet_Type text,
+		gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,
+		ca.Cabinet_Type,
+		so.OrderNum,
+		sod.FUnit,
+		pwo.*,
+		right('00'+cast(day(PlannedBeginTime) as VARCHAR),2)+'-'+right('00'+cast(month(PlannedBeginTime) as VARCHAR),2)+'-'+right('00'+cast(year(PlannedBeginTime) as VARCHAR),4)+' 00:00:00' start_date,
+		right('00'+cast(day(PlannedEndTime) as VARCHAR),2)+'-'+right('00'+cast(month(PlannedEndTime) as VARCHAR),2)+'-'+right('00'+cast(year(PlannedEndTime) as VARCHAR),4)+' 23:59:59' end_date
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		
+			left join
+		PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+		gy1.Cabinet_No
+		left join
+		DT_PROJECT gy2 on gy1.PROJECT_ID =
+		gy2.PROJECT_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+		WHERE
+		1=1
+		and
+		pwo.PlanningWorkOrder_ID =
+		#{PlanningWorkOrder_ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT
+		pwom.OutputMaterial OutputMaterialMaster,
+		gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,
+		so.OrderNum,
+		sod.FUnit,
+		pwom.WorkOrderNum WorkOrderNumMaster,
+		pwo.*,
+		ca.Cabinet_Type
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON
+		pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder
+		so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		left join
+		PP_PlanningWorkOrderMaster pwom on pwo.MasterWorkOrder_ID =
+		pwom.PlanningWorkOrderMaster_ID
+		left join
+		PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+		gy1.Cabinet_No
+		left join
+		DT_PROJECT gy2 on gy1.PROJECT_ID =
+		gy2.PROJECT_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+		WHERE
+		1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			gy2.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' or gy2.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+			)
+		</if>
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND so.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.WorkOrderType != null and pd.WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{pd.WorkOrderType}
+		</if>
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			AND pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>
+		<if test="pd.WorkOrderNumMaster != null and pd.WorkOrderNumMaster != ''">
+			AND pwom.WorkOrderNum = #{pd.WorkOrderNumMaster}
+		</if>
+		<if test="pd.Cabinet_Type != null and pd.Cabinet_Type != ''">
+			and ca.Cabinet_Type = #{pd.Cabinet_Type}
+		</if>
+		[fhstart] order by FStatus desc,WorkOrderCreateTime desc,WorkOrderNum
+		desc [fhend]
+	</select>
+<!-- 列表 -->
+	<select id="listXMGDlistPage" parameterType="page" resultType="pd">
+		SELECT
+		pwom.OutputMaterial OutputMaterialMaster,
+		gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,
+		so.OrderNum,
+		sod.FUnit,
+		pwom.WorkOrderNum WorkOrderNumMaster,
+		pwo.*,
+		ca.Cabinet_Type
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON
+		pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder
+		so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		left join
+		PP_PlanningWorkOrderMaster pwom on pwo.MasterWorkOrder_ID =
+		pwom.PlanningWorkOrderMaster_ID
+		left join
+		PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+		gy1.Cabinet_No
+		left join
+		DT_PROJECT gy2 on gy1.PROJECT_ID =
+		gy2.PROJECT_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+		WHERE
+		1=1
+		and pwo.PlanningWorkOrder_ID in(
+select distinct f1.PlanningWorkOrder_ID from PP_PlanningWorkOrder f1 
+inner join PMS_Cabinet_Assembly_Detail f3 on f1.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4 on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where 1=1 and f4.PPROJECT_MANAGER=#{pd.CREATORMAN} and f1.FStatus !='结束' and f3.Load_Status='是'
+)
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			gy2.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' or gy2.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+			)
+		</if>
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND so.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.WorkOrderType != null and pd.WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{pd.WorkOrderType}
+		</if>
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			AND pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>
+		<if test="pd.WorkOrderNumMaster != null and pd.WorkOrderNumMaster != ''">
+			AND pwom.WorkOrderNum = #{pd.WorkOrderNumMaster}
+		</if>
+		<if test="pd.Cabinet_Type != null and pd.Cabinet_Type != ''">
+			and ca.Cabinet_Type = #{pd.Cabinet_Type}
+		</if>
+		[fhstart] order by FStatus desc,WorkOrderCreateTime desc,WorkOrderNum
+		desc [fhend]
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		SELECT
+		gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,ca.Cabinet_Type,
+		so.OrderNum,
+		pwo.*
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		left join
+		PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+		gy1.Cabinet_No
+		left join
+		DT_PROJECT gy2 on gy1.PROJECT_ID =
+		gy2.PROJECT_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+		WHERE
+		1=1
+		<if test="OrderNum != null and OrderNum != ''">
+			AND so.OrderNum = #{OrderNum}
+		</if>
+		<if test="WorkOrderType != null and WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{WorkOrderType}
+		</if>
+		<if test="WorkOrderNum != null and WorkOrderNum != ''">
+			AND pwo.WorkOrderNum = #{WorkOrderNum}
+		</if>
+		<if test="NODE_ID != null and NODE_ID != ''">
+			AND pwo.NODE_ID = #{NODE_ID}
+		</if>
+		<if test="MasterWorkOrder_ID != null and MasterWorkOrder_ID != ''">
+			AND pwo.MasterWorkOrder_ID = #{MasterWorkOrder_ID}
+		</if>
+		order by pwo.WorkOrderCreateTime,pwo.WorkOrderNum
+	</select>
+	<!-- 列表(根据下发状态和排程状态获取) -->
+	<select id="listAllByScheduleAndDistributionProgresslistPage"
+		parameterType="page" resultType="pd">
+		SELECT
+		gy1.Cabinet_Assembly_Detail_ID,
+		ca.Cabinet_Type,
+		SUBSTRING(pwo.WorkOrderBeginTime,1,10)+'~'+SUBSTRING(pwo.WorkOrderEndTime,1,10) FPlanTimes,
+		SUBSTRING(pwo.PlannedBeginTime,1,10)+'~'+SUBSTRING(pwo.PlannedEndTime,1,10) FScheduleTimes,
+		gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,
+		so.OrderNum,
+		sod.FUnit,
+		pwom.WorkOrderNum WorkOrderNumMaster,
+		pwo.*
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON
+		pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder
+		so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		left join
+		PP_PlanningWorkOrderMaster pwom on pwo.MasterWorkOrder_ID =
+		pwom.PlanningWorkOrderMaster_ID
+		left join
+		PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+		gy1.Cabinet_No
+		left join
+		DT_PROJECT gy2 on gy1.PROJECT_ID =
+		gy2.PROJECT_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+		WHERE
+		1=1
+		and pwo.ScheduleSchedule =
+		#{pd.ScheduleSchedule}
+		and
+		pwo.DistributionProgress =
+		#{pd.DistributionProgress}
+		and pwo.OutputMaterial is not null
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND so.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.WorkOrderType != null and pd.WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{pd.WorkOrderType}
+		</if>
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			AND 
+			(
+			pwo.WorkOrderNum like '%'+ #{pd.WorkOrderNum} + '%'
+			or
+			gy2.PPROJECT_CODE like '%'+ #{pd.WorkOrderNum} + '%'
+			or
+			gy2.PPROJECT_NAME like '%'+ #{pd.WorkOrderNum} + '%'
+			)
+		</if>
+		<if test="pd.WorkOrderNumMaster != null and pd.WorkOrderNumMaster != ''">
+			AND pwom.WorkOrderNum  like '%'+  #{pd.WorkOrderNumMaster}+ '%'
+		</if>
+		 <!-- WorkOrderCreateTime,WorkOrderNum  -->
+		[fhstart] order by 
+		PlannedBeginTime [fhend]
+	</select>
+	<!-- 根据排程状态和下发状态获取数量 -->
+	<select id="getCountByScheduleAndDistributionProgress"
+		parameterType="pd" resultType="pd">
+		select count(1) as count from (
+		SELECT
+		pwo.PlanningWorkOrder_ID
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		left join PP_PlanningWorkOrderMaster pwom on
+		pwo.MasterWorkOrder_ID =
+		pwom.PlanningWorkOrderMaster_ID
+		WHERE
+		1=1
+		and
+		pwo.ScheduleSchedule = #{ScheduleSchedule}
+		and
+		pwo.DistributionProgress
+		= #{DistributionProgress}
+		and pwo.OutputMaterial is not null
+		)t
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		PlanningWorkOrder_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 更新计划工单生产进度 -->
+	<update id="updateWorkOrderDistributionProgress" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		ScheduleSchedule = #{ScheduleSchedule},
+		DistributionProgress =
+		#{DistributionProgress}
+		where
+		PlanningWorkOrder_ID =
+		#{PlanningWorkOrder_ID}
+	</update>
+
+	<!-- 更新工单层级 -->
+	<update id="updateTheOrderLevel" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		OrderLevel = #{OrderLevel}
+		where
+		PlanningWorkOrder_ID =
+		#{PlanningWorkOrder_ID}
+	</update>
+
+	<!-- 创建物料转移单时 保存计划工单的转移单状态 -->
+	<update id="saveCreateMRStatus" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		CreateMRStatus = #{CreateMRStatus}
+		where
+		PlanningWorkOrder_ID =
+		#{PlanningWorkOrder_ID}
+	</update>
+
+	<delete id="deleteProcessWorkOrderExampleByPlanningWorkOrderID"
+		parameterType="string">
+		DELETE
+		FROM
+		PP_ProcessWorkOrderExample
+		WHERE
+		PlanningWorkOrderID = #{PlanningWorkOrderID}
+	</delete>
+
+	<delete id="deleteMaterialRequirementByPlanningWorkOrderID"
+		parameterType="string">
+		DELETE
+		FROM
+		MM_MaterialRequirement
+		WHERE
+		PlanningWorkOrderID = #{PlanningWorkOrderID}
+
+	</delete>
+	<delete id="deleteWorkorderProcessIOExampleByPlanningWorkOrderID"
+		parameterType="string">
+		DELETE
+		FROM
+		PP_WorkorderProcessIOExample
+		WHERE
+		ProcessWorkOrderExampleID IN (
+		SELECT
+		ProcessWorkOrderExample_ID
+		FROM
+		PP_ProcessWorkOrderExample
+		WHERE
+		PlanningWorkOrderID =
+		#{PlanningWorkOrderID}
+		)
+	</delete>
+	<select id="getProcessWorkOrderExampleByPK" parameterType="string"
+		resultType="pd">
+		select wpe.SerialNum,pwoe.*
+		FROM
+		PP_ProcessWorkOrderExample
+		pwoe
+		left join
+		km_WorkingProcedureExample
+		wpe on
+		wpe.WorkingProcedureExample_ID
+		=
+		pwoe.WorkingProcedureExampleID
+		WHERE
+		pwoe.ProcessWorkOrderExample_ID =
+		#{ProcessWorkOrderExample_ID}
+	</select>
+	<select id="getListProcessWorkOrderExampleByPlanningWorkOrderID"
+		parameterType="string" resultType="pd">
+		select
+		wpe.SerialNum,pwoe.*,ISNULL(num.ConsumptionQuantity,
+		0)ConsumptionQuantity
+		FROM
+		PP_ProcessWorkOrderExample pwoe
+		left join
+		km_WorkingProcedureExample
+		wpe on wpe.WorkingProcedureExample_ID
+		=
+		pwoe.WorkingProcedureExampleID
+		LEFT JOIN (
+		SELECT
+		wpie.ProcessWorkOrderExampleID,mc.MaterialID,SUM(mc.ConsumptionQuantity)ConsumptionQuantity
+		FROM PP_WorkorderProcessIOExample wpie
+		LEFT JOIN KM_MaterialConsume mc
+		ON wpie.WorkorderProcessIOExample_ID = mc.ConsumptionDocumentID
+		WHERE
+		mc.FType='产出'
+		GROUP BY wpie.ProcessWorkOrderExampleID,mc.MaterialID
+		)num
+		ON pwoe.ProcessWorkOrderExample_ID=num.ProcessWorkOrderExampleID
+		AND
+		pwoe.ProcessIMaterielID=num.MaterialID
+		WHERE
+		PlanningWorkOrderID =
+		#{PlanningWorkOrderID}
+		order by
+		pwoe.TaskNum,pwoe.PlannedBeginTime,wpe.SerialNum
+	</select>
+
+	<select id="getListMaterialRequirementByPlanningWorkOrderID"
+		parameterType="string" resultType="pd">
+		select *
+		FROM
+		MM_MaterialRequirement
+		WHERE
+		PlanningWorkOrderID = #{PlanningWorkOrderID}
+
+	</select>
+	<select id="getListWorkorderProcessIOExampleByPlanningWorkOrderID"
+		parameterType="string" resultType="pd">
+		SELECT
+		t.*,pwoe.WPName
+		FROM
+		(
+		SELECT
+		*
+		FROM
+		PP_WorkorderProcessIOExample
+		WHERE
+		ProcessWorkOrderExampleID IN (
+		SELECT
+		ProcessWorkOrderExample_ID
+		FROM
+		PP_ProcessWorkOrderExample
+		WHERE
+		PlanningWorkOrderID = #{PlanningWorkOrderID}
+		)
+		) t
+		LEFT JOIN
+		PP_ProcessWorkOrderExample pwoe ON t.ProcessWorkOrderExampleID =
+		pwoe.ProcessWorkOrderExample_ID
+
+		order by pwoe.WokNum asc
+		,pwoe.SerialNum asc,t.TType desc ,t.SerialNum asc
+	</select>
+
+	<!-- 获取编号列表-可搜索-前100条 -->
+	<select id="getWorkOrderNumList" parameterType="pd" resultType="pd">
+		SELECT TOP 100
+		f.*
+		FROM
+		PP_PlanningWorkOrder f
+		LEFT JOIN PP_SalesOrderDetail sod ON f.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		LEFT JOIN PP_PlanningWorkOrderMaster pwom ON
+		f.MasterWorkOrder_ID = pwom.PlanningWorkOrderMaster_ID
+		WHERE
+		1 = 1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.WorkOrderNum LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.MasterWorkOrder_ID =
+			#{KEYWORDS}
+			or
+			f.BatchNum LIKE '%'+ #{KEYWORDS}+'%'
+			)
+		</if>
+		<if test="FCustomer != null and FCustomer != ''"><!-- 客户id -->
+			and f.FCustomer=#{FCustomer}
+		</if>
+		<if test="FStatus != null and FStatus != ''"><!-- 状态(创建、执行中、暂停、结束) -->
+			and f.FStatus in (#{FStatus})
+		</if>
+		<if test="WorkOrderNum != null and WorkOrderNum != ''"><!-- 订单号 -->
+			and so.OrderNum = #{WorkOrderNum}
+		</if>
+		order by f.WorkOrderNum
+	</select>
+
+	<!-- 计划工单明细-物料列表-采购订单添加明细列表 -->
+	<select id="listPurchaseMat" parameterType="pd" resultType="pd">
+		SELECT
+		t.FMatJoint,
+		t.MaterialID,
+		t.MaterialName,
+		t.MaterialNum,
+		t.DeliveryWarehouse,
+		FUnitName,
+		UNIT_INFO_ID,
+		FOrderNum,
+		PlanningWorkOrderID,
+		FWorkOrderNum,
+		PlannedBeginTime,
+		BatchNum,
+		SPropKey,
+		MAT_AUXILIARYMX_NAME,
+		MAT_AUXILIARY_ID,
+		MAT_AUXILIARYMX_ID,
+		SUM (t.DemandCount) AS DemandCount,
+		MAT_SPEC_QTY,
+		MAT_SPEC_NAME,
+		SpecificationsDesc
+		FROM
+		(
+		SELECT
+		f.MaterialRequirement_ID,
+		f.PlanningWorkOrderID,
+		f.DemandCount,
+		f.MaterialName,
+		f.MaterialNum,
+		f.MaterialID,
+		f.IssuedQuantity,
+		f.DeliveryWarehouse,
+		f.BatchNum,
+		l.MAT_AUXILIARYMX_ID AS SPropKey,
+		l.MAT_AUXILIARYMX_ID,
+		isnull(h.MAT_CODE, '无编号') + '/' + isnull(h.MAT_NAME, '无名称') FMatJoint,
+		n.FNAME FUnitName,
+		n.UNIT_INFO_ID,
+		l.MAT_AUXILIARYMX_NAME,
+		l.MAT_AUXILIARY_ID,
+		f3.OrderNum FOrderNum,
+		f1.WorkOrderNum FWorkOrderNum,
+		f1.PlannedBeginTime,
+		h.MAT_CODE,
+		h.MAT_CLASS_ID,
+		h.MAT_NAME,
+		h.MAT_ATTRIBUTE,
+		h.MAT_BASIC_ID,
+		spec.MAT_SPEC_QTY,
+		n1.FNAME MAT_SPEC_NAME,
+		CAST(isnull(spec.MAT_SPEC_QTY, 0) AS VARCHAR)+
+		isnull(n1.FNAME, '默认单位') as SpecificationsDesc
+		FROM
+		MM_MaterialRequirement f
+		LEFT JOIN PP_PlanningWorkOrder f1 ON f.PlanningWorkOrderID =
+		f1.PlanningWorkOrder_ID
+		LEFT JOIN PP_SalesOrderDetail f2 ON
+		f1.SalesOrderDetailID = f2.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder
+		f3 ON f2.SalesOrderID = f3.SalesOrder_ID
+		LEFT JOIN MBASE_MAT_BASIC h ON
+		h.MAT_CODE = f.MaterialNum
+		LEFT JOIN MBASE_MAT_CLASS matclass ON
+		h.MAT_CLASS_ID = matclass.MAT_CLASS_ID
+		LEFT JOIN MBASE_MAT_SPEC spec ON
+		spec.MAT_BASIC_ID=h.MAT_BASIC_ID
+		LEFT JOIN MBASE_UNIT_INFO n ON
+		h.MAT_MAIN_UNIT = n.UNIT_INFO_ID
+		LEFT JOIN MBASE_UNIT_INFO n1 ON
+		spec.UNIT_INFO_ID = n1.UNIT_INFO_ID
+		LEFT JOIN MBASE_MAT_AUXILIARYMX l
+		ON f.SPropKey = l.MAT_AUXILIARYMX_ID
+		WHERE f.RowClose = 'N'
+		AND
+		f.PushDownTransferIF &lt;&gt; 'Y'
+		AND matclass.FCLASS &lt;&gt; '产成品'
+		AND matclass.FCLASS &lt;&gt; '中间品'
+		AND matclass.FCLASS &lt;&gt; '半成品'
+		<!-- and f.PushDownPurchaseIF='N' -->
+		<if test="KEYWORDS_MatNum != null and KEYWORDS_MatNum != ''">
+			and f.MRCode = #{KEYWORDS_MatNum}
+		</if>
+		<if test="KEYWORDS_OrderNum != null and KEYWORDS_OrderNum != ''">
+			and f3.OrderNum = #{KEYWORDS_OrderNum}
+		</if>
+		<if test="KEYWORDS_WorkOrderNum != null and KEYWORDS_WorkOrderNum != ''">
+			and f1.WorkOrderNum = #{KEYWORDS_WorkOrderNum}
+		</if>
+		<if test="KEYWORDS_MaterialNum != null and KEYWORDS_MaterialNum != ''">
+			and MAT_CODE LIKE '%'+ #{KEYWORDS_MaterialNum}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialType != null and KEYWORDS_MaterialType != ''">
+			and h.MAT_CLASS_ID LIKE '%'+ #{KEYWORDS_MaterialType}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialSX != null and KEYWORDS_MaterialSX != ''">
+			and h.MAT_ATTRIBUTE LIKE '%'+ #{KEYWORDS_MaterialSX}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialName != null and KEYWORDS_MaterialName != ''">
+			and MAT_NAME LIKE '%'+ #{KEYWORDS_MaterialName}+'%'
+		</if>
+		) t
+		GROUP BY
+		t.FMatJoint,
+		t.MaterialID,
+		t.MaterialName,
+		t.MaterialNum,
+		t.DeliveryWarehouse,
+		t.FUnitName,
+		t.UNIT_INFO_ID,
+		t.FOrderNum,
+		t.PlanningWorkOrderID,
+		t.FWorkOrderNum,
+		t.PlannedBeginTime,
+		t.BatchNum,
+		t.SPropKey,
+		t.MAT_AUXILIARYMX_NAME,
+		t.MAT_AUXILIARY_ID,
+		t.MAT_AUXILIARYMX_ID,
+		t.MAT_SPEC_QTY,
+		t.MAT_SPEC_NAME,
+		t.SpecificationsDesc
+	</select>
+
+	<!-- 计划工单明细-物料列表 -->
+	<select id="listAllMat" parameterType="pd" resultType="pd">
+
+		select
+		sum(DemandCount) as DemandCount ,
+		MaterialName as FMatJoint,
+		MaterialNum,
+		IssuedQuantity as FCanUseCount,
+		FUnitName,
+		FOrderNum,
+		FWorkOrderNum,
+		SPropKey,
+		MaterialID,
+		DeliveryWarehouse,
+		BatchNum
+		from (
+		select
+		f.DemandCount,
+		f.MaterialName,
+		f.MaterialNum,
+		f.MaterialID,
+		f.IssuedQuantity,
+		f.DeliveryWarehouse,
+		f.BatchNum,
+		l.MAT_AUXILIARYMX_CODE as SPropKey,
+		isnull(h.MAT_CODE,'无编号')+'/'+isnull(h.MAT_NAME,'无名称')
+		FMatJoint,
+		n.FNAME FUnitName,n.UNIT_INFO_ID,l.MAT_AUXILIARYMX_NAME,
+		f3.OrderNum
+		FOrderNum,f1.WorkOrderNum
+		FWorkOrderNum,h.MAT_CODE,h.MAT_CLASS_ID,h.MAT_NAME,h.MAT_ATTRIBUTE,h.MAT_BASIC_ID
+		from
+		MM_MaterialRequirement f
+		left join PP_PlanningWorkOrder f1
+		on
+		f.PlanningWorkOrderID=f1.PlanningWorkOrder_ID
+		left join
+		PP_SalesOrderDetail f2
+		on f1.SalesOrderDetailID=f2.SalesOrderDetail_ID
+		left join PP_SalesOrder f3
+		on f2.SalesOrderID=f3.SalesOrder_ID
+		left join
+		MBASE_MAT_BASIC h
+		on h.MAT_CODE=f.MaterialNum
+		left join MBASE_UNIT_INFO
+		n
+		on h.MAT_MAIN_UNIT=n.UNIT_INFO_ID
+		left join MBASE_MAT_AUXILIARYMX l
+		on
+		f.SPropKey=l.MAT_AUXILIARYMX_ID
+		where
+		1=1
+		and f.RowClose='N'
+		and
+		f.PushDownPurchaseIF='N'
+		<if test="KEYWORDS_MatNum != null and KEYWORDS_MatNum != ''">
+			and f.MRCode = #{KEYWORDS_MatNum}
+		</if>
+		<if test="KEYWORDS_OrderNum != null and KEYWORDS_OrderNum != ''">
+			and f3.OrderNum = #{KEYWORDS_OrderNum}
+		</if>
+		<if test="KEYWORDS_WorkOrderNum != null and KEYWORDS_WorkOrderNum != ''">
+			and f1.WorkOrderNum = #{KEYWORDS_WorkOrderNum}
+		</if>
+		<if test="KEYWORDS_MaterialNum != null and KEYWORDS_MaterialNum != ''">
+			and MAT_CODE LIKE '%'+ #{KEYWORDS_MaterialNum}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialType != null and KEYWORDS_MaterialType != ''">
+			and h.MAT_CLASS_ID LIKE '%'+ #{KEYWORDS_MaterialType}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialSX != null and KEYWORDS_MaterialSX != ''">
+			and h.MAT_ATTRIBUTE LIKE '%'+ #{KEYWORDS_MaterialSX}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialName != null and KEYWORDS_MaterialName != ''">
+			and MAT_NAME LIKE '%'+ #{KEYWORDS_MaterialName}+'%'
+		</if>
+
+		)t1
+		group by
+		MaterialName,MaterialNum,IssuedQuantity,FUnitName,FOrderNum,
+		FWorkOrderNum,SPropKey,BatchNum,MaterialID,DeliveryWarehouse
+	</select>
+
+	<select id="taskdatalistPage" parameterType="page" resultType="pd">
+
+		SELECT *,
+cast(DATEDIFF( mi, ActualBeginTime, GETDATE())*1.0/60 as NUMERIC(24,2)) FUseHours
+FROM (
+		SELECT
+		isnull(
+		STUFF(
+		(SELECT '/' +OPerson
+		FROM 
+		(select distinct a.OPerson
+		from PP_O_RECORD a
+		where 1=1 and a.WorkingProcedureExampleID=t.ProcessWorkOrderExample_ID
+		) tt
+		FOR xml path('')
+		),1,1,''
+		),'') FOperateMan,
+    staff1.NAME as Responsible_Technology_Name,
+    gy3.Cabinet_Type,
+		gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,
+		staff.NAME AS ExecutorName,
+		station.FNAME+'/'+station.FCODE AS StationName,
+		pwo.WorkOrderNum,
+		pwo.BatchNum,
+		t.*,
+		cabinet.Cabinet_Assembly_Detail_ID
+		FROM
+		(
+		SELECT
+		pwoe.ProcessWorkOrderExample_ID,
+		pwoe.WPName,
+		pwoe.TaskNum,
+		pwoe.FStatus,
+		pwoe.WPType,
+		pwoe.PlannedBeginTime,
+		pwoe.PlannedEndTime,
+		pwoe.ActualBeginTime,
+		pwoe.ActualEndTime,
+		pwoe.ExecutorID,
+		pwoe.FStation,
+		pwoe.WP,
+		pwoe.PlanningWorkOrderID,
+		pwoe.ProcessIMateriel,
+		pwoe.ProcessIMaterielCode,
+		pwoe.OriginTaskID,
+		pwoe.FMSpecification,
+		pwoe.WokNum,
+		pwoe.WokIF,
+		wpde.FName,
+		(select ppor.O_RECORD_ID from
+		PP_O_RECORD ppor where ppor.WorkingProcedureExampleID =
+		pwoe.ProcessWorkOrderExample_ID and ppor.BeginTime is not null and
+		ppor.EndTime is null) O_RECORD_ID,
+		pwoe.WorkHours+''+pwoe.WorkHoursUnit as WorkHours,
+		wpde.PreparationTime + '' +wpde.PreparationTimeUnit AS PreparationTime
+		FROM
+		PP_ProcessWorkOrderExample pwoe LEFT JOIN
+		KM_WorkingProcedureExample wpde on
+		pwoe.WorkingProcedureExampleID =
+		wpde.WorkingProcedureExample_ID
+		WHERE
+		1 = 1
+		<!-- AND TaskType = #{pd.TaskType} -->
+		<if test="pd.TaskType != 1">
+			AND pwoe.TaskType = #{pd.TaskType}
+		</if>
+		<if test="pd.TaskType == 1">
+			AND pwoe.TaskType in('1','3')
+		</if>
+		<choose>
+			<when
+				test="pd.FStatus != null and pd.FStatus != '' and pd.FStatus != '全部'">
+				AND pwoe.FStatus =#{pd.FStatus}
+			</when>
+			<when
+				test="pd.FStatus != null and pd.FStatus != '' and pd.FStatus != '全部' and pd.TaskType != 1">
+				AND pwoe.FStatus IN ( '待执行','执行中', '暂停','结束','强制结束')
+			</when>
+			<otherwise>
+				AND pwoe.FStatus IN ( '待执行','执行中', '暂停')
+			</otherwise>
+		</choose>
+		) t
+		LEFT JOIN OA_STAFF
+		staff ON
+		staff.STAFF_ID
+		= t.ExecutorID
+		LEFT JOIN
+		PP_PlanningWorkOrder pwo ON
+		pwo.PlanningWorkOrder_ID =
+		t.PlanningWorkOrderID
+		LEFT JOIN
+		MDM_WC_STATION station ON
+		station.WC_STATION_ID = t.FStation
+		LEFT JOIN
+		PMS_Cabinet_Assembly_Detail cabinet ON
+		cabinet.Cabinet_No = t.ProcessIMaterielCode
+		left join
+		DT_PROJECT gy2 on cabinet.PROJECT_ID =
+		gy2.PROJECT_ID
+		LEFT JOIN
+		PMS_Cabinet_Assembly gy3 ON
+		gy3.Cabinet_Assembly_ID = cabinet.Cabinet_Assembly_ID
+		left join oa_staff staff1 on staff1.STAFF_ID = cabinet.Responsible_Technology
+		where 1=1
+		AND t.FStation in
+		${pd.item}
+		<!-- <foreach item="item" index="index" collection="pd.stationIDList" open="(" 
+			separator="," close=")"> -->
+		<!-- #{item} -->
+		<!-- </foreach> -->
+
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			ProcessIMateriel like '%'+ #{pd.KEYWORDS}+'%'
+			or
+			ProcessIMaterielCode like '%'+ #{pd.KEYWORDS}+'%'
+			or
+			TaskNum like '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			pwo.WorkOrderNum = #{pd.KEYWORDS}
+			or
+			t.WPName =
+			#{pd.KEYWORDS}
+			or
+			station.FNAME like '%' +#{pd.KEYWORDS}+ '%'
+			)
+		</if>
+
+
+		<if test="pd.TaskNum != null and pd.TaskNum != ''">
+			and TaskNum like '%'+ #{pd.TaskNum}+'%'
+		</if>
+
+		<if test="pd.ProcessIMateriel != null and pd.ProcessIMateriel != ''">
+			and ProcessIMateriel like '%' + #{pd.ProcessIMateriel} +
+			'%'
+		</if>
+		<if
+			test="pd.ProcessIMaterielCode != null and pd.ProcessIMaterielCode != ''">
+			and ProcessIMaterielCode like '%' + #{pd.ProcessIMaterielCode} +
+			'%'
+		</if>
+
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			and pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>
+
+		<if test="pd.WPName != null and pd.WPName != ''">
+			and pd.FName = #{pd.WPName}
+		</if>
+		<if test="pd.StationName != null and pd.StationName != ''">
+			station.FNAME like '%' +#{pd.KEYWORDS}+ '%'
+		</if>
+		) ta
+		[fhstart] order by TaskNum asc [fhend]
+	</select>
+
+	<select id="selectAllGD" parameterType="pd" resultType="pd">
+
+		select
+		f.DemandCount,
+		f.MaterialName,
+		f.MaterialNum,
+		f.MaterialID,
+		f.IssuedQuantity,
+		f.DeliveryWarehouse,
+		f.BatchNum,
+		f.RowNum,
+		l.MAT_AUXILIARYMX_CODE as SPropKey,
+		isnull(h.MAT_CODE,'无编号')+'/'+isnull(h.MAT_NAME,'无名称')
+		FMatJoint,
+		n.FNAME FUnitName,n.UNIT_INFO_ID,l.MAT_AUXILIARYMX_NAME,
+		f3.OrderNum
+		FOrderNum,f1.WorkOrderNum
+		FWorkOrderNum,h.MAT_CODE,h.MAT_CLASS_ID,h.MAT_NAME,h.MAT_ATTRIBUTE,h.MAT_BASIC_ID
+		from
+		MM_MaterialRequirement f
+		left join PP_PlanningWorkOrder f1
+		on
+		f.PlanningWorkOrderID=f1.PlanningWorkOrder_ID
+		left join
+		PP_SalesOrderDetail f2
+		on f1.SalesOrderDetailID=f2.SalesOrderDetail_ID
+		left join PP_SalesOrder f3
+		on f2.SalesOrderID=f3.SalesOrder_ID
+		left join
+		MBASE_MAT_BASIC h
+		on h.MAT_CODE=f.MaterialNum
+		left join MBASE_UNIT_INFO
+		n
+		on h.MAT_MAIN_UNIT=n.UNIT_INFO_ID
+		left join MBASE_MAT_AUXILIARYMX l
+		on
+		f.SPropKey=l.MAT_AUXILIARYMX_ID
+		where
+		1=1
+		and f.RowClose='N'
+		and
+		f.PushDownPurchaseIF='N'
+		and
+		MaterialRequirement_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		order by FOrderNum,cast(RowNum as int)
+	</select>
+
+	<select id="listByMasterIdAndMasterWorkOrderNum" parameterType="pd"
+		resultType="pd">
+		select * from PP_PlanningWorkOrder
+		where 1=1
+		<if test="MasterWorkOrder_ID != null and MasterWorkOrder_ID != 	''">
+			and MasterWorkOrder_ID = #{MasterWorkOrder_ID}
+		</if>
+		<if test="MasterWorkOrderNum != null and MasterWorkOrderNum != ''">
+			and MasterWorkOrderNum like '%'+#{MasterWorkOrderNum}+'%'
+		</if>
+	</select>
+	<select id="getPlanByNodeIdAndMasterPlanId" parameterType="pd"
+		resultType="pd">
+		select * from PP_PlanningWorkOrder
+		where 1=1 and
+		MasterWorkOrder_ID = #{MasterWorkOrder_ID} and NODE_ID = #{NODE_ID}
+	</select>
+	<select id="appTaskListByStaffId" parameterType="org.yy.controller.app.AppPage"
+		resultType="pd">
+
+		SELECT * FROM (
+		SELECT
+		staff.NAME AS ExecutorName,
+		station.FNAME+'/'+station.FCODE AS StationName,
+		pwo.WorkOrderNum,
+		pwo.BatchNum,
+		t.*,
+		cabinet.Cabinet_Assembly_Detail_ID
+		FROM
+		(
+		SELECT
+		pwoe.ProcessWorkOrderExample_ID,
+		pwoe.WPName,
+		pwoe.TaskNum,
+		pwoe.FStatus,
+		pwoe.PlannedBeginTime,
+		pwoe.PlannedEndTime,
+		pwoe.ActualBeginTime,
+		pwoe.ActualEndTime,
+		pwoe.ExecutorID,
+		pwoe.FStation,
+		pwoe.WP,
+		pwoe.PlanningWorkOrderID,
+		pwoe.ProcessIMateriel,
+		pwoe.ProcessIMaterielCode,
+		pwoe.WokNum,
+		pwoe.CheckDoneIF,
+		pwoe.WeighingDoneIF,
+		pwoe.EQM_BASE_ID,
+		pwoe.Throughput,
+		pwoe.WokIF,
+		pwoe.WeighingIF,
+		pwoe.FMSpecification
+		FROM
+		PP_ProcessWorkOrderExample pwoe
+		WHERE
+		1 = 1
+		AND
+		FStatus
+		in('待执行','执行中','暂停','结束','强制结束')
+		<!-- AND TaskType = #{pd.TaskType} -->
+		<if test="pd.TaskType != 1">
+			AND TaskType = #{pd.TaskType}
+		</if>
+		<if test="pd.TaskType == 1">
+			AND TaskType in('1','3')
+		</if>
+		) t
+		LEFT JOIN OA_STAFF
+		staff ON
+		staff.STAFF_ID
+		= t.ExecutorID
+		LEFT JOIN
+		PP_PlanningWorkOrder pwo ON
+		pwo.PlanningWorkOrder_ID =
+		t.PlanningWorkOrderID
+		LEFT JOIN
+		MDM_WC_STATION station ON
+		station.WC_STATION_ID = t.FStation
+		LEFT JOIN
+		PMS_Cabinet_Assembly_Detail cabinet ON
+		cabinet.Cabinet_No = t.ProcessIMaterielCode
+		where 1=1
+		AND t.FStation in
+		<foreach item="item" index="index" collection="pd.stationIDList"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			ProcessIMateriel like '%'+ #{pd.KEYWORDS}+'%'
+			or
+			ProcessIMaterielCode like '%'+ #{pd.KEYWORDS}+'%'
+			or
+			TaskNum like '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			pwo.WorkOrderNum = #{pd.KEYWORDS}
+			or
+			t.WPName =
+			#{pd.KEYWORDS}
+			or
+			station.FNAME like '%' +#{pd.KEYWORDS}+ '%'
+			)
+		</if>
+
+
+		<if test="pd.TaskNum != null and pd.TaskNum != ''">
+			and TaskNum like '%'+ #{pd.TaskNum}+'%'
+		</if>
+
+		<if test="pd.ProcessIMateriel != null and pd.ProcessIMateriel != ''">
+			and ProcessIMateriel like '%' + #{pd.ProcessIMateriel} +
+			'%'
+		</if>
+		<if
+			test="pd.ProcessIMaterielCode != null and pd.ProcessIMaterielCode != ''">
+			and ProcessIMaterielCode like '%' + #{pd.ProcessIMaterielCode} +
+			'%'
+		</if>
+
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			and pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>
+
+		<if test="pd.WPName != null and pd.WPName != ''">
+			and pd.FName = #{pd.WPName}
+		</if>
+		<if test="pd.StationName != null and pd.StationName != ''">
+			station.FNAME like '%' +#{pd.KEYWORDS}+ '%'
+		</if>
+		) ta
+	</select>
+	<select id="appProcessWorkOrderExampleDetailByPK" parameterType="pd"
+		resultType="pd">
+		SELECT
+		staff.NAME AS ExecutorName,
+		station.FNAME+'/'+station.FCODE AS StationName,
+		station.WC_STATION_ID,
+		pwo.WorkOrderNum,
+		pwo.BatchNum,
+		pwo.PlanningWorkOrder_ID,
+		pwo.MasterWorkOrderNum,
+		pwo.OutputMaterial,
+		t.*
+		FROM
+		(
+		SELECT
+		pwoe.EnableTest,
+		pwoe.ProcessWorkOrderExample_ID,
+		pwoe.WorkingProcedureExampleID,
+		pwoe.TaskNum,
+		pwoe.FStatus,
+		pwoe.PlannedBeginTime,
+		pwoe.PlannedEndTime,
+		pwoe.ActualBeginTime,
+		pwoe.ActualEndTime,
+		pwoe.ExecutorID,
+		pwoe.FStation,
+		pwoe.WP,
+		pwoe.WPName,
+		pwoe.WPType,
+		pwoe.SOP_ID,
+		pwoe.EnableSOP,
+		pwoe.QITaskIF,
+		pwoe.QIPlanID,
+		pwoe.PlanningWorkOrderID,
+		pwoe.ProcessIMateriel,
+		pwoe.ProcessIMaterielID,
+		pwoe.WokNum,
+		pwoe.CheckDoneIF,
+		pwoe.WeighingDoneIF,
+		pwoe.EQM_BASE_ID,
+		pwoe.Throughput,
+		pwoe.WokIF,
+		pwoe.WeighingIF,
+		pwoe.OrderNum,
+		wpde.FName,
+		pwoe.FMSpecification
+		FROM
+		PP_ProcessWorkOrderExample pwoe
+		LEFT JOIN
+		KM_WorkingProcedureExample wpde on pwoe.WorkingProcedureExampleID =
+		wpde.WorkingProcedureExample_ID
+		WHERE
+		pwoe.ProcessWorkOrderExample_ID =
+		#{ProcessWorkOrderExample_ID}
+		) t
+		LEFT JOIN OA_STAFF staff ON
+		staff.STAFF_ID = t.ExecutorID
+		LEFT JOIN
+		PP_PlanningWorkOrder pwo ON
+		pwo.PlanningWorkOrder_ID =
+		t.PlanningWorkOrderID
+		LEFT JOIN
+		MDM_WC_STATION station ON
+		station.WC_STATION_ID = t.FStation
+		order by
+		PlannedBeginTime
+	</select>
+	<select id="getRunNodeInfo" parameterType="pd" resultType="pd">
+		SELECT
+		t.PlanningWorkOrderID AS SUBPLAN_ID,
+		t.NODE_ID,
+		pwo.NODE_ID AS
+		RUN_O_ID,
+		pwo.MasterWorkOrder_ID AS MASTERPLAN_ID
+		FROM
+		(
+		SELECT
+		pwoe.PlanningWorkOrderID,
+		pwoe.NODE_ID
+		FROM
+		PP_ProcessWorkOrderExample
+		pwoe
+		WHERE
+		1 = 1
+		AND pwoe.ProcessWorkOrderExample_ID =
+		#{ProcessWorkOrderExample_ID}
+		) t
+		LEFT JOIN PP_PlanningWorkOrder pwo ON
+		pwo.PlanningWorkOrder_ID =
+		t.PlanningWorkOrderID
+	</select>
+	<update id="editStatus" parameterType="pd">
+		update PP_PlanningWorkOrder
+		set FStatus = '结束'
+		where
+		PlanningWorkOrder_ID = #{PlanningWorkOrder_ID}
+	</update>
+	
+	<!-- 生产看板-工序列表，入参：工序名称；未结束的任务 -->
+	<select id="listAllGXlistPage" parameterType="page"
+		resultType="pd">
+select * 
+from
+(
+select 
+--f1.WPName,
+f4.PPROJECT_CODE,--项目编号
+f4.PPROJECT_NAME,--项目名称
+f5.Cabinet_Type,--柜体类型
+f2.WorkOrderNum,--工单编号
+f1.FRUN_STATE,--执行状态
+f2.WorkOrderBeginTime,--计划开始时间
+f2.WorkOrderEndTime,--计划结束时间
+f1.ActualBeginTime,--实际开始时间
+isnull(STUFF(
+(SELECT ',' +OPerson
+FROM 
+(select distinct  OPerson from PP_O_RECORD  
+where 1=1 and OPerson !='' and WorkingProcedureExampleID=f1.ProcessWorkOrderExample_ID
+) tt
+FOR xml path('')
+),1,1,''
+),'') OPerson--操作人
+ from PP_ProcessWorkOrderExample f1
+inner join PP_PlanningWorkOrder f2 
+on f1.PlanningWorkOrderID=f2.PlanningWorkOrder_ID
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 
+on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where f1.WPName=#{pd.WPName} and f1.FStatus IN ( '待执行','执行中') 
+) gy
+[fhstart] order by WorkOrderBeginTime [fhend]
+	</select>
+	<!-- 生产看板-工序列表角标；未结束的任务 -->
+	<select id="listAllGXNUM" parameterType="pd"
+		resultType="pd">
+		select  0 id,'装配' name,
+(select count(*) 
+from
+(
+select 
+--f1.WPName,
+f4.PPROJECT_CODE,--项目编号
+f4.PPROJECT_NAME,--项目名称
+f5.Cabinet_Type,--柜体类型
+f2.WorkOrderNum,--工单编号
+f1.FRUN_STATE,--执行状态
+f2.WorkOrderBeginTime,--计划开始时间
+f2.WorkOrderEndTime,--计划结束时间
+f1.ActualBeginTime,--实际开始时间
+isnull(STUFF(
+(SELECT ',' +OPerson
+FROM 
+(select distinct  OPerson from PP_O_RECORD  
+where 1=1 and OPerson !='' and WorkingProcedureExampleID=f1.ProcessWorkOrderExample_ID
+) tt
+FOR xml path('')
+),1,1,''
+),'') OPerson--操作人
+ from PP_ProcessWorkOrderExample f1
+inner join PP_PlanningWorkOrder f2 
+on f1.PlanningWorkOrderID=f2.PlanningWorkOrder_ID
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 
+on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where f1.WPName='装配' and f1.FStatus IN ( '待执行','执行中') 
+) gy)  num
+union all 
+select  1 id,'接线' name,
+(select count(*) 
+from
+(
+select 
+--f1.WPName,
+f4.PPROJECT_CODE,--项目编号
+f4.PPROJECT_NAME,--项目名称
+f5.Cabinet_Type,--柜体类型
+f2.WorkOrderNum,--工单编号
+f1.FRUN_STATE,--执行状态
+f2.WorkOrderBeginTime,--计划开始时间
+f2.WorkOrderEndTime,--计划结束时间
+f1.ActualBeginTime,--实际开始时间
+isnull(STUFF(
+(SELECT ',' +OPerson
+FROM 
+(select distinct  OPerson from PP_O_RECORD  
+where 1=1 and OPerson !='' and WorkingProcedureExampleID=f1.ProcessWorkOrderExample_ID
+) tt
+FOR xml path('')
+),1,1,''
+),'') OPerson--操作人
+ from PP_ProcessWorkOrderExample f1
+inner join PP_PlanningWorkOrder f2 
+on f1.PlanningWorkOrderID=f2.PlanningWorkOrder_ID
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 
+on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where f1.WPName='接线' and f1.FStatus IN ( '待执行','执行中') 
+) gy)  num 
+<!-- union all 
+select  2 id,'过程检验记录' name,5 num -->
+union all 
+select  3 id,'上电检测' name,
+(select count(*) 
+from
+(
+select 
+--f1.WPName,
+f4.PPROJECT_CODE,--项目编号
+f4.PPROJECT_NAME,--项目名称
+f5.Cabinet_Type,--柜体类型
+f2.WorkOrderNum,--工单编号
+f1.FRUN_STATE,--执行状态
+f2.WorkOrderBeginTime,--计划开始时间
+f2.WorkOrderEndTime,--计划结束时间
+f1.ActualBeginTime,--实际开始时间
+isnull(STUFF(
+(SELECT ',' +OPerson
+FROM 
+(select distinct  OPerson from PP_O_RECORD  
+where 1=1 and OPerson !='' and WorkingProcedureExampleID=f1.ProcessWorkOrderExample_ID
+) tt
+FOR xml path('')
+),1,1,''
+),'') OPerson--操作人
+ from PP_ProcessWorkOrderExample f1
+inner join PP_PlanningWorkOrder f2 
+on f1.PlanningWorkOrderID=f2.PlanningWorkOrder_ID
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 
+on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where f1.WPName='上电检测' and f1.FStatus IN ( '待执行','执行中') 
+) gy)  num
+union all 
+select  4 id,'终检' name,
+(select count(*) 
+from
+(
+select 
+--f1.WPName,
+f4.PPROJECT_CODE,--项目编号
+f4.PPROJECT_NAME,--项目名称
+f5.Cabinet_Type,--柜体类型
+f2.WorkOrderNum,--工单编号
+f1.FRUN_STATE,--执行状态
+f2.WorkOrderBeginTime,--计划开始时间
+f2.WorkOrderEndTime,--计划结束时间
+f1.ActualBeginTime,--实际开始时间
+isnull(STUFF(
+(SELECT ',' +OPerson
+FROM 
+(select distinct  OPerson from PP_O_RECORD  
+where 1=1 and OPerson !='' and WorkingProcedureExampleID=f1.ProcessWorkOrderExample_ID
+) tt
+FOR xml path('')
+),1,1,''
+),'') OPerson--操作人
+ from PP_ProcessWorkOrderExample f1
+inner join PP_PlanningWorkOrder f2 
+on f1.PlanningWorkOrderID=f2.PlanningWorkOrder_ID
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 
+on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where f1.WPName='终检' and f1.FStatus IN ( '待执行','执行中') 
+) gy)  num
+union all 
+select  5 id,'包装' name,
+(select count(*) 
+from
+(
+select 
+--f1.WPName,
+f4.PPROJECT_CODE,--项目编号
+f4.PPROJECT_NAME,--项目名称
+f5.Cabinet_Type,--柜体类型
+f2.WorkOrderNum,--工单编号
+f1.FRUN_STATE,--执行状态
+f2.WorkOrderBeginTime,--计划开始时间
+f2.WorkOrderEndTime,--计划结束时间
+f1.ActualBeginTime,--实际开始时间
+isnull(STUFF(
+(SELECT ',' +OPerson
+FROM 
+(select distinct  OPerson from PP_O_RECORD  
+where 1=1 and OPerson !='' and WorkingProcedureExampleID=f1.ProcessWorkOrderExample_ID
+) tt
+FOR xml path('')
+),1,1,''
+),'') OPerson--操作人
+ from PP_ProcessWorkOrderExample f1
+inner join PP_PlanningWorkOrder f2 
+on f1.PlanningWorkOrderID=f2.PlanningWorkOrder_ID
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 
+on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where f1.WPName='包装' and f1.FStatus IN ( '待执行','执行中') 
+) gy)  num
+union all 
+select  6 id,'人员工时' name,
+(
+select count(*) from OA_STAFF f1
+inner join OA_DEPARTMENT f2 on f1.DEPARTMENT_ID=f2.DEPARTMENT_ID 
+left JOIN
+(
+select OPerson,sum(cast(isnull(h2.WorkHours,0) as NUMERIC(24,2))) WorkHours,
+sum(cast(DATEDIFF( mi, BeginTime, EndTime)*1.0/60 as NUMERIC(24,2))) FUseHours
+ from PP_O_RECORD h1
+left join PP_ProcessWorkOrderExample h2 on h1.WorkingProcedureExampleID=h2.ProcessWorkOrderExample_ID
+where convert(varchar(10),BeginTime,21)
+BETWEEN #{BeginTime} AND #{EndTime}
+<!-- BETWEEN convert(varchar(10),dateadd(dd,-day(getdate())+1,getdate()),21) AND 
+convert(varchar(10),dateadd(ms,-3,DATEADD(mm, DATEDIFF(m,0,getdate())+1, 0)),21) -->
+group by OPerson
+) f3 on f1.NAME=f3.OPerson
+where 1=1 and f2.DEPARTMENT_ID in ${depts}
+) num
+	</select>
+	<!--工序执行状态数 -->
+	<select id="getAllNum" parameterType="pd" resultType="pd">
+		--工单总数量
+select (select count(*) FNUM from PP_PlanningWorkOrder f1
+where FStatus!='结束') FNUM1,
+--未开始工单数量
+(select count(*) FNUM from PP_PlanningWorkOrder f1
+where FStatus='创建') FNUM2,
+--未开始工单数量
+(select count(*) FNUM from PP_PlanningWorkOrder f1
+where FStatus='执行中') FNUM3,
+--可控范围工单数量
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where pwo.FStatus!='结束'
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '可控范围' ) FNUM4,
+--正常范围工单数量
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where pwo.FStatus!='结束'
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '正常范围' ) FNUM5,
+--即将超期工单数量
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where pwo.FStatus!='结束'
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '即将超期' ) FNUM6,
+--超期生产工单数量
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where pwo.FStatus!='结束'
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '超期生产' ) FNUM7,
+--已排产工单数
+(select count(*) FNUM from PP_PlanningWorkOrder f1
+where FStatus!='结束' and ScheduleSchedule='已排程') FNUM8,
+--未排产工单数
+(select count(*) FNUM from PP_PlanningWorkOrder f1
+where FStatus!='结束' and ScheduleSchedule='未排程') FNUM9,
+--待请料工单数
+(select count(distinct gy1.WorkOrderNum) from PP_PlanningWorkOrder gy1 left join MM_CallMaterial gy2 on gy1.WorkOrderNum=gy2.PlanningWorkOrderNum
+where FStatus!='结束' and gy2.CallMaterial_ID is null) FNUM10,
+--待发货工单数
+12 FNUM11,
+--变更工单数
+(select count(*) from PMS_Cabinet_Assembly_Detail gy1
+inner join PP_PlanningWorkOrder gy4 on gy4.WorkOrderNum=gy1.Cabinet_No
+where Cabinet_Assembly_Detail_ID  in(select gy1.Cabinet_Assembly_Detail_ID from PMS_Cabinet_Assembly_Detail gy1 
+left join PMS_Cabinet_BOM gy2 on gy1.Cabinet_Assembly_Detail_ID=gy2.Cabinet_Assembly_Detail_ID
+left join KM_AttachmentSet gy3 on gy1.Cabinet_Assembly_Detail_ID=gy3.AssociationID
+where 1=1  and (gy2.FSTATE='变更' or gy3.FStatus='归档')) and gy4.FStatus!='结束') FNUM12,
+--返工任务数
+(select count(*) from PP_ProcessWorkOrderExample gy1 
+inner join PP_PlanningWorkOrder gy2 on gy1.PlanningWorkOrderID=gy2.PlanningWorkOrder_ID
+where TaskType=2 and gy2.FStatus!='结束') FNUM13,
+--异常任务数
+(select count(*) from PP_PlanningWorkOrder gy1 
+inner join KM_Exception gy2 on gy1.PlanningWorkOrder_ID=gy2.PlanningWorkOrder_ID
+where 1=1 and gy1.FStatus!='结束') FNUM14
+	</select>
+	
+	<!--toc饼图 -->
+	<select id="listAllBT" parameterType="pd"
+		resultType="pd">
+		
+--超期生产工单数量
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'超期' name  FROM 
+	(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where pwo.FStatus!='结束'
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '超期生产' 
+
+union ALL
+--正常范围工单数量
+SELECT CONVERT(nvarchar,COUNT(*)) as num,'正常' name  FROM 
+	(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where pwo.FStatus!='结束'
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '正常范围' 
+union all
+--可控范围工单数量
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'可控' name  FROM 
+	(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where pwo.FStatus!='结束'
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '可控范围' 
+union all 
+--即将超期工单数量
+SELECT CONVERT(nvarchar,COUNT(*)) as num,'预警' name  FROM 
+	(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where pwo.FStatus!='结束'
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '即将超期' 
+
+
+	</select>
+	
+	
+	<select id="listAllXMlistPage" parameterType="page" resultType="pd">
+			select *,(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警] from(
+ SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PROJECT_ID,
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{pd.NAME}
+          <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			pwo.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or pwo.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+			)
+		</if>
+				) l
+			) m
+		) k
+) b where 1=1
+<choose>
+   <when
+    test="pd.FTYPE != null and pd.FTYPE == '全部'">
+    AND 预警标识 in('即将超期','超期生产')
+   </when>
+   <when
+    test="pd.FTYPE != null and pd.FTYPE == '可控'">
+    AND 预警标识 in('可控范围')
+   </when>
+   <when
+    test="pd.FTYPE != null and pd.FTYPE == '正常'">
+    AND 预警标识 in('正常范围')
+   </when>
+   <when
+    test="pd.FTYPE != null and pd.FTYPE == '预警'">
+    AND 预警标识 in('即将超期')
+   </when>
+   <when
+    test="pd.FTYPE != null and pd.FTYPE == '超期'">
+    AND 预警标识 in('超期生产')
+   </when>
+   <otherwise>
+    AND 1=1 
+   </otherwise>
+  </choose>
+[fhstart] order by CHARINDEX(预警标识,'可控范围,正常范围,即将超期,超期生产' ),预计开始日期 [fhend]
+	</select>
+	<select id="listAllXMHislistPage" parameterType="page" resultType="pd">
+				select *,(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警] from(
+ SELECT *,
+	CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PROJECT_ID,
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE='结束' and pwo.PPROJECT_MANAGER=#{pd.NAME}
+           <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			pwo.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or pwo.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+			)
+		   </if>
+				) l
+			) m
+		) k
+) b where 1=1
+[fhstart] order by 预计开始日期 [fhend]
+	</select>
+	<select id="getAllXMNUM" parameterType="pd"
+		resultType="pd">
+		select
+(
+	select count(*)
+	FROM
+	DT_PROJECT pwo
+  where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{NAME}
+) FNUM1,
+(
+select count(*) from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '可控范围' ) FNUM2,
+(
+select count(*) from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '正常范围' ) FNUM3,
+(
+select count(*) from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '即将超期' ) FNUM4,
+(
+select count(*) from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '超期生产' ) FNUM5,
+--待设计项目数量
+(
+select count(distinct project.PROJECT_ID) from PMS_Cabinet_Assembly_Detail f1
+inner join DT_PROJECT project on project.PROJECT_ID =
+f1.PROJECT_ID
+ where FStatus='下发' and project.PPROJECT_MANAGER=#{NAME}
+) FNUM6,
+--待采购项目数量
+(
+select count(distinct f2.PROJECT_ID) 
+from PMS_Cabinet_Assembly_Detail f1
+inner join DT_PROJECT f2 on f2.PROJECT_ID =f1.PROJECT_ID
+inner join PP_PurchaseMaterialDetails f3 on f1.Cabinet_No =f3.Cabinet_No
+inner join PP_PurchaseList f4 on f4.PurchaseList_ID =f3.PurchaseID
+ where If_Purchase_Done='是' and f2.PPROJECT_MANAGER=#{NAME} and f4.FStatus !='结束'
+) FNUM7,
+--待执行项目数量
+(
+select count(distinct f4.PROJECT_ID) from PP_PlanningWorkOrder f1 
+inner join MM_CallMaterial f2 on f1.WorkOrderNum=f2.PlanningWorkOrderNum
+inner join PMS_Cabinet_Assembly_Detail f3 on f1.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4 on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where 1=1 and f2.FState='仓库接收' and f4.PPROJECT_MANAGER=#{NAME} and f4.FEND_STATE !='结束'
+) FNUM8,
+--待生产项目数量
+(
+select count(distinct f4.PROJECT_ID) from PP_PlanningWorkOrder f1 
+inner join PMS_Cabinet_Assembly_Detail f3 on f1.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4 on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where 1=1 and f4.PPROJECT_MANAGER=#{NAME} and f1.FStatus !='结束' and f3.Load_Status='是'
+) FNUM9,
+--待处理异常项目数
+(select count(distinct f4.PROJECT_ID) from PP_PlanningWorkOrder f1 
+inner join KM_Exception f2 on f1.PlanningWorkOrder_ID=f2.PlanningWorkOrder_ID
+inner join PMS_Cabinet_Assembly_Detail f3 on f1.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4 on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where 1=1 and f4.PPROJECT_MANAGER=#{NAME} and f1.FStatus !='结束' and f2.IssueType!='已完成') FNUM10,
+(SELECT
+(select '('+isnull(STUFF(
+		(SELECT ',''' +Exception_ID+''''
+		FROM 
+		(
+select distinct Exception_ID from PP_PlanningWorkOrder f1 
+inner join KM_Exception f2 on f1.PlanningWorkOrder_ID=f2.PlanningWorkOrder_ID
+inner join PMS_Cabinet_Assembly_Detail f3 on f1.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4 on f3.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5 on f3.Cabinet_Assembly_ID = f5.Cabinet_Assembly_ID
+where 1=1 and f4.PPROJECT_MANAGER=#{NAME} and f4.PPROJECT_MANAGER='项目管理' and f1.FStatus !='结束' and f2.IssueType!='已完成'
+		) tt
+		FOR xml path('')
+		),1,1,''
+		),'''''')+')')) IDS
+
+	</select>
+	<!--toc饼图 -->
+	<select id="listAllBTXM" parameterType="pd"
+		resultType="pd">
+		
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'可控' name from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '可控范围' 
+union all
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'正常' name from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]	
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '正常范围' 
+union ALL
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'预警' name from(
+
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '即将超期' 
+union all
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'超期' name from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			合同签订日期 [预计开始日期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pwo.PPROJECT_NAME[项目名称],
+						pwo.PPROJECT_CODE[项目号],
+					  pwo.PPROJECT_MANAGER[项目经理],
+						CONVERT(VARCHAR(10),pwo.PSIGN_DATE,21) [合同签订日期],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [交货日期],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.PDELIVERY_DATE,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.PSIGN_DATE,  pwo.PDELIVERY_DATE) [缓冲期]
+					FROM
+						DT_PROJECT pwo
+          where pwo.FEND_STATE!='结束' and pwo.PPROJECT_MANAGER=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '超期生产' 
+	</select>
+	
+	<!--设计看板-数字和饼图 -->
+	<select id="listAllSJNUM" parameterType="pd" resultType="pd">
+	select
+(
+	select count(*)
+	FROM
+	PMS_Cabinet_Assembly_Detail cad 
+	inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+	inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where cad.FStatus='下发' and staff.NAME=#{NAME}
+) FNUM1,
+(
+select count(*) from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						cad.Cabinet_No[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21))  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where cad.FStatus='下发' and staff.NAME=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '可控范围' ) FNUM2,
+(
+select count(*) from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						cad.Cabinet_No[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21))  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where cad.FStatus='下发' and staff.NAME=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '正常范围' ) FNUM3,
+(
+select count(*) from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						cad.Cabinet_No[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21))  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where cad.FStatus='下发' and staff.NAME=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '即将超期' ) FNUM4,
+(
+select count(*) from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						cad.Cabinet_No[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21))  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+          where cad.FStatus='下发' and staff.NAME=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '超期生产' ) FNUM5,
+--本月已完成柜体数量
+(
+select count(distinct cad.Cabinet_Assembly_Detail_ID) 
+from PMS_Cabinet_Assembly_Detail cad 
+inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+where (cad.FStatus='设计冻结') and staff.NAME=#{NAME} and datediff(month,Distribute_Time,getdate())=0
+) FNUM6,
+--本月未完成柜体数量
+(
+select count(distinct cad.Cabinet_Assembly_Detail_ID) 
+from PMS_Cabinet_Assembly_Detail cad 
+inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+where (cad.FStatus='下发' or cad.FStatus='设计结束') and staff.NAME=#{NAME} and datediff(month,Distribute_Time,getdate())=0
+) FNUM7,
+--本月下发柜体数量
+(
+select count(distinct cad.Cabinet_Assembly_Detail_ID) 
+from PMS_Cabinet_Assembly_Detail cad 
+inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+where (cad.FStatus='下发' or cad.FStatus='设计结束' or cad.FStatus='设计冻结') and staff.NAME=#{NAME} and datediff(month,Distribute_Time,getdate())=0
+) FNUM8
+	</select>
+	
+	<!--设计看板-数字和饼图 -->
+	<select id="listAllBTSJ" parameterType="pd" resultType="pd">
+	
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'可控' name from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						cad.Cabinet_No[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21))  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where cad.FStatus='下发' and staff.NAME=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '可控范围'
+union all
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'正常' name from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						cad.Cabinet_No[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21))  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where cad.FStatus='下发' and staff.NAME=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '正常范围'
+union ALL
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'预警' name from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						cad.Cabinet_No[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21))  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where cad.FStatus='下发' and staff.NAME=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '即将超期'
+union all
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'超期' name from(
+SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						cad.Cabinet_No[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21))  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology where cad.FStatus='下发' and staff.NAME=#{NAME}
+				) l
+			) m
+		) k 
+) u
+	where 1=1 AND 预警标识 = '超期生产'
+	</select>
+	<!--设计看板-数字和饼图 -->
+	<select id="listAllBTSJX" parameterType="pd" resultType="pd">
+	--本月已完成柜体数量
+SELECT CONVERT(nvarchar,count(distinct cad.Cabinet_Assembly_Detail_ID)) as value,'已完成' name 
+from PMS_Cabinet_Assembly_Detail cad 
+inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+where (cad.FStatus='设计冻结') and staff.NAME=#{NAME} and datediff(month,Distribute_Time,getdate())=0
+union all
+
+SELECT CONVERT(nvarchar,count(distinct cad.Cabinet_Assembly_Detail_ID)) as value,'未完成' name 
+from PMS_Cabinet_Assembly_Detail cad 
+inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+where (cad.FStatus='下发' or cad.FStatus='设计结束') and staff.NAME=#{NAME} and datediff(month,Distribute_Time,getdate())=0
+	
+	</select>
+	
+	<select id="listAllSJHislistPage" parameterType="page" resultType="pd">
+	select *,(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警] from(
+SELECT *,
+    case when FNUM=0 then '未变更' else '已变更' end [变更状态],
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+(select count(*) from PMS_Cabinet_Assembly_Detail gy1 
+left join PMS_Cabinet_BOM gy2 on gy1.Cabinet_Assembly_Detail_ID=gy2.Cabinet_Assembly_Detail_ID
+left join KM_AttachmentSet gy3 on gy1.Cabinet_Assembly_Detail_ID=gy3.AssociationID
+where 1=1  and (gy2.FSTATE='变更' or gy3.FStatus='归档') and gy1.Cabinet_Assembly_Detail_ID=m.Cabinet_Assembly_Detail_ID) FNUM,
+
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+            cad.Cabinet_Assembly_Detail_ID,
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目编号],
+						cad.Cabinet_No[柜体编号],
+            ff1.Cabinet_Type[柜体类型],
+            case when cad.If_Bom_Done='是' then '已下发' else '未下发' end [BOM下发],
+            case when cad.If_Drawings_Done='是' then '已下发' else '未下发' end [图纸下发],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						CONVERT(VARCHAR(10),DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21)),21)  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						CONVERT(VARCHAR(10),cad.FEnd_Time,21) '设计冻结时间',
+						CONVERT(VARCHAR(10),DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21)),21)  [预计完成时间],	
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+					inner JOIN PMS_Cabinet_Assembly ff1 ON cad.Cabinet_Assembly_ID = ff1.Cabinet_Assembly_ID
+          where cad.FStatus='设计冻结' and staff.NAME=#{pd.NAME}
+            <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			pro.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or pro.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or cad.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+			</if>
+				) l
+			) m
+		) k 
+) u
+	
+[fhstart] order by 下发技术时间 [fhend]
+	</select>
+	
+	<select id="listAllSJlistPage" parameterType="page" resultType="pd">
+		select *,(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警] from(
+SELECT *,
+    case when FNUM=0 then '未变更' else '已变更' end [变更状态],
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+(select count(*) from PMS_Cabinet_Assembly_Detail gy1 
+left join PMS_Cabinet_BOM gy2 on gy1.Cabinet_Assembly_Detail_ID=gy2.Cabinet_Assembly_Detail_ID
+left join KM_AttachmentSet gy3 on gy1.Cabinet_Assembly_Detail_ID=gy3.AssociationID
+where 1=1  and (gy2.FSTATE='变更' or gy3.FStatus='归档') and gy1.Cabinet_Assembly_Detail_ID=m.Cabinet_Assembly_Detail_ID) FNUM,
+
+			下发技术时间 [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+            cad.Cabinet_Assembly_Detail_ID,
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目编号],
+						cad.Cabinet_No[柜体编号],
+            ff1.Cabinet_Type[柜体类型],
+            case when cad.If_Bom_Done='是' then '已下发' else '未下发' end [BOM下发],
+            case when cad.If_Drawings_Done='是' then '已下发' else '未下发' end [图纸下发],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),cad.Distribute_Time,21) '下发技术时间',
+						CONVERT(VARCHAR(10),DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21)),21)  [要求完成日期],
+						cad.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						CONVERT(VARCHAR(10),cad.FEnd_Time,21) '设计冻结时间',
+						CONVERT(VARCHAR(10),DATEADD(dd, 3,CONVERT(VARCHAR(10),cad.Distribute_Time,21)),21)  [预计完成时间],	
+						3 [缓冲期]
+					FROM
+					PMS_Cabinet_Assembly_Detail cad 
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					inner join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+					inner JOIN PMS_Cabinet_Assembly ff1 ON cad.Cabinet_Assembly_ID = ff1.Cabinet_Assembly_ID
+          where cad.FStatus='下发' and staff.NAME=#{pd.NAME}
+           
+            <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			pro.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or pro.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or cad.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+			</if>
+				) l
+			) m
+		) k 
+) u
+where 1=1 
+<choose>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '全部'">
+				AND 预警标识 in('即将超期','超期生产')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '可控'">
+				AND 预警标识 in('可控范围')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '正常'">
+				AND 预警标识 in('正常范围')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '预警'">
+				AND 预警标识 in('即将超期')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '超期'">
+				AND 预警标识 in('超期生产')
+			</when>
+			<otherwise>
+				AND 1=1 
+			</otherwise>
+		</choose>
+[fhstart] order by 下发技术时间 [fhend]
+	</select>
+	<select id="listAllJYHislistPage" parameterType="page" resultType="pd">
+	select *, case when FNUM=0 then '未变更' else '已变更' end [变更状态] from(select 
+WPName [待检类型],gy2.PPROJECT_NAME[项目名称],gy2.PPROJECT_CODE[项目编号],
+gy1.Cabinet_No[柜体编号],ca.Cabinet_Type[柜体类型],f1.TaskNum [任务编号],
+f1.PlannedBeginTime [工序计划开始时间],f1.PlannedEndTime[工序计划结束时间],
+(select count(*) from PMS_Cabinet_Assembly_Detail gy11 
+left join PMS_Cabinet_BOM gy2 on gy11.Cabinet_Assembly_Detail_ID=gy2.Cabinet_Assembly_Detail_ID
+left join KM_AttachmentSet gy3 on gy11.Cabinet_Assembly_Detail_ID=gy3.AssociationID
+where 1=1  and (gy2.FSTATE='变更' or gy3.FStatus='归档') and gy11.Cabinet_Assembly_Detail_ID=gy1.Cabinet_Assembly_Detail_ID) FNUM
+	FROM
+	PP_ProcessWorkOrderExample f1  
+  left join PP_PlanningWorkOrder pwo on f1.PlanningWorkOrderID=pwo.PlanningWorkOrder_ID
+	left join
+	PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+	gy1.Cabinet_No
+	left join
+	DT_PROJECT gy2 on gy1.PROJECT_ID =
+	gy2.PROJECT_ID
+	left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+
+where (WPName='上电检测' or  WPName='终检')
+and f1.FStatus IN ( '结束') 
+<!-- and FRUN_STATE='结束' -->
+ <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			gy2.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or gy2.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or gy1.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or WPName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+</if>
+) ggy
+ [fhstart] order by 待检类型,柜体编号 [fhend]
+	</select>
+	
+	<select id="listAllJYlistPage" parameterType="page" resultType="pd">
+		select *,case when FNUM=0 then '未变更' else '已变更' end [变更状态] from(select 
+		gy1.Cabinet_Assembly_Detail_ID, 
+WPName [待检类型],gy2.PPROJECT_NAME[项目名称],gy2.PPROJECT_CODE[项目编号],
+gy1.Cabinet_No[柜体编号],ca.Cabinet_Type[柜体类型],f1.TaskNum [任务编号],
+f1.PlannedBeginTime [工序计划开始时间],f1.PlannedEndTime[工序计划结束时间],
+(select count(*) from PMS_Cabinet_Assembly_Detail gy11 
+left join PMS_Cabinet_BOM gy2 on gy11.Cabinet_Assembly_Detail_ID=gy2.Cabinet_Assembly_Detail_ID
+left join KM_AttachmentSet gy3 on gy11.Cabinet_Assembly_Detail_ID=gy3.AssociationID
+where 1=1  and (gy2.FSTATE='变更' or gy3.FStatus='归档') and gy11.Cabinet_Assembly_Detail_ID=gy1.Cabinet_Assembly_Detail_ID) FNUM
+	FROM
+	PP_ProcessWorkOrderExample f1  
+  left join PP_PlanningWorkOrder pwo on f1.PlanningWorkOrderID=pwo.PlanningWorkOrder_ID
+	left join
+	PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+	gy1.Cabinet_No
+	left join
+	DT_PROJECT gy2 on gy1.PROJECT_ID =
+	gy2.PROJECT_ID
+	left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+
+where 1=1
+<choose>
+	<when
+		test="pd.FTYPE != null and pd.FTYPE == '上电检测'">
+		and (WPName='上电检测')
+	</when>
+	<when
+		test="pd.FTYPE != null and pd.FTYPE == '终检'">
+		and (WPName='终检')
+	</when>
+	<otherwise>
+		and (WPName='上电检测' or  WPName='终检')
+	</otherwise>
+</choose>
+					
+<!-- and FRUN_STATE!='结束' -->
+and f1.FStatus IN ( '待执行','执行中') 
+ <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			gy2.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or gy2.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or gy1.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or WPName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+</if>
+) ggy
+ [fhstart] order by 待检类型,柜体编号 [fhend]
+	</select>
+	<select id="listAllJYNUM" parameterType="pd" resultType="pd">
+	select
+--待检测工序数-上电检验
+(
+	select count(*)
+	FROM
+	PP_ProcessWorkOrderExample f1  where WPName='上电检测'
+	and f1.FStatus IN ( '待执行','执行中') 
+) FNUM1,
+--待检测工序数-产品终检
+(
+	select count(*)
+	FROM
+	PP_ProcessWorkOrderExample f1  where WPName='终检'
+	and f1.FStatus IN ( '待执行','执行中') 
+) FNUM2,
+--待处理异常项目数
+(select count(*) from KM_Exception f2
+where 1=1 and f2.IssueType!='已完成') FNUM3
+	
+	</select>
+	<select id="listAllZPlistPage" parameterType="page" resultType="pd">
+	SELECT *,(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警],'齐套' [齐套状态]  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识],
+		case when FNUM=0 then '未变更' else '已变更' end [变更状态]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期],
+			(select count(*) from PMS_Cabinet_Assembly_Detail gy1 
+			left join PMS_Cabinet_BOM gy2 on gy1.Cabinet_Assembly_Detail_ID=gy2.Cabinet_Assembly_Detail_ID
+			left join KM_AttachmentSet gy3 on gy1.Cabinet_Assembly_Detail_ID=gy3.AssociationID
+			where 1=1  and (gy2.FSTATE='变更' or gy3.FStatus='归档') and gy1.Cabinet_Assembly_Detail_ID=m.Cabinet_Assembly_Detail_ID) FNUM
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT 
+            f1.TaskNum '任务编号',
+						cad.Cabinet_Assembly_Detail_ID,
+						f1.WPName [工序名称],
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目编号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体编号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						ff1.Cabinet_Type[柜体类型],
+						f1.FStatus [工序状态],
+            f1.PlannedBeginTime [计划开始时间],f1.PlannedEndTime [计划结束时间],f1.ActualBeginTime [工序实际开始时间],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+					inner join PP_ProcessWorkOrderExample f1 on f1.PlanningWorkOrderID = pwo.PlanningWorkOrder_ID 
+					inner JOIN PMS_Cabinet_Assembly ff1 ON cad.Cabinet_Assembly_ID = ff1.Cabinet_Assembly_ID
+					where 1=1
+					<choose>
+						<when
+							test="pd.FTYPE != null and pd.FTYPE == '未开始'">
+							AND f1.FStatus IN ( '待执行')
+						</when>
+						<when
+							test="pd.FTYPE != null and pd.FTYPE == '执行中'">
+							AND f1.FStatus IN ( '执行中') 
+						</when>
+						<otherwise>
+						AND f1.FStatus IN ( '待执行','执行中') 
+						</otherwise>
+					</choose>
+ 					<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+					and
+					(
+					pro.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or pro.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or cad.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or f1.WPName LIKE '%'+ #{pd.KEYWORDS}+'%'
+					)
+					</if>
+					and WPName='装配' AND f1.FStation in
+		      		${pd.item}
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 
+	<choose>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '全部'">
+				AND 预警标识 in('即将超期','超期生产')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '可控'">
+				AND 预警标识 in('可控范围')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '正常'">
+				AND 预警标识 in('正常范围')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '预警'">
+				AND 预警标识 in('即将超期')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '超期'">
+				AND 预警标识 in('超期生产')
+			</when>
+			<otherwise>
+				AND 1=1 
+			</otherwise>
+		</choose>
+	
+[fhstart] order by CHARINDEX(预警标识,'即将超期,超期生产' ),柜体编号 [fhend]
+	</select>
+	<select id="listAllZPRUNlistPage" parameterType="page" resultType="pd">
+	SELECT *,(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警],
+	'齐套' [齐套状态]  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识],
+		case when FNUM=0 then '未变更' else '已变更' end [变更状态]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期],
+			(select count(*) from PMS_Cabinet_Assembly_Detail gy1 
+			left join PMS_Cabinet_BOM gy2 on gy1.Cabinet_Assembly_Detail_ID=gy2.Cabinet_Assembly_Detail_ID
+			left join KM_AttachmentSet gy3 on gy1.Cabinet_Assembly_Detail_ID=gy3.AssociationID
+			where 1=1  and (gy2.FSTATE='变更' or gy3.FStatus='归档') and gy1.Cabinet_Assembly_Detail_ID=m.Cabinet_Assembly_Detail_ID) FNUM
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT 
+            f1.TaskNum '任务编号',
+						cad.Cabinet_Assembly_Detail_ID,
+						f1.WPName [工序名称],
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目编号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体编号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						ff1.Cabinet_Type[柜体类型],
+						f1.FStatus [工序状态],
+            f1.PlannedBeginTime [计划开始时间],f1.PlannedEndTime [计划结束时间],f1.ActualBeginTime [工序实际开始时间],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+					inner join PP_ProcessWorkOrderExample f1 on f1.PlanningWorkOrderID = pwo.PlanningWorkOrder_ID 
+					inner JOIN PMS_Cabinet_Assembly ff1 ON cad.Cabinet_Assembly_ID = ff1.Cabinet_Assembly_ID
+					where 1=1
+ 					<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+					and
+					(
+					pro.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or pro.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or cad.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or f1.WPName LIKE '%'+ #{pd.KEYWORDS}+'%'
+					)
+					</if>
+					AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in
+		      		${pd.item}
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 
+	
+[fhstart] order by CHARINDEX(预警标识,'可控范围,正常范围,即将超期,超期生产' ),柜体编号 [fhend]
+	</select>
+	
+	<select id="listAllZPHISlistPage" parameterType="page" resultType="pd">
+	SELECT *,(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警],
+	'齐套' [齐套状态]  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识],
+		case when FNUM=0 then '未变更' else '已变更' end [变更状态]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期],
+			(select count(*) from PMS_Cabinet_Assembly_Detail gy1 
+			left join PMS_Cabinet_BOM gy2 on gy1.Cabinet_Assembly_Detail_ID=gy2.Cabinet_Assembly_Detail_ID
+			left join KM_AttachmentSet gy3 on gy1.Cabinet_Assembly_Detail_ID=gy3.AssociationID
+			where 1=1  and (gy2.FSTATE='变更' or gy3.FStatus='归档') and gy1.Cabinet_Assembly_Detail_ID=m.Cabinet_Assembly_Detail_ID) FNUM
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT 
+            f1.TaskNum '任务编号',
+						cad.Cabinet_Assembly_Detail_ID,
+						f1.WPName [工序名称],
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目编号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体编号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						ff1.Cabinet_Type[柜体类型],
+						f1.FStatus [工序状态],
+            f1.PlannedBeginTime [计划开始时间],f1.PlannedEndTime [计划结束时间],f1.ActualBeginTime [工序实际开始时间],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+					inner join PP_ProcessWorkOrderExample f1 on f1.PlanningWorkOrderID = pwo.PlanningWorkOrder_ID 
+					inner JOIN PMS_Cabinet_Assembly ff1 ON cad.Cabinet_Assembly_ID = ff1.Cabinet_Assembly_ID
+					where 1=1
+ 					<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+					and
+					(
+					pro.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or pro.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or cad.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or f1.WPName LIKE '%'+ #{pd.KEYWORDS}+'%'
+					)
+					</if> 
+					and f1.FStatus IN ( '结束') 
+					and WPName='装配' AND f1.FStation in
+		      		${pd.item}
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 
+	
+[fhstart] order by CHARINDEX(预警标识,'可控范围,正常范围,即将超期,超期生产' ),柜体编号 [fhend]
+	</select>
+	<select id="listAllZPNUM" parameterType="pd"
+		resultType="pd">
+SELECT
+(
+select count(*) from PP_ProcessWorkOrderExample f1 
+where 1=1 AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in ${item}
+) FNUM1,
+(
+select count(*) from PP_ProcessWorkOrderExample f1 
+where 1=1 AND f1.FStatus IN ( '待执行') and WPName='装配' AND f1.FStation in ${item}
+) FNUM2,
+(
+select count(*) from PP_ProcessWorkOrderExample f1 
+where 1=1 AND f1.FStatus IN ( '执行中') and WPName='装配' AND f1.FStation in ${item}
+) FNUM3,
+		(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+					where 1=1
+					and cad.Cabinet_No in
+					(
+					select distinct ProcessIMaterielCode from PP_ProcessWorkOrderExample f1 
+					where 1=1 AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in
+		       ${item}
+					)
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '可控范围' )
+FNUM4,
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+							where 1=1
+					and cad.Cabinet_No in
+					(
+					select distinct ProcessIMaterielCode from PP_ProcessWorkOrderExample f1 
+					where 1=1 AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in
+		         ${item}
+					)
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '正常范围' )
+FNUM5,
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+						where 1=1
+					and cad.Cabinet_No in
+					(
+					select distinct ProcessIMaterielCode from PP_ProcessWorkOrderExample f1 
+					where 1=1 AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in
+		        ${item}
+					)
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '即将超期' )
+FNUM6,
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+							where 1=1
+					and cad.Cabinet_No in
+					(
+					select distinct ProcessIMaterielCode from PP_ProcessWorkOrderExample f1 
+					where 1=1 AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in
+		         ${item}
+					)
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '超期生产' )
+FNUM7,
+(select count(*) from 
+KM_Exception f1
+inner join PP_ProcessWorkOrderExample f2 on f1.ProcessWorkOrderExample_ID=f2.ProcessWorkOrderExample_ID
+where  1=1 AND f2.FStatus IN ( '待执行','执行中') and WPName='装配'   and f1.IssueType!='已完成'  AND f2.FStation in
+${item}
+) FNUM8,
+(select '('+isnull(
+		STUFF(
+		(SELECT ',''' +Exception_ID+''''
+		FROM 
+		(
+select f1.Exception_ID from 
+KM_Exception f1
+inner join PP_ProcessWorkOrderExample f2 on f1.ProcessWorkOrderExample_ID=f2.ProcessWorkOrderExample_ID
+where  1=1 AND f2.FStatus IN ( '待执行','执行中') and WPName='装配'   and f1.IssueType!='已完成'  AND f2.FStation in
+${item}
+		) tt
+		FOR xml path('')
+		),1,1,''
+		),'''''')+')') IDS
+		
+	</select>
+	<select id="listAllBTZP" parameterType="pd"
+		resultType="pd">
+		SELECT CONVERT(nvarchar,COUNT(*)) as value,'可控' name  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+					where 1=1
+					and cad.Cabinet_No in
+					(
+					select distinct ProcessIMaterielCode from PP_ProcessWorkOrderExample f1 
+					where 1=1 AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in
+		      ${item}
+					)
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '可控范围' 
+union all
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'正常' name  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+							where 1=1
+					and cad.Cabinet_No in
+					(
+					select distinct ProcessIMaterielCode from PP_ProcessWorkOrderExample f1 
+					where 1=1 AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in
+		      ${item}
+					)
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '正常范围' 
+union ALL
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'预警' name  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+						where 1=1
+					and cad.Cabinet_No in
+					(
+					select distinct ProcessIMaterielCode from PP_ProcessWorkOrderExample f1 
+					where 1=1 AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in
+		       ${item}
+					)
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '即将超期' 
+union all
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'超期' name  FROM 
+
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						pro.PPROJECT_NAME[项目名称],
+						pro.PPROJECT_CODE[项目号],
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					inner JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					inner JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No = mat.MAT_CODE
+					inner JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+					left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology 
+							where 1=1
+					and cad.Cabinet_No in
+					(
+					select distinct ProcessIMaterielCode from PP_ProcessWorkOrderExample f1 
+					where 1=1 AND f1.FStatus IN ( '待执行','执行中') and WPName='装配' AND f1.FStation in
+		       ${item}
+					)
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '超期生产' 
+		
+	</select>
+	<select id="listAllCGNUM" parameterType="pd"
+		resultType="pd">
+		select 
+(select count(*) from PP_PurchaseList where 1=1 and FStatus!='结束') FNUM1,
+(select count(*) from PP_PurchaseList where 1=1 and FStatus='创建' ) FNUM2,
+(select count(*) from PP_PurchaseList where 1=1 and (FStatus='已申请' or FStatus='审批通过')) FNUM3,
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						*,
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.EstimatedTimeOfArrival,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.FMakeBillsTime, pwo.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList pwo
+						where 1=1 and FStatus!='结束'
+					
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '可控范围' )
+FNUM4,
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						*,
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.EstimatedTimeOfArrival,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.FMakeBillsTime, pwo.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList pwo
+						where 1=1 and FStatus!='结束'
+					
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '正常范围' )
+FNUM5,
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						*,
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.EstimatedTimeOfArrival,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.FMakeBillsTime, pwo.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList pwo
+						where 1=1 and FStatus!='结束'
+					
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '即将超期' )
+FNUM6,
+(SELECT CONVERT(nvarchar,COUNT(*)) as num  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						*,
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.EstimatedTimeOfArrival,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.FMakeBillsTime, pwo.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList pwo
+						where 1=1 and FStatus!='结束'
+					
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '超期生产' )
+FNUM7
+		</select>
+		<select id="listAllBTCG" parameterType="pd"
+		resultType="pd">
+		SELECT CONVERT(nvarchar,COUNT(*)) as value,'可控' name  FROM 	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						*,
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.EstimatedTimeOfArrival,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.FMakeBillsTime, pwo.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList pwo
+						where 1=1 and FStatus!='结束'
+					
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '可控范围' 
+union all
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'正常' name  FROM 	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						*,
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.EstimatedTimeOfArrival,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.FMakeBillsTime, pwo.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList pwo
+						where 1=1 and FStatus!='结束'
+					
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '正常范围' 
+union all
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'预警' name  FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						*,
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.EstimatedTimeOfArrival,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.FMakeBillsTime, pwo.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList pwo
+						where 1=1 and FStatus!='结束'
+					
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '即将超期' 
+union all
+SELECT CONVERT(nvarchar,COUNT(*)) as value,'超期' name  FROM 	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						*,
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.EstimatedTimeOfArrival,21) [要求完成日期],
+						DATEDIFF(DAY, pwo.FMakeBillsTime, pwo.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList pwo
+						where 1=1 and FStatus!='结束'
+					
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 AND 预警标识 = '超期生产'
+		</select>
+	<select id="listAllCGlistPage" parameterType="page" resultType="pd">
+	SELECT  *,(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警] FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						f1.PurchaseList_ID,
+						FStatus [状态],
+						f1.FNum [采购单号],
+						f2.PPROJECT_CODE [项目编号],f2.PPROJECT_NAME [项目名称],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),f1.EstimatedTimeOfArrival,21) [要求完成日期],
+						CONVERT(VARCHAR(10),f1.EstimatedTimeOfArrival,21) [计划到货时间],
+						CONVERT(VARCHAR(10),f1.FMakeBillsTime,21) [制单时间],
+						DATEDIFF(DAY, f1.FMakeBillsTime, f1.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList f1
+						inner join DT_PROJECT f2 on f1.PROJECT_ID=f2.PROJECT_ID
+						where 1=1 
+						<choose>
+						<when
+							test="pd.FTYPE != null and pd.FTYPE == '未执行'">
+							AND f1.FStatus='创建'
+						</when>
+						<when
+							test="pd.FTYPE != null and pd.FTYPE == '已执行'">
+							and (f1.FStatus='已申请' or f1.FStatus='审批通过')
+						</when>
+						<otherwise>
+						and f1.FStatus!='结束'
+						</otherwise>
+						</choose>
+						 <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+							and
+							(
+							f2.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or f2.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or f1.FNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+							)
+						</if>
+					
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 
+	<choose>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '全部'">
+				AND 预警标识 in('即将超期','超期生产')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '可控'">
+				AND 预警标识 in('可控范围')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '正常'">
+				AND 预警标识 in('正常范围')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '预警'">
+				AND 预警标识 in('即将超期')
+			</when>
+			<when
+				test="pd.FTYPE != null and pd.FTYPE == '超期'">
+				AND 预警标识 in('超期生产')
+			</when>
+			<otherwise>
+				AND 1=1 
+			</otherwise>
+		</choose>
+[fhstart] order by CHARINDEX(预警标识,'可控范围,正常范围,即将超期,超期生产' ),采购单号 [fhend]
+	</select>
+	<select id="listAllCGHislistPage" parameterType="page" resultType="pd">
+		SELECT  *,(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警] FROM 
+	(
+		SELECT *,
+		CASE 
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+						f1.PurchaseList_ID,
+						FStatus [状态],
+						f1.FNum [采购单号],
+						f2.PPROJECT_CODE [项目编号],f2.PPROJECT_NAME [项目名称],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),f1.EstimatedTimeOfArrival,21) [要求完成日期],
+						CONVERT(VARCHAR(10),f1.EstimatedTimeOfArrival,21) [计划到货时间],
+						CONVERT(VARCHAR(10),f1.FMakeBillsTime,21) [制单时间],
+						DATEDIFF(DAY, f1.FMakeBillsTime, f1.EstimatedTimeOfArrival) [缓冲期]
+					FROM
+						PP_PurchaseList f1
+						inner join DT_PROJECT f2 on f1.PROJECT_ID=f2.PROJECT_ID
+						where 1=1 and FStatus='结束'
+					 <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+							and
+							(
+							f2.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or f2.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or f1.FNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+							)
+						</if>
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 
+[fhstart] order by CHARINDEX(预警标识,'可控范围,正常范围,即将超期,超期生产' ),采购单号 [fhend]
+	</select>
+	
+		<select id="listAllKFNUM" parameterType="pd"
+		resultType="pd">
+		select 
+(select count(*) from(
+select f1.CallMaterial_ID,
+(
+select count(*) from(
+select (SELECT SUM(f.ActualCount) stockSum FROM MM_Stock f
+WHERE 1=1 and ItemID= gy.Material_ID and WarehouseID= gy.DeliveryWarehouseID and PositionID= gy.DeliveryPositionID) FNUM,QuantityCount
+from MM_CallMaterialDetails gy where CallMaterial_ID=f1.CallMaterial_ID
+) gy1 where FNUM>=QuantityCount
+) FNUM1,
+(select count(*) from MM_CallMaterialDetails where CallMaterial_ID=f1.CallMaterial_ID) FNUM2
+ from MM_CallMaterial f1 where 1=1 and (FState='叫料' or FState='仓库接收')
+) hh where FNUM1=FNUM2) FNUM1,
+(select count(*) from(
+select f1.CallMaterial_ID,
+(
+select count(*) from(
+select (SELECT SUM(f.ActualCount) stockSum FROM MM_Stock f
+WHERE 1=1 and ItemID= gy.Material_ID and WarehouseID= gy.DeliveryWarehouseID and PositionID= gy.DeliveryPositionID) FNUM,QuantityCount
+from MM_CallMaterialDetails gy where CallMaterial_ID=f1.CallMaterial_ID
+) gy1 where FNUM>=QuantityCount
+) FNUM1,
+(select count(*) from MM_CallMaterialDetails where CallMaterial_ID=f1.CallMaterial_ID) FNUM2
+ from MM_CallMaterial f1 where 1=1 and (FState='叫料' or FState='仓库接收')
+) hh where FNUM1!=FNUM2) FNUM2
+	</select>
+	
+		<select id="listAllKFlistPage" parameterType="page"
+		resultType="pd">
+		
+		select *,(case when FNUM1=FNUM2 then '齐套' else '未齐套' end) [齐套状态] 
+from(
+select f2.Cabinet_Assembly_Detail_ID,f1.CallMaterial_ID,f2.Cabinet_No [柜体编号],f3.PPROJECT_CODE [项目编号],
+f3.PPROJECT_NAME [项目名称],f4.Cabinet_Type [柜体类型],f1.FState [请料状态],
+CONVERT(VARCHAR(10), f1.FCallTime,21)  [叫料时间],
+f1.FCallMan [叫料人],
+CONVERT(VARCHAR(10),f1.FOutTime,21) [出库时间],
+f1.FOutMan[出库人],
+f1.FInMan[入库人],
+CONVERT(VARCHAR(10),f1.FInTime,21)  [入库时间],
+f1.FRecieveMan[接收人],
+CONVERT(VARCHAR(10),f1.FRecieveTime,21)  [接收时间],
+CONVERT(VARCHAR(10),f1.MakeTime,21)   [制单时间],
+f1.DocumentNum [叫料单号],
+(
+select count(*) from(
+select (SELECT SUM(f.ActualCount) stockSum FROM MM_Stock f
+WHERE 1=1 and ItemID= gy.Material_ID and WarehouseID= gy.DeliveryWarehouseID and PositionID= gy.DeliveryPositionID) FNUM,QuantityCount
+from MM_CallMaterialDetails gy where CallMaterial_ID=f1.CallMaterial_ID
+) gy1 where FNUM>=QuantityCount
+) FNUM1,
+(select count(*) from MM_CallMaterialDetails where CallMaterial_ID=f1.CallMaterial_ID) FNUM2
+ from MM_CallMaterial f1
+inner join PMS_Cabinet_Assembly_Detail f2 on f1.PlanningWorkOrderNum=f2.Cabinet_No
+inner join DT_PROJECT f3 on f2.PROJECT_ID=f3.PROJECT_ID
+inner join PMS_Cabinet_Assembly f4 on f2.Cabinet_Assembly_ID=f4.Cabinet_Assembly_ID
+
+ where 1=1 and (f1.FState='仓库出库')
+ <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f3.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or f3.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or f2.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+</if>
+) hh where 1=1
+[fhstart] order by 制单时间 desc  [fhend]
+
+		</select>
+		<select id="listAllKFlistPage1" parameterType="page"
+		resultType="pd">
+		
+		select *,(case when FNUM1=FNUM2 then '齐套' else '未齐套' end) [齐套状态] 
+from(
+select f2.Cabinet_Assembly_Detail_ID,f1.CallMaterial_ID,f2.Cabinet_No [柜体编号],f3.PPROJECT_CODE [项目编号],
+f3.PPROJECT_NAME [项目名称],f4.Cabinet_Type [柜体类型],f1.FState [请料状态],
+CONVERT(VARCHAR(10), f1.FCallTime,21)  [叫料时间],
+f1.FCallMan [叫料人],
+CONVERT(VARCHAR(10),f1.FOutTime,21) [出库时间],
+f1.FOutMan[出库人],
+f1.FInMan[入库人],
+CONVERT(VARCHAR(10),f1.FInTime,21)  [入库时间],
+f1.FRecieveMan[接收人],
+CONVERT(VARCHAR(10),f1.FRecieveTime,21)  [接收时间],
+CONVERT(VARCHAR(10),f1.MakeTime,21)   [制单时间],
+f1.DocumentNum [叫料单号],
+(
+select count(*) from(
+select (SELECT SUM(f.ActualCount) stockSum FROM MM_Stock f
+WHERE 1=1 and ItemID= gy.Material_ID and WarehouseID= gy.DeliveryWarehouseID and PositionID= gy.DeliveryPositionID) FNUM,QuantityCount
+from MM_CallMaterialDetails gy where CallMaterial_ID=f1.CallMaterial_ID
+) gy1 where FNUM>=QuantityCount
+) FNUM1,
+(select count(*) from MM_CallMaterialDetails where CallMaterial_ID=f1.CallMaterial_ID) FNUM2
+ from MM_CallMaterial f1
+inner join PMS_Cabinet_Assembly_Detail f2 on f1.PlanningWorkOrderNum=f2.Cabinet_No
+inner join DT_PROJECT f3 on f2.PROJECT_ID=f3.PROJECT_ID
+inner join PMS_Cabinet_Assembly f4 on f2.Cabinet_Assembly_ID=f4.Cabinet_Assembly_ID
+
+ where 1=1 and (f1.FState='叫料' or f1.FState='仓库接收')
+ <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f3.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or f3.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or f2.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+</if>
+) hh where 1=1 and FNUM1=FNUM2
+[fhstart] order by 制单时间 desc  [fhend]
+
+		</select>
+		<select id="listAllKFlistPage2" parameterType="page"
+		resultType="pd">
+		
+		select *,(case when FNUM1=FNUM2 then '齐套' else '未齐套' end) [齐套状态] 
+from(
+select f2.Cabinet_Assembly_Detail_ID,f1.CallMaterial_ID,f2.Cabinet_No [柜体编号],f3.PPROJECT_CODE [项目编号],
+f3.PPROJECT_NAME [项目名称],f4.Cabinet_Type [柜体类型],f1.FState [请料状态],
+CONVERT(VARCHAR(10), f1.FCallTime,21)  [叫料时间],
+f1.FCallMan [叫料人],
+CONVERT(VARCHAR(10),f1.FOutTime,21) [出库时间],
+f1.FOutMan[出库人],
+f1.FInMan[入库人],
+CONVERT(VARCHAR(10),f1.FInTime,21)  [入库时间],
+f1.FRecieveMan[接收人],
+CONVERT(VARCHAR(10),f1.FRecieveTime,21)  [接收时间],
+CONVERT(VARCHAR(10),f1.MakeTime,21)   [制单时间],
+f1.DocumentNum [叫料单号],
+(
+select count(*) from(
+select (SELECT SUM(f.ActualCount) stockSum FROM MM_Stock f
+WHERE 1=1 and ItemID= gy.Material_ID and WarehouseID= gy.DeliveryWarehouseID and PositionID= gy.DeliveryPositionID) FNUM,QuantityCount
+from MM_CallMaterialDetails gy where CallMaterial_ID=f1.CallMaterial_ID
+) gy1 where FNUM>=QuantityCount
+) FNUM1,
+(select count(*) from MM_CallMaterialDetails where CallMaterial_ID=f1.CallMaterial_ID) FNUM2
+ from MM_CallMaterial f1
+inner join PMS_Cabinet_Assembly_Detail f2 on f1.PlanningWorkOrderNum=f2.Cabinet_No
+inner join DT_PROJECT f3 on f2.PROJECT_ID=f3.PROJECT_ID
+inner join PMS_Cabinet_Assembly f4 on f2.Cabinet_Assembly_ID=f4.Cabinet_Assembly_ID
+
+ where 1=1 and (f1.FState='叫料' or f1.FState='仓库接收')
+ <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f3.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' or f3.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'  or f2.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+</if>
+) hh where 1=1 and FNUM1!=FNUM2
+[fhstart] order by 制单时间 desc  [fhend]
+
+		</select>
+<select id="listAllGSlistPage" parameterType="page"
+		resultType="pd">
+	select f1.NAME,f2.NAME FDEPT,f3.WorkHours,f3.FUseHours,
+	cast(f3.WorkHours-f3.FUseHours as NUMERIC(24,2)) FED_HOURS from OA_STAFF f1
+inner join OA_DEPARTMENT f2 on f1.DEPARTMENT_ID=f2.DEPARTMENT_ID 
+left JOIN
+(
+select OPerson,sum(cast(isnull(h2.WorkHours,0) as NUMERIC(24,2))) WorkHours,
+sum(cast(DATEDIFF( mi, BeginTime, EndTime)*1.0/60 as NUMERIC(24,2))) FUseHours
+ from PP_O_RECORD h1
+left join PP_ProcessWorkOrderExample h2 on h1.WorkingProcedureExampleID=h2.ProcessWorkOrderExample_ID
+where convert(varchar(10),BeginTime,21)
+BETWEEN #{pd.BeginTime} AND #{pd.EndTime}
+group by OPerson
+) f3 on f1.NAME=f3.OPerson
+where 1=1 and f2.DEPARTMENT_ID in ${pd.depts}	
+</select>
+<!-- 列表 -->
+	<select id="listSCPagelistPage" parameterType="page" resultType="pd">
+		SELECT *,
+(case when [预警标识]='即将超期' then '预警' 
+when [预警标识]='可控范围' then '可控' when [预警标识]='正常范围' then '正常' else '超期' end) [预警]   FROM 
+	(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+			SELECT *,
+			CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21) [预计开始日期],
+			CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21) [预计交期]
+			FROM 
+			(
+				SELECT *,[缓冲期]/3 [区间值] FROM
+				(
+					SELECT
+					    gy1.Cabinet_Assembly_Detail_ID,
+						pwom.OutputMaterial OutputMaterialMaster,
+						gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,
+						gy2.PPROJECT_NAME[项目名称],
+						gy2.PPROJECT_CODE[项目号],
+						so.OrderNum,
+						sod.FUnit,
+						pwom.WorkOrderNum WorkOrderNumMaster,
+						pwo.*,
+						ca.Cabinet_Type,
+						pwo.BatchNum[批次号],
+						mat.MAT_CODE[柜体号],
+						CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+						CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+						pwo.FStatus[柜体状态],
+						staff.NAME [负责技术],
+						DATEDIFF(DAY, pwo.WorkOrderBeginTime,  pwo.WorkOrderEndTime) [缓冲期]
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+					LEFT JOIN PMS_Cabinet_Assembly_Detail gy1 ON gy1.Cabinet_No = mat.MAT_CODE
+					LEFT JOIN DT_PROJECT gy2 ON gy2.PROJECT_ID = gy1.PROJECT_ID
+					left join
+					PP_PlanningWorkOrderMaster pwom on pwo.MasterWorkOrder_ID =
+					pwom.PlanningWorkOrderMaster_ID
+					LEFT JOIN
+					PP_SalesOrderDetail sod ON
+					pwo.SalesOrderDetailID =
+					sod.SalesOrderDetail_ID
+					LEFT JOIN PP_SalesOrder
+					so ON sod.SalesOrderID
+					= so.SalesOrder_ID
+					left join OA_STAFF staff on staff.STAFF_ID = gy1.Responsible_Technology 
+					left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+
+					where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			gy2.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' or gy2.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+			)
+		</if>
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND so.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.WorkOrderType != null and pd.WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{pd.WorkOrderType}
+		</if>
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			AND pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>
+		<if test="pd.WorkOrderNumMaster != null and pd.WorkOrderNumMaster != ''">
+			AND pwom.WorkOrderNum = #{pd.WorkOrderNumMaster}
+		</if>
+		<if test="pd.Cabinet_Type != null and pd.Cabinet_Type != ''">
+			and ca.Cabinet_Type = #{pd.Cabinet_Type}
+		</if>
+					<choose>
+						<when
+							test="pd.FTYPE != null and pd.FTYPE == '未开始'">
+							AND pwo.FStatus IN ( '创建')
+						</when>
+						<when
+							test="pd.FTYPE != null and pd.FTYPE == '执行中'">
+							AND pwo.FStatus IN ( '执行中') 
+						</when>
+						<when test="pd.FTYPE != null and pd.FTYPE == '已排产'">
+    						AND pwo.FStatus!='结束' and pwo.ScheduleSchedule='已排程'
+   						</when>
+    					<when test="pd.FTYPE != null and pd.FTYPE == '未排产'">
+    						AND pwo.FStatus!='结束' and pwo.ScheduleSchedule='未排程'
+   						</when>
+   						<when test="pd.FTYPE != null and pd.FTYPE == '待请料'">
+    						AND pwo.PlanningWorkOrder_ID in
+    						(
+    						select distinct gy1.PlanningWorkOrder_ID from PP_PlanningWorkOrder gy1 
+							left join MM_CallMaterial gy2 on gy1.WorkOrderNum=gy2.PlanningWorkOrderNum
+							where FStatus!='结束' and gy2.CallMaterial_ID is null
+    						)
+   						</when>
+   						<when test="pd.FTYPE != null and pd.FTYPE == '变更工单'">
+    						AND pwo.PlanningWorkOrder_ID in
+    						(
+    						select distinct gy4.PlanningWorkOrder_ID from PMS_Cabinet_Assembly_Detail gy1
+							inner join PP_PlanningWorkOrder gy4 on gy4.WorkOrderNum=gy1.Cabinet_No
+							where Cabinet_Assembly_Detail_ID  in(select gy1.Cabinet_Assembly_Detail_ID from PMS_Cabinet_Assembly_Detail gy1 
+							left join PMS_Cabinet_BOM gy2 on gy1.Cabinet_Assembly_Detail_ID=gy2.Cabinet_Assembly_Detail_ID
+							left join KM_AttachmentSet gy3 on gy1.Cabinet_Assembly_Detail_ID=gy3.AssociationID
+							where 1=1  and (gy2.FSTATE='变更' or gy3.FStatus='归档')) and gy4.FStatus!='结束'
+    						)
+   						</when>
+						<otherwise>
+						and pwo.FStatus!='结束'
+						</otherwise>
+					</choose>		
+					<!-- pwo.FStatus!='结束' -->
+				) l
+			) m
+		) k 
+	) u
+	where 1=1 
+	<choose>
+   <when
+    test="pd.FTYPE != null and pd.FTYPE == '可控'">
+    AND 预警标识 in('可控范围')
+   </when>
+   <when
+    test="pd.FTYPE != null and pd.FTYPE == '正常'">
+    AND 预警标识 in('正常范围')
+   </when>
+   <when
+    test="pd.FTYPE != null and pd.FTYPE == '预警'">
+    AND 预警标识 in('即将超期')
+   </when>
+   <when
+    test="pd.FTYPE != null and pd.FTYPE == '超期'">
+    AND 预警标识 in('超期生产')
+   </when>
+    
+   <otherwise>
+    AND 1=1 
+   </otherwise>
+  </choose>
+[fhstart] order by CHARINDEX(预警标识,'可控范围,正常范围,即将超期,超期生产' ),预计开始日期 [fhend]
+
+	</select>
+	<!-- v1   管悦   20210803  生产排程一键修改计划员 -->
+	<update id="editByUser" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		FPlannerID = #{FPlanner}
+		where
+		PlanningWorkOrder_ID in 
+		${IDS}
+	</update>
+	
+	<select id="getPCList" parameterType="pd"
+		resultType="pd">
+		SELECT
+		isnull(gy2.progressXM,0) progress,'项目' FLEVEL, 0 SerialNum,'A' as FTYPE,'0' parent,gy2.PROJECT_ID id,
+
+		gy2.PPROJECT_CODE text,
+		gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,gy2.PPROJECT_NAME FNAME,
+		'' Cabinet_Type,
+		'' ProcessRoute_Name,
+		'' WorkOrderNum,gy2.PlannedBeginTimeXM,gy2.PlannedEndTimeXM,
+				right('00'+cast(day(case when gy2.PlannedBeginTimeXM is null or  gy2.PlannedBeginTimeXM='' then convert(varchar(10),GETDATE(),120) else gy2.PlannedBeginTimeXM end ) as VARCHAR),2)+'-'+
+right('00'+cast(month(case when gy2.PlannedBeginTimeXM is null or  gy2.PlannedBeginTimeXM='' then convert(varchar(10),GETDATE(),120) else gy2.PlannedBeginTimeXM end ) as VARCHAR),2)+'-'+
+right('00'+cast(year(case when gy2.PlannedBeginTimeXM is null or  gy2.PlannedBeginTimeXM='' then convert(varchar(10),GETDATE(),120) else gy2.PlannedBeginTimeXM end ) as VARCHAR),4)+' 00:00:00' start_date,
+
+right('00'+cast(day(case when gy2.PlannedEndTimeXM is null or  gy2.PlannedEndTimeXM='' then convert(varchar(10),GETDATE(),120) else gy2.PlannedEndTimeXM end ) as VARCHAR),2)+'-'+
+right('00'+cast(month(case when gy2.PlannedEndTimeXM is null or  gy2.PlannedEndTimeXM='' then convert(varchar(10),GETDATE(),120) else gy2.PlannedEndTimeXM end ) as VARCHAR),2)+'-'+
+right('00'+cast(year(case when gy2.PlannedEndTimeXM is null or  gy2.PlannedEndTimeXM='' then convert(varchar(10),GETDATE(),120) else gy2.PlannedEndTimeXM end ) as VARCHAR),4)+' 23:59:59' end_date
+		
+		FROM
+		PP_PlanningWorkOrder pwo
+			inner join
+		PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+		gy1.Cabinet_No
+		inner join
+		DT_PROJECT gy2 on gy1.PROJECT_ID =
+		gy2.PROJECT_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+		WHERE
+		1=1
+		and
+		pwo.PlanningWorkOrder_ID in 
+		${IDS}
+union all
+SELECT
+		isnull(pwo.progress,0) progress,'柜体' FLEVEL, 0 SerialNum,'A' as FTYPE,gy2.PROJECT_ID parent,pwo.PlanningWorkOrder_ID id,
+
+		ca.Cabinet_Type text,
+		gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,gy1.Cabinet_Aliases FNAME,
+		ca.Cabinet_Type,
+		pwo.ProcessRoute_Name,
+		pwo.WorkOrderNum,pwo.PlannedBeginTime,pwo.PlannedEndTime,
+		right('00'+cast(day(pwo.PlannedBeginTime) as VARCHAR),2)+'-'+right('00'+cast(month(pwo.PlannedBeginTime) as VARCHAR),2)+'-'+right('00'+cast(year(pwo.PlannedBeginTime) as VARCHAR),4)+' 00:00:00' start_date,
+		right('00'+cast(day(pwo.PlannedEndTime) as VARCHAR),2)+'-'+right('00'+cast(month(pwo.PlannedEndTime) as VARCHAR),2)+'-'+right('00'+cast(year(pwo.PlannedEndTime) as VARCHAR),4)+' 23:59:59' end_date
+		FROM
+		PP_PlanningWorkOrder pwo
+			left join
+		PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+		gy1.Cabinet_No
+		left join
+		DT_PROJECT gy2 on gy1.PROJECT_ID =
+		gy2.PROJECT_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+		WHERE
+		1=1
+		and
+		pwo.PlanningWorkOrder_ID in 
+		${IDS}
+union all 
+SELECT
+		isnull(t.progress,0) progress,'工序' FLEVEL,cast(SerialNum as int) SerialNum,'A' as FTYPE,pwo.PlanningWorkOrder_ID parent,t.ProcessWorkOrderExample_ID id,
+
+		isnull(WPName,'') text,
+		gy2.PPROJECT_CODE,gy2.PPROJECT_NAME  PPROJECT_NAME,WPName FNAME,
+		ca.Cabinet_Type,
+		pwo.ProcessRoute_Name,
+		pwo.WorkOrderNum,
+		t.PlannedBeginTime,t.PlannedEndTime,
+		right('00'+cast(day(t.PlannedBeginTime) as VARCHAR),2)+'-'+right('00'+cast(month(t.PlannedBeginTime) as VARCHAR),2)+'-'+right('00'+cast(year(t.PlannedBeginTime) as VARCHAR),4)+' 00:00:00' start_date,
+		right('00'+cast(day(t.PlannedEndTime) as VARCHAR),2)+'-'+right('00'+cast(month(t.PlannedEndTime) as VARCHAR),2)+'-'+right('00'+cast(year(t.PlannedEndTime) as VARCHAR),4)+' 23:59:59' end_date
+		FROM
+PP_ProcessWorkOrderExample t
+left join 
+		PP_PlanningWorkOrder pwo on t.PlanningWorkOrderID=pwo.PlanningWorkOrder_ID
+			left join
+		PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+		gy1.Cabinet_No
+		left join
+		DT_PROJECT gy2 on gy1.PROJECT_ID =
+		gy2.PROJECT_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+		WHERE
+		1=1
+		and
+		t.PlanningWorkOrderID in 
+		${IDS}
+order by WorkOrderNum,SerialNum
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.DOCUMENTTEMPLATEMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOM_DOCUMENTTEMPLATE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FNAME,	
+		f.VERSION,	
+		f.DAYTIME,	
+		f.BELONG_TYPE,	
+		f.TEMPLATE_STATUS,	
+		f.FCREATOR,	
+		f.CREATE_TIME,
+		f.FRUN_STATE,
+		f.EQMTYPE,
+		f.FEXTEND1,
+		f.FEXTEND2,
+		f.FEXTEND3,
+		f.FEXTEND4,
+		f.FEXTEND5,
+		f.DOCUMENTTEMPLATE_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		FNAME,	
+		VERSION,	
+		DAYTIME,	
+		BELONG_TYPE,	
+		TEMPLATE_STATUS,	
+		FCREATOR,	
+		CREATE_TIME,
+		FRUN_STATE,
+		EQMTYPE,
+		FEXTEND1,
+		FEXTEND2,
+		FEXTEND3,
+		FEXTEND4,
+		FEXTEND5,
+		DOCUMENTTEMPLATE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FNAME},	
+		#{VERSION},	
+		#{DAYTIME},	
+		#{BELONG_TYPE},	
+		#{TEMPLATE_STATUS},	
+		#{FCREATOR},	
+		#{CREATE_TIME},
+		#{FRUN_STATE},
+		#{EQMTYPE},
+		#{FEXTEND1},
+		#{FEXTEND2},
+		#{FEXTEND3},
+		#{FEXTEND4},
+		#{FEXTEND5},	
+		#{DOCUMENTTEMPLATE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DOCUMENTTEMPLATE_ID = #{DOCUMENTTEMPLATE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FNAME = #{FNAME},
+			VERSION = #{VERSION},
+			DAYTIME = #{DAYTIME},
+			BELONG_TYPE = #{BELONG_TYPE},
+			TEMPLATE_STATUS = #{TEMPLATE_STATUS},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			FRUN_STATE = #{FRUN_STATE},
+			EQMTYPE = #{EQMTYPE},
+		    FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FEXTEND4 = #{FEXTEND4},
+			FEXTEND5 = #{FEXTEND5},	
+			DOCUMENTTEMPLATE_ID = DOCUMENTTEMPLATE_ID
+		where 
+			DOCUMENTTEMPLATE_ID = #{DOCUMENTTEMPLATE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.DOCUMENTTEMPLATE_ID = #{DOCUMENTTEMPLATE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCREATOR LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.BELONG_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					
+				)
+		</if>
+		<if test="pd.BELONGTYPE!= null and pd.BELONGTYPE != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.BELONG_TYPE = #{pd.BELONGTYPE} 
+					
+				)
+		</if>
+		<if test="pd.ELECT!= null and pd.ELECT == 'YES'"><!-- 关键词检索 -->
+			and f.TEMPLATE_STATUS = 'YES' and f.FRUN_STATE = '已发布'
+		</if>
+		[fhstart] order by f.FRUN_STATE, f.CREATE_TIME DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DOCUMENTTEMPLATE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 修改发布状态 -->
+	<update id="editIssue" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FRUN_STATE = #{FRUN_STATE}
+		where 
+			DOCUMENTTEMPLATE_ID = #{DOCUMENTTEMPLATE_ID}
+	</update>
+	
+	<!-- 模板名称根据工单关键字查询数据 -->
+	<select id="getTemplate" parameterType="pd" resultType="pd">
+		SELECT 
+          ISNULL(f.FNAME, '') FNAME,
+          ISNULL(f.DOCUMENTTEMPLATE_ID, '') DOCUMENTTEMPLATE_ID,
+          ISNULL(f.VERSION, '') VERSION,
+          ISNULL(f.DAYTIME, '') DAYTIME,
+          ISNULL(f.BELONG_TYPE, '') BELONG_TYPE
+        FROM MOM_DOCUMENTTEMPLATE f WHERE f.TEMPLATE_STATUS='YES' AND f.FRUN_STATE='已发布'
+        <if test="inputName!= null and inputName != ''"><!-- 关键词检索 -->
+		  and(
+		     f.FNAME LIKE '%'+#{inputName}+'%'<!-- 模板名称 -->
+		     or
+		     f.BELONG_TYPE LIKE '%'+#{inputName}+'%'<!-- 类型 -->
+		  )
+		</if>
+	</select>
+	
+	<!-- 修改sql -->
+	<update id="editSql" parameterType="pd">
+		${updateSql}
+	</update>
+	
+	<!-- 查询模板名称及ID -->
+	<select id="findByStencil" parameterType="pd" resultType="pd">
+		SELECT TOP 1 f.FNAME,f.DOCUMENTTEMPLATE_ID FROM MOM_DOCUMENTTEMPLATE f WHERE f.EQMTYPE=#{FTYPE} AND FRUN_STATE='已发布' 
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

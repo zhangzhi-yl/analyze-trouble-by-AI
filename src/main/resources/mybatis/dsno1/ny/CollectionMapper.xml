@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.ny.CollectionMapper">
+
+    <insert id="saveInput" parameterType="pd">
+        insert into NY_CollectInput
+        VALUES (#{FTime},#{FValue},#{Loop_Code},#{FType})
+    </insert>
+    <update id="editInput" parameterType="pd">
+        update NY_CollectInput set FValue = #{FValue} where FTime = #{FTime} and Loop_Code = #{Loop_Code} and FType = #{FType}
+    </update>
+    <select id="findByTime" parameterType="pd" resultType="pd">
+        select FTime,FValue from NY_CollectInput where FTime = #{FTime} and Loop_Code = #{Loop_Code} and FType = #{FType}
+    </select>
+
+
+    <!--    数据采集列表-->
+    <select id="plcList" parameterType="pd" resultType="pd">
+        SELECT f.SaveField,f.SaveTable,f.Extend1,l.FCode FCode1,s.FCODE FCode2,a.FCODE FCode3,l.FName DeptName1,s.FNAME
+        DeptName2,a.FNAME DeptName3
+        FROM NY_PLC f
+        left join NY_Loop l on f.Loop = l.Loop_ID
+        left join MDM_SITE s on f.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on f.Loop = a.AREA_ID
+        WHERE 1=1
+        <if test="IDS != null and IDS != ''"><!-- 关键词检索 -->
+            and f.Loop IN ${IDS}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and f.SaveTable = #{SaveTable}
+        </if>
+        <if test="EnergyType != null and EnergyType != ''"><!-- 关键词检索 -->
+            and f.ParamType = #{EnergyType}
+        </if>
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            and f.ParamType like '%'+ #{ParamType}+'%'
+        </if>
+        <if test="isTotalUseEnergy != null and isTotalUseEnergy != ''"><!-- 关键词检索 -->
+            and Loop IN (SELECT DM_SITE_ID FROM  MDM_SITE)
+        </if>
+    </select>
+
+    <select id="getWeekList" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        FROM ${SaveTable} f
+        WHERE 1=1
+        <if test="StartTime != null and StartTime != ''">
+            and f.TimeStamp &gt;= #{StartTime}
+        </if>
+        <if test="EndTime != null and EndTime != ''">
+            and f.TimeStamp &lt;= #{EndTime}
+        </if>
+    </select>
+
+    <select id="getQuarterList" parameterType="pd" resultType="pd">
+        SELECT ${SaveField},SUBSTRING(f.TimeStamp, 0, 8) TimeStamp
+        FROM ${SaveTable} f
+        WHERE 1=1
+        <if test="StartTime != null and StartTime != ''">
+            and f.TimeStamp &gt;= #{StartTime}
+        </if>
+        <if test="EndTime != null and EndTime != ''">
+            and f.TimeStamp &lt;= #{EndTime}
+        </if>
+        GROUP BY SUBSTRING(f.TimeStamp, 0, 8)
+        ORDER BY SUBSTRING(f.TimeStamp, 0, 8) DESC
+    </select>
+
+    <select id="getMonthList" parameterType="pd" resultType="pd">
+        SELECT ${SaveField},SUBSTRING(f.TimeStamp, 0, 11) TimeStamp
+        FROM ${SaveTable} f
+        WHERE 1=1
+        <if test="StartTime != null and StartTime != ''">
+            and SUBSTRING(f.TimeStamp, 0, 8) = #{StartTime}
+        </if>
+        GROUP BY SUBSTRING(f.TimeStamp, 0, 11)
+        ORDER BY SUBSTRING(f.TimeStamp, 0, 11) DESC
+    </select>
+
+    <select id="getYearList" parameterType="pd" resultType="pd">
+        SELECT ${SaveField},SUBSTRING(f.TimeStamp, 0, 8) TimeStamp
+        FROM ${SaveTable} f
+        WHERE 1=1
+        <if test="StartTime != null and StartTime != ''">
+            and SUBSTRING(f.TimeStamp, 0, 5) = #{StartTime}
+        </if>
+        GROUP BY SUBSTRING(f.TimeStamp, 0, 8)
+        ORDER BY SUBSTRING(f.TimeStamp, 0, 8) DESC
+    </select>
+
+    <select id="getDayList" parameterType="pd" resultType="pd">
+        SELECT ${SaveField},SUBSTRING(TimeStamp, 0, 14) TimeStamp
+        FROM ${SaveTable} f
+        WHERE 1=1
+        <if test="StartTime != null and StartTime != ''">
+            and SUBSTRING(f.TimeStamp, 0, 11) = #{StartTime}
+        </if>
+        <if test="time != null and time != ''">
+            and datepart(hour,f.TimeStamp) = #{time}
+        </if>
+        GROUP BY SUBSTRING(f.TimeStamp, 0, 14)
+        ORDER BY SUBSTRING(f.TimeStamp, 0, 14) DESC
+    </select>
+
+
+    <insert id="saveAll" parameterType="list">
+        insert into NY_CollTemporary VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.FTime},#{item.EnergyType},#{item.FValue},#{item.FUnit},#{item.FCode},#{item.FName})
+        </foreach>
+    </insert>
+
+    <delete id="deleteAll">
+        delete
+        from NY_CollTemporary
+    </delete>
+
+    <insert id="saveAllOne" parameterType="list">
+        insert into NY_CollTemporary1 VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.FTime},#{item.EnergyType},#{item.FValue},#{item.FUnit},#{item.FCode},#{item.FName})
+        </foreach>
+    </insert>
+    <insert id="saveAllTwo" parameterType="list">
+        insert into NY_CollTemporary2 VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.FTime},#{item.EnergyType},#{item.FValue},#{item.FUnit},#{item.FCode},#{item.FName})
+        </foreach>
+    </insert>
+    <insert id="saveAllThree" parameterType="list">
+        insert into NY_CollTemporary3 VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.FTime},#{item.EnergyType},#{item.FValue},#{item.FUnit},#{item.FCode},#{item.FName})
+        </foreach>
+    </insert>
+    <insert id="saveAllFour" parameterType="list">
+        insert into NY_CollTemporary4 VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.FTime},#{item.EnergyType},#{item.FValue},#{item.FUnit},#{item.FCode},#{item.FName})
+        </foreach>
+    </insert>
+    <insert id="saveAllFive" parameterType="list">
+        insert into NY_CollTemporary5 VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.FTime},#{item.EnergyType},#{item.FValue},#{item.FUnit},#{item.FCode},#{item.FName})
+        </foreach>
+    </insert>
+    <insert id="saveAllSix" parameterType="list">
+        insert into NY_CollTemporary6 VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.FTime},#{item.EnergyType},#{item.FValue},#{item.FUnit},#{item.FCode},#{item.FName})
+        </foreach>
+    </insert>
+    <delete id="deleteTableAll" parameterType="pd">
+        delete
+        from ${CollTable}
+    </delete>
+
+    <select id="getResultdatalistPage" resultType="pd" parameterType="page">
+        select f.*,isnull(f1.FValue,'') AValue
+        from NY_CollTemporary f
+                 left join NY_CollectInput f1 on f.FTime = f1.FTime and f.FCode = f1.Loop_Code and f.EnergyType = f1.FType
+            [fhstart] ORDER BY FTime DESC, CAST(FValue AS NUMERIC(10,2)) DESC [fhend]
+    </select>
+
+    <select id="getLoopdatalistPage" resultType="pd" parameterType="page">
+        select DISTINCT f.FName,f.FCode
+        from NY_CollTemporary f
+    </select>
+
+    <select id="ranklist" resultType="pd" parameterType="pd">
+        select f.*,isnull(f1.FValue,'') AValue,CAST(f.FValue AS NUMERIC(10,2)) numValue
+        from NY_CollTemporary f
+                 left join NY_CollectInput f1 on f.FTime = f1.FTime and f.FCode = f1.Loop_Code and f.EnergyType = f1.FType
+        ORDER BY numValue DESC
+    </select>
+    <select id="getResultAllList" resultType="pd" parameterType="page">
+        select f.*,isnull(f1.FValue,'') AValue
+        from NY_CollTemporary f
+                 left join NY_CollectInput f1 on f.FTime = f1.FTime and f.FCode = f1.Loop_Code and f.EnergyType = f1.FType
+        ORDER BY FTime DESC, CAST(f.FValue AS NUMERIC(10,2)) DESC
+    </select>
+
+    <select id="getResultList" resultType="pd" parameterType="pd">
+        select SUM(CAST (FValue  AS NUMERIC ( 10, 2 ) )) FValue,FTime
+        from NY_CollTemporary
+        GROUP BY FTime
+        order by FTime ASC
+    </select>
+
+    <select id="getOnlyConsume" resultType="pd" parameterType="pd">
+        SELECT
+            a.FTime,
+            ISNULL( b.FValue, 0.00 ) FValue,
+            ISNULL( b.YIELD, 0.00 ) YIELD
+        FROM
+            (
+                SELECT
+                    '01' FTime UNION ALL
+                SELECT
+                    '02' FTime UNION ALL
+                SELECT
+                    '03' FTime UNION ALL
+                SELECT
+                    '04' FTime UNION ALL
+                SELECT
+                    '05' FTime UNION ALL
+                SELECT
+                    '06' FTime UNION ALL
+                SELECT
+                    '07' FTime UNION ALL
+                SELECT
+                    '08' FTime UNION ALL
+                SELECT
+                    '09' FTime UNION ALL
+                SELECT
+                    '10' FTime UNION ALL
+                SELECT
+                    '11' FTime UNION ALL
+                SELECT
+                    '12' FTime
+            ) AS a
+                LEFT JOIN (
+                SELECT
+                    f.FValue ,
+                    f1.YIELD,
+                    f.FTime
+                FROM
+                    (
+                        SELECT SUM
+                                   (
+                                       CAST ( ( CASE WHEN FValue IS NULL THEN '0' WHEN FValue = '' THEN '0' ELSE FValue END ) AS NUMERIC ( 10, 2 ) )
+                                   ) FValue,
+                               FTime
+                        FROM
+                            NY_CollTemporary5
+                        GROUP BY
+                            FTime
+                    ) AS f
+                        LEFT JOIN (
+                        SELECT SUM
+                                   ( CAST ( YIELD AS NUMERIC ( 10, 2 ) ) ) YIELD,
+                               SUBSTRING ( FTime, 0, 8 ) FTime
+                        FROM
+                            NY_YIELD
+                        WHERE
+                            DateDiff( yy, FTime, getdate( ) ) = 0
+                        GROUP BY
+                            SUBSTRING ( FTime, 0, 8 )
+                    ) AS f1 ON f.FTime = f1.FTime
+            ) AS b ON a.FTime = SUBSTRING ( b.FTime, 6, 2 )
+        ORDER BY
+            a.FTime ASC
+    </select>
+
+    <select id="getResultAllMonthList" resultType="pd" parameterType="pd">
+        SELECT f.FTime, ISNULL(f1.FValue,'0.00') FValue
+        from
+            (
+                SELECT '01' FTime union all
+                SELECT '02' FTime union all
+                SELECT '03' FTime union all
+                SELECT '04' FTime union all
+                SELECT '05' FTime union all
+                SELECT '06' FTime union all
+                SELECT '07' FTime union all
+                SELECT '08' FTime union all
+                SELECT '09' FTime union all
+                SELECT '10' FTime union all
+                SELECT '11' FTime union all
+                SELECT '12' FTime
+            ) as f
+                left join (
+
+                SELECT ISNULL(SUM
+                                  ( CAST ( FValue AS NUMERIC ( 10, 2 ) ) ),0) FValue,
+                       substring(FTime,6,5) FTime
+                FROM
+                    NY_CollTemporary
+                GROUP BY
+                    FTime
+            ) as f1 on f.FTime = f1.FTime
+        ORDER BY
+            FTime ASC
+    </select>
+
+    <select id="getResultTableAllMonthList" resultType="pd" parameterType="pd">
+        SELECT f.FTime, ISNULL(f1.FValue,'0.00') FValue
+        from
+            (
+                SELECT '01' FTime union all
+                SELECT '02' FTime union all
+                SELECT '03' FTime union all
+                SELECT '04' FTime union all
+                SELECT '05' FTime union all
+                SELECT '06' FTime union all
+                SELECT '07' FTime union all
+                SELECT '08' FTime union all
+                SELECT '09' FTime union all
+                SELECT '10' FTime union all
+                SELECT '11' FTime union all
+                SELECT '12' FTime
+            ) as f
+                left join (
+
+                SELECT ISNULL(SUM
+                                  ( CAST ( FValue AS NUMERIC ( 10, 2 ) ) ),0) FValue,
+                       substring(FTime,6,5) FTime
+                FROM
+                    ${CollTable}
+                GROUP BY
+                    FTime
+            ) as f1 on f.FTime = f1.FTime
+        ORDER BY
+            FTime ASC
+    </select>
+    <select id="getResultTableList" resultType="pd" parameterType="pd">
+        select SUM(CAST (FValue  AS NUMERIC ( 10, 2 ) )) FValue,FTime
+        from ${CollTable}
+        GROUP BY FTime
+        order by FTime ASC
+    </select>
+
+    <select id="getResultGroupByName" resultType="pd" parameterType="pd">
+        select FName, SUM(CAST(FValue AS numeric(10, 2))) FValue
+        from NY_CollTemporary
+        group by FName
+        order by FName
+    </select>
+
+    <select id="getAnalysisList" resultType="pd">
+        select FName,FCode,FTime, EnergyType, SUM(CAST(FValue AS numeric(10, 2))) FValue, FUnit
+        from NY_CollTemporary
+        group by FName,FCode,FTime, EnergyType, FUnit
+        order by FTime
+    </select>
+
+    <select id="getAnalysisAllList" resultType="pd">
+        select FName,FCode, FTime, EnergyType, SUM(CAST(FValue AS numeric(10, 2))) FValue, FUnit
+        from NY_CollTemporary
+        group by FName,FCode, FTime, EnergyType, FUnit
+        order by FValue desc
+    </select>
+
+    <select id="getDayRank" parameterType="pd" resultType="pd">
+        select ${SaveField},SUBSTRING(TimeStamp, 0, 11) TimeStamp
+        FROM ${SaveTable} f
+        WHERE 1=1
+        <if test="StartTime != null and StartTime != ''">
+            and SUBSTRING(f.TimeStamp , 0, 11) = #{StartTime}
+        </if>
+        GROUP BY SUBSTRING(f.TimeStamp , 0, 11)
+    </select>
+
+    <select id="getMonthRank" parameterType="pd" resultType="pd">
+        select ${SaveField},SUBSTRING(TimeStamp, 0, 8) TimeStamp
+        FROM ${SaveTable} f
+        WHERE 1=1
+        <if test="StartTime != null and StartTime != ''">
+            and SUBSTRING(f.TimeStamp , 0, 8) = #{StartTime}
+        </if>
+        GROUP BY SUBSTRING(f.TimeStamp , 0, 8)
+    </select>
+
+    <select id="getQuarterRank" parameterType="pd" resultType="pd">
+        select ${SaveField},datename(qq,f.TimeStamp) TimeStamp
+        FROM ${SaveTable} f
+        WHERE 1=1
+        <if test="StartTime != null and StartTime != ''">
+            and datename(qq,f.TimeStamp) = #{StartTime}
+        </if>
+        <if test="FYear != null and FYear != ''">
+            and datename(year,f.TimeStamp) = #{FYear}
+        </if>
+        GROUP BY datename(qq,f.TimeStamp)
+    </select>
+
+    <select id="getYearRank" parameterType="pd" resultType="pd">
+        select ${SaveField},SUBSTRING(TimeStamp, 0, 5) TimeStamp
+        FROM ${SaveTable} f
+        WHERE 1=1
+        <if test="StartTime != null and StartTime != ''">
+            and SUBSTRING(TimeStamp, 0, 5) = #{StartTime}
+        </if>
+        GROUP BY SUBSTRING(TimeStamp, 0, 5)
+    </select>
+
+    <!--    同比列表-->
+    <select id="grewList" parameterType="pd" resultType="pd">
+        select ${SaveField},SUBSTRING(TimeStamp, 0, 5) TimeStamp
+        FROM ${SaveTable} f
+        WHERE
+        SUBSTRING(f.TimeStamp, 6, 2) = DATENAME(month, GETDATE())
+        <if test="StartTime != null and StartTime != ''">
+            and SUBSTRING(f.TimeStamp, 0, 5) = #{StartTime}
+        </if>
+        GROUP BY SUBSTRING(f.TimeStamp, 0, 5)
+    </select>
+
+    <insert id="saveGrewAll" parameterType="list">
+        insert into NY_GrewTable VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.nowValue},#{item.beforeValue},#{item.nowTime},#{item.beforeTime},#{item.EnergyType},#{item.FUnit},#{item.FName},#{item.FCode})
+        </foreach>
+    </insert>
+
+    <delete id="deleteAllGrew">
+        delete
+        from NY_GrewTable
+    </delete>
+
+    <select id="getGrewdatalistPage" resultType="pd" parameterType="page">
+        select *
+        from NY_GrewTable [fhstart]
+        order by NowValue DESC [fhend]
+    </select>
+
+    <select id="getGrewList" resultType="pd" parameterType="pd">
+        select *
+        from NY_GrewTable
+        order by NowValue DESC
+    </select>
+
+</mapper>

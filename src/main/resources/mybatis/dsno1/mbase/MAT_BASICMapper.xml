@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mbase.MAT_BASICMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_MAT_BASIC
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.MAT_BASIC_ID,
+		f.MAT_CLASS_ID,
+		f.MAT_CODE,
+		f.MAT_NAME,
+		f.MAT_ALIAS,
+		f.MAT_BRAND,
+		f.MAT_FULL_NAME,
+		f.FVERIFIER,
+		f.MAT_ATTRIBUTE,
+		f.MAT_MAIN_UNIT,
+		f.MAT_AUXILIARY_UNIT,
+		f.MAT_SPECS,
+		f.MAT_CLASS,
+		f.MAT_SOURCE,
+		f.MAT_QTY_ACCURACY,
+		f.MAT_QTY_L,
+		f.MAT_QTY_H,
+		f.SAFETY_STOCK_QTY,
+		f.MAT_STATE,
+		f.DANGER_LEVEL,
+		f.ARCHIVE_WHETHER,
+		f.ERP_CODE,
+		f.FCREATOR,
+		f.CREATE_TIME,
+		f.ENABLEFBATCH,
+		f.FBATCH,
+		f.MAT_AUXILIARY_ID,
+		f.UNIQUE_CODE_WHETHER,
+		f.MAT_SPECS_QTY,
+		f.SAFE_STOCK,
+		f.SAFE_STOCK_QTY,
+		f.EARLY_WARN
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field2">
+		MAT_BASIC_ID,
+		MAT_CLASS_ID,
+		MAT_CODE,
+		MAT_NAME,
+		MAT_ALIAS,
+		MAT_BRAND,
+		MAT_FULL_NAME,
+		FVERIFIER,
+		MAT_ATTRIBUTE,
+		MAT_MAIN_UNIT,
+		MAT_AUXILIARY_UNIT,
+		MAT_SPECS,
+		MAT_CLASS,
+		MAT_SOURCE,
+		MAT_QTY_ACCURACY,
+		MAT_QTY_L,
+		MAT_QTY_H,
+		SAFETY_STOCK_QTY,
+		MAT_STATE,
+		DANGER_LEVEL,
+		ARCHIVE_WHETHER,
+		ERP_CODE,
+		FCREATOR,
+		CREATE_TIME,
+		ENABLEFBATCH,
+		FBATCH,
+		MAT_AUXILIARY_ID,
+		UNIQUE_CODE_WHETHER,
+		MAT_SPECS_QTY,
+		SAFE_STOCK,
+		SAFE_STOCK_QTY,
+		EARLY_WARN
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MAT_BASIC_ID},
+		#{MAT_CLASS_ID},
+		#{MAT_CODE},
+		#{MAT_NAME},
+		#{MAT_ALIAS},
+		#{MAT_BRAND},
+		#{MAT_FULL_NAME},
+		#{FVERIFIER},
+		#{MAT_ATTRIBUTE},
+		#{MAT_MAIN_UNIT},
+		#{MAT_AUXILIARY_UNIT},
+		#{MAT_SPECS},
+		#{MAT_CLASS},
+		#{MAT_SOURCE},
+		#{MAT_QTY_ACCURACY},
+		#{MAT_QTY_L},
+		#{MAT_QTY_H},
+		#{SAFETY_STOCK_QTY},
+		#{MAT_STATE},
+		#{DANGER_LEVEL},
+		#{ARCHIVE_WHETHER},
+		#{ERP_CODE},
+		#{FCREATOR},
+		#{CREATE_TIME},
+		#{ENABLEFBATCH},
+		#{FBATCH},
+		#{MAT_AUXILIARY_ID},
+		#{UNIQUE_CODE_WHETHER},
+		#{MAT_SPECS_QTY},
+		#{SAFE_STOCK},
+		#{SAFE_STOCK_QTY},
+		#{EARLY_WARN}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 新增归档 -->
+	<insert id="saveGD" parameterType="pd">
+		insert into
+		MBASE_MAT_BASIC_GD
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		MAT_BASIC_ID = #{MAT_BASIC_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		MAT_BASIC_ID = #{MAT_BASIC_ID},
+		MAT_CLASS_ID = #{MAT_CLASS_ID},
+		MAT_CODE = #{MAT_CODE},
+		MAT_NAME = #{MAT_NAME},
+		MAT_ALIAS = #{MAT_ALIAS},
+		MAT_BRAND = #{MAT_BRAND},
+		MAT_FULL_NAME = #{MAT_FULL_NAME},
+		FVERIFIER = #{FVERIFIER},
+		MAT_ATTRIBUTE = #{MAT_ATTRIBUTE},
+		MAT_MAIN_UNIT = #{MAT_MAIN_UNIT},
+		MAT_AUXILIARY_UNIT = #{MAT_AUXILIARY_UNIT},
+		MAT_SPECS = #{MAT_SPECS},
+		MAT_CLASS = #{MAT_CLASS},
+		MAT_SOURCE = #{MAT_SOURCE},
+		MAT_QTY_ACCURACY = #{MAT_QTY_ACCURACY},
+		MAT_QTY_L = #{MAT_QTY_L},
+		MAT_QTY_H = #{MAT_QTY_H},
+		SAFETY_STOCK_QTY = #{SAFETY_STOCK_QTY},
+		MAT_STATE = #{MAT_STATE},
+		DANGER_LEVEL = #{DANGER_LEVEL},
+		ARCHIVE_WHETHER = #{ARCHIVE_WHETHER},
+		ERP_CODE = #{ERP_CODE},
+		FCREATOR = #{FCREATOR},
+		CREATE_TIME = #{CREATE_TIME},
+		ENABLEFBATCH = #{ENABLEFBATCH},
+		FBATCH = #{FBATCH},
+		MAT_AUXILIARY_ID = #{MAT_AUXILIARY_ID},
+		UNIQUE_CODE_WHETHER = #{UNIQUE_CODE_WHETHER},
+		MAT_SPECS_QTY = #{MAT_SPECS_QTY},
+		SAFE_STOCK = #{SAFE_STOCK},
+		SAFE_STOCK_QTY = #{SAFE_STOCK_QTY},
+		EARLY_WARN = #{EARLY_WARN}
+		where
+		MAT_BASIC_ID = #{MAT_BASIC_ID}
+	</update>
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.MAT_CODE = #{MAT_CODE} 
+		<if test="MAT_BASIC_ID != null and MAT_BASIC_ID != ''"><!-- 物料id -->
+			and f.MAT_BASIC_ID &lt;&gt; #{MAT_BASIC_ID}
+		</if>
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		,t.FCLASS,f1.FNAME FUNITNAME,f1.FCODE FUNITCODE
+		,f2.FNAME AUXILIARY_UNITNAME,f2.FCODE AUXILIARY_UNITCODE
+		from
+		<include refid="tableName"></include>
+		f LEFT JOIN MBASE_MAT_CLASS t ON f.MAT_CLASS_ID=t.MAT_CLASS_ID
+		left join MBASE_UNIT_INFO f1 on f.MAT_MAIN_UNIT=f1.UNIT_INFO_ID
+		left join MBASE_UNIT_INFO f2 on f.MAT_AUXILIARY_UNIT=f2.UNIT_INFO_ID
+		where
+		f.MAT_BASIC_ID = #{MAT_BASIC_ID}
+	</select>
+	<select id="getListByMatCode" parameterType="string" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.FCODE FUNITCODE,f1.FNAME FUNITNAME,
+		clazz.FCLASS as MAT_CLASS
+		from
+		<include refid="tableName"></include>
+		f
+		left join MBASE_UNIT_INFO f1 on f.MAT_MAIN_UNIT=f1.UNIT_INFO_ID
+		left join MBASE_MAT_CLASS clazz on clazz.MAT_CLASS_ID = f.MAT_CLASS_ID
+		where 1=1 and f.MAT_CODE = #{MAT_CODE}
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		unit.FNAME MAT_MAIN_UNIT_NAME,
+		<include refid="Field"></include>
+		,t.FCLASS,d.NAME DENAME 
+		from
+		<include refid="tableName"></include>
+		f
+		LEFT JOIN MBASE_MAT_CLASS t ON f.MAT_CLASS_ID=t.MAT_CLASS_ID 
+		LEFT JOIN MBASE_UNIT_INFO unit ON f.MAT_MAIN_UNIT=unit.UNIT_INFO_ID 
+		LEFT JOIN SYS_DICTIONARIES d ON f.MAT_ATTRIBUTE=d.DICTIONARIES_ID 
+		where 1=1
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f.MAT_ALIAS LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f.MAT_BRAND LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f.MAT_FULL_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart] order by f.CREATE_TIME DESC [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		,t.FCLASS,u1.FNAME MAT_MAIN_UNIT_NAME,u2.FNAME MAT_AUXILIARY_UNIT_NAME,
+		aux.MAT_AUXILIARY_NAME,d.NAME MAT_ATTRIBUTE_NAME 
+		from
+		<include refid="tableName"></include> f 
+		LEFT JOIN MBASE_MAT_CLASS t ON f.MAT_CLASS_ID=t.MAT_CLASS_ID 
+		LEFT JOIN MBASE_UNIT_INFO u1 ON f.MAT_MAIN_UNIT=u1.UNIT_INFO_ID 
+		LEFT JOIN MBASE_UNIT_INFO u2 ON f.MAT_AUXILIARY_UNIT=u2.UNIT_INFO_ID 
+		LEFT JOIN MBASE_MAT_AUXILIARY aux ON f.MAT_BASIC_ID=aux.MAT_AUXILIARY_ID 
+		LEFT JOIN SYS_DICTIONARIES d ON f.MAT_ATTRIBUTE=d.DICTIONARIES_ID
+		where
+		1=1
+		<if test="KEYWORDS!= null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.MAT_CODE LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.MAT_NAME LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.MAT_ALIAS LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.MAT_BRAND LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.MAT_FULL_NAME LIKE '%'+ #{KEYWORDS}+'%'
+			)
+		</if>
+		order by f.CREATE_TIME DESC
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		MAT_BASIC_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 根据物料关键字查询数据 -->
+	<select id="getBasic" parameterType="pd" resultType="pd">
+		SELECT
+		top 10 f.MAT_BASIC_ID,f.MAT_BRAND,f.MAT_CLASS_ID,clazz.FCLASS as MAT_CLASS,
+		f.MAT_CODE,f.MAT_NAME,f.MAT_MAIN_UNIT,f.MAT_AUXILIARY_UNIT,f.MAT_SPECS,f.ERP_CODE,f1.FNAME MAT_MAIN_UNITNAME,f2.FNAME MAT_AUXILIARY_UNITNAME
+		FROM MBASE_MAT_BASIC f 
+		left join MBASE_UNIT_INFO f1 on f.MAT_MAIN_UNIT=f1.UNIT_INFO_ID
+		left join MBASE_UNIT_INFO f2 on f.MAT_AUXILIARY_UNIT=f2.UNIT_INFO_ID
+		left join MBASE_MAT_CLASS clazz on clazz.MAT_CLASS_ID = f.MAT_CLASS_ID
+		 WHERE 1=1
+		<if test="inputName!= null and inputName != ''"><!-- 关键词检索 -->
+			and(
+			f.MAT_CODE LIKE '%'+#{inputName}+'%'<!-- 物料代码 -->
+			or
+			f.MAT_NAME LIKE '%'+#{inputName}+'%'<!-- 物料名称 -->
+			or
+			f.MAT_SPECS LIKE '%'+#{inputName}+'%'<!--  -->
+			)
+		</if>
+		<if test="clazzNameNot != null and clazzNameNot != ''"><!-- 关键词检索 -->
+			and clazz.FCLASS != #{clazzNameNot}<!-- 物料代码 -->			
+		</if>
+	</select>
+	<!-- 获取物料列表-可搜索-前100条 -->
+	<select id="getMaterialList" parameterType="pd" resultType="pd">
+		select top 10 
+		MAT_BASIC_ID,MAT_NAME,MAT_CODE,isnull(MAT_CODE,'无编号')+'/'+isnull(MAT_NAME,'无名称')  FSelectOption,
+		MAT_AUXILIARY_ID,f.UNIQUE_CODE_WHETHER,
+		f2.FNAME FUnitName,f2.UNIT_INFO_ID 
+		from
+		<include refid="tableName"></include>
+		f
+		left join MBASE_UNIT_INFO f2
+		on f.MAT_MAIN_UNIT=f2.UNIT_INFO_ID
+		where 1=1
+		<if test="KEYWORDS!= null and KEYWORDS != ''">
+			and
+			(
+			f.MAT_CODE LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.MAT_NAME LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.MAT_SPECS LIKE '%'+#{inputName}+'%'<!--  -->
+			)
+		</if>
+		order by f.MAT_CODE
+	</select>
+
+	<!-- 获取物料详情-销售订单 -->
+	<select id="getMaterialMessage" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		,t.FCLASS,
+		isnull(f2.FNAME,'') FUnitName
+		from
+		<include refid="tableName"></include>
+		f
+		LEFT JOIN MBASE_MAT_CLASS t ON f.MAT_CLASS_ID=t.MAT_CLASS_ID
+		left join
+		MBASE_UNIT_INFO f2
+		on f.MAT_MAIN_UNIT=f2.UNIT_INFO_ID
+		where
+		f.MAT_BASIC_ID = #{MAT_BASIC_ID}
+	</select>
+	
+	<!-- 通过物料代码获取物料详情 -->
+	<select id="getBasicId" parameterType="pd" resultType="pd">
+	    SELECT TOP 1
+	    <include refid="Field"></include>
+	    FROM MBASE_MAT_BASIC f WHERE f.MAT_CODE=#{MAT_CODE}
+	</select>
+	
+	<!-- 车间库存物料列表 -->
+	<select id="getWorkShopStockList" parameterType="pd" resultType="pd">
+		SELECT aux.MAT_AUXILIARYMX_CODE,MaterialSPropKey,
+		isnull(MAT_CODE,'无编号')+'/'+isnull(MAT_NAME,'无名称')  FSelectOption,
+		UNIQUE_CODE_WHETHER,MAT_BASIC_ID,WarehouseID,ActualCount,MAT_CODE,MAT_NAME,
+		unit.FNAME FUnitName,MAT_AUXILIARY_UNIT,unit.UNIT_INFO_ID  
+		FROM (
+			SELECT ItemID,WarehouseID,sum(ActualCount) ActualCount,MaterialSPropKey 
+			FROM MM_Stock 
+			WHERE ActualCount &gt; 0 
+			GROUP BY ItemID,WarehouseID,MaterialSPropKey
+		) s 
+		LEFT JOIN MBASE_MAT_BASIC m ON s.ItemID=m.MAT_BASIC_ID 
+		LEFT JOIN MWMS_WH_WAREHOUSE warehouse ON s.WarehouseID=warehouse.WH_WAREHOUSE_ID 
+		LEFT JOIN MBASE_UNIT_INFO unit ON m.MAT_MAIN_UNIT=unit.UNIT_INFO_ID 
+		LEFT JOIN MBASE_MAT_AUXILIARYMX aux ON aux.MAT_AUXILIARYMX_ID=s.MaterialSPropKey
+		WHERE  warehouse.FTYPE='车间库'
+	</select>
+	<select id="getUnitID" parameterType="pd" resultType="String">
+		select UNIT_INFO_ID from MBASE_UNIT_INFO
+		where FNAME = #{FUnitName}
+	</select>
+	
+		<!-- 通过规格型号获取物料详情 -->
+	<select id="findBySPECS" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		,t.FCLASS,u1.FNAME MAT_MAIN_UNIT_NAME,u2.FNAME MAT_AUXILIARY_UNIT_NAME,
+		aux.MAT_AUXILIARY_NAME,d.NAME MAT_ATTRIBUTE_NAME 
+		from
+		<include refid="tableName"></include> f 
+		LEFT JOIN MBASE_MAT_CLASS t ON f.MAT_CLASS_ID=t.MAT_CLASS_ID 
+		LEFT JOIN MBASE_UNIT_INFO u1 ON f.MAT_MAIN_UNIT=u1.UNIT_INFO_ID 
+		LEFT JOIN MBASE_UNIT_INFO u2 ON f.MAT_AUXILIARY_UNIT=u2.UNIT_INFO_ID 
+		LEFT JOIN MBASE_MAT_AUXILIARY aux ON f.MAT_BASIC_ID=aux.MAT_AUXILIARY_ID 
+		LEFT JOIN SYS_DICTIONARIES d ON f.MAT_ATTRIBUTE=d.DICTIONARIES_ID
+		where
+		f.MAT_SPECS=#{MAT_SPECS} and MAT_SPECS!='' and MAT_SPECS is not null
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

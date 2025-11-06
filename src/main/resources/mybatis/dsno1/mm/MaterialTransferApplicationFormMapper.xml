@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.MaterialTransferApplicationFormMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_MaterialTransferApplicationForm
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.MaterialTransferApplicationForm_ID,	
+		f.FNum,	
+		f.FPriorityID,	
+		f.DemandTime,	
+		f.FCustomer,	
+		f.RunningState,	
+		f.Transferor,	
+		f.TransferTime,	
+		f.TransferType,	
+		f.FCreator,	
+		f.PreparationTime,	
+		f.AuditMark,	
+		f.FReviewer,	
+		f.AuditTime,	
+		f.TransitionType,
+		f.FExplanation
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		MaterialTransferApplicationForm_ID,	
+		FNum,	
+		FPriorityID,	
+		DemandTime,	
+		FCustomer,	
+		RunningState,	
+		Transferor,	
+		TransferTime,	
+		TransferType,	
+		FCreator,	
+		PreparationTime,	
+		AuditMark,	
+		FReviewer,	
+		AuditTime,	
+		TransitionType,
+		FExplanation
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MaterialTransferApplicationForm_ID},	
+		#{FNum},	
+		#{FPriorityID},	
+		#{DemandTime},	
+		#{FCustomer},	
+		#{RunningState},	
+		#{Transferor},	
+		#{TransferTime},	
+		#{TransferType},	
+		#{FCreator},	
+		#{PreparationTime},	
+		#{AuditMark},	
+		#{FReviewer},	
+		#{AuditTime},	
+		#{TransitionType},
+		#{FExplanation}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MaterialTransferApplicationForm_ID = #{MaterialTransferApplicationForm_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FNum = #{FNum},
+			FPriorityID = #{FPriorityID},
+			DemandTime = #{DemandTime},
+			FCustomer = #{FCustomer},
+			RunningState = #{RunningState},
+			Transferor = #{Transferor},
+			TransferTime = #{TransferTime},
+			TransferType = #{TransferType},
+			FCreator = #{FCreator},
+			PreparationTime = #{PreparationTime},
+			AuditMark = #{AuditMark},
+			FReviewer = #{FReviewer},
+			AuditTime = #{AuditTime},
+			TransitionType = #{TransitionType},
+			FExplanation = #{FExplanation}
+		where 
+			MaterialTransferApplicationForm_ID = #{MaterialTransferApplicationForm_ID}
+	</update>
+	
+	<!-- 更新审核状态 -->
+	<update id="editAuditMark" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FReviewer = #{FReviewer},
+			AuditMark = #{AuditMark},
+			AuditTime = #{AuditTime}
+		where 
+			MaterialTransferApplicationForm_ID = #{MaterialTransferApplicationForm_ID}
+	</update>
+	
+	<!-- 编辑运转状态：创建，执行，关闭，下发操作 -->
+	<update id="editRunningState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RunningState = #{RunningState},
+			TransitionType = #{TransitionType}
+		where 
+			MaterialTransferApplicationForm_ID = #{MaterialTransferApplicationForm_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		s.name FCreatePerson,s1.name TransferorPerson,s2.name FReviewerPerson,
+		c.FName Customer_Name,<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN OA_STAFF s ON f.FCreator=s.staff_id 
+		LEFT JOIN OA_STAFF s1 ON f.Transferor=s1.staff_id 
+		LEFT JOIN OA_STAFF s2 ON f.FReviewer=s2.staff_id 
+		LEFT JOIN KM_Customer c ON c.Customer_ID=f.FCustomer 
+		where 
+			f.MaterialTransferApplicationForm_ID = #{MaterialTransferApplicationForm_ID}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByFNum" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FNum = #{FNum}
+		<if test="MaterialTransferApplicationForm_ID != null and MaterialTransferApplicationForm_ID != ''"><!-- 转移申请id -->
+			and f.MaterialTransferApplicationForm_ID &lt;&gt; #{MaterialTransferApplicationForm_ID}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		s.name FCreatePerson,s1.name TransferorPerson,s2.name FReviewerPerson,
+		c.FName Customer_Name,<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN OA_STAFF s ON f.FCreator=s.staff_id 
+		LEFT JOIN OA_STAFF s1 ON f.Transferor=s1.staff_id 
+		LEFT JOIN OA_STAFF s2 ON f.FReviewer=s2.staff_id 
+		LEFT JOIN KM_Customer c ON c.Customer_ID=f.FCustomer 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.FNum != null and pd.FNum != ''"><!-- 转移单号 -->
+			and f.FNum = #{pd.FNum}
+		</if>
+		<if test="pd.FPriorityID != null and pd.FPriorityID != ''"><!-- 优先级 -->
+			and f.FPriorityID = #{pd.FPriorityID}
+		</if>
+		<if test="pd.RunningState != null and pd.RunningState != ''"><!-- 运转状态（待转、运行、关闭） -->
+			and f.RunningState = #{pd.RunningState}
+		</if>
+		<if test="pd.TransferType != null and pd.TransferType != ''"><!-- 状态（转移、退料） -->
+			and f.TransferType = #{pd.TransferType}
+		</if>
+		<if test="pd.FCreator != null and pd.FCreator != ''"><!-- 创建人 -->
+			and f.FCreator = #{pd.FCreator}
+		</if>
+		<if test="pd.TransitionType != null and pd.TransitionType != ''"><!-- 运转状态：转出、转入 -->
+			and f.TransitionType = #{pd.TransitionType}
+		</if>
+		[fhstart] order by f.PreparationTime desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		s.name FCreatePerson,s1.name TransferorPerson,s2.name FReviewerPerson,
+		c.FName Customer_Name,<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN OA_STAFF s ON f.FCreator=s.staff_id 
+		LEFT JOIN OA_STAFF s1 ON f.Transferor=s1.staff_id 
+		LEFT JOIN OA_STAFF s2 ON f.FReviewer=s2.staff_id 
+		LEFT JOIN KM_Customer c ON c.Customer_ID=f.FCustomer 
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNum LIKE '%'+ #{KEYWORDS}+'%'
+				)
+		</if>
+		<if test="FNum != null and FNum != ''"><!-- 转移单号 -->
+			and f.FNum = #{FNum}
+		</if>
+		<if test="FPriorityID != null and FPriorityID != ''"><!-- 优先级 -->
+			and f.FPriorityID = #{FPriorityID}
+		</if>
+		<if test="RunningState != null and RunningState != ''"><!-- 运转状态（待转、运行、关闭） -->
+			and f.RunningState = #{RunningState}
+		</if>
+		<if test="TransferType != null and TransferType != ''"><!-- 状态（转移、退料） -->
+			and f.TransferType = #{TransferType}
+		</if>
+		<if test="FCreator != null and FCreator != ''"><!-- 创建人 -->
+			and f.FCreator = #{FCreator}
+		</if>
+		<if test="TransitionType != null and TransitionType != ''"><!-- 运转状态：转出、转入 -->
+			and f.TransitionType = #{TransitionType}
+		</if>
+		order by f.PreparationTime desc 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MaterialTransferApplicationForm_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 列表 -->
+	<select id="listTransfer" parameterType="page" resultType="pd">
+		select
+		s.name FCreatePerson,s1.name TransferorPerson,s2.name FReviewerPerson,
+		c.FName Customer_Name,<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN OA_STAFF s ON f.FCreator=s.staff_id 
+		LEFT JOIN OA_STAFF s1 ON f.Transferor=s1.staff_id 
+		LEFT JOIN OA_STAFF s2 ON f.FReviewer=s2.staff_id 
+		LEFT JOIN KM_Customer c ON c.Customer_ID=f.FCustomer 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.FNum != null and pd.FNum != ''"><!-- 转移单号 -->
+			and f.FNum = #{pd.FNum}
+		</if>
+		<if test="pd.FPriorityID != null and pd.FPriorityID != ''"><!-- 优先级 -->
+			and f.FPriorityID = #{pd.FPriorityID}
+		</if>
+		<if test="pd.RunningState != null and pd.RunningState != ''"><!-- 运转状态（待转、运行、关闭） -->
+			and f.RunningState = #{pd.RunningState}
+		</if>
+		<if test="pd.TransferType != null and pd.TransferType != ''"><!-- 状态（转移、退料） -->
+			and f.TransferType = #{pd.TransferType}
+		</if>
+		<if test="pd.FCreator != null and pd.FCreator != ''"><!-- 创建人 -->
+			and s.name = #{pd.FCreator}
+		</if>
+		<if test="pd.TransitionType != null and pd.TransitionType != ''"><!-- 运转状态：转出、转入 -->
+			and f.TransitionType = #{pd.TransitionType}
+		</if>
+		<if test="pd.lastStart != null and pd.lastStart != ''">
+			and f.PreparationTime &gt;= #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd != null and pd.lastEnd != ''">
+			and f.PreparationTime &lt;= #{pd.lastEnd}
+		</if>
+	</select>
+
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

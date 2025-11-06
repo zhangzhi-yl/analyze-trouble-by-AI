@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_VULNERABLE_PARTSMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_VULNERABLE_PARTS
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.VULNERABLE_PARTS_ID,	
+		f.EQM_BASE_ID,	
+		f.FNAME,	
+		f.FSPECS,	
+		f.FTEXTURE,	
+		f.FAMOUNT,	
+		f.FPRICE,	
+		f.FREMARKS,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.MAINTENANCE_CYCLE,	
+		f.CHECKIN_TIME,	
+		f.FMANUFACTURER
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		VULNERABLE_PARTS_ID,	
+		EQM_BASE_ID,	
+		FNAME,	
+		FSPECS,	
+		FTEXTURE,	
+		FAMOUNT,	
+		FPRICE,	
+		FREMARKS,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		MAINTENANCE_CYCLE,	
+		CHECKIN_TIME,	
+		FMANUFACTURER
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{VULNERABLE_PARTS_ID},	
+		#{EQM_BASE_ID},	
+		#{FNAME},	
+		#{FSPECS},	
+		#{FTEXTURE},	
+		#{FAMOUNT},	
+		#{FPRICE},	
+		#{FREMARKS},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{MAINTENANCE_CYCLE},	
+		#{CHECKIN_TIME},	
+		#{FMANUFACTURER}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			VULNERABLE_PARTS_ID = #{VULNERABLE_PARTS_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FNAME = #{FNAME},
+			FSPECS = #{FSPECS},
+			FTEXTURE = #{FTEXTURE},
+			FAMOUNT = #{FAMOUNT},
+			FPRICE = #{FPRICE},
+			FREMARKS = #{FREMARKS},
+			CHECKIN_TIME = #{CHECKIN_TIME},
+			MAINTENANCE_CYCLE = #{MAINTENANCE_CYCLE},
+			FMANUFACTURER = #{FMANUFACTURER}
+		where 
+			VULNERABLE_PARTS_ID = #{VULNERABLE_PARTS_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select b.FNAME EQM_BASE_NAME,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MDM_EQM_BASE b on f.EQM_BASE_ID=b.EQM_BASE_ID 
+		where 
+			f.VULNERABLE_PARTS_ID = #{VULNERABLE_PARTS_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select b.FNAME EQM_BASE_NAME,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MDM_EQM_BASE b on f.EQM_BASE_ID=b.EQM_BASE_ID 
+		where
+			f.EQM_BASE_ID = #{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FSPECS LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FTEXTURE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FMANUFACTURER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select b.FNAME EQM_BASE_NAME,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MDM_EQM_BASE b on f.EQM_BASE_ID=b.EQM_BASE_ID 
+	</select>
+	
+	<!-- 通过设备基础资料ID删除信息-->
+	<delete id="deleteBase" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			VULNERABLE_PARTS_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</select>
+	
+	<!-- 报备列表 -->
+	<select id="listBB" parameterType="pd" resultType="pd">
+	SELECT 
+	ISNULL(a.VULNERABLE_PARTS_ID, '') VULNERABLE_PARTS_ID,
+	ISNULL(b.FNAME,'') SHEBEINAME,
+	ISNULL(a.FNAME,'') YSJNAME,
+	ISNULL(a.FSPECS,'') FSPECS,
+	ISNULL(a.FTEXTURE,'') FTEXTURE,
+	ISNULL(a.FAMOUNT,0) FAMOUNT,
+	ISNULL(a.FMANUFACTURER,'') FMANUFACTURER,
+	ISNULL(a.FPRICE,0) FPRICE,
+	ISNULL(a.CHECKIN_TIME, '') CHECKIN_TIME,
+	ISNULL(a.MAINTENANCE_CYCLE, 0) MAINTENANCE_CYCLE 
+	FROM MDM_EQM_VULNERABLE_PARTS a LEFT JOIN MDM_EQM_BASE b ON a.EQM_BASE_ID = b.EQM_BASE_ID
+	WHERE DATEDIFF(DAY, a.CHECKIN_TIME, GETDATE()) = 0 
+	</select>
+	
+	<!-- 修改(设备维护时间) -->
+	<update id="editDay" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CHECKIN_TIME = #{CHECKIN_TIME}
+		where 
+			VULNERABLE_PARTS_ID = #{VULNERABLE_PARTS_ID}
+	</update>	<!-- YY 356703572 -->
+</mapper>

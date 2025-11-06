@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.ProcessWorkOrderExampleMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		PP_ProcessWorkOrderExample
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.WorkingProcedureExampleID,
+		f.OrderNum,
+		f.PlanningWorkOrderID,
+		f.BatchNum,
+		f.ProcessIMateriel,
+		f.ProcessIMaterielCode,
+		f.ProcessIMaterielID,
+		f.FMSpecification,
+		f.WP,
+		f.WPName,
+		f.WPNum,
+		f.WPType,
+		isnull(f.SerialNum,0) SerialNum,
+		f.FStation,
+		f.ExecutorID,
+		f.PlannedBeginTime,
+		f.WorkHours,
+		f.WorkHoursUnit,
+		f.PlannedEndTime,
+		f.LockingIF,
+		f.ConnectionMode,
+		f.SingleScan,
+		f.OneCodeEnd,
+		f.MaterialTraceability,
+		f.UnqualifiedProducts,
+		f.PreparationTime,
+		f.PreparationTimeUnit,
+		f.WPOutputRatio,
+		f.FrozenIF,
+		f.ProductionDesc,
+		f.FAttachment,
+		f.FCreatePersonID,
+		f.FCreateTime,
+		f.TaskNum,
+		f.FStatus,
+		f.ActualBeginTime,
+		f.ActualEndTime,
+		f.NODE_ID,
+		f.QIPlanID,
+		f.FRUN_STATE,
+		f.FIFUCCOPY,
+		f.FOPERATOR,
+		f.EXECUTE_TIME,
+		f.TIME_STAMP,
+		f.TaskType,
+		f.OriginTaskID,
+		f.EnableSOP,
+		f.SOP_ID,
+		f.QITaskIF,
+		f.WokNum,
+		f.CheckDoneIF,
+		f.WeighingDoneIF,
+		f.EQM_BASE_ID,
+		f.Throughput,
+		f.WokIF,
+		f.WeighingIF,
+		f.Collator,
+		f.ProofTime,
+		f.ProcessWorkOrderExample_ID,
+		f.EnableTest,
+		isnull(f.progress,0) progress
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		WorkingProcedureExampleID,
+		OrderNum,
+		PlanningWorkOrderID,
+		BatchNum,
+		ProcessIMateriel,
+		ProcessIMaterielCode,
+		ProcessIMaterielID,
+		FMSpecification,
+		WP,
+		WPName,
+		WPNum,
+		WPType,
+		SerialNum,
+		FStation,
+		ExecutorID,
+		PlannedBeginTime,
+		WorkHours,
+		WorkHoursUnit,
+		PlannedEndTime,
+		LockingIF,
+		ConnectionMode,
+		SingleScan,
+		OneCodeEnd,
+		MaterialTraceability,
+		UnqualifiedProducts,
+		PreparationTime,
+		PreparationTimeUnit,
+		WPOutputRatio,
+		FrozenIF,
+		ProductionDesc,
+		FAttachment,
+		FCreatePersonID,
+		FCreateTime,
+		TaskNum,
+		FStatus,
+		ActualBeginTime,
+		ActualEndTime,
+		NODE_ID,
+		QIPlanID,
+		FRUN_STATE,
+		FIFUCCOPY,
+		FOPERATOR,
+		EXECUTE_TIME,
+		TIME_STAMP,
+		TaskType,
+		OriginTaskID,
+		EnableSOP,
+		SOP_ID,
+		QITaskIF,
+		WokNum,
+		CheckDoneIF,
+		WeighingDoneIF,
+		EQM_BASE_ID,
+		Throughput,
+		WokIF,
+		WeighingIF,
+		Collator,
+		ProofTime,
+		ProcessWorkOrderExample_ID,
+		EnableTest
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WorkingProcedureExampleID},
+		#{OrderNum},
+		#{PlanningWorkOrderID},
+		#{BatchNum},
+		#{ProcessIMateriel},
+		#{ProcessIMaterielCode},
+		#{ProcessIMaterielID},
+		#{FMSpecification},
+		#{WP},
+		#{WPName},
+		#{WPNum},
+		#{WPType},
+		#{SerialNum},
+		#{FStation},
+		#{ExecutorID},
+		#{PlannedBeginTime},
+		#{WorkHours},
+		#{WorkHoursUnit},
+		#{PlannedEndTime},
+		#{LockingIF},
+		#{ConnectionMode},
+		#{SingleScan},
+		#{OneCodeEnd},
+		#{MaterialTraceability},
+		#{UnqualifiedProducts},
+		#{PreparationTime},
+		#{PreparationTimeUnit},
+		#{WPOutputRatio},
+		#{FrozenIF},
+		#{ProductionDesc},
+		#{FAttachment},
+		#{FCreatePersonID},
+		#{FCreateTime},
+		#{TaskNum},
+		#{FStatus},
+		#{ActualBeginTime},
+		#{ActualEndTime},
+		#{NODE_ID},
+		#{QIPlanID},
+		#{FRUN_STATE},
+		#{FIFUCCOPY},
+		#{FOPERATOR},
+		#{EXECUTE_TIME},
+		#{TIME_STAMP},
+		#{TaskType},
+		#{OriginTaskID},
+		#{EnableSOP},
+		#{SOP_ID},
+		#{QITaskIF},
+		#{WokNum},
+		#{CheckDoneIF},
+		#{WeighingDoneIF},
+		#{EQM_BASE_ID},
+		#{Throughput},
+		#{WokIF},
+		#{WeighingIF},
+		#{Collator},
+		#{ProofTime},
+		#{ProcessWorkOrderExample_ID},
+		#{EnableTest}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		WorkingProcedureExampleID = #{WorkingProcedureExampleID},
+		OrderNum =
+		#{OrderNum},
+		PlanningWorkOrderID = #{PlanningWorkOrderID},
+		BatchNum =
+		#{BatchNum},
+		ProcessIMateriel = #{ProcessIMateriel},
+		ProcessIMaterielCode = #{ProcessIMaterielCode},
+		ProcessIMaterielID =
+		#{ProcessIMaterielID},
+		FMSpecification =
+		#{FMSpecification},
+		WP = #{WP},
+		WPName = #{WPName},
+		WPNum = #{WPNum},
+		WPType =#{WPType},
+		SerialNum =
+		#{SerialNum},
+		FStation =
+		#{FStation},
+		ExecutorID =
+		#{ExecutorID},
+		PlannedBeginTime =
+		#{PlannedBeginTime},
+		WorkHours = #{WorkHours},
+		WorkHoursUnit =
+		#{WorkHoursUnit},
+		PlannedEndTime =
+		#{PlannedEndTime},
+		LockingIF
+		= #{LockingIF},
+		ConnectionMode =
+		#{ConnectionMode},
+		SingleScan =
+		#{SingleScan},
+		OneCodeEnd =
+		#{OneCodeEnd},
+		MaterialTraceability =
+		#{MaterialTraceability},
+		UnqualifiedProducts = #{UnqualifiedProducts},
+		PreparationTime =
+		#{PreparationTime},
+		PreparationTimeUnit =
+		#{PreparationTimeUnit},
+		WPOutputRatio = #{WPOutputRatio},
+		FrozenIF =
+		#{FrozenIF},
+		ProductionDesc
+		= #{ProductionDesc},
+		FAttachment =
+		#{FAttachment},
+		FCreatePersonID =
+		#{FCreatePersonID},
+		FCreateTime =
+		#{FCreateTime},
+		TaskNum = #{TaskNum},
+		FStatus = #{FStatus},
+		ActualBeginTime = #{ActualBeginTime},
+		ActualEndTime = #{ActualEndTime},
+		NODE_ID = #{NODE_ID},
+		QIPlanID =
+		#{QIPlanID},
+		FRUN_STATE = #{FRUN_STATE},
+		FIFUCCOPY = #{FIFUCCOPY},
+		FOPERATOR = #{FOPERATOR},
+		EXECUTE_TIME =
+		#{EXECUTE_TIME},
+		TIME_STAMP = #{TIME_STAMP},
+		TaskType = #{TaskType},
+		OriginTaskID = #{OriginTaskID},
+		EnableSOP = #{EnableSOP},
+		SOP_ID = #{SOP_ID},
+		QITaskIF = #{QITaskIF},		
+		WokNum = #{WokNum},
+		CheckDoneIF = #{CheckDoneIF},
+		WeighingDoneIF = #{WeighingDoneIF},
+		EQM_BASE_ID = #{EQM_BASE_ID},
+		Throughput = #{Throughput},
+		WokIF = #{WokIF},
+		WeighingIF = #{WeighingIF},
+		Collator = #{Collator},
+		ProofTime = #{ProofTime},
+		progress=#{progress},
+		ProcessWorkOrderExample_ID = ProcessWorkOrderExample_ID
+		where
+		ProcessWorkOrderExample_ID =
+		#{ProcessWorkOrderExample_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		soptmp.FName as SOPName,f4.PROJECT_ID,
+		<include refid="Field"></include>,f3.USER_ID FSC_NO,f3.NAME FSC_NAME,
+		f2.WorkOrderNum
+		from
+		<include refid="tableName"></include>
+		f
+		left join KM_SopSchemeTemplate soptmp on soptmp.SopSchemeTemplate_ID = f.SOP_ID
+		left join PP_PlanningWorkOrder f2 on f.PlanningWorkOrderID=f2.PlanningWorkOrder_ID
+		inner join PMS_Cabinet_Assembly_Detail f4 on f2.WorkOrderNum=f4.Cabinet_No
+		left join OA_STAFF f3 on f2.ProductionSupervisorID=f3.STAFF_ID
+		where
+		f.ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID}
+		
+		
+		
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		left join
+		PP_PlanningWorkOrder pwo
+		on pwo.PlanningWorkOrder_ID =
+		f.PlanningWorkOrderID
+		where 1=1
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND f.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.PlanningWorkOrderID != null and pd.PlanningWorkOrderID != ''">
+			AND f.PlanningWorkOrderID = #{pd.PlanningWorkOrderID}
+		</if>
+		<if test="pd.BatchNum != null and pd.BatchNum != ''">
+			AND f.BatchNum = #{pd.BatchNum}
+		</if>
+		<if test="pd.ProcessIMateriel != null and pd.ProcessIMateriel != ''">
+			AND f.ProcessIMateriel = #{pd.ProcessIMateriel}
+		</if>
+		<if
+			test="pd.ProcessIMaterielCode != null and pd.ProcessIMaterielCode != ''">
+			AND f.ProcessIMaterielCode = #{pd.ProcessIMaterielCode}
+		</if>
+		<if test="pd.WP != null and pd.WP != ''">
+			AND f.WP = #{pd.WP}
+		</if>
+		<if test="pd.FStation != null and pd.FStation != ''">
+			AND f.FStation = #{pd.FStation}
+		</if>
+		<if test="pd.ExecutorID != null and pd.ExecutorID != ''">
+			AND f.ExecutorID = #{pd.ExecutorID}
+		</if>
+		<if test="pd.TaskType != null and pd.TaskType != ''">
+			AND f.TaskType = #{pd.TaskType}
+		</if>
+		<if test="pd.TaskNum != null and pd.TaskNum != ''">
+			AND f.TaskNum = #{pd.TaskNum}
+		</if>
+		<if
+			test="pd.PlannedBeginTimeBegin != null and pd.PlannedBeginTimeBegin != '' 
+		and pd.PlannedBeginTimeEnd != null and pd.PlannedBeginTimeEnd !=''">
+			AND f.PlannedBeginTime &gt;= #{pd.PlannedBeginTimeBegin}
+			AND
+			f.PlannedBeginTime &lt;= #{pd.PlannedBeginTimeEnd}
+		</if>
+		<if
+			test="pd.PlannedEndTimeBegin != null and pd.PlannedEndTimeBegin != '' 
+		and pd.PlannedEndTimeEnd != null and pd.PlannedEndTimeEnd !=''">
+			AND f.PlannedEndTime &gt;= #{pd.PlannedEndTimeBegin}
+			AND
+			f.PlannedEndTime &lt;= #{pd.PlannedEndTimeEnd}
+		</if>
+
+		<if test="pd.FStatus != null and pd.FStatus != ''">
+			AND f.FStatus in ( #{pd.FStatus} )
+		</if>
+		<if
+			test="pd.ActualBeginTimeBegin != null and pd.ActualBeginTimeBegin != ''
+		and pd.ActualBeginTimeEnd != null and pd.ActualBeginTimeEnd != ''">
+			AND f.ActualBeginTime &gt;= #{pd.ActualBeginTimeBegin}
+			AND
+			f.ActualBeginTime &lt;= #{pd.ActualBeginTimeEnd}
+		</if>
+		<if
+			test="pd.ActualEndTimeBegin != null and pd.ActualEndTimeBegin != ''
+		and pd.ActualEndTimeEnd != null and pd.ActualEndTimeEnd != ''">
+			AND f.ActualEndTime &gt;= #{pd.ActualEndTimeBegin}
+			AND
+			f.ActualEndTime &lt;= #{pd.ActualEndTimeEnd}
+		</if>
+		<if test="pd.FPriorityID != null and pd.FPriorityID != ''">
+			AND pwo.FPriorityID = #{pd.FPriorityID}
+		</if>
+		<if
+			test="pd.DistributionProgress != null and pd.DistributionProgress != ''">
+			AND pwo.DistributionProgress in (#{pd.DistributionProgress})
+		</if>
+		[fhstart] order by TaskNum [fhend]
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f where 1=1
+		<if test="OrderNum != null and OrderNum != ''">
+			AND f.OrderNum = #{OrderNum}
+		</if>
+		<if test="PlanningWorkOrderID != null and PlanningWorkOrderID != ''">
+			AND f.PlanningWorkOrderID = #{PlanningWorkOrderID}
+		</if>
+
+		<if test="NODE_ID != null and NODE_ID != ''">
+			AND f.NODE_ID = #{NODE_ID}
+		</if>
+
+		order by cast(isnull(f.SerialNum,0) as int) asc ,f.WorkHours desc
+	</select>
+
+
+	<!-- 列表(根据计划工单查询) -->
+	<select id="listByPlanningWorkOrderID" parameterType="pd"
+		resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where 1=1
+		and ( f.TaskType = 1 or f.TaskType = 3)
+		and f.PlanningWorkOrderID =
+		#{PlanningWorkOrderID}
+		order by
+		TaskNum
+
+	</select>
+	<select id="listByTimeStrAndStationID" parameterType="pd"
+		resultType="pd">
+		SELECT
+		*
+		FROM
+		PP_ProcessWorkOrderExample
+		WHERE
+		1=1
+		and
+		PlannedEndTime > #{TimeStr}
+		and FStation like '%'+#{StationID}+'%'
+		order by PlannedEndTime desc
+	</select>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		ProcessWorkOrderExample_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<update id="updateExecutorIDByWPAndPlanningWorkOrderID"
+		parameterType="String">
+		update
+		PP_ProcessWorkOrderExample
+		set
+		ExecutorID =
+		#{ExecutorID},
+		FStation = #{FStation}
+		WHERE
+		1=1 and
+		PlanningWorkOrderID =
+		#{planningWorkOrder_ID}
+		and WP= #{WP}
+	</update>
+	<update id="updateByConditionMap" parameterType="map">
+		UPDATE
+		PP_ProcessWorkOrderExample
+		SET
+		PlannedBeginTime = #{PlannedBeginTime},
+		PlannedEndTime = #{PlannedEndTime},
+		WorkHours =
+		#{WorkHours},
+		WorkHoursUnit = #{WorkHoursUnit}
+		WHERE
+		ProcessWorkOrderExample_ID =
+		#{ProcessWorkOrderExample_ID}
+	</update>
+	<update id="EditQIIF" parameterType="pd">
+		update
+			PP_ProcessWorkOrderExample
+			set 
+			QITaskIF = #{QITaskIF}
+		where ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID}
+	</update>
+	
+	<!-- 编辑是否核对 -->
+	<update id="editCheckDoneIF" parameterType="pd">
+		update
+			PP_ProcessWorkOrderExample
+		set 
+			CheckDoneIF = #{CheckDoneIF},
+			Collator = #{Collator},
+		    ProofTime = #{ProofTime}
+		where 
+			ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID}
+	</update>
+	
+	<!-- 配方核对任务列表 -->
+	<select id="recipeChecklistPage" parameterType="page" resultType="pd">
+		SELECT 
+			workOrder.WorkOrderNum,
+			isnull(example.WokNum, 0) WokNum,
+			example.WPNum,isnull(example.WPName, '无工序名称') WPName,
+			example.ProcessIMaterielID,
+			isnull(mat.MAT_CODE, '无编码') MAT_CODE,isnull(mat.MAT_NAME, '无名称') MAT_NAME,
+			isnull(unit.FNAME,'无单位名称') UNIT_NAME,
+			isnull(ioexample.PlannedQuantity, 0) PlannedQuantity,
+			isnull(example.Throughput,0) Throughput,
+			isnull(example.CheckDoneIF,'否') CheckDoneIF,
+			isnull(example.ProductionDesc,'') ProductionDesc,
+			isnull(example.Collator,'') Collator,
+			isnull(example.ProofTime,'') ProofTime,
+			example.ProcessWorkOrderExample_ID 
+		FROM PP_ProcessWorkOrderExample example 
+		LEFT JOIN PP_PlanningWorkOrder workOrder ON example.PlanningWorkOrderID=workOrder.PlanningWorkOrder_ID 
+		LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID=example.ProcessIMaterielID 
+		LEFT JOIN MBASE_UNIT_INFO unit ON mat.MAT_MAIN_UNIT=unit.UNIT_INFO_ID 
+		LEFT JOIN PP_WorkorderProcessIOExample ioexample ON example.ProcessWorkOrderExample_ID=ioexample.ProcessWorkOrderExampleID 
+		WHERE 1=1  
+		AND example.WeighingIF='是' 
+		AND ioexample.TType='产出'
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			AND
+			(
+				workOrder.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				 or 
+				example.WPName LIKE '%'+ #{pd.KEYWORDS}+'%' 
+			)
+		</if>
+		<if test="pd.CheckDoneIF != null and pd.CheckDoneIF != ''">
+			AND example.CheckDoneIF = #{pd.CheckDoneIF}
+		</if>
+		<if test="pd.PlanningWorkOrderID != null and pd.PlanningWorkOrderID != ''">
+			AND example.PlanningWorkOrderID = #{pd.PlanningWorkOrderID}
+		</if>
+		<if test="pd.DistributionProgress != null and pd.DistributionProgress != ''">
+			AND workOrder.DistributionProgress = #{pd.DistributionProgress}
+		</if>
+		[fhstart] order by example.CheckDoneIF [fhend]
+	</select>
+	
+	<!-- 称量称重任务列表 -->
+	<select id="weighinglistPage" parameterType="page" resultType="pd">
+		SELECT 
+			workOrder.WorkOrderNum,
+			isnull(example.WokNum, 0) WokNum,
+			example.WPNum,isnull(example.WPName, '无工序名称') WPName,
+			example.ProcessIMaterielID,
+			isnull(mat.MAT_CODE, '无编码') MAT_CODE,isnull(mat.MAT_NAME, '无名称') MAT_NAME,
+			isnull(unit.FNAME,'无单位名称') UNIT_NAME,
+			isnull(ioexample.PlannedQuantity, 0) PlannedQuantity,
+			isnull(example.Throughput,0) Throughput,
+			isnull(example.WeighingDoneIF,'否') WeighingDoneIF,
+			example.EQM_BASE_ID,isnull(eqm.FIDENTIFY,'无设备标识') eqmCode,isnull(eqm.FNAME,'无设备名称') eqmName, 
+			example.ProcessWorkOrderExample_ID 
+		FROM PP_ProcessWorkOrderExample example 
+		LEFT JOIN PP_PlanningWorkOrder workOrder ON example.PlanningWorkOrderID=workOrder.PlanningWorkOrder_ID 
+		LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID=example.ProcessIMaterielID 
+		LEFT JOIN MBASE_UNIT_INFO unit ON mat.MAT_MAIN_UNIT=unit.UNIT_INFO_ID 
+		LEFT JOIN PP_WorkorderProcessIOExample ioexample ON example.ProcessWorkOrderExample_ID=ioexample.ProcessWorkOrderExampleID 
+		LEFT JOIN MDM_EQM_BASE eqm ON example.EQM_BASE_ID = eqm.EQM_BASE_ID 
+		WHERE 1=1  
+		AND example.WeighingIF='是' 
+		AND ioexample.TType='产出' 
+		AND example.CheckDoneIF='是' 
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			AND
+			(
+				workOrder.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				 or 
+				example.WPName LIKE '%'+ #{pd.KEYWORDS}+'%' 
+			)
+		</if>
+		<if test="pd.WeighingDoneIF != null and pd.WeighingDoneIF != ''">
+			AND example.WeighingDoneIF = #{pd.WeighingDoneIF}
+		</if>
+		<if test="pd.DistributionProgress != null and pd.DistributionProgress != ''">
+			AND workOrder.DistributionProgress = #{pd.DistributionProgress}
+		</if>
+		[fhstart] order by example.WeighingDoneIF [fhend]
+	</select>
+	
+	<!-- 编辑是否完成称重 -->
+	<update id="editWeighingDoneIF" parameterType="pd">
+		update
+			PP_ProcessWorkOrderExample
+		set 
+			WeighingDoneIF = #{WeighingDoneIF}
+		where 
+			ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID}
+	</update>
+	
+	<!-- 编辑任务指定设备 -->
+	<update id="editProcessWorkOrderExampleEqm" parameterType="pd">
+		update
+			PP_ProcessWorkOrderExample
+		set 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+		where 
+			ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID}
+	</update>
+	
+	<!-- 任务关联计划列表 -->
+	<select id="datalistPageWorkOrderExample" parameterType="page" resultType="pd">
+		SELECT f.ProcessWorkOrderExample_ID,f.WPName,f.SerialNum,f1.* FROM PP_ProcessWorkOrderExample f
+		LEFT JOIN (
+		SELECT
+				so.OrderNum,
+				sod.FUnit,
+				pwom.WorkOrderNum WorkOrderNumMaster,
+				pwo.*
+				FROM
+				PP_PlanningWorkOrder pwo
+				LEFT JOIN
+				PP_SalesOrderDetail sod ON
+				pwo.SalesOrderDetailID =
+				sod.SalesOrderDetail_ID
+				LEFT JOIN PP_SalesOrder
+				so ON sod.SalesOrderID
+				= so.SalesOrder_ID
+				left join
+				PP_PlanningWorkOrderMaster pwom on pwo.MasterWorkOrder_ID =
+				pwom.PlanningWorkOrderMaster_ID
+		) f1 
+		ON f.PlanningWorkOrderID=f1.PlanningWorkOrder_ID
+		WHERE f1.DistributionProgress='已下发'
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			AND
+			(
+				f.WPName LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				 or 
+				f1.WorkOrserType LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				 or 
+				f1.OrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				 or 
+				f1.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				 or 
+				f1.OutputMaterial LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				
+			)
+		</if>
+		
+		[fhstart] ORDER BY WorkOrderCreateTime DESC,SerialNum ASC [fhend]
+	</select>
+	
+	<select id="getWoklistPage" parameterType="page" resultType="pd">
+		SELECT 
+			workOrder.WorkOrderNum,
+			isnull(example.WokNum, 0) WokNum,
+			example.WPNum,isnull(example.WPName, '无工序名称') WPName,
+			example.ProcessIMaterielID,
+			isnull(mat.MAT_CODE, '无编码') MAT_CODE,isnull(mat.MAT_NAME, '无名称') MAT_NAME,
+			isnull(unit.FNAME,'无单位名称') UNIT_NAME,
+			isnull(ioexample.PlannedQuantity, 0) PlannedQuantity,
+			isnull(example.Throughput,0) Throughput,
+			isnull(example.WeighingDoneIF,'否') WeighingDoneIF,
+			example.EQM_BASE_ID,isnull(eqm.FIDENTIFY,'无设备标识') eqmCode,isnull(eqm.FNAME,'无设备名称') eqmName, 
+			example.ProcessWorkOrderExample_ID 
+		FROM PP_ProcessWorkOrderExample example 
+		LEFT JOIN PP_PlanningWorkOrder workOrder ON example.PlanningWorkOrderID=workOrder.PlanningWorkOrder_ID 
+		LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID=example.ProcessIMaterielID 
+		LEFT JOIN MBASE_UNIT_INFO unit ON mat.MAT_MAIN_UNIT=unit.UNIT_INFO_ID 
+		LEFT JOIN PP_WorkorderProcessIOExample ioexample ON example.ProcessWorkOrderExample_ID=ioexample.ProcessWorkOrderExampleID 
+		LEFT JOIN MDM_EQM_BASE eqm ON example.EQM_BASE_ID = eqm.EQM_BASE_ID 
+		WHERE 1=1  
+		AND ioexample.TType='产出' 
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			AND
+			(
+				workOrder.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				 or 
+				wp.FName LIKE '%'+ #{pd.KEYWORDS}+'%' 
+			)
+		</if>	
+		<if test="pd.PlanningWorkOrderID != null and pd.PlanningWorkOrderID != ''">
+			AND workOrder.PlanningWorkOrder_ID = #{pd.PlanningWorkOrderID}
+		</if>
+		[fhstart] order by WPName ,WokNum  [fhend]
+	</select>
+	
+	<!-- 列表 -->
+	<select id="listSClistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		left join
+		PP_PlanningWorkOrder pwo
+		on pwo.PlanningWorkOrder_ID =
+		f.PlanningWorkOrderID
+		where 1=1
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND f.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.PlanningWorkOrderID != null and pd.PlanningWorkOrderID != ''">
+			AND f.PlanningWorkOrderID = #{pd.PlanningWorkOrderID}
+		</if>
+		<if test="pd.BatchNum != null and pd.BatchNum != ''">
+			AND f.BatchNum = #{pd.BatchNum}
+		</if>
+		<if test="pd.ProcessIMateriel != null and pd.ProcessIMateriel != ''">
+			AND f.ProcessIMateriel = #{pd.ProcessIMateriel}
+		</if>
+		<if
+			test="pd.ProcessIMaterielCode != null and pd.ProcessIMaterielCode != ''">
+			AND f.ProcessIMaterielCode = #{pd.ProcessIMaterielCode}
+		</if>
+		<if test="pd.WP != null and pd.WP != ''">
+			AND f.WP = #{pd.WP}
+		</if>
+		<if test="pd.FStation != null and pd.FStation != ''">
+			AND f.FStation = #{pd.FStation}
+		</if>
+		<if test="pd.ExecutorID != null and pd.ExecutorID != ''">
+			AND f.ExecutorID = #{pd.ExecutorID}
+		</if>
+		<if test="pd.TaskType != null and pd.TaskType != ''">
+			AND f.TaskType = #{pd.TaskType}
+		</if>
+		<if test="pd.TaskNum != null and pd.TaskNum != ''">
+			AND f.TaskNum = #{pd.TaskNum}
+		</if>
+		<if
+			test="pd.PlannedBeginTimeBegin != null and pd.PlannedBeginTimeBegin != '' 
+		and pd.PlannedBeginTimeEnd != null and pd.PlannedBeginTimeEnd !=''">
+			AND f.PlannedBeginTime &gt;= #{pd.PlannedBeginTimeBegin}
+			AND
+			f.PlannedBeginTime &lt;= #{pd.PlannedBeginTimeEnd}
+		</if>
+		<if
+			test="pd.PlannedEndTimeBegin != null and pd.PlannedEndTimeBegin != '' 
+		and pd.PlannedEndTimeEnd != null and pd.PlannedEndTimeEnd !=''">
+			AND f.PlannedEndTime &gt;= #{pd.PlannedEndTimeBegin}
+			AND
+			f.PlannedEndTime &lt;= #{pd.PlannedEndTimeEnd}
+		</if>
+
+		<if test="pd.FStatus != null and pd.FStatus != ''">
+			AND f.FStatus in ( #{pd.FStatus} )
+		</if>
+		<if
+			test="pd.ActualBeginTimeBegin != null and pd.ActualBeginTimeBegin != ''
+		and pd.ActualBeginTimeEnd != null and pd.ActualBeginTimeEnd != ''">
+			AND f.ActualBeginTime &gt;= #{pd.ActualBeginTimeBegin}
+			AND
+			f.ActualBeginTime &lt;= #{pd.ActualBeginTimeEnd}
+		</if>
+		<if
+			test="pd.ActualEndTimeBegin != null and pd.ActualEndTimeBegin != ''
+		and pd.ActualEndTimeEnd != null and pd.ActualEndTimeEnd != ''">
+			AND f.ActualEndTime &gt;= #{pd.ActualEndTimeBegin}
+			AND
+			f.ActualEndTime &lt;= #{pd.ActualEndTimeEnd}
+		</if>
+		<if test="pd.FPriorityID != null and pd.FPriorityID != ''">
+			AND pwo.FPriorityID = #{pd.FPriorityID}
+		</if>
+		<if
+			test="pd.DistributionProgress != null and pd.DistributionProgress != ''">
+			AND pwo.DistributionProgress in (#{pd.DistributionProgress})
+		</if>
+			<choose>
+						<when
+							test="pd.FTYPE != null and pd.FTYPE == '返修'">
+							AND f.ProcessWorkOrderExample_ID IN 
+							(
+							select distinct gy1.ProcessWorkOrderExample_ID from PP_ProcessWorkOrderExample gy1 
+							inner join PP_PlanningWorkOrder gy2 on gy1.PlanningWorkOrderID=gy2.PlanningWorkOrder_ID
+							where TaskType=2 and gy2.FStatus!='结束'
+							)
+						</when>
+						
+						<otherwise>
+						and 1=1 
+						</otherwise>
+					</choose>	
+		[fhstart] order by TaskNum [fhend]
+	</select>
+	<!-- 通过工序名获取数据 -->
+	<select id="findByWP" parameterType="pd" resultType="pd">
+		select
+		soptmp.FName as SOPName,
+		<include refid="Field"></include>,f3.USER_ID FSC_NO,f3.NAME FSC_NAME,
+		f2.WorkOrderNum
+		from
+		<include refid="tableName"></include>
+		f
+		left join KM_SopSchemeTemplate soptmp on soptmp.SopSchemeTemplate_ID = f.SOP_ID
+		left join PP_PlanningWorkOrder f2 on f.PlanningWorkOrderID=f2.PlanningWorkOrder_ID
+		left join OA_STAFF f3 on f2.ProductionSupervisorID=f3.STAFF_ID
+		where f.WPName=#{WPName} and ProcessIMaterielCode=#{ProcessIMaterielCode}
+		
+		
+		
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

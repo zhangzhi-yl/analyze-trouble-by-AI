@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdmc.EQM_MAINTENANCE_SECOND_CARDMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDMC_EQM_MAINTENANCE_SECOND_CARD
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.EQM_MAINTENANCE_PLAN_MONTH_ID,	
+		f.FEQM_ID,	
+		f.FCLASS_ID,	
+		f.EQM_MAINTENANCE_ITEM_MAIN_ID,	
+		f.SINGLE_NUMBER,	
+		f.TIME,	
+		f.MACHINE_NAME,	
+		f.MACHINE_NUMBER,	
+		f.SECONDARY_MAINTAINER,	
+		f.MONITER,	
+		f.REMARK,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.LAST_MODIFIER,	
+		f.LAST_MODIFIED_TIME,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.EQM_MAINTENANCE_SECOND_CARD_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		EQM_MAINTENANCE_PLAN_MONTH_ID,	
+		FEQM_ID,	
+		FCLASS_ID,	
+		EQM_MAINTENANCE_ITEM_MAIN_ID,	
+		SINGLE_NUMBER,	
+		TIME,	
+		MACHINE_NAME,	
+		MACHINE_NUMBER,	
+		SECONDARY_MAINTAINER,	
+		MONITER,	
+		REMARK,	
+		FCREATOR,	
+		CREATE_TIME,	
+		LAST_MODIFIER,	
+		LAST_MODIFIED_TIME,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		EQM_MAINTENANCE_SECOND_CARD_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{EQM_MAINTENANCE_PLAN_MONTH_ID},	
+		#{FEQM_ID},	
+		#{FCLASS_ID},	
+		#{EQM_MAINTENANCE_ITEM_MAIN_ID},	
+		#{SINGLE_NUMBER},	
+		#{TIME},	
+		#{MACHINE_NAME},	
+		#{MACHINE_NUMBER},	
+		#{SECONDARY_MAINTAINER},	
+		#{MONITER},	
+		#{REMARK},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{LAST_MODIFIER},	
+		#{LAST_MODIFIED_TIME},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{EQM_MAINTENANCE_SECOND_CARD_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_MAINTENANCE_SECOND_CARD_ID = #{EQM_MAINTENANCE_SECOND_CARD_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			SECONDARY_MAINTAINER = #{SECONDARY_MAINTAINER},
+			MONITER = #{MONITER},
+			LAST_MODIFIER= #{LAST_MODIFIER},	
+			LAST_MODIFIED_TIME= #{LAST_MODIFIED_TIME},
+			REMARK = #{REMARK}
+		where 
+			EQM_MAINTENANCE_SECOND_CARD_ID = #{EQM_MAINTENANCE_SECOND_CARD_ID}
+	</update>
+	<!-- 修改 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FEXTEND1 = '已完成'
+		where 
+			EQM_MAINTENANCE_SECOND_CARD_ID = #{EQM_MAINTENANCE_SECOND_CARD_ID}
+	</update>
+	
+	<!-- 修改状态： 未完成、审批中、审核完成、已完成 -->
+	<update id="editState1" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FEXTEND1 = #{FEXTEND1}
+		where 
+			EQM_MAINTENANCE_SECOND_CARD_ID = #{EQM_MAINTENANCE_SECOND_CARD_ID}
+	</update>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.EQM_MAINTENANCE_SECOND_CARD_ID = #{EQM_MAINTENANCE_SECOND_CARD_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and f.EQM_MAINTENANCE_PLAN_MONTH_ID=#{pd.EQM_MAINTENANCE_PLAN_MONTH_ID} and f.TIME=#{pd.TIME}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FEXTEND1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.SECONDARY_MAINTAINER LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.MONITER LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		[fhstart] order by FEXTEND1 [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and f.EQM_MAINTENANCE_PLAN_MONTH_ID=#{EQM_MAINTENANCE_PLAN_MONTH_ID} and f.TIME=#{TIME}
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_MAINTENANCE_SECOND_CARD_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

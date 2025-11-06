@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.FEEDBACKMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PMS_FEEDBACK
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FPROJECT_ID,	
+		f.FCABINENT_ID,	
+		f.FTYPE,	
+		f.FDESCRIBE,	
+		f.FRECEIVEMAN,	
+		f.FBACK,	
+		f.FCREATOR,	
+		f.FCTIME,	
+		f.FBATCH,	
+		f.FEEDBACK_ID,
+		f.FRELATED_ID,
+		f.AccessURL,
+		f.DNAME
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FPROJECT_ID,	
+		FCABINENT_ID,	
+		FTYPE,	
+		FDESCRIBE,	
+		FRECEIVEMAN,	
+		FBACK,	
+		FCREATOR,	
+		FCTIME,	
+		FBATCH,	
+		FEEDBACK_ID,
+		FRELATED_ID,
+		AccessURL,
+		DNAME
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FPROJECT_ID},	
+		#{FCABINENT_ID},	
+		#{FTYPE},	
+		#{FDESCRIBE},	
+		#{FRECEIVEMAN},	
+		#{FBACK},	
+		#{FCREATOR},	
+		#{FCTIME},	
+		#{FBATCH},	
+		#{FEEDBACK_ID},
+		#{FRELATED_ID},
+		#{AccessURL},
+		#{DNAME}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			FEEDBACK_ID = #{FEEDBACK_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FPROJECT_ID = #{FPROJECT_ID},
+			FCABINENT_ID = #{FCABINENT_ID},
+			FTYPE = #{FTYPE},
+			FDESCRIBE = #{FDESCRIBE},
+			FRECEIVEMAN = #{FRECEIVEMAN},
+			FBACK = #{FBACK},
+			FCREATOR = #{FCREATOR},
+			FCTIME = #{FCTIME},
+			FBATCH = #{FBATCH},
+			FRELATED_ID=#{FRELATED_ID},
+			AccessURL=#{AccessURL},
+			DNAME=#{DNAME},
+			FEEDBACK_ID = FEEDBACK_ID
+		where 
+			FEEDBACK_ID = #{FEEDBACK_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,staff.NAME FRECEIVEMAN_NAME,
+		isnull(PPROJECT_NAME,'') PPROJECT_NAME,isnull(PPROJECT_CODE,'') PPROJECT_CODE,
+		isnull(f2.Cabinet_Aliases,'') Cabinet_Aliases,isnull(f2.Cabinet_No,'') Cabinet_No
+		from 
+		<include refid="tableName"></include> f
+		left join DT_PROJECT f1 on f.FPROJECT_ID=f1.PROJECT_ID
+		left join PMS_Cabinet_Assembly_Detail f2 on f.FCABINENT_ID=f2.Cabinet_Assembly_Detail_ID
+		left join oa_staff staff on staff.USER_ID = f.FRECEIVEMAN
+		where 
+			f.FEEDBACK_ID = #{FEEDBACK_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,staff.NAME FRECEIVEMAN_NAME,
+		isnull(PPROJECT_NAME,'') PPROJECT_NAME,isnull(PPROJECT_CODE,'') PPROJECT_CODE,
+		isnull(f2.Cabinet_Aliases,'') Cabinet_Aliases,isnull(f2.Cabinet_No,'') Cabinet_No
+		from 
+		<include refid="tableName"></include> f
+		left join DT_PROJECT f1 on f.FPROJECT_ID=f1.PROJECT_ID
+		left join PMS_Cabinet_Assembly_Detail f2 on f.FCABINENT_ID=f2.Cabinet_Assembly_Detail_ID
+		left join oa_staff staff on staff.USER_ID = f.FRECEIVEMAN
+		
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					Cabinet_Aliases LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					FBATCH LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					FCREATOR LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.KEYWORDS_FTYPE != null and pd.KEYWORDS_FTYPE != ''">
+			and f.FTYPE = #{pd.KEYWORDS_FTYPE}
+		</if>
+		<if test="pd.FRELATED_ID != null and pd.FRELATED_ID != ''">
+			and f.FRELATED_ID = #{pd.FRELATED_ID}
+		</if>
+		<if test="pd.FRELATED_ID == null || pd.FRELATED_ID == ''">
+			and staff.NAME=#{pd.FCREATOR}
+		</if>
+		
+		[fhstart] order by FCTIME desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			FEEDBACK_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- v1 管悦 2021-07-09 获取描述信息 -->
+	<select id="getMsg" parameterType="pd" resultType="pd">
+	<choose>
+	<when test="FTYPE=='生产'">
+	select staff.NAME 'FZJS_NAME',staff.USER_ID 'FZJS_USERNAME',
+f1.Cabinet_No,f2.PPROJECT_CODE,f2.PPROJECT_NAME,f2.PPROJECT_MANAGER 'XNJIL_NAME' ,
+staff1.USER_ID 'XNJIL_USERNAME','项目：'+isnull(f2.PPROJECT_NAME,'无名称')+'('+isnull(f2.PPROJECT_CODE,'无编号')+')'+
+'；柜体：'+isnull(f1.Cabinet_Aliases,'别名')+'('+isnull(f1.Cabinet_No,'无编号')+')'+
+'；项目经理：'+isnull(f2.PPROJECT_MANAGER,'无名称')+
+'；负责技术：'+isnull(staff.NAME,'无名称') FDESCRIBE,
+f1.PROJECT_ID,f1.Cabinet_Assembly_Detail_ID,
+staff.USER_ID+','+staff.USER_ID FRECEIVEMANS
+from 
+PP_PlanningWorkOrder f
+left join 
+PMS_Cabinet_Assembly_Detail f1 
+on f.WorkOrderNum=f1.Cabinet_No
+left join DT_PROJECT f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+left join oa_staff staff on staff.STAFF_ID = f1.Responsible_Technology
+left join oa_staff staff1 on staff1.NAME = f2.PPROJECT_MANAGER
+where PlanningWorkOrder_ID=#{PlanningWorkOrder_ID}
+	</when>
+	<when test="FTYPE=='采购'">
+	select *,
+'项目：'+isnull(PPROJECT_NAME,'无名称')+'('+isnull(PPROJECT_CODE,'无编号')+')'+
+'；物料：'+isnull(MAT_NAME,'无名称')+'('+isnull(MAT_CODE,'无编号')+')'+
+'；项目经理：'+isnull(XNJIL_NAME,'无名称')+
+'；负责技术：'+isnull(FZJSNAMES,'无名称') FDESCRIBE,
+XNJIL_USERNAME+','+FZJSUSERNAMES FRECEIVEMANS
+ from(
+select  f2.MAT_AUXILIARYMX_CODE,f3.MAT_CODE,f3.MAT_NAME,
+f4.PROJECT_ID,f4.PPROJECT_MANAGER 'XNJIL_NAME' ,
+staff1.USER_ID 'XNJIL_USERNAME',f4.PPROJECT_CODE,f4.PPROJECT_NAME,
+isnull(
+STUFF(
+(SELECT ',' +FHTNAME
+FROM 
+(select  staff.NAME FHTNAME
+from PMS_Cabinet_Assembly_Detail  a
+left join oa_staff staff on staff.STAFF_ID = a.Responsible_Technology
+where 1=1 
+and a.PROJECT_ID=f4.PROJECT_ID 
+group by staff.NAME
+) tt
+FOR xml path('')
+),1,1,''
+),'') FZJSNAMES,
+isnull(
+STUFF(
+(SELECT ',' +FHTNAME
+FROM 
+(select  staff.USER_ID  FHTNAME
+from PMS_Cabinet_Assembly_Detail  a
+left join oa_staff staff on staff.STAFF_ID = a.Responsible_Technology
+where 1=1 
+and a.PROJECT_ID=f4.PROJECT_ID 
+group by staff.USER_ID 
+) tt
+FOR xml path('')
+),1,1,''
+),'') FZJSUSERNAMES
+ from 
+PP_PurchaseMaterialDetails f1
+left join MBASE_MAT_AUXILIARYMX  f2
+on f1.SPropKey=f2.MAT_AUXILIARYMX_ID
+left join MBASE_MAT_BASIC  f3
+on f1.MaterialID=f3.MAT_BASIC_ID
+left join DT_PROJECT f4
+on f2.MAT_AUXILIARYMX_CODE=f4.PPROJECT_CODE
+left join oa_staff staff1 on staff1.NAME = f4.PPROJECT_MANAGER
+where PurchaseMaterialDetails_ID=#{PurchaseMaterialDetails_ID}
+) gy
+	</when>
+	</choose>
+
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

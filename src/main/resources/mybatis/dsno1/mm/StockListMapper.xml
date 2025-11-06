@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.StockListMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_StockList
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.DocumentNo,	
+		f.DocumentTypeBlueRed,	
+		f.DocumentTypeInOut,	
+		f.FCustomer,	
+		f.FConsignee,	
+		f.ShippingAddress,	
+		f.DeliveredBy,	
+		f.DeliveryDate,	
+		f.PlaceOfDelivery,	
+		f.FCreator,	
+		f.FMakeBillsTime,	
+		f.AuditMark,	
+		f.FReviewer,	
+		f.AuditTime,	
+		f.StockList_ID,
+		f.SupplierID,
+		f.FStatus
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		DocumentNo,	
+		DocumentTypeBlueRed,	
+		DocumentTypeInOut,	
+		FCustomer,	
+		FConsignee,	
+		ShippingAddress,	
+		DeliveredBy,	
+		DeliveryDate,	
+		PlaceOfDelivery,	
+		FCreator,	
+		FMakeBillsTime,	
+		AuditMark,	
+		FReviewer,	
+		AuditTime,	
+		StockList_ID,
+		SupplierID,
+		FStatus
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{DocumentNo},	
+		#{DocumentTypeBlueRed},	
+		#{DocumentTypeInOut},	
+		#{FCustomer},	
+		#{FConsignee},	
+		#{ShippingAddress},	
+		#{DeliveredBy},	
+		#{DeliveryDate},	
+		#{PlaceOfDelivery},	
+		#{FCreator},	
+		#{FMakeBillsTime},	
+		#{AuditMark},	
+		#{FReviewer},	
+		#{AuditTime},	
+		#{StockList_ID},
+		#{SupplierID},
+		#{FStatus}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			StockList_ID = #{StockList_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			DocumentNo = #{DocumentNo},
+			DocumentTypeBlueRed = #{DocumentTypeBlueRed},
+			DocumentTypeInOut = #{DocumentTypeInOut},
+			FCustomer = #{FCustomer},
+			FConsignee = #{FConsignee},
+			ShippingAddress = #{ShippingAddress},
+			DeliveredBy = #{DeliveredBy},
+			DeliveryDate = #{DeliveryDate},
+			PlaceOfDelivery = #{PlaceOfDelivery},
+			SupplierID = #{SupplierID},
+			FStatus = #{FStatus}
+		where 
+			StockList_ID = #{StockList_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,
+		isnull(f1.FName,'无名称')  +'|'+isnull(f1.FNum,'无编号')  FCustomerJoint,
+		isnull(f1.FName,'无名称') CustomerName, isnull(f1.FNum,'无编号') CustomerNum,
+		isnull(f2.NAME,'') FCreatorName, isnull(f3.NAME,'') FReviewerName,
+		isnull(f4.FNum,'无编号') SupplierNum, isnull(f4.FName,'无名称') SupplierName,
+		isnull(f4.FName,'无名称')  +'|'+isnull(f4.FNum,'无编号')  SupplierJoint 
+		from 
+		<include refid="tableName"></include> f 
+		left join KM_Customer f1 on f.FCustomer=f1.Customer_ID
+		left join OA_STAFF f2 on f.FCreator=f2.STAFF_ID
+		left join OA_STAFF f3 on f.FReviewer=f3.STAFF_ID
+		left join KM_Supplier f4 on f.SupplierID=f4.Supplier_ID
+		where 
+			f.StockList_ID = #{StockList_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		isnull(f1.FName,'无名称')  +'/'+isnull(f1.FNum,'无编号')  FCustomerJoint,
+		f2.NAME FCreatorName,
+		f3.NAME FReviewerName
+		from 
+		<include refid="tableName"></include> f
+		left join KM_Customer f1
+		on f.FCustomer=f1.Customer_ID
+		left join OA_STAFF f2
+		on f.FCreator=f2.STAFF_ID
+		left join OA_STAFF f3
+		on f.FReviewer=f3.STAFF_ID
+		
+		where 1=1
+		and f.DocumentTypeInOut=#{pd.DocumentTypeInOut}
+		<if test="pd.KEYWORDS_DocumentNo != null and pd.KEYWORDS_DocumentNo != ''">
+			and f.DocumentNo LIKE '%'+ #{pd.KEYWORDS_DocumentNo}+'%'
+		</if>
+		<if test="pd.KEYWORDS_AuditMark != null and pd.KEYWORDS_AuditMark != ''">
+			and f.AuditMark = #{pd.KEYWORDS_AuditMark}
+		</if>
+		<if test="pd.KEYWORDS_FCreator != null and pd.KEYWORDS_FCreator != ''">
+			and f.FCreator = #{pd.KEYWORDS_FCreator}
+		</if>
+		[fhstart] order by FMakeBillsTime desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where f.DocumentTypeInOut=#{pd.DocumentTypeInOut}
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			StockList_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 出入库单号验重 -->
+	<select id="getRepeatNum" parameterType="pd" resultType="pd">
+		select
+		isnull(count(*),0) RepeatNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and DocumentNo=#{DocumentNo}
+		and DocumentTypeInOut=#{DocumentTypeInOut}
+		<if test="StockList_ID != null and StockList_ID != ''">
+			and f.StockList_ID != #{StockList_ID}
+		</if>
+	</select>
+	
+	<!-- 审核或反审核销售订单 -->
+	<update id="editAudit" parameterType="pd">
+		<choose>
+           <when test="AuditMark != null and AuditMark == 'Y'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				AuditTime = #{AuditTime},
+				FReviewer = #{FReviewer},
+				AuditMark = #{AuditMark}
+				where 
+				StockList_ID = #{StockList_ID}
+           </when>
+           <when test="AuditMark != null and AuditMark == 'N'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				AuditTime = '',
+				FReviewer = '',
+				AuditMark = #{AuditMark}
+				where 
+				StockList_ID = #{StockList_ID}
+           </when>
+           <otherwise>
+           </otherwise>
+         </choose>
+		
+	</update>
+	
+	<!-- 获取编号列表-可搜索-前100条-->
+	<select id="getDocumentNoList" parameterType="pd" resultType="pd">
+		select
+		top 100 DocumentNo
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="DocumentTypeBlueRed != null and DocumentTypeBlueRed != ''">
+			and 
+			(
+			DocumentTypeBlueRed =#{DocumentTypeBlueRed}
+			
+			)	
+		</if>
+		<if test="DocumentTypeInOut != null and DocumentTypeInOut != ''">
+			and 
+			(
+			DocumentTypeInOut =#{DocumentTypeInOut}
+			
+			)	
+		</if>
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			DocumentNo LIKE '%'+ #{KEYWORDS}+'%'
+			
+			)	
+		</if>
+		 order by f.DocumentNo 
+	</select>
+	
+	<!-- 入厂记录列表 -->
+	<select id="listInRecordlistPage" parameterType="page" resultType="pd">
+	select f1.*,
+	isnull(f3.FName,'无名称')  +'/'+isnull(f3.FNum,'无编号')  FCustomerJoint,
+	f4.NAME FCreatorName,
+	f5.NAME FReviewerName,
+	case when 
+	f2.FCode is null or f2.FCode='' then '' 
+	else isnull(f6.MAT_CODE,'无编号')+'/'+isnull(f6.MAT_NAME,'无名称')  end FMatJoint,
+	case when 
+	f2.PositionID is null or f2.PositionID='' then '' 
+	else isnull(f8.FNAME,'无名称')+'/'+isnull(f8.FCODE,'无编号')  end FLOCATIONJoint,
+	case when 
+	f2.WarehouseID is null or f2.WarehouseID='' then '' 
+	else isnull(f7.FNAME,'无名称')+'/'+isnull(f7.FCODE,'无编号')  end FWAREHOUSEJoint,
+	isnull(f7.FNAME,'无名称')+'/'+isnull(f7.FCODE,'无编号')+'-'+isnull(f8.FNAME,'无名称')+'/'+isnull(f8.FCODE,'无编号')   FSelectOptionAll,
+	f9.MAT_AUXILIARYMX_NAME,f9.MAT_AUXILIARYMX_CODE,
+	f10.FNAME FUnitName,
+	f2.RowNum,	
+	f2.DataSources,	
+	f2.SourceOrderNum,	
+	f2.SourceRowNum,	
+	f2.LineCloseIf,	
+	f2.QRCodeInformation,	
+	f2.FItem,	
+	f2.MaterialBatchNumber,	
+	f2.FCode,	
+	f2.MaterialQuantity,	
+	f2.MaterialSProp,	
+	f2.MaterialSPropKey,	
+	f2.WarehouseID,	
+	f2.PositionID,	
+	f2.SubordinateInventory,	
+	f2.QualificationInspection,	
+	f2.TareWeightOfMaterial,	
+	f2.NetWeightOfMaterial,	
+	f2.UnitPrice,	
+	f2.FUnit,	
+	f2.FCost,	
+	f2.FExplanation1,	
+	f2.FExplanation2,	
+	f2.FExplanation3,	
+	f2.StockListDetail_ID 
+	from MM_StockList f1
+	inner join MM_StockListDetail f2 on f1.StockList_ID=f2.StockList_ID
+	left join KM_Customer f3 on f1.FCustomer=f3.Customer_ID
+	left join OA_STAFF f4 on f1.FCreator=f4.STAFF_ID
+	left join OA_STAFF f5 on f1.FReviewer=f5.STAFF_ID
+	left join MBASE_MAT_BASIC f6 on f6.MAT_BASIC_ID=f2.FCode
+	left join MWMS_WH_WAREHOUSE f7 on f7.WH_WAREHOUSE_ID=f2.WarehouseID
+	left join MWMS_WH_LOCATION f8 on f8.WH_LOCATION_ID=f2.PositionID
+	left join MBASE_MAT_AUXILIARYMX f9 on f9.MAT_AUXILIARYMX_ID=f2.MaterialSPropKey
+	left join MBASE_UNIT_INFO f10 on f6.MAT_MAIN_UNIT=f10.UNIT_INFO_ID
+	where 1=1
+	and DocumentTypeInOut=#{pd.DocumentTypeInOut}
+	and LineCloseIf='N'
+	<if test="pd.KEYWORDS_QRCodeInformation != null and pd.KEYWORDS_QRCodeInformation != ''">
+		and f2.QRCodeInformation LIKE '%'+ #{pd.KEYWORDS_QRCodeInformation}+'%'
+	</if>
+	<if test="pd.KEYWORDS_WarehouseID != null and pd.KEYWORDS_WarehouseID != ''">
+		and f2.WarehouseID= #{pd.KEYWORDS_WarehouseID}
+	</if>
+	<if test="pd.KEYWORDS_PositionID != null and pd.KEYWORDS_PositionID != ''">
+		and f2.PositionID= #{pd.KEYWORDS_PositionID}
+	</if>
+	<if test="pd.KEYWORDS_Material != null and pd.KEYWORDS_Material != ''">
+		and f2.FCode = #{pd.KEYWORDS_Material}
+	</if>
+	[fhstart] order by f1.DocumentNo,cast(RowNum as int) [fhend]
+	</select>
+<!-- 导出入厂记录到excel -->
+	<select id="exportInRecord" parameterType="pd" resultType="pd">
+select f1.*,
+isnull(f3.FName,'无名称')  +'/'+isnull(f3.FNum,'无编号')  FCustomerJoint,
+f4.NAME FCreatorName,
+f5.NAME FReviewerName,
+isnull(f6.MAT_CODE,'无编号')+'/'+isnull(f6.MAT_NAME,'无名称') FMatJoint,
+isnull(f7.FNAME,'无名称')+'/'+isnull(f7.FCODE,'无编号')  FWAREHOUSEJoint,
+isnull(f8.FNAME,'无名称')+'/'+isnull(f8.FCODE,'无编号')  FLOCATIONJoint,
+isnull(f7.FNAME,'无名称')+'/'+isnull(f7.FCODE,'无编号')+'-'+isnull(f8.FNAME,'无名称')+'/'+isnull(f8.FCODE,'无编号')   FSelectOptionAll,
+
+f9.MAT_AUXILIARYMX_NAME,f9.MAT_AUXILIARYMX_CODE,
+f10.FNAME FUnitName,
+f2.RowNum,	
+f2.DataSources,	
+f2.SourceOrderNum,	
+f2.SourceRowNum,	
+f2.LineCloseIf,	
+f2.QRCodeInformation,	
+f2.FItem,	
+f2.MaterialBatchNumber,	
+f2.FCode,	
+f2.MaterialQuantity,	
+f2.MaterialSProp,	
+f2.MaterialSPropKey,	
+f2.WarehouseID,	
+f2.PositionID,	
+f2.SubordinateInventory,	
+f2.QualificationInspection,	
+f2.TareWeightOfMaterial,	
+f2.NetWeightOfMaterial,	
+f2.UnitPrice,	
+f2.FUnit,	
+f2.FCost,	
+f2.FExplanation1,	
+f2.FExplanation2,	
+f2.FExplanation3,	
+f2.StockListDetail_ID 
+from MM_StockList f1
+inner join MM_StockListDetail f2
+on f1.StockList_ID=f2.StockList_ID
+left join KM_Customer f3
+on f1.FCustomer=f3.Customer_ID
+left join OA_STAFF f4
+on f1.FCreator=f4.STAFF_ID
+left join OA_STAFF f5
+on f1.FReviewer=f5.STAFF_ID
+left join MBASE_MAT_BASIC f6
+on f6.MAT_BASIC_ID=f2.FCode
+left join MWMS_WH_WAREHOUSE f7
+on f7.WH_WAREHOUSE_ID=f2.WarehouseID
+left join MWMS_WH_LOCATION f8
+on f8.WH_LOCATION_ID=f2.PositionID
+left join MBASE_MAT_AUXILIARYMX f9
+on f9.MAT_AUXILIARYMX_ID=f2.MaterialSPropKey
+left join MBASE_UNIT_INFO f10
+on f6.MAT_MAIN_UNIT=f10.UNIT_INFO_ID
+where 1=1
+and DocumentTypeInOut=#{DocumentTypeInOut}
+and LineCloseIf='N'
+<if test="KEYWORDS_QRCodeInformation != null and KEYWORDS_QRCodeInformation != ''">
+	and f2.QRCodeInformation LIKE '%'+ #{KEYWORDS_QRCodeInformation}+'%'
+</if>
+<if test="KEYWORDS_PositionID != null and KEYWORDS_PositionID != ''">
+	and f2.PositionID= #{KEYWORDS_PositionID}
+</if>
+<if test="KEYWORDS_Material != null and KEYWORDS_Material != ''">
+	and f2.FCode = #{KEYWORDS_Material}
+</if>
+<if test="KEYWORDS_WarehouseID != null and KEYWORDS_WarehouseID != ''">
+	and f2.WarehouseID= #{KEYWORDS_WarehouseID}
+</if>
+ order by f1.DocumentNo,cast(RowNum as int) 
+	</select>
+	
+	<!-- app入库单列表 -->
+	<select id="appListIn" 
+		parameterType="org.yy.controller.app.AppPage"
+		resultType="pd">
+		select
+		<include refid="Field"></include>,
+		isnull(f1.FNum,'无编号')+'|'+ isnull(f1.FName,'无名称') FCustomerJoint,
+		isnull(f2.NAME,'') FCreatorName,
+		isnull(f3.NAME,'') FReviewerName,
+		isnull(f4.FNum,'无编号')+'|'+ isnull(f4.FName,'无名称') FSupplierJoint 
+		from 
+		<include refid="tableName"></include> f 
+		left join KM_Customer f1 on f.FCustomer=f1.Customer_ID
+		left join OA_STAFF f2 on f.FCreator=f2.STAFF_ID
+		left join OA_STAFF f3 on f.FReviewer=f3.STAFF_ID
+		left join KM_Supplier f4 on f.SupplierID=f4.Supplier_ID
+		where f.DocumentTypeInOut=#{pd.DocumentTypeInOut}
+		<if test="pd.KEYWORDS_DocumentNo != null and pd.KEYWORDS_DocumentNo != ''">
+			and f.DocumentNo LIKE '%'+ #{pd.KEYWORDS_DocumentNo}+'%'
+		</if>
+		<if test="pd.KEYWORDS_AuditMark != null and pd.KEYWORDS_AuditMark != ''">
+			and f.AuditMark = #{pd.KEYWORDS_AuditMark}
+		</if>
+		<if test="pd.KEYWORDS_FCreator != null and pd.KEYWORDS_FCreator != ''">
+			and f2.NAME LIKE '%'+ #{pd.KEYWORDS_FCreator}+'%'
+		</if>
+		<if test="pd.lastStart != null and pd.lastStart != ''"><!-- 开始时间检索 -->
+			and f.FMakeBillsTime &gt;= #{pd.lastStart} 
+		</if>
+		<if test="pd.lastEnd != null and pd.lastEnd != ''"><!-- 结束时间检索 -->
+			and f.FMakeBillsTime &lt;= #{pd.lastEnd} 
+		</if>
+		<if test="pd.FStatus != null and pd.FStatus != ''"><!-- 扫码状态，已完成、执行中、未开始 -->
+			and f.FStatus = #{pd.FStatus} 
+		</if>
+	</select>
+	
+	<!-- 出入厂记录列表 -->
+	<select id="listInOutRecordlistPage" parameterType="page" resultType="pd">
+	select f1.*,
+	isnull(f3.FName,'无名称')  +'/'+isnull(f3.FNum,'无编号')  FCustomerJoint,
+	f4.NAME FCreatorName,
+	f5.NAME FReviewerName,
+	case when 
+	f2.FCode is null or f2.FCode='' then '' 
+	else isnull(f6.MAT_CODE,'无编号')+'/'+isnull(f6.MAT_NAME,'无名称')  end FMatJoint,
+	case when 
+	f2.PositionID is null or f2.PositionID='' then '' 
+	else isnull(f8.FNAME,'无名称')+'/'+isnull(f8.FCODE,'无编号')  end FLOCATIONJoint,
+	case when 
+	f2.WarehouseID is null or f2.WarehouseID='' then '' 
+	else isnull(f7.FNAME,'无名称')+'/'+isnull(f7.FCODE,'无编号')  end FWAREHOUSEJoint,
+	isnull(f7.FNAME,'无名称')+'/'+isnull(f7.FCODE,'无编号')+'-'+isnull(f8.FNAME,'无名称')+'/'+isnull(f8.FCODE,'无编号')   FSelectOptionAll,
+	f9.MAT_AUXILIARYMX_NAME,f9.MAT_AUXILIARYMX_CODE,
+	f10.FNAME FUnitName,
+	f2.RowNum,	
+	f2.DataSources,	
+	f2.SourceOrderNum,	
+	f2.SourceRowNum,	
+	f2.LineCloseIf,	
+	f2.QRCodeInformation,	
+	f2.FItem,	
+	f2.MaterialBatchNumber,	
+	f2.FCode,	
+	f2.MaterialQuantity,	
+	f2.MaterialSProp,	
+	f2.MaterialSPropKey,	
+	f2.WarehouseID,	
+	f2.PositionID,	
+	f2.SubordinateInventory,	
+	f2.QualificationInspection,	
+	f2.TareWeightOfMaterial,	
+	f2.NetWeightOfMaterial,	
+	f2.UnitPrice,	
+	f2.FUnit,	
+	f2.FCost,	
+	f2.FExplanation1,	
+	f2.FExplanation2,	
+	f2.FExplanation3,	
+	f2.StockListDetail_ID 
+	from MM_StockList f1
+	inner join MM_StockListDetail f2 on f1.StockList_ID=f2.StockList_ID
+	left join KM_Customer f3 on f1.FCustomer=f3.Customer_ID
+	left join OA_STAFF f4 on f1.FCreator=f4.STAFF_ID
+	left join OA_STAFF f5 on f1.FReviewer=f5.STAFF_ID
+	left join MBASE_MAT_BASIC f6 on f6.MAT_BASIC_ID=f2.FCode
+	left join MWMS_WH_WAREHOUSE f7 on f7.WH_WAREHOUSE_ID=f2.WarehouseID
+	left join MWMS_WH_LOCATION f8 on f8.WH_LOCATION_ID=f2.PositionID
+	left join MBASE_MAT_AUXILIARYMX f9 on f9.MAT_AUXILIARYMX_ID=f2.MaterialSPropKey
+	left join MBASE_UNIT_INFO f10 on f6.MAT_MAIN_UNIT=f10.UNIT_INFO_ID
+	where 1=1
+	and LineCloseIf='N'
+	<if test="pd.KEYWORDS_DocumentTypeInOut != null and pd.KEYWORDS_DocumentTypeInOut != ''">
+		and DocumentTypeInOut=#{pd.KEYWORDS_DocumentTypeInOut}
+	</if>
+	<if test="pd.KEYWORDS_WarehouseID != null and pd.KEYWORDS_WarehouseID != ''">
+		and f2.WarehouseID= #{pd.KEYWORDS_WarehouseID}
+	</if>
+	<if test="pd.KEYWORDS_PositionID != null and pd.KEYWORDS_PositionID != ''">
+		and f2.PositionID= #{pd.KEYWORDS_PositionID}
+	</if>
+	<if test="pd.KEYWORDS_Material != null and pd.KEYWORDS_Material != ''">
+		and f2.FCode = #{pd.KEYWORDS_Material}
+	</if>
+	<if test="pd.lastStart != null and pd.lastStart != ''"><!-- 开始时间检索 -->
+		and f1.FMakeBillsTime &gt;= #{pd.lastStart} 
+	</if>
+	<if test="pd.lastEnd != null and pd.lastEnd != ''"><!-- 结束时间检索 -->
+		and f1.FMakeBillsTime &lt;= #{pd.lastEnd} 
+	</if>
+	[fhstart] order by f1.FMakeBillsTime desc [fhend]
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

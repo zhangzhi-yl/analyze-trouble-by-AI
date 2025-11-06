@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.ProcessRecordMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PP_ProcessRecord
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.RecordTime,	
+		f.RecordPerson,	
+		f.RecordTerm,	
+		f.RecordDescribe,	
+		f.ProcessWorkOrderExample_ID,	
+		f.FType,	
+		f.BatchNum,	
+		f.ProcessRecord_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		RecordTime,	
+		RecordPerson,	
+		RecordTerm,	
+		RecordDescribe,	
+		ProcessWorkOrderExample_ID,	
+		FType,	
+		BatchNum,	
+		ProcessRecord_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{RecordTime},	
+		#{RecordPerson},	
+		#{RecordTerm},	
+		#{RecordDescribe},	
+		#{ProcessWorkOrderExample_ID},	
+		#{FType},	
+		#{BatchNum},	
+		#{ProcessRecord_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProcessRecord_ID = #{ProcessRecord_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RecordTime = #{RecordTime},
+			RecordPerson = #{RecordPerson},
+			RecordTerm = #{RecordTerm},
+			RecordDescribe = #{RecordDescribe},
+			ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID},
+			FType = #{FType},
+			BatchNum = #{BatchNum},
+			ProcessRecord_ID = ProcessRecord_ID
+		where 
+			ProcessRecord_ID = #{ProcessRecord_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.ProcessRecord_ID = #{ProcessRecord_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		wpde.FName ProcessWorkOrderExample
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN PP_ProcessWorkOrderExample pwoe on pwoe.ProcessWorkOrderExample_ID=f.ProcessWorkOrderExample_ID
+		LEFT JOIN KM_WorkingProcedureExample wpde on pwoe.WorkingProcedureExampleID = wpde.WorkingProcedureExample_ID
+		where 1=1
+		<if test="pd.ProcessWorkOrderExample_ID != null and pd.ProcessWorkOrderExample_ID != ''">
+			and f.ProcessWorkOrderExample_ID = #{pd.ProcessWorkOrderExample_ID}
+		</if>
+		<if test="pd.RecordTerm != null and pd.RecordTerm != ''">
+			and f.RecordTerm = #{pd.RecordTerm}
+		</if>
+		<if test="pd.FType != null and pd.FType != ''">
+			and f.FType  = #{pd.FType}
+		</if>
+	</select>
+	
+	<!-- APP 列表 -->
+	<select id="applist"  parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.ProcessWorkOrderExample_ID != null and pd.ProcessWorkOrderExample_ID != ''">
+			and f.ProcessWorkOrderExample_ID = #{pd.ProcessWorkOrderExample_ID}
+		</if>
+		<if test="pd.RecordTerm != null and pd.RecordTerm != ''">
+			and f.RecordTerm = #{pd.RecordTerm}
+		</if>
+		<if test="pd.FType != null and pd.FType != ''">
+			and f.FType  = #{pd.FType}
+		</if>
+
+	</select>
+	
+	
+	
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProcessRecord_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

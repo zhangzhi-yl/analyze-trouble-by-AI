@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.WC_WorkCenterMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_WC_WORKCENTER
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.WC_WORKCENTER_ID,	
+		f.FCODE,	
+		f.FNAME,	
+		f.FTYPE,
+		f.FIMG,	
+		f.FDES,	
+		f.PLINE_ENTITY_ID,	
+		f.AREA_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		WC_WORKCENTER_ID,	
+		FCODE,	
+		FNAME,	
+		FTYPE,	
+		FIMG,	
+		FDES,	
+		PLINE_ENTITY_ID,	
+		AREA_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WC_WORKCENTER_ID},	
+		#{FCODE},	
+		#{FNAME},	
+		#{FTYPE},	
+		#{FIMG},	
+		#{FDES},	
+		#{PLINE_ENTITY_ID},	
+		#{AREA_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WC_WORKCENTER_ID = #{WC_WORKCENTER_ID}
+	</delete>
+	
+	<!-- 删除图片 -->
+	<update id="delTp" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FIMG = ''
+		where 
+			WC_WORKCENTER_ID = #{WC_WORKCENTER_ID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FTYPE = #{FTYPE},
+			FIMG = #{FIMG},
+			FDES = #{FDES},	
+			PLINE_ENTITY_ID = #{PLINE_ENTITY_ID},	
+			AREA_ID = #{AREA_ID}
+		where 
+			WC_WORKCENTER_ID = #{WC_WORKCENTER_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,
+		area.FNAME AREA_NAME,area.FCODE AREA_CODE,pe.FNAME PLINE_ENTITY_NAME,pe.FCODE PLINE_ENTITY_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_AREA area ON f.AREA_ID=area.AREA_ID 
+		LEFT JOIN MDM_PLINE_ENTITY pe ON f.PLINE_ENTITY_ID=pe.PLINE_ENTITY_ID 
+		where 
+			f.WC_WORKCENTER_ID = #{WC_WORKCENTER_ID}
+	</select>
+	
+	<!-- 通过FCODE获取数据 -->
+	<select id="findByFCODE" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FCODE = #{pd.FCODE}
+	</select>
+	
+	<!-- 根据产线实体ID查询工作中心总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select 
+			count(*) zs 
+		from 
+			<include refid="tableName"></include>
+		where 
+			PLINE_ENTITY_ID  = #{PLINE_ENTITY_ID}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FCODE = #{FCODE} 
+		<if test="WC_WORKCENTER_ID != null and WC_WORKCENTER_ID != ''"><!-- 工作中心id -->
+			and f.WC_WORKCENTER_ID &lt;&gt; #{WC_WORKCENTER_ID}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		area.FNAME AREA_NAME,area.FCODE AREA_CODE,pe.FNAME PLINE_ENTITY_NAME,pe.FCODE PLINE_ENTITY_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_AREA area ON f.AREA_ID=area.AREA_ID 
+		LEFT JOIN MDM_PLINE_ENTITY pe ON f.PLINE_ENTITY_ID=pe.PLINE_ENTITY_ID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FTYPE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FNAME != null and pd.FNAME != ''"><!-- 名称 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.FNAME}+'%' 
+				)
+		</if>
+		<if test="pd.FCODE != null and pd.FCODE != ''"><!-- 代码 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{pd.FCODE}+'%'
+				)
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 类型 -->
+			and
+				(
+					f.FTYPE LIKE '%'+ #{pd.FTYPE}+'%'
+				)
+		</if>
+		<if test="pd.PLINE_ENTITY_ID != null and pd.PLINE_ENTITY_ID != ''"><!-- 产线实体ID -->
+			and
+				(
+					f.PLINE_ENTITY_ID = #{pd.PLINE_ENTITY_ID} 
+				)
+		</if>
+		[fhstart] ORDER BY f.FCODE DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		area.FNAME AREA_NAME,area.FCODE AREA_CODE,pe.FNAME PLINE_ENTITY_NAME,pe.FCODE PLINE_ENTITY_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_AREA area ON f.AREA_ID=area.AREA_ID 
+		LEFT JOIN MDM_PLINE_ENTITY pe ON f.PLINE_ENTITY_ID=pe.PLINE_ENTITY_ID 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WC_WORKCENTER_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 工作中心下拉列表 -->
+	<select id="workCenterList" parameterType="pd" resultType="pd">
+		SELECT 
+		area.AREA_ID,area.FNAME AREA_NAME,area.FCODE AREA_CODE,isnull(f.FCODE,'无编号')+'/'+isnull(f.FNAME,'无名称')  FSelectOption,
+		f.WC_WORKCENTER_ID,f.FNAME AS WORKCENTER_NAME,f.FCODE AS WORKCENTER_CODE FROM MDM_WC_WORKCENTER f 
+		LEFT JOIN MDM_AREA area ON f.AREA_ID=area.AREA_ID 
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

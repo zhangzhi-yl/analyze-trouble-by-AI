@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pm.PM_MAINTAINMxMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PM_MAINTAINMx
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.MAINTAIN_PART,	
+		f.MAINTAIN_CONTENT,	
+		f.MAINTAIN_NORM,	
+		f.MAINTAIN_NORM_FILE,	
+		f.IF_SIGNIN,	
+		f.SIGNIN_TIME,	
+		f.SIGNIN_RERSON,	
+		f.DESCRIBE,	
+		f.RESERVE_ONE,	
+		f.RESERVE_TWO,	
+		f.RESERVE_THREE,
+		f.FTYPE,
+		f.FEXECUTE,
+		f.FEXECUTE_TIME,
+		f.FEXECUTOR,
+		f.PM_MAINTAINMx_ID,
+		f.PM_MAINTAIN_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		MAINTAIN_PART,	
+		MAINTAIN_CONTENT,	
+		MAINTAIN_NORM,	
+		MAINTAIN_NORM_FILE,	
+		IF_SIGNIN,	
+		SIGNIN_TIME,	
+		SIGNIN_RERSON,	
+		DESCRIBE,	
+		RESERVE_ONE,	
+		RESERVE_TWO,	
+		RESERVE_THREE,
+		FTYPE,
+		FEXECUTE,
+		FEXECUTE_TIME,	
+		FEXECUTOR,
+		PM_MAINTAINMx_ID,
+		PM_MAINTAIN_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MAINTAIN_PART},	
+		#{MAINTAIN_CONTENT},	
+		#{MAINTAIN_NORM},	
+		#{MAINTAIN_NORM_FILE},	
+		#{IF_SIGNIN},	
+		#{SIGNIN_TIME},	
+		#{SIGNIN_RERSON},	
+		#{DESCRIBE},	
+		#{RESERVE_ONE},	
+		#{RESERVE_TWO},	
+		#{RESERVE_THREE},
+		#{FTYPE},
+		#{FEXECUTE},
+		#{FEXECUTE_TIME},	
+		#{FEXECUTOR},	
+		#{PM_MAINTAINMx_ID},
+		#{PM_MAINTAIN_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PM_MAINTAINMx_ID = #{PM_MAINTAINMx_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MAINTAIN_PART = #{MAINTAIN_PART},
+			MAINTAIN_CONTENT = #{MAINTAIN_CONTENT},
+			MAINTAIN_NORM = #{MAINTAIN_NORM},
+			MAINTAIN_NORM_FILE = #{MAINTAIN_NORM_FILE},
+			IF_SIGNIN = #{IF_SIGNIN},
+			SIGNIN_TIME = #{SIGNIN_TIME},
+			SIGNIN_RERSON = #{SIGNIN_RERSON},
+			DESCRIBE = #{DESCRIBE},
+			RESERVE_ONE = #{RESERVE_ONE},
+			RESERVE_TWO = #{RESERVE_TWO},
+			RESERVE_THREE = #{RESERVE_THREE},
+			FTYPE = #{FTYPE},
+			FEXECUTE = #{FEXECUTE},
+			FEXECUTE_TIME = #{FEXECUTE_TIME},
+			FEXECUTOR = #{FEXECUTOR},	
+			PM_MAINTAINMx_ID = PM_MAINTAINMx_ID
+		where 
+			PM_MAINTAINMx_ID = #{PM_MAINTAINMx_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PM_MAINTAINMx_ID = #{PM_MAINTAINMx_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where
+			f.PM_MAINTAIN_ID = #{pd.PM_MAINTAIN_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.MAINTAIN_PART LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.MAINTAIN_NORM LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f.IF_SIGNIN LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f.SIGNIN_RERSON LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] order by CAST(RESERVE_ONE AS DECIMAL) ASC  [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where
+			f.PM_MAINTAIN_ID = #{PM_MAINTAIN_ID}
+		<if test="KEYWORDS!= null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.MAINTAIN_PART LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.MAINTAIN_NORM LIKE '%'+ #{KEYWORDS}+'%'
+					or 
+					f.IF_SIGNIN LIKE '%'+ #{KEYWORDS}+'%'
+					or 
+					f.SIGNIN_RERSON LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		order by CAST(RESERVE_ONE AS DECIMAL) ASC
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PM_MAINTAINMx_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			PM_MAINTAIN_ID = #{PM_MAINTAIN_ID}
+	</select>
+	
+	<!-- 删除附件 -->
+	<update id="delFj" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RESERVE_TWO = '',
+			MAINTAIN_NORM_FILE = ''
+		where 
+			PM_MAINTAINMx_ID = #{PM_MAINTAINMx_ID}
+	</update>
+	
+	<!-- 更新执行项 -->
+	<update id="editExecute" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FEXECUTE = #{FEXECUTE},
+			FEXECUTE_TIME = #{FEXECUTE_TIME},
+			FEXECUTOR = #{FEXECUTOR}
+		where 
+			PM_MAINTAINMx_ID = #{PM_MAINTAINMx_ID}
+	</update>	<!-- yy356703572qq(彬耶) -->
+</mapper>

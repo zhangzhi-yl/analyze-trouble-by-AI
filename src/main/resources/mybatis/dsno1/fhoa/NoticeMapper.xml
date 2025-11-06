@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.fhoa.NoticeMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		OA_NOTICE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FTitle,
+		f.FContent,
+		f.LinkIf,
+		ISNULL(f.AccessURL,'') AccessURL,
+		f.ReceivingAuthority,
+		f.ReadPeople,
+		f.FIssuedID,
+		f.ReleaseTime,
+		f.TType,
+		f.DataSources,
+		f.NOTICE_ID,
+		f.Report_Key,
+		f.Report_Value
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FTitle,
+		FContent,
+		LinkIf,
+		AccessURL,
+		ReceivingAuthority,
+		ReadPeople,
+		FIssuedID,
+		ReleaseTime,
+		TType,
+		DataSources,
+		NOTICE_ID,
+		AccessAppURL,
+		WorkStation,
+		Report_Key,
+		Report_Value
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FTitle},
+		#{FContent},
+		#{LinkIf},
+		#{AccessURL},
+		#{ReceivingAuthority},
+		#{ReadPeople},
+		#{FIssuedID},
+		#{ReleaseTime},
+		#{TType},
+		#{DataSources},
+		#{NOTICE_ID},
+		#{AccessAppURL},
+		#{WorkStation},
+		#{Report_Key},
+		#{Report_Value}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			NOTICE_ID = #{NOTICE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FTitle = #{FTitle},
+			FContent = #{FContent},
+			LinkIf = #{LinkIf},
+			AccessURL = #{AccessURL},
+			TType = #{TType},
+			ReceivingAuthority = #{ReceivingAuthority},
+			PushType = #{PushType},
+			NOTICE_ID = NOTICE_ID
+		where 
+			NOTICE_ID = #{NOTICE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,
+		case when LinkIf = 'yes' then '是' else '否' end LinkIfs
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.NOTICE_ID = #{NOTICE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT 
+			f.*,
+			case when f.ord = 0 then '未读' else '已读' end  ord1
+		FROM (
+			SELECT ISNULL(CHARINDEX ( ',${pd.USERNAME},' ,ReadPeople), 0) ord ,
+			* 
+			FROM OA_NOTICE
+			) f 
+			where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FTitle LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.USERNAME!=null and pd.USERNAME!=''"><!-- 根据部门ID过滤 -->
+			and 
+				(
+					f.ReceivingAuthority LIKE '%'+ #{pd.USERNAME}+'%'
+					or 
+					f.ReceivingAuthority = 'All'
+				)
+		</if>
+		[fhstart]order by f.ord ASC,ReleaseTime DESC[fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			NOTICE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 修改已读人员 -->
+	<update id="editRead" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ReadPeople = #{ReadPeople}
+		where 
+			NOTICE_ID = #{NOTICE_ID}
+	</update>
+		<!-- 手机端列表 -->
+	<select id="AppList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		SELECT 
+			f.*,
+			case when f.ord = 0 then '未读' else '已读' end  ord1
+		FROM (
+			SELECT ISNULL(CHARINDEX ( ',${pd.USERNAME},' ,ReadPeople), 0) ord ,
+			* 
+			FROM OA_NOTICE
+			) f 
+			where 1=1 
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 标题检索 -->
+			and
+				(
+					f.FTitle LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 通知类型检索 -->
+			and
+				(
+					f.TType LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 内容检索 -->
+			and
+				(
+					f.FContent LIKE '%'+ #{pd.KEYWORDS2}+'%'
+				)
+		</if>
+		<if test="pd.lastStart != null and pd.lastStart != ''"><!-- 发布时间检索 -->
+			and 
+			(
+				f.ReleaseTime &gt; =#{pd.lastStart}
+			)
+		</if>
+		<if test="pd.lastEnd != null and pd.lastEnd != ''"><!-- 发布时间检索 -->
+			and 
+			(
+				f.ReleaseTime &lt; =#{pd.lastEnd}
+			)
+		</if>
+		<if test="pd.USERNAME!=null and pd.USERNAME!=''"><!-- 根据部门ID过滤 -->
+			and 
+				(
+					f.ReceivingAuthority LIKE '%'+ #{pd.USERNAME}+'%'
+					or 
+					f.ReceivingAuthority = 'All'
+				)
+		</if>
+	</select>
+		<!-- 未读列表 -->
+	<select id="listAllWD" parameterType="pd" resultType="pd">
+		SELECT 
+			f.*,
+			case when f.ord = 0 then '未读' else '已读' end  ord1
+		FROM (
+			SELECT ISNULL(CHARINDEX ( ',${USERNAME},' ,ReadPeople), 0) ord ,
+			* 
+			FROM OA_NOTICE
+			) f 
+			where 1=1 and f.ord =0
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FTitle LIKE '%'+ #{KEYWORDS}+'%'
+				)
+		</if>
+		<if test="USERNAME!=null and USERNAME!=''"><!-- 根据部门ID过滤 -->
+			and 
+				(
+					f.ReceivingAuthority LIKE '%'+ #{USERNAME}+'%'
+					or 
+					f.ReceivingAuthority = 'All'
+				)
+		</if>
+	</select>
+		<!-- 列表 -->
+	<select id="listRight" parameterType="page" resultType="pd">
+		SELECT top 30
+			f.*,'z'+cast(f2.MENU_ID as nvarchar(4000)) MENU_ID,f2.MENU_NAME,REPLACE(f.AccessURL, '../../../views/', './../../') MENU_URL,'lm'+cast(f2.PARENT_ID as nvarchar(4000)) PARENT_ID ,
+			case when f.ord = 0 then '未读' else '已读' end  ord1
+		FROM (
+			SELECT ISNULL(CHARINDEX ( ',${pd.USERNAME},' ,ReadPeople), 0) ord ,
+			f1.*,REPLACE(SUBSTRING(f1.AccessURL,0,case when CHARINDEX('?',f1.AccessURL )=0 
+then len(f1.AccessURL)+1 else  CHARINDEX('?',f1.AccessURL ) end), '../../../views/', './../../') FURL
+			FROM OA_NOTICE f1
+
+			) f 
+left join SYS_MENU f2
+on  f.FURL=f2.MENU_URL
+			where 1=1 and f.ord = 0
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FTitle LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.USERNAME!=null and pd.USERNAME!=''"><!-- 根据部门ID过滤 -->
+			and 
+				(
+					f.ReceivingAuthority LIKE '%'+ #{pd.USERNAME}+'%'
+					or 
+					f.ReceivingAuthority = 'All'
+				)
+		</if>
+		order by f.ord ASC,ReleaseTime DESC
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

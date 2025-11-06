@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.REPAIR_WORKORDERMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_REPAIR_WORKORDER
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.REPAIR_WORKORDER_ID,	
+		f.EQM_NO,	
+		f.EQM_NAME,	
+		f.FAULT_DISCOVER_TIME,	
+		f.FAULT_DES,	
+		f.APPLICATION_DATE,	
+		f.FSTATE,	
+		f.FAPPLICANT,	
+		f.REPAIR_WORKORDER_BILLNO,	
+		f.WC_WORKCENTER_ID,	
+		f.EQM_TYPE,	
+		f.FINISH_TIME,
+		f.FOPINION,
+		f.REPAIR_TYPE,
+		f.FREMARK,
+		f.EQM_ID,
+		f.PROC_INST_ID_,
+		f.RUN_STATUS,
+		f.GENERATE_PROGRESS,
+		f.FOPINION1,
+		f.PERSON_LIABLE
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		REPAIR_WORKORDER_ID,	
+		EQM_NO,	
+		EQM_NAME,	
+		FAULT_DISCOVER_TIME,	
+		FAULT_DES,	
+		APPLICATION_DATE,	
+		FSTATE,	
+		FAPPLICANT,	
+		REPAIR_WORKORDER_BILLNO,	
+		WC_WORKCENTER_ID,	
+		EQM_TYPE,	
+		FINISH_TIME,
+		FOPINION,
+		REPAIR_TYPE,
+		FREMARK,
+		EQM_ID,
+		PROC_INST_ID_,
+		RUN_STATUS,
+		GENERATE_PROGRESS,
+		FOPINION1,
+		PERSON_LIABLE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{REPAIR_WORKORDER_ID},	
+		#{EQM_NO},	
+		#{EQM_NAME},	
+		#{FAULT_DISCOVER_TIME},	
+		#{FAULT_DES},	
+		#{APPLICATION_DATE},	
+		#{FSTATE},	
+		#{FAPPLICANT},	
+		#{REPAIR_WORKORDER_BILLNO},	
+		#{WC_WORKCENTER_ID},	
+		#{EQM_TYPE},	
+		#{FINISH_TIME},
+		#{FOPINION},
+		#{REPAIR_TYPE},
+		#{FREMARK},
+		#{EQM_ID},
+		#{PROC_INST_ID_},
+		#{RUN_STATUS},
+		#{GENERATE_PROGRESS},
+		#{FOPINION1},
+		#{PERSON_LIABLE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			REPAIR_WORKORDER_ID = #{REPAIR_WORKORDER_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			EQM_NO = #{EQM_NO},
+			EQM_NAME = #{EQM_NAME},
+			FAULT_DISCOVER_TIME = #{FAULT_DISCOVER_TIME},
+			FAULT_DES = #{FAULT_DES},
+			APPLICATION_DATE = #{APPLICATION_DATE},
+			FSTATE = #{FSTATE},
+			FAPPLICANT = #{FAPPLICANT},
+			REPAIR_WORKORDER_BILLNO = #{REPAIR_WORKORDER_BILLNO},
+			WC_WORKCENTER_ID = #{WC_WORKCENTER_ID},
+			EQM_TYPE = #{EQM_TYPE},
+			FINISH_TIME = #{FINISH_TIME},
+			FOPINION = #{FOPINION},
+			REPAIR_TYPE = #{REPAIR_TYPE},
+			FREMARK = #{FREMARK},
+			EQM_ID = #{EQM_ID},
+			FOPINION1 = #{FOPINION1},
+			PERSON_LIABLE = #{PERSON_LIABLE}
+		where 
+			REPAIR_WORKORDER_ID = #{REPAIR_WORKORDER_ID}
+	</update>
+	
+	<!-- 修改状态 -->
+	<update id="updateState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FSTATE = #{FSTATE}
+		where 
+			REPAIR_WORKORDER_ID = #{REPAIR_WORKORDER_ID}
+	</update>
+	
+	<!-- 根据流程实例ID修改状态 -->
+	<update id="updateStateByPROC_INST_ID" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FSTATE = #{FSTATE}
+		where 
+			PROC_INST_ID_ = #{PROC_INST_ID_}
+	</update>
+	
+	<!-- 修改Fopinion -->
+	<update id="updateFopinion" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FOPINION = #{FOPINION}
+		where 
+			REPAIR_WORKORDER_ID = #{REPAIR_WORKORDER_ID}
+	</update>
+	
+	<!-- 修改Fopinion1 -->
+	<update id="updateFopinion1" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FOPINION1 = #{FOPINION1}
+		where 
+			REPAIR_WORKORDER_ID = #{REPAIR_WORKORDER_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT rutask.ID_,rep.NAME_ PNAME_,rep.DGRM_RESOURCE_NAME_,f.* FROM MDM_REPAIR_WORKORDER f 
+		LEFT JOIN ACT_RU_TASK rutask ON f.PROC_INST_ID_=rutask.PROC_INST_ID_ 
+		LEFT JOIN ACT_RE_PROCDEF rep ON rutask.PROC_DEF_ID_ = rep.ID_ 
+		where 
+			f.REPAIR_WORKORDER_ID = #{REPAIR_WORKORDER_ID}
+	</select>
+	
+	<!-- 查询最大单号 -->
+	<select id="findMaxBillNo" resultType="pd">
+		SELECT MAX(REPAIR_WORKORDER_BILLNO) REPAIR_WORKORDER_BILLNO FROM MDM_REPAIR_WORKORDER ;
+	</select>
+	
+	<!-- 根据设备标识查询top1 -->
+	<select id="findByIdentify" parameterType="pd" resultType="pd">
+		SELECT TOP 1 wc.FNAME WORK_CENTER_NAME,c.CLASS_NAME EQM_CLASS_NAME,f.* FROM MDM_EQM_BASE f 
+		LEFT JOIN MDM_EQM_CLASS c ON f.EQM_CLASS_ID=c.EQM_CLASS_ID 
+		LEFT JOIN MDM_WC_WORKCENTER wc ON f.FWORKCENTER=wc.WC_WORKCENTER_ID 
+		WHERE f.FIDENTIFY = #{FIDENTIFY}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT rutask.ID_,rep.NAME_ PNAME_,rep.DGRM_RESOURCE_NAME_,f.* FROM MDM_REPAIR_WORKORDER f 
+		LEFT JOIN ACT_RU_TASK rutask ON f.PROC_INST_ID_=rutask.PROC_INST_ID_ 
+		LEFT JOIN ACT_RE_PROCDEF rep ON rutask.PROC_DEF_ID_ = rep.ID_ 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.REPAIR_WORKORDER_BILLNO LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.EQM_NO LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.EQM_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FAPPLICANT LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.WC_WORKCENTER_ID LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.PERSON_LIABLE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		 [fhstart] order by f.REPAIR_WORKORDER_BILLNO DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			REPAIR_WORKORDER_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 手机端列表 -->
+	<select id="AppList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		SELECT 
+		rutask.ID_,
+		rep.NAME_ PNAME_,
+		rep.DGRM_RESOURCE_NAME_,
+		f.REPAIR_WORKORDER_ID,	
+		f.EQM_NO,	
+		f.EQM_NAME,	
+		f.FAULT_DISCOVER_TIME,	
+		subString(f.FAULT_DES,0,4) + '...' as FAULT_DES,
+		f.APPLICATION_DATE,	
+		f.FSTATE,	
+		f.FAPPLICANT,	
+		f.REPAIR_WORKORDER_BILLNO,	
+		f.WC_WORKCENTER_ID,	
+		f.EQM_TYPE,	
+		f.FINISH_TIME,
+		f.FOPINION,
+		f.REPAIR_TYPE,
+		f.FREMARK,
+		f.EQM_ID,
+		f.PROC_INST_ID_,
+		f.RUN_STATUS,
+		f.GENERATE_PROGRESS,
+		f.FOPINION1,
+		f.PERSON_LIABLE
+		FROM MDM_REPAIR_WORKORDER f 
+		LEFT JOIN ACT_RU_TASK rutask ON f.PROC_INST_ID_=rutask.PROC_INST_ID_ 
+		LEFT JOIN ACT_RE_PROCDEF rep ON rutask.PROC_DEF_ID_ = rep.ID_ 
+		where 1=1 and f.PROC_INST_ID_ is not null and f.GENERATE_PROGRESS = '10发起人'
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.REPAIR_WORKORDER_BILLNO LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.EQM_NO LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.EQM_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FAPPLICANT LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.WC_WORKCENTER_ID LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.PERSON_LIABLE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.KEYWORDS_EQM_NO != null and pd.KEYWORDS_EQM_NO != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.EQM_NO LIKE '%'+ #{pd.KEYWORDS_EQM_NO}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS_EQM_NAME != null and pd.KEYWORDS_EQM_NAME != ''">
+			and
+				(
+					f.EQM_NAME LIKE '%'+ #{pd.KEYWORDS_EQM_NAME}+'%' 
+				)
+		</if>
+		<if test="pd.FAPPLICANT != null and pd.FAPPLICANT != ''">
+			and
+				(
+					f.FAPPLICANT LIKE '%'+ #{pd.FAPPLICANT}+'%' 
+				)
+		</if>
+		<if test="pd.lastStart != null and pd.lastStart != '' and pd.lastEnd != null and pd.lastEnd != ''">
+			and
+				(
+				f.FAULT_DISCOVER_TIME &gt; = #{pd.lastStart} and f.FAULT_DISCOVER_TIME &lt; = #{pd.lastEnd}
+				)
+		</if>
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

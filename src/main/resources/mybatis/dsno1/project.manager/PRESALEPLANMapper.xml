@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.PRESALEPLANMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		DT_PRESALEPLAN
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FBUDGETNAME,	
+		f.FBUDGETNUMBER,	
+		f.FCONTRACTAMOUNT,	
+		f.FMATERIALCOST,	
+		f.FTECHNICALEXPENSES,	
+		f.FASSEMBLYCHARGE,	
+		f.FDESIGNHOUR,	
+		f.FDIVISIONHOUR,	
+		f.FASSEMBLYHOUR,	
+		f.FWIRINGHOUR,	
+		f.FEXAMINATIONHOUR,	
+		f.FPACKINGHOUR,	
+		f.FMAJORCOSTS,	
+		f.FPROJECTGROSSPROFIT,	
+		f.FGROSSMARGIN,	
+		f.FCREATETIME,	
+		f.FFOUNDER,	
+		f.FFOUNDERACCOUNT,	
+		f.FMODIFIERS,	
+		f.FMODIFIERSACCOUNT,	
+		f.FMODIFIERSTIME,	
+		f.FAUTHOR,	
+		f.FAUTHORNUMBER,	
+		f.FAUTHORTIME,	
+		f.FEXAMINERS,	
+		f.FEXAMINERSNUMBER,	
+		f.FEXAMINERSTIME,	
+		f.FTECHNICALTEAMLEADER,	
+		f.FAUDIT,	
+		f.FDESIGNUNITPRICE,	
+		f.FDESIGNAMOUNT,	
+		f.FDIVISIONUNITPRICE,	
+		f.FDIVISIONAMOUNT,
+		f.FASSEMBLYUNITPRICE,
+		f.FASSEMBLYAMOUNT,
+		f.FWIRINGUNITPRICE,
+		f.FWIRINGAMOUNT,
+		f.FEXAMINATIONUNITPRICE,
+		f.FEXAMINATIONAMOUNT,
+		f.FPACKINGUNITPRICE,
+		f.FPACKINGAMOUNT,
+		f.FFINALINSPECTIONHOUR,
+		f.FFINALINSPECTIONPRICE,
+		f.FFINALINSPECTIONAMOUNT,
+		f.PRESALEPLAN_ID,
+		f.FSTATE_LXSQ,
+		f.FTIME1,
+		f.FMAN1,
+		f.FBILLNO_LXSQ,
+		f.FSTATE_LX,
+		f.FTIME2,
+		f.FMAN2,
+		f.PROJECT_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FBUDGETNAME,	
+		FBUDGETNUMBER,	
+		FCONTRACTAMOUNT,	
+		FMATERIALCOST,	
+		FTECHNICALEXPENSES,	
+		FASSEMBLYCHARGE,	
+		FDESIGNHOUR,	
+		FDIVISIONHOUR,	
+		FASSEMBLYHOUR,	
+		FWIRINGHOUR,	
+		FEXAMINATIONHOUR,	
+		FPACKINGHOUR,	
+		FMAJORCOSTS,	
+		FPROJECTGROSSPROFIT,	
+		FGROSSMARGIN,	
+		FCREATETIME,	
+		FFOUNDER,	
+		FFOUNDERACCOUNT,	
+		FMODIFIERS,	
+		FMODIFIERSACCOUNT,	
+		FMODIFIERSTIME,	
+		FAUTHOR,	
+		FAUTHORNUMBER,	
+		FAUTHORTIME,	
+		FEXAMINERS,	
+		FEXAMINERSNUMBER,	
+		FEXAMINERSTIME,	
+		FTECHNICALTEAMLEADER,	
+		FAUDIT,	
+		FDESIGNUNITPRICE,	
+		FDESIGNAMOUNT,	
+		FDIVISIONUNITPRICE,	
+		FDIVISIONAMOUNT,
+		FASSEMBLYUNITPRICE,
+		FASSEMBLYAMOUNT,
+		FWIRINGUNITPRICE,
+		FWIRINGAMOUNT,
+		FEXAMINATIONUNITPRICE,
+		FEXAMINATIONAMOUNT,
+		FPACKINGUNITPRICE,
+		FPACKINGAMOUNT,
+		FFINALINSPECTIONHOUR,
+		FFINALINSPECTIONPRICE,
+		FFINALINSPECTIONAMOUNT,
+		PRESALEPLAN_ID,
+		FSTATE_LXSQ,
+		FTIME1,
+		FMAN1,
+		FBILLNO_LXSQ,
+		FSTATE_LX,
+		FTIME2,
+		FMAN2
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FBUDGETNAME},	
+		#{FBUDGETNUMBER},	
+		#{FCONTRACTAMOUNT},	
+		#{FMATERIALCOST},	
+		#{FTECHNICALEXPENSES},	
+		#{FASSEMBLYCHARGE},	
+		#{FDESIGNHOUR},	
+		#{FDIVISIONHOUR},	
+		#{FASSEMBLYHOUR},	
+		#{FWIRINGHOUR},	
+		#{FEXAMINATIONHOUR},	
+		#{FPACKINGHOUR},	
+		#{FMAJORCOSTS},	
+		#{FPROJECTGROSSPROFIT},	
+		#{FGROSSMARGIN},	
+		#{FCREATETIME},	
+		#{FFOUNDER},	
+		#{FFOUNDERACCOUNT},	
+		#{FMODIFIERS},	
+		#{FMODIFIERSACCOUNT},	
+		#{FMODIFIERSTIME},	
+		#{FAUTHOR},	
+		#{FAUTHORNUMBER},	
+		#{FAUTHORTIME},	
+		#{FEXAMINERS},	
+		#{FEXAMINERSNUMBER},	
+		#{FEXAMINERSTIME},	
+		#{FTECHNICALTEAMLEADER},	
+		#{FAUDIT},	
+		#{FDESIGNUNITPRICE},	
+		#{FDESIGNAMOUNT},	
+		#{FDIVISIONUNITPRICE},	
+		#{FDIVISIONAMOUNT},
+		#{FASSEMBLYUNITPRICE},
+		#{FASSEMBLYAMOUNT},
+		#{FWIRINGUNITPRICE},
+		#{FWIRINGAMOUNT},
+		#{FEXAMINATIONUNITPRICE},
+		#{FEXAMINATIONAMOUNT},
+		#{FPACKINGUNITPRICE},
+		#{FPACKINGAMOUNT},
+		#{FFINALINSPECTIONHOUR},
+		#{FFINALINSPECTIONPRICE},
+		#{FFINALINSPECTIONAMOUNT},
+		#{PRESALEPLAN_ID},
+		#{FSTATE_LXSQ},
+		#{FTIME1},
+		#{FMAN1},
+		#{FBILLNO_LXSQ},
+		#{FSTATE_LX},
+		#{FTIME2},
+		#{FMAN2}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PRESALEPLAN_ID = #{PRESALEPLAN_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FBUDGETNAME = #{FBUDGETNAME},
+			FBUDGETNUMBER = #{FBUDGETNUMBER},
+			FCONTRACTAMOUNT = #{FCONTRACTAMOUNT},
+			FMATERIALCOST = #{FMATERIALCOST},
+			FTECHNICALEXPENSES = #{FTECHNICALEXPENSES},
+			FASSEMBLYCHARGE = #{FASSEMBLYCHARGE},
+			FDESIGNHOUR = #{FDESIGNHOUR},
+			FDIVISIONHOUR = #{FDIVISIONHOUR},
+			FASSEMBLYHOUR = #{FASSEMBLYHOUR},
+			FWIRINGHOUR = #{FWIRINGHOUR},
+			FEXAMINATIONHOUR = #{FEXAMINATIONHOUR},
+			FPACKINGHOUR = #{FPACKINGHOUR},
+			FMAJORCOSTS = #{FMAJORCOSTS},
+			FPROJECTGROSSPROFIT = #{FPROJECTGROSSPROFIT},
+			FGROSSMARGIN = #{FGROSSMARGIN},
+			FMODIFIERS = #{FMODIFIERS},
+			FMODIFIERSACCOUNT = #{FMODIFIERSACCOUNT},
+			FMODIFIERSTIME = #{FMODIFIERSTIME},
+			
+			FDESIGNUNITPRICE = #{FDESIGNUNITPRICE},
+			FDIVISIONUNITPRICE = #{FDIVISIONUNITPRICE},
+			FASSEMBLYUNITPRICE = #{FASSEMBLYUNITPRICE},
+			FWIRINGUNITPRICE = #{FWIRINGUNITPRICE},
+			FEXAMINATIONUNITPRICE = #{FEXAMINATIONUNITPRICE},
+			FPACKINGUNITPRICE = #{FPACKINGUNITPRICE},
+			FDESIGNAMOUNT = #{FDESIGNAMOUNT},
+			FDIVISIONAMOUNT = #{FDIVISIONAMOUNT},
+			FASSEMBLYAMOUNT = #{FASSEMBLYAMOUNT},
+			FWIRINGAMOUNT = #{FWIRINGAMOUNT},
+			FEXAMINATIONAMOUNT = #{FEXAMINATIONAMOUNT},
+			FPACKINGAMOUNT = #{FPACKINGAMOUNT},
+			FFINALINSPECTIONHOUR = #{FFINALINSPECTIONHOUR},
+			FFINALINSPECTIONPRICE = #{FFINALINSPECTIONPRICE},
+			FFINALINSPECTIONAMOUNT = #{FFINALINSPECTIONAMOUNT},
+			PRESALEPLAN_ID = PRESALEPLAN_ID
+		where 
+			PRESALEPLAN_ID = #{PRESALEPLAN_ID}
+	</update>
+	
+	<!-- 审核操作 -->
+	<update id="goAduit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FAUDIT = #{FAUDIT}
+		where 
+			PRESALEPLAN_ID = #{PRESALEPLAN_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PRESALEPLAN_ID = #{PRESALEPLAN_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,staff.Name as FTECHNICALTEAMLEADER_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join oa_staff staff on staff.STAFF_ID = f.FTECHNICALTEAMLEADER
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FBUDGETNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FBUDGETNUMBER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				
+				)
+		</if>
+		[fhstart]ORDER BY FCREATETIME DESC[fhend]
+	</select>
+	
+	<!-- 列表(全部)
+	v2 管悦 20210916 过滤未下推立项申请的报价方案
+	 -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and FSTATE_LXSQ='已下推'
+		<if test="FSTATE_LX != null and FSTATE_LX != ''"><!-- 是否立项 -->
+			and
+				(
+					f.FSTATE_LX =#{FSTATE_LX}
+				)
+		</if>
+		ORDER BY FCREATETIME DESC
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PRESALEPLAN_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- v1 管悦 20210916 下推立项申请 -->
+	<update id="editLXSQ" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FSTATE_LXSQ = #{FSTATE_LXSQ},
+			FTIME1 = #{FTIME1},
+			FMAN1 = #{FMAN1}
+			
+		where 
+			PRESALEPLAN_ID = #{PRESALEPLAN_ID}
+	</update>
+	<!-- v1 管悦 20210916 反写立项申请立项状态 -->
+	<update id="editLX" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FSTATE_LX = #{FSTATE_LX},
+			FTIME2 = #{FTIME2},
+			FMAN2 = #{FMAN2},
+			PROJECT_ID=#{PROJECT_ID}
+		where 
+			PRESALEPLAN_ID = #{PRESALEPLAN_ID}
+	</update>
+	<!-- v1 管悦 20210916 立项申请列表 -->
+	<select id="LXSQlistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,staff.Name as FTECHNICALTEAMLEADER_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join oa_staff staff on staff.STAFF_ID = f.FTECHNICALTEAMLEADER
+		where 1=1 and FSTATE_LXSQ='已下推'
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FBUDGETNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FBUDGETNUMBER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				
+				)
+		</if>
+		<if test="pd.FSTATE_LX != null and pd.FSTATE_LX != ''"><!-- 是否立项 -->
+			and
+				(
+					f.FSTATE_LX =#{pd.FSTATE_LX}
+				)
+		</if>
+		[fhstart]ORDER BY FCREATETIME DESC[fhend]
+	</select>
+</mapper>

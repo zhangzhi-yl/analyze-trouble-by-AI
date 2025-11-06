@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.ChangeMapper">
+	
+	<!-- v1 2021-05-27 陈春光 新建变更表 mapper -->
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PMS_Change
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.Relation_ID,	
+		f.FType,	
+		f.Change_Duty,	
+		f.Change_Description,	
+		f.CC,	
+		f.Change_Date,	
+		f.Attachment,	
+		f.Change_ID,
+		f.FRelation_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		Relation_ID,	
+		FType,	
+		Change_Duty,	
+		Change_Description,	
+		CC,	
+		Change_Date,	
+		Attachment,	
+		Change_ID,
+		FRelation_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{Relation_ID},	
+		#{FType},	
+		#{Change_Duty},	
+		#{Change_Description},	
+		#{CC},	
+		#{Change_Date},	
+		#{Attachment},	
+		#{Change_ID},
+		#{FRelation_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			Change_ID = #{Change_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			Relation_ID = #{Relation_ID},
+			FType = #{FType},
+			Change_Duty = #{Change_Duty},
+			Change_Description = #{Change_Description},
+			CC = #{CC},
+			Change_Date = #{Change_Date},
+			Attachment = #{Attachment},
+			FRelation_ID=#{FRelation_ID},
+			Change_ID = Change_ID
+		where 
+			Change_ID = #{Change_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,ca.Cabinet_Type,f1.Cabinet_No
+		from 
+		<include refid="tableName"></include> f
+		left join PMS_Cabinet_Assembly_Detail f1
+		on f.FRelation_ID=f1.Cabinet_Assembly_Detail_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = f1.Cabinet_Assembly_ID
+		where 
+			f.Change_ID = #{Change_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,ca.Cabinet_Type,f1.Cabinet_No
+		from 
+		<include refid="tableName"></include> f
+		left join PMS_Cabinet_Assembly_Detail f1
+		on f.FRelation_ID=f1.Cabinet_Assembly_Detail_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = f1.Cabinet_Assembly_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					Change_Duty LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					Change_Description LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f1.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					ca.Cabinet_Type LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''">
+			and
+				(
+					f.FType = #{pd.KEYWORDS1}
+				)
+		</if>
+		and f.Relation_ID=#{pd.Relation_ID}
+		[fhstart] order by Change_Date desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			Change_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

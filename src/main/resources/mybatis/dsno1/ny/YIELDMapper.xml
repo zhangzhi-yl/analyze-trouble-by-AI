@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.ny.YIELDMapper">
+
+    <!--表名 -->
+    <sql id="tableName">
+        NY_YIELD
+    </sql>
+
+    <!--数据字典表名 -->
+    <sql id="dicTableName">
+        SYS_DICTIONARIES
+    </sql>
+
+    <!-- 字段 -->
+    <sql id="Field">
+        f
+        .
+        LOOP_ID
+        ,
+		f.YIELD,	
+		f.OUTPUT,	
+		f.FTime,	
+		f.YIELD_ID
+    </sql>
+
+    <!-- 字段用于新增 -->
+    <sql id="Field2">
+        LOOP_ID
+        ,
+		YIELD,	
+		OUTPUT,	
+		FTime,	
+		YIELD_ID
+    </sql>
+
+    <!-- 字段值 -->
+    <sql id="FieldValue">
+        #{LOOP_ID}
+        ,
+        #{YIELD},
+        #{OUTPUT},
+        #{FTime},
+        #{YIELD_ID}
+    </sql>
+
+    <!-- 新增-->
+    <insert id="save" parameterType="pd">
+        insert into
+        <include refid="tableName"></include>
+        (
+        <include refid="Field2"></include>
+        ) values (
+        <include refid="FieldValue"></include>
+        )
+    </insert>
+
+    <insert id="saveAll" parameterType="list">
+        insert into
+        <include refid="tableName"></include>
+        (
+        YIELD_ID,LOOP_ID,YIELD,OUTPUT,FTime
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.YIELD_ID},
+            #{item.LOOP_ID},
+            #{item.YIELD},
+            #{item.OUTPUT},
+            #{item.FTime}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 删除-->
+    <delete id="delete" parameterType="pd">
+        delete from
+        <include refid="tableName"></include>
+        where
+        YIELD_ID = #{YIELD_ID}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="pd">
+        update
+        <include refid="tableName"></include>
+        set
+        YIELD = #{YIELD},
+        OUTPUT = #{OUTPUT}
+        where
+        YIELD_ID = #{YIELD_ID}
+    </update>
+
+    <!-- 通过ID获取数据 -->
+    <select id="findById" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        f
+        where
+        f.YIELD_ID = #{YIELD_ID}
+    </select>
+
+    <!-- 列表 -->
+    <select id="datalistPage" parameterType="page" resultType="pd">
+        select
+        <include refid="Field"></include>,l.FName LoopName
+        from
+        <include refid="tableName"></include>
+        f
+        left join MDM_AREA l on f.LOOP_ID = l.AREA_ID
+        where 1=1
+        <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+            AND LOOP_ID = #{pd.KEYWORDS}
+        </if>
+        <if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 关键词检索 -->
+            AND FTime = #{pd.KEYWORDS1}
+        </if>
+        [fhstart] ORDER BY FTime DESC [fhend]
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listAll" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>,l.FName LoopName
+        from
+        <include refid="tableName"></include>
+        f
+        left join MDM_AREA l on f.LOOP_ID = l.AREA_ID
+        where 1=1
+        <if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+            AND LOOP_ID = #{KEYWORDS}
+        </if>
+        <if test="KEYWORDS1 != null and KEYWORDS1 != ''"><!-- 关键词检索 -->
+            AND FTime = #{KEYWORDS1}
+        </if>
+    </select>
+
+    <select id="dayYield" parameterType="pd" resultType="pd">
+        select
+        ISNULL(SUM(CAST(YIELD AS NUMERIC (10,0))),0) AS FSUM
+        from
+        <include refid="tableName"></include>
+        where
+        FTime = CONVERT(varchar(100), GETDATE(), 23)
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="deleteAll" parameterType="String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        YIELD_ID in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!-- yy356703572qq(彬耶) -->
+</mapper>

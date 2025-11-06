@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.InputOutputMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		KM_InputOutput
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ProcessRouteExampleID,
+		f.SerialNum,
+		f.TType,
+		f.ProcessIType,
+		f.ByProduct,
+		f.MaterialID,
+		f.FCount,
+		f.SubstituteMaterial,
+		f.FStatus,
+		f.FExplanation,
+		f.InputOutput_ID,
+		f.WorkingProcedureExample_ID,
+		f.ProductionBOM_ID
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		ProcessRouteExampleID,
+		SerialNum,
+		TType,
+		ProcessIType,
+		ByProduct,
+		MaterialID,
+		FCount,
+		SubstituteMaterial,
+		FStatus,
+		FExplanation,
+		InputOutput_ID,
+		WorkingProcedureExample_ID,
+		ProductionBOM_ID
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ProcessRouteExampleID},
+		#{SerialNum},
+		#{TType},
+		#{ProcessIType},
+		#{ByProduct},
+		#{MaterialID},
+		#{FCount},
+		#{SubstituteMaterial},
+		#{FStatus},
+		#{FExplanation},
+		#{InputOutput_ID},
+		#{WorkingProcedureExample_ID},
+		#{ProductionBOM_ID}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		InputOutput_ID = #{InputOutput_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		TType = #{TType},
+		ProcessIType = #{ProcessIType},
+		ByProduct = #{ByProduct},
+		MaterialID = #{MaterialID},
+		FCount =#{FCount},
+		SubstituteMaterial = #{SubstituteMaterial},
+		FExplanation = #{FExplanation}
+		where
+		InputOutput_ID = #{InputOutput_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') FInMatJoint,
+		isnull(f2.MAT_CODE,'无编号')+'/'+isnull(f2.MAT_NAME,'无名称') FReplaceMatJoint,
+		isnull(f3.FNum,'无编号')+'/'+isnull(f3.FName,'无名称') FProcessJoint
+		from
+		<include refid="tableName"></include> f
+		left join MBASE_MAT_BASIC f1
+		on f.MaterialID=f1.MAT_BASIC_ID
+		left join MBASE_MAT_BASIC f2
+		on f.SubstituteMaterial=f2.MAT_BASIC_ID
+		left join KM_WorkingProcedureExample f3
+		on f.WorkingProcedureExample_ID=f3.WorkingProcedureExample_ID
+		where
+		f.InputOutput_ID = #{InputOutput_ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f4.FNAME FUnitName,
+		case when 
+		f.MaterialID is null or f.MaterialID='' then '' 
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称')  end FInMatJoint,
+		case when 
+		f.SubstituteMaterial is null or f.SubstituteMaterial='' then '' 
+		else isnull(f2.MAT_CODE,'无编号')+'/'+isnull(f2.MAT_NAME,'无名称')  end FReplaceMatJoint,
+	    isnull(f3.FNum,'无编号')+'/'+isnull(f3.FName,'无名称') FProcessJoint,
+	    f5.FName ProcessDefinitionName 
+		from
+		<include refid="tableName"></include> f
+		left join MBASE_MAT_BASIC f1 on f.MaterialID=f1.MAT_BASIC_ID
+		left join MBASE_MAT_BASIC f2 on f.SubstituteMaterial=f2.MAT_BASIC_ID
+		left join KM_WorkingProcedureExample f3 on f.WorkingProcedureExample_ID=f3.WorkingProcedureExample_ID
+		left join MBASE_UNIT_INFO f4 on f1.MAT_MAIN_UNIT=f4.UNIT_INFO_ID 
+		left join KM_ProcessDefinition f5 on f5.ProcessDefinition_ID=f3.WP 
+		where 1=1
+		and f.WorkingProcedureExample_ID=#{pd.WorkingProcedureExample_ID}
+		<choose>
+           <when test="pd.FTYPE != null and pd.FTYPE == '投入'.toString()">
+                and f.TType=#{pd.FTYPE}
+           </when>
+          <when test="pd.FTYPE != null and pd.FTYPE == '产出'.toString()">
+                and f.TType=#{pd.FTYPE}
+          </when>
+          <otherwise>
+          </otherwise>
+        </choose>
+        [fhstart] order by cast(SerialNum as int) [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		InputOutput_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+		<!-- 生成序号 -->
+	<select id="getSerialNum" parameterType="pd" resultType="pd">
+		select
+		isnull(max(cast(isnull(SerialNum,'0') as int)),0)+1 SerialNum
+		from 
+		<include refid="tableName"></include> f
+		where WorkingProcedureExample_ID = #{WorkingProcedureExample_ID}
+	</select>
+
+	<!-- 列表(根据 工艺工序实例ID获取) -->
+	<select id="getInputOutputListByWorkingProcedureExample_ID"
+		parameterType="String" resultType="pd">
+		SELECT
+			m.MAT_NAME MaterialName,
+			m.MAT_CODE MaterialNum,
+			m.MAT_SPECS,
+			f.FCount DemandCount,
+			w.FName WP,
+			m.FBATCH,
+			f.TType,
+			f.ProcessRouteExampleID,
+			f.SerialNum,
+			f.ProcessIType,
+			f.ByProduct,
+			f.MaterialID,
+			f.SubstituteMaterial,
+			f.FStatus,
+			f.FExplanation,
+			f.InputOutput_ID,
+			f.WorkingProcedureExample_ID,
+			f.ProductionBOM_ID	
+		FROM
+			KM_InputOutput f
+		LEFT JOIN MBASE_MAT_BASIC m ON m.MAT_BASIC_ID = f.MaterialID
+		LEFT JOIN KM_WorkingProcedureExample w ON w.WorkingProcedureExample_ID = f.WorkingProcedureExample_ID
+		where 1=1 and f.FStatus = 'N' and f.WorkingProcedureExample_ID = #{WorkingProcedureExample_ID}
+	</select>
+	
+	<select id="getInputOutputListByBOM_ID" parameterType="String"
+		resultType="pd">
+		SELECT
+			m.MAT_NAME MaterialName,
+			m.MAT_CODE MaterialNum,
+			m.MAT_SPECS,
+			f.FCount DemandCount,
+			w.FName as WPName,
+			w.WP,
+			m.FBATCH,
+			f.TType,
+			f.ProcessRouteExampleID,
+			f.SerialNum,
+			f.ProcessIType,
+			f.ByProduct,
+			f.MaterialID,
+			f.SubstituteMaterial,
+			f.FStatus,
+			f.FExplanation,
+			f.InputOutput_ID,
+			f.WorkingProcedureExample_ID,
+			f.ProductionBOM_ID
+		FROM
+			KM_InputOutput f
+		LEFT JOIN MBASE_MAT_BASIC m ON m.MAT_BASIC_ID = f.MaterialID
+		LEFT JOIN KM_WorkingProcedureExample w ON w.WorkingProcedureExample_ID = f.WorkingProcedureExample_ID
+		WHERE
+		1=1 and f.FStatus = 'N' and
+			f.WorkingProcedureExample_ID IN (
+				SELECT
+					WorkingProcedureExample_ID
+				FROM
+					KM_WorkingProcedureExample
+				WHERE
+					bom_id = #{BOM_ID}
+			)
+			
+		<!-- and TType = '投入' -->	
+	</select>
+	
+	<!-- 行关闭/反行关闭-->
+	<update id="rowClose" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FStatus = #{FStatus}
+		where 
+			InputOutput_ID = #{InputOutput_ID}
+	</update>
+	
+		<!-- 获取工序产出物料数量 -->
+	<select id="getOutNum" parameterType="pd" resultType="pd">
+		select
+		isnull(count(*),0) OutNum
+		from 
+		<include refid="tableName"></include> f
+		where WorkingProcedureExample_ID = #{WorkingProcedureExample_ID}
+		and TType='产出' and FStatus='N' and ProcessIType = '主产出'
+		<if test="InputOutput_ID != null and InputOutput_ID != ''">
+			and InputOutput_ID !=#{InputOutput_ID}
+		</if>
+		
+	</select>
+		<!-- 关联行关闭投入产出明细 -->
+	<update id="deleteMxRelated" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FStatus = #{FStatus}
+		where 
+			WorkingProcedureExample_ID = #{WorkingProcedureExample_ID}
+	</update>
+	
+		<!-- 删除BOM关联行关闭-->
+	<update id="rowCloseByBomId" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FStatus = #{FStatus}
+		where 
+			ProductionBOM_ID = #{ProductionBOM_ID}
+	</update>
+	<select id="listAll1" parameterType="pd" resultType="pd">
+	  select
+	  <include refid="Field"></include>,f4.FNAME FUnitName,
+	  case when 
+	  f.MaterialID is null or f.MaterialID='' then '' 
+	  else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称')  end FInMatJoint,
+	  case when 
+	  f.SubstituteMaterial is null or f.SubstituteMaterial='' then '' 
+	  else isnull(f2.MAT_CODE,'无编号')+'/'+isnull(f2.MAT_NAME,'无名称')  end FReplaceMatJoint,
+	     isnull(f3.FNum,'无编号')+'/'+isnull(f3.FName,'无名称') FProcessJoint,
+	     f5.FName ProcessDefinitionName 
+	  from
+	  <include refid="tableName"></include> f
+	  left join MBASE_MAT_BASIC f1 on f.MaterialID=f1.MAT_BASIC_ID
+	  left join MBASE_MAT_BASIC f2 on f.SubstituteMaterial=f2.MAT_BASIC_ID
+	  left join KM_WorkingProcedureExample f3 on f.WorkingProcedureExample_ID=f3.WorkingProcedureExample_ID
+	  left join MBASE_UNIT_INFO f4 on f1.MAT_MAIN_UNIT=f4.UNIT_INFO_ID 
+	  left join KM_ProcessDefinition f5 on f5.ProcessDefinition_ID=f3.WP 
+	  where 1=1
+	  and f.WorkingProcedureExample_ID=#{WorkingProcedureExample_ID}
+	  <choose>
+	           <when test="FTYPE != null and FTYPE == '投入'.toString()">
+	                and f.TType=#{FTYPE}
+	           </when>
+	          <when test="FTYPE != null and FTYPE == '产出'.toString()">
+	                and f.TType=#{FTYPE}
+	          </when>
+	          <otherwise>
+	          </otherwise>
+	        </choose>
+	 </select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_CULTURE_PLANMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_CULTURE_PLAN
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.EQM_TYPE,	
+		f.BEGIN_TIME,	
+		f.END_TIME,	
+		f.EQM_NAME,	
+		f.EQM_CODE,	
+		f.FWARRANTY,	
+		f.COMPLETE_WHETHER,	
+		f.EXECUTE_DATE,	
+		f.COMPILING_PERSON,	
+		f.WARRANTY_EXECUTOR,	
+		f.FREVIEWER,
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.EQM_BASE_ID,
+		f.FASSIGN_TYPE,
+		f.FASSIGN_CONTENT,
+		f.FEXTEND1,
+		f.FEXTEND2,
+		f.FEXTEND3,	
+		f.FPERIOD,
+		f.FFREQUENCY,
+		f.FTYPE,
+		f.EQM_CULTURE_PLAN_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		EQM_TYPE,	
+		BEGIN_TIME,	
+		END_TIME,	
+		EQM_NAME,	
+		EQM_CODE,	
+		FWARRANTY,	
+		COMPLETE_WHETHER,	
+		EXECUTE_DATE,	
+		COMPILING_PERSON,	
+		WARRANTY_EXECUTOR,	
+		FREVIEWER,	
+		FCREATOR,	
+		CREATE_TIME,
+		EQM_BASE_ID,
+		FASSIGN_TYPE,
+		FASSIGN_CONTENT,
+		FEXTEND1,
+		FEXTEND2,
+		FEXTEND3,	
+		FPERIOD,
+		FFREQUENCY,
+		FTYPE,		
+		EQM_CULTURE_PLAN_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{EQM_TYPE},	
+		#{BEGIN_TIME},	
+		#{END_TIME},	
+		#{EQM_NAME},	
+		#{EQM_CODE},	
+		#{FWARRANTY},	
+		#{COMPLETE_WHETHER},	
+		#{EXECUTE_DATE},	
+		#{COMPILING_PERSON},	
+		#{WARRANTY_EXECUTOR},	
+		#{FREVIEWER},	
+		#{FCREATOR},	
+		#{CREATE_TIME},
+		#{EQM_BASE_ID},	
+		#{FASSIGN_TYPE},	
+		#{FASSIGN_CONTENT},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},
+		#{FPERIOD},
+		#{FFREQUENCY},
+		#{FTYPE},			
+		#{EQM_CULTURE_PLAN_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_CULTURE_PLAN_ID = #{EQM_CULTURE_PLAN_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			EQM_TYPE = #{EQM_TYPE},
+			BEGIN_TIME = #{BEGIN_TIME},
+			END_TIME = #{END_TIME},
+			EQM_NAME = #{EQM_NAME},
+			EQM_CODE = #{EQM_CODE},
+			FWARRANTY = #{FWARRANTY},
+			COMPLETE_WHETHER = #{COMPLETE_WHETHER},
+			EXECUTE_DATE = #{EXECUTE_DATE},
+			COMPILING_PERSON = #{COMPILING_PERSON},
+			WARRANTY_EXECUTOR = #{WARRANTY_EXECUTOR},
+			FREVIEWER = #{FREVIEWER},
+			FCREATOR = #{FCREATOR},	
+		    CREATE_TIME = #{CREATE_TIME},	
+		    EQM_BASE_ID = #{EQM_BASE_ID},
+		    FASSIGN_TYPE = #{FASSIGN_TYPE},	
+		    FASSIGN_CONTENT = #{FASSIGN_CONTENT},	
+		    FEXTEND1 = #{FEXTEND1},	
+		    FEXTEND2 = #{FEXTEND2},	
+		    FEXTEND3 = #{FEXTEND3},
+		    FPERIOD = #{FPERIOD},
+			FFREQUENCY = #{FFREQUENCY},
+			FTYPE = #{FTYPE},		
+			EQM_CULTURE_PLAN_ID = EQM_CULTURE_PLAN_ID
+		where 
+			EQM_CULTURE_PLAN_ID = #{EQM_CULTURE_PLAN_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.EQM_CULTURE_PLAN_ID = #{EQM_CULTURE_PLAN_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FTYPENAME
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1
+		ON f.FTYPE = f1.DICTIONARIES_ID 
+		where EQM_BASE_ID=#{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.EQM_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.EQM_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		 [fhstart] order by f.CREATE_TIME DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FTYPENAME
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1
+		ON f.FTYPE = f1.DICTIONARIES_ID 
+		where 1=1 
+		<if test="State!= null and State != ''"><!-- 关键词检索 -->
+			and f.FEXTEND1 = #{State}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_CULTURE_PLAN_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过设备基础资料ID删除信息-->
+	<delete id="deleteBase" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</delete>
+	
+	<!-- 更新发布状态 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		    FEXTEND1 = #{FEXTEND1}
+		where 
+			EQM_CULTURE_PLAN_ID = #{EQM_CULTURE_PLAN_ID}
+	</update>
+	
+	<!-- 带办任务列表 -->
+	<select id="datalistPageTask" parameterType="page" resultType="pd">
+		SELECT 
+			t.*,f.WORKCENTER_NAME 
+		FROM (SELECT n.*,s.WC_WORKCENTER_ID,s.FNAME AS WORKCENTER_NAME FROM MDM_WC_WORKCENTER s LEFT JOIN MDM_EQM_BASE n ON s.WC_WORKCENTER_ID=n.FWORKCENTER ) f 
+		LEFT JOIN MDM_EQM_CULTURE_PLAN t ON f.EQM_BASE_ID = t.EQM_BASE_ID 
+		WHERE t.FEXTEND1='YES' AND t.COMPLETE_WHETHER!='YES'
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					t.EQM_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					t.EQM_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.WORKCENTER_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.USERNAME!= null and pd.USERNAME != ''"><!-- 待办权限 -->
+		   <if test="pd.DEPTNAME!= null and pd.DEPTNAME != ''">
+			and
+				(
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.USERNAME}+'%'
+					 or 
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.DEPTNAME}+'%' 
+				)
+		   </if>
+		</if>
+		 [fhstart] order by t.CREATE_TIME DESC [fhend] 
+	</select>
+	
+	<!-- 更新完成状态 -->
+	<update id="editOver" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		    COMPLETE_WHETHER = #{COMPLETE_WHETHER}
+		where 
+			EQM_CULTURE_PLAN_ID = #{EQM_CULTURE_PLAN_ID}
+	</update>
+	<!-- YY 356703572 -->
+</mapper>

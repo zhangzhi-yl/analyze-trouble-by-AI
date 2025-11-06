@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno3.taskDetails.TaskDetailsMapper">
+
+    <!--下线机任务详情-->
+    <select id="TaskDetails" resultType="pd" parameterType="pd">
+        select *
+        from (
+                 select ISNULL(gg2.WORK_ORDER_BARCODE, '')                          as 工单条码,
+                        ISNULL(gg2.PROJECT_FNAME, '')                               as 项目名称,
+                        case
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'PLC' then 'PLC'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'CP' then '低压控制'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'MC' then '传动'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'LV' then '配电'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'HPC' then '高压'
+                            else ''
+                            end
+                            +
+                        case
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 3), '') = 'Cabinet' then '柜体'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'BOX' then '箱体'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'OP' then '操作台'
+                            else ''
+                            end as '柜体类型',
+                        STUFF((
+                            select ',' + a.FNUMBER
+                            from MOM_CONTAINER a
+                            where a.FBINDCODE = gg2.WORK_ORDER_BARCODE
+                              and a.FBINDCODE !='' and a.FBINDCODE is not null for xml path ('') ),1,1,'') '容器编码',
+                        gg2.PRODUCT_CODE '柜体名称',
+                        gg2.STANDBY_FIELD2 '柜体别名',
+                        ISNULL(gg2.GENERATE_PROGRESS, '') as '生产进度',
+                        convert(varchar (13), ISNULL(gg2.PLAN_START_TIME, ''), 120) as 预计装配开始时间,
+                        convert(varchar (13), ISNULL(gg2.PLAN_END_TIME, ''), 120)   as 预计装配结束时间,
+                        ISNULL(gg2.REQUIRE_FINISH_TIME, '')                         as 要求完成日期,
+                        ZNUM 'BOM数',
+                        isnull((gg2.ZNUM - gg2.WTNUM), 0) '已领数' ,
+                        isnull(gg2.WTNUM, 0) '未发数',
+                        WORK_AREA_NO '装配工位',
+                        STUFF((
+                            select ',' + a.FSCAN_MAN
+                            from MOM_CONTAINER a
+                            where a.FBINDCODE = gg2.WORK_ORDER_BARCODE
+                              and a.FBINDCODE !='' and a.FBINDCODE is not null for xml path ('') ),1,1,'') '分料班组',
+                        gg2.WORK_ORDER_USER '装配班组',
+                        ISNULL(gg2.PROJECT_FCODE, '')                               as 项目编号,
+                        FWORKPIECE '生产效率',
+                        FPRODUCT_NUM '生产数量',
+                        FLINE_TYPE '线束种类',
+                        FLINE_LENGTH '导线长度',
+                        FCHANGE '是否变更',
+                        PLANBATCH '项目编号/批号'
+
+
+                 from (SELECT f2.PLANBATCH,
+                              f1.*,
+                              isnull((select count(*) from MOM_PRO_ORDER_BOM where PRO_ORDERS_ID = f1.PRO_ORDERS_ID),
+                                     0)    ZNUM,
+                              isnull((select count(*) WTNUM
+                                      from (select gy1.SJNUM - (case when gy1.YLNUM_K3 != 0 then gy1.YLNUM_K3 else gy1.YLNUM end) WLNUM
+
+                                            from (
+                                                     select case
+                                                                when VERIFICATION_STATUS = '对冲' then 0.00
+                                                                ELSE (
+                                                                    isnull(
+                                                                                cast(isnull(f.MATERIAL_REALITY_QTY, 0) as NUMERIC(18, 2)) +
+                                                                                isnull(
+                                                                                        (select sum(cast(isnull(f11.MATERIAL_REALITY_QTY, 0) as NUMERIC(18, 2))) NUM
+                                                                                         from MOM_PRO_ORDER_BOM f11
+                                                                                         where f11.PRO_ORDERS_ID = f.PRO_ORDERS_ID
+                                                                                           and f11.MATERIAL_FNUMBER = f.MATERIAL_FNUMBER
+                                                                                           and VERIFICATION_STATUS = '对冲'
+                                                                                         group by PRO_ORDERS_ID, MATERIAL_FNUMBER),
+                                                                                        0), 0)) end         SJNUM,
+                                                            case
+                                                                when VERIFICATION_STATUS = '对冲' then 0.00
+                                                                ELSE (isnull((select sum(isnull(VERIFY_QTY, 0))
+                                                                              from MOM_PRO_ORDER_REQ_OUTWARE f2
+                                                                              where f2.PRO_ORDERS_ID = f.PRO_ORDERS_ID
+                                                                                and f2.MATERIAL_CODE = f.MATERIAL_FNUMBER),
+                                                                             0)) end                        YLNUM,
+                                                            isnull((SELECT SUM(FQty) FQty
+                                                                    FROM K3005.AIS20201023183316.dbo.yl_33
+                                                                    WHERE objs = f1.PRODUCT_CODE
+                                                                      and FNumber = f.MATERIAL_FNUMBER), 0) YLNUM_K3
+                                                     from MOM_PRO_ORDER_BOM f
+                                                     where 1 = 1
+                                                       and PRO_ORDERS_ID = f1.PRO_ORDERS_ID
+                                                       and STANDBY_FIELD1 != 'YES' and VERIFICATION_STATUS != '对冲'
+                                                 ) gy1) gg
+                                      where 1 = 1
+                                        and WLNUM > 0
+                                     ), 0) WTNUM
+
+
+                       FROM MOM_PRO_ORDERS f1,
+                            MOM_PRO_PLANS f2
+                       WHERE 1 = 1
+                         and f1.PRO_PLANS_ID = f2.PRO_PLANS_ID
+                         and (f1.GENERATE_PROGRESS !='装配完成' or f1.GENERATE_PROGRESS is null or f1.GENERATE_PROGRESS ='')
+                         and PRO_ORDERS_ID in
+                             (
+                                 select distinct PRO_ORDERS_ID
+                                 from (
+                                          select *,
+                                                 ROW_NUMBER() over(partition by PRO_ORDERS_ID order by cast(REVISION as int) desc) as num
+                                          from MOM_WIND_INSERT
+                                          where USE_STATUS = '在用'
+                                      ) gy
+                                 where num = 1
+                             )
+                      ) gg2
+                          left join
+                      (select PRO_ORDERS_ID,
+                              FWORKPIECE,
+                              FPRODUCT_NUM,
+                              FLINE_TYPE,
+                              FLINE_LENGTH,
+                              case when REVISION = 1 then '否' else '是' end FCHANGE
+                       from (
+                                select *,
+                                       ROW_NUMBER() over(partition by PRO_ORDERS_ID order by cast(REVISION as int) desc) as num
+                                from MOM_WIND_INSERT
+                                where USE_STATUS = '在用'
+                            ) gy
+                       where num = 1
+                      ) gg3
+                      on gg2.PRO_ORDERS_ID = gg3.PRO_ORDERS_ID
+                 where 1 = 1
+             ) gy1
+        where 1 = 1
+        <if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+            and
+            gy1.柜体名称 LIKE '%'+ #{KEYWORDS}+'%'
+        </if>
+        order by 要求完成日期
+    </select>
+
+    <!--下线机任务详情-->
+    <select id="TaskDetailsdatalistPage" resultType="pd" parameterType="page">
+        select *
+        from (
+                 select ISNULL(gg2.WORK_ORDER_BARCODE, '')                          as 工单条码,
+                        ISNULL(gg2.PROJECT_FNAME, '')                               as 项目名称,
+                        case
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'PLC' then 'PLC'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'CP' then '低压控制'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'MC' then '传动'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'LV' then '配电'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'HPC' then '高压'
+                            else ''
+                            end
+                            +
+                        case
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 3), '') = 'Cabinet' then '柜体'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'BOX' then '箱体'
+                            when ISNULL(PARSENAME(PRODUCT_CODE, 2), '') = 'OP' then '操作台'
+                            else ''
+                            end as '柜体类型',
+                        STUFF((
+                            select ',' + a.FNUMBER
+                            from MOM_CONTAINER a
+                            where a.FBINDCODE = gg2.WORK_ORDER_BARCODE
+                              and a.FBINDCODE !='' and a.FBINDCODE is not null for xml path ('') ),1,1,'') '容器编码',
+                        gg2.PRODUCT_CODE '柜体名称',
+                        gg2.STANDBY_FIELD2 '柜体别名',
+                        ISNULL(gg2.GENERATE_PROGRESS, '') as '生产进度',
+                        convert(varchar (13), ISNULL(gg2.PLAN_START_TIME, ''), 120) as 预计装配开始时间,
+                        convert(varchar (13), ISNULL(gg2.PLAN_END_TIME, ''), 120)   as 预计装配结束时间,
+                        ISNULL(gg2.REQUIRE_FINISH_TIME, '')                         as 要求完成日期,
+                        ZNUM 'BOM数',
+                        isnull((gg2.ZNUM - gg2.WTNUM), 0) '已领数' ,
+                        isnull(gg2.WTNUM, 0) '未发数',
+                        WORK_AREA_NO '装配工位',
+                        STUFF((
+                            select ',' + a.FSCAN_MAN
+                            from MOM_CONTAINER a
+                            where a.FBINDCODE = gg2.WORK_ORDER_BARCODE
+                              and a.FBINDCODE !='' and a.FBINDCODE is not null for xml path ('') ),1,1,'') '分料班组',
+                        gg2.WORK_ORDER_USER '装配班组',
+                        ISNULL(gg2.PROJECT_FCODE, '')                               as 项目编号,
+                        FWORKPIECE '生产效率',
+                        FPRODUCT_NUM '生产数量',
+                        FLINE_TYPE '线束种类',
+                        FLINE_LENGTH '导线长度',
+                        FCHANGE '是否变更',
+                        PLANBATCH '项目编号/批号'
+
+
+                 from (SELECT f2.PLANBATCH,
+                              f1.*,
+                              isnull((select count(*) from MOM_PRO_ORDER_BOM where PRO_ORDERS_ID = f1.PRO_ORDERS_ID),
+                                     0)    ZNUM,
+                              isnull((select count(*) WTNUM
+                                      from (select gy1.SJNUM - (case when gy1.YLNUM_K3 != 0 then gy1.YLNUM_K3 else gy1.YLNUM end) WLNUM
+
+                                            from (
+                                                     select case
+                                                                when VERIFICATION_STATUS = '对冲' then 0.00
+                                                                ELSE (
+                                                                    isnull(
+                                                                                cast(isnull(f.MATERIAL_REALITY_QTY, 0) as NUMERIC(18, 2)) +
+                                                                                isnull(
+                                                                                        (select sum(cast(isnull(f11.MATERIAL_REALITY_QTY, 0) as NUMERIC(18, 2))) NUM
+                                                                                         from MOM_PRO_ORDER_BOM f11
+                                                                                         where f11.PRO_ORDERS_ID = f.PRO_ORDERS_ID
+                                                                                           and f11.MATERIAL_FNUMBER = f.MATERIAL_FNUMBER
+                                                                                           and VERIFICATION_STATUS = '对冲'
+                                                                                         group by PRO_ORDERS_ID, MATERIAL_FNUMBER),
+                                                                                        0), 0)) end         SJNUM,
+                                                            case
+                                                                when VERIFICATION_STATUS = '对冲' then 0.00
+                                                                ELSE (isnull((select sum(isnull(VERIFY_QTY, 0))
+                                                                              from MOM_PRO_ORDER_REQ_OUTWARE f2
+                                                                              where f2.PRO_ORDERS_ID = f.PRO_ORDERS_ID
+                                                                                and f2.MATERIAL_CODE = f.MATERIAL_FNUMBER),
+                                                                             0)) end                        YLNUM,
+                                                            isnull((SELECT SUM(FQty) FQty
+                                                                    FROM K3005.AIS20201023183316.dbo.yl_33
+                                                                    WHERE objs = f1.PRODUCT_CODE
+                                                                      and FNumber = f.MATERIAL_FNUMBER), 0) YLNUM_K3
+                                                     from MOM_PRO_ORDER_BOM f
+                                                     where 1 = 1
+                                                       and PRO_ORDERS_ID = f1.PRO_ORDERS_ID
+                                                       and STANDBY_FIELD1 != 'YES' and VERIFICATION_STATUS != '对冲'
+                                                 ) gy1) gg
+                                      where 1 = 1
+                                        and WLNUM > 0
+                                     ), 0) WTNUM
+
+
+                       FROM MOM_PRO_ORDERS f1,
+                            MOM_PRO_PLANS f2
+                       WHERE 1 = 1
+                         and f1.PRO_PLANS_ID = f2.PRO_PLANS_ID
+                         and (f1.GENERATE_PROGRESS !='装配完成' or f1.GENERATE_PROGRESS is null or f1.GENERATE_PROGRESS ='')
+                         and PRO_ORDERS_ID in
+                             (
+                                 select distinct PRO_ORDERS_ID
+                                 from (
+                                          select *,
+                                                 ROW_NUMBER() over(partition by PRO_ORDERS_ID order by cast(REVISION as int) desc) as num
+                                          from MOM_WIND_INSERT
+                                          where USE_STATUS = '在用'
+                                      ) gy
+                                 where num = 1
+                             )
+                      ) gg2
+                          left join
+                      (select PRO_ORDERS_ID,
+                              FWORKPIECE,
+                              FPRODUCT_NUM,
+                              FLINE_TYPE,
+                              FLINE_LENGTH,
+                              case when REVISION = 1 then '否' else '是' end FCHANGE
+                       from (
+                                select *,
+                                       ROW_NUMBER() over(partition by PRO_ORDERS_ID order by cast(REVISION as int) desc) as num
+                                from MOM_WIND_INSERT
+                                where USE_STATUS = '在用'
+                            ) gy
+                       where num = 1
+                      ) gg3
+                      on gg2.PRO_ORDERS_ID = gg3.PRO_ORDERS_ID
+                 where 1 = 1
+             ) gy1
+        where 1 = 1
+        <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+            and
+            gy1.柜体名称 LIKE '%'+ #{pd.KEYWORDS}+'%'
+        </if>
+        [fhstart]order by 要求完成日期[fhend]
+    </select>
+
+
+    <!-- yy356703572qq(彬耶) -->
+</mapper>

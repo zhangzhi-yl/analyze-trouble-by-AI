@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.ActivityInstanceMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		EPM_ACTIVITYINSTANCE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		isnull(f.FAINAME,'') FAINAME,	
+		isnull(f.FAIDESCRIPTION,'') FAIDESCRIPTION, 	
+		isnull(f.FAIREMARK,'')  FAIREMARK,	
+		isnull(f.FAISTATE,'')  FAISTATE,	
+		isnull(f.FAILEVEL,'')  FAILEVEL,	
+		isnull(f.FAIISCHECK,'')  FAIISCHECK,	
+		isnull(f.FAICHECKINSID,	'') FAICHECKINSID, 
+		isnull(f.FAICHECKSTATE,'')  FAICHECKSTATE,	
+		isnull(f.FAIDUTYNAME,'')  FAIDUTYNAME,	
+		isnull(f.FAIDUTYMAN,'')  FAIDUTYMAN,	
+		isnull(f.FAISTARTTIME,'')  FAISTARTTIME,	
+		isnull(f.FAIENDTIME,'')  FAIENDTIME,	
+		isnull(f.FACTUALSTART,'') FACTUALSTART, 	
+		isnull(f.FACTUALEND,'')  FACTUALEND,	
+		isnull(f.FAIPROPERTY,'')  FAIPROPERTY,	
+		isnull(f.FAICOMRATE,'') 	FAICOMRATE,
+		isnull(f.PHASEINSTANCE_ID,'') PHASEINSTANCE_ID, 	
+		isnull(f.PLANINSTANCE_ID,'')  PLANINSTANCE_ID,	
+		isnull(f.FAIINPUTITEMS,	'')  FAIINPUTITEMS,
+		isnull(f.FAIOUTPUTITEMS,'')  FAIOUTPUTITEMS,	
+		isnull(f.FCREATOR,'')  FCREATOR,
+		isnull(f.FCTIME,'')  FCTIME,
+		isnull(f.FCHECK,'')  FCHECK,
+		isnull(f.ACTIVITYINSTANCE_ID,'')  ACTIVITYINSTANCE_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FAINAME,	
+		FAIDESCRIPTION,	
+		FAIREMARK,	
+		FAISTATE,	
+		FAILEVEL,	
+		FAIISCHECK,	
+		FAICHECKINSID,	
+		FAICHECKSTATE,	
+		FAIDUTYNAME,	
+		FAIDUTYMAN,	
+		FAISTARTTIME,	
+		FAIENDTIME,	
+		FACTUALSTART,	
+		FACTUALEND,	
+		FAIPROPERTY,	
+		FAICOMRATE,	
+		PHASEINSTANCE_ID,	
+		PLANINSTANCE_ID,	
+		FAIINPUTITEMS,	
+		FAIOUTPUTITEMS,	
+		FCREATOR,	
+		FCTIME,	
+		FCHECK,
+		ACTIVITYINSTANCE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FAINAME},	
+		#{FAIDESCRIPTION},	
+		#{FAIREMARK},	
+		#{FAISTATE},	
+		#{FAILEVEL},	
+		#{FAIISCHECK},	
+		#{FAICHECKINSID},	
+		#{FAICHECKSTATE},	
+		#{FAIDUTYNAME},	
+		#{FAIDUTYMAN},	
+		#{FAISTARTTIME},	
+		#{FAIENDTIME},	
+		#{FACTUALSTART},	
+		#{FACTUALEND},	
+		#{FAIPROPERTY},	
+		#{FAICOMRATE},	
+		#{PHASEINSTANCE_ID},	
+		#{PLANINSTANCE_ID},	
+		#{FAIINPUTITEMS},	
+		#{FAIOUTPUTITEMS},	
+		#{FCREATOR},	
+		#{FCTIME},
+		#{FCHECK},	
+		#{ACTIVITYINSTANCE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ACTIVITYINSTANCE_ID = #{ACTIVITYINSTANCE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FAISTATE = #{FAISTATE},
+			FAILEVEL = #{FAILEVEL},
+			FAIDUTYNAME = #{FAIDUTYNAME},
+			FAIDUTYMAN = #{FAIDUTYMAN},
+			FAISTARTTIME = #{FAISTARTTIME},
+			FAIENDTIME = #{FAIENDTIME},
+			FAIPROPERTY= #{FAIPROPERTY},
+			ACTIVITYINSTANCE_ID = ACTIVITYINSTANCE_ID
+		where 
+			ACTIVITYINSTANCE_ID = #{ACTIVITYINSTANCE_ID}
+	</update>
+	
+	<!-- 活动修改执行的时候，重新计算阶段的工单开始时间和工单结束时间，并且更新阶段表里对应字段-->
+	
+	<update id="updatePhasePlanStartEndTime" parameterType="pd">
+	  UPDATE  EPM_PHASEINSTANCE  SET FHISTARTTIME= t.phaseStart, FHIENDTIME=t.phaseEnd
+      FROM
+        (SELECT  MIN(FAISTARTTIME)  phaseStart ,MAX(FAIENDTIME)  phaseEnd
+        from EPM_ACTIVITYINSTANCE A  WHERE A.PLANINSTANCE_ID=#{PLANINSTANCE_ID} and A.PHASEINSTANCE_ID=#{PHASEINSTANCE_ID}) t
+      WHERE PHASEINSTANCE_ID=#{PHASEINSTANCE_ID}	
+	</update>
+	<!-- 活动修改执行的时候，重新计算工单的工单开始时间和工单结束时间，并且更新工单表里对应字段-->
+	<update id="updatePlanPlanStartEndTime" parameterType="pd">
+	  UPDATE  EPM_PLANINSTANCE  SET FPISTARTTIME= t.planStart, FPIENDTIME=t.planEnd
+      FROM
+        (SELECT  MIN(FAISTARTTIME)  planStart ,MAX(FAIENDTIME)  planEnd
+        from EPM_ACTIVITYINSTANCE A  WHERE A.PLANINSTANCE_ID=#{PLANINSTANCE_ID}) t
+      WHERE PLANINSTANCE_ID=#{PLANINSTANCE_ID}	
+	</update>
+	
+	
+	<!--任务进度更新的时候，更新对应活动的完成进度-->
+	<update id="updateActivityCOMRATE" parameterType="pd">
+	  UPDATE EPM_ACTIVITYINSTANCE set  FAICOMRATE=
+      (SELECT AVG(CAST(w.FWPCOMRATE AS FLOAT))  AVGCOMRATE FROM EPM_WORKPACKAGE w   WHERE  w.ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID})
+      WHERE ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID}	
+	</update>
+	
+    <!-- 更新活动的实际开始时间 -->
+    
+    <update id="updateActivityActualStart" parameterType="pd">
+	  update  EPM_ACTIVITYINSTANCE  set     
+      FACTUALSTART=(SELECT min(w.FACTUALSTART) astartstime FROM EPM_WORKPACKAGE w  where w.ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID} and  w.FACTUALSTART!='')
+      where ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID}
+	</update>
+	<!-- 更新活动的实际结束时间 -->
+	<update id="updateActivityActualEnd" parameterType="pd">
+	  update  EPM_ACTIVITYINSTANCE  set     
+      FACTUALEND=(SELECT MAX(w.FACTUALEND) aendstime FROM EPM_WORKPACKAGE w  where w.ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID})
+      where ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID}
+	</update>
+	
+	<!-- 按照活动ID更新运行状态 -->
+	<update id="updateActivityStartStatus" parameterType="pd">
+	    UPDATE  a set a.FAISTATE= CASE WHEN b.num>0 then '运行' else a.FAISTATE END
+		FROM  EPM_ACTIVITYINSTANCE  a  
+		LEFT JOIN (select  ACTIVITYINSTANCE_ID,FWPSTATE, count(*) num FROM EPM_WORKPACKAGE where ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID} and FWPSTATE='运行'  GROUP BY  ACTIVITYINSTANCE_ID , FWPSTATE) b
+		on b.ACTIVITYINSTANCE_ID=a.ACTIVITYINSTANCE_ID
+		where a.ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID} 
+	</update>
+	
+	<!--按照活动ID更新结束状态   -->
+	<update id="updateActivityEndStatus" parameterType="pd">
+	    UPDATE  a set a.FAISTATE= CASE WHEN c.snum=b.num then '正常结束' else a.FAISTATE END
+		FROM  EPM_ACTIVITYINSTANCE  a  
+		LEFT JOIN (select  ACTIVITYINSTANCE_ID,FWPSTATE, count(*) num FROM EPM_WORKPACKAGE where ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID}  and FWPSTATE like '%结束%'  GROUP BY  ACTIVITYINSTANCE_ID , FWPSTATE) b
+		on b.ACTIVITYINSTANCE_ID=a.ACTIVITYINSTANCE_ID
+		LEFT JOIN (select  ACTIVITYINSTANCE_ID,FWPSTATE, count(*) snum FROM EPM_WORKPACKAGE where ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID}  GROUP BY  ACTIVITYINSTANCE_ID , FWPSTATE) c
+		on c.ACTIVITYINSTANCE_ID=a.ACTIVITYINSTANCE_ID
+		where a.ACTIVITYINSTANCE_ID=#{ACTIVITYINSTANCE_ID}
+	</update>
+	
+	
+	
+	
+	
+	<!-- 按照工单实例ID列出活动实例列表 -->
+	<select id="listActivityByPlanID" parameterType="pd" resultType="pd">
+		select
+		p.FPICONTRACTINNERID,
+		p.FPINAME,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		left join   EPM_PLANINSTANCE  p
+		on  f.PLANINSTANCE_ID=p.PLANINSTANCE_ID
+	    WHERE f.FCHECK='YES' and f.PLANINSTANCE_ID=#{PLANINSTANCE_ID}
+	</select>
+	
+	<!-- 通过项目ID获得生产制造活动的开始结束时间-->
+	<select id="findPlanStartEndTimeByProID" parameterType="pd" resultType="pd">
+	    select min(a.FAISTARTTIME) FAISTARTTIME ,max(a.FAIENDTIME) FAIENDTIME
+		from EPM_ACTIVITYINSTANCE a 
+		left join EPM_PLANINSTANCE  p
+		on a.PLANINSTANCE_ID=p.PLANINSTANCE_ID
+		WHERE p.FPICONTRACTINNERID=#{FPICONTRACTINNERID} and a.FAINAME='生产制造' and a.FAISTARTTIME!=''	
+	</select>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.ACTIVITYINSTANCE_ID = #{ACTIVITYINSTANCE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and f.PHASEINSTANCE_ID=#{pd.PHASEINSTANCE_ID} 
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				  f.FAINAME LIKE '%'+ #{pd.keywords}+'%'
+				  
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.keywords}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.keywords}+'%' 
+				-->
+				)
+		</if>
+		[fhstart]  ORDER BY  f.FAILEVEL  [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	<!-- 获取活动实例列表，用于拓扑图使用 -->
+	<select id="getTptDatalist" parameterType="pd" resultType="pd">
+		SELECT
+			isnull(ai.ACTIVITYINSTANCE_ID,'') ACTIVITYINSTANCE_ID,	
+			isnull(ai.FAINAME,'') FAINAME,	
+			isnull(ai.FAISTATE,'') FAISTATE,	
+			isnull(ai.FAICOMRATE,'') FAICOMRATE,	
+			isnull(pii.FHINAME,'') FHINAME,	
+			isnull(pii.FHILEVEL,'') FHILEVEL,	
+			isnull(ai.FAINAME,'') FAINAME,	
+			isnull(ai.FAILEVEL,'') FAILEVEL,	
+			isnull(pi.FPTNAME,'') FPTNAME
+		FROM
+			EPM_PLANINSTANCE pi
+		LEFT JOIN EPM_PHASEINSTANCE pii ON pi.PLANINSTANCE_ID = pii.PLANINSTANCE_ID
+		LEFT JOIN EPM_ACTIVITYINSTANCE ai ON pii.PHASEINSTANCE_ID = ai.PHASEINSTANCE_ID
+		WHERE
+			pi.FPICONTRACTINNERID = #{PROJECT_ID}
+		ORDER BY
+			pii.FHILEVEL ASC,
+			ai.FAILEVEL ASC
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ACTIVITYINSTANCE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 验证是否该工单ID下是否有活动没填入开始结束时间还有负责任的-->
+	<select id="getArecordnum" parameterType="pd" resultType="pd">
+		SELECT count(*) arecordnum from  EPM_ACTIVITYINSTANCE  WHERE (FAISTARTTIME is NULL or FAIENDTIME is NULL or FAIDUTYNAME is NULL or FAIDUTYMAN is null) and PLANINSTANCE_ID=#{PLANINSTANCE_ID}
+	</select>
+	<!-- 验证是否该工单ID下是否有阶段没填入开始结束时间还有负责任的-->
+	<select id="getPrecordnum" parameterType="pd" resultType="pd">
+	SELECT count(*) precordnum from  EPM_PHASEINSTANCE    WHERE (FHISTARTTIME is NULL or FHIENDTIME is NULL or FHIDUTYNAME is NULL or FHIDUTYMAN is null) and PLANINSTANCE_ID=#{PLANINSTANCE_ID}
+	</select>
+	
+	<!-- 修改勾选信息 -->
+	<update id="editFcheck" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCHECK = #{FCHECK}
+		where 
+			ACTIVITYINSTANCE_ID = #{ACTIVITYINSTANCE_ID}
+	</update>
+</mapper>

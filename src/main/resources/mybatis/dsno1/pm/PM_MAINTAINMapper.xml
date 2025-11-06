@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pm.PM_MAINTAINMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PM_MAINTAIN
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PM_MAINTAIN_ID,	
+		f.MAINTAIN_PLAN_NO,	
+		f.EQM_BASE_ID,	
+		f.MAINTAIN_TYPE,	
+		f.MAINTAIN_SOURCE,	
+		f.MAINTAIN_DEPT,	
+		f.MAINTAIN_PRINCIPAL,	
+		f.PLAN_MAINTAIN_TIME,	
+		f.PRACTICAL_START_TIME,	
+		f.PRACTICAL_END_TIME,	
+		f.MAINTAIN_MANHOUR,	
+		f.IF_LEFTOVER_PROBLEM,	
+		f.LEFTOVER_PROBLEM,	
+		f.REMARK,	
+		f.MAINTAIN_FILE,	
+		f.RUN_STATUS,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.RESERVE_ONE,	
+		f.RESERVE_TWO,	
+		f.RESERVE_THREE,
+		f.FPERIOD,
+		f.FFREQUENCY,
+		f.FTYPE,
+		f.EQM_CULTURE_PLAN_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		PM_MAINTAIN_ID,	
+		MAINTAIN_PLAN_NO,	
+		EQM_BASE_ID,	
+		MAINTAIN_TYPE,	
+		MAINTAIN_SOURCE,	
+		MAINTAIN_DEPT,	
+		MAINTAIN_PRINCIPAL,	
+		PLAN_MAINTAIN_TIME,	
+		PRACTICAL_START_TIME,	
+		PRACTICAL_END_TIME,	
+		MAINTAIN_MANHOUR,	
+		IF_LEFTOVER_PROBLEM,	
+		LEFTOVER_PROBLEM,	
+		REMARK,	
+		MAINTAIN_FILE,	
+		RUN_STATUS,	
+		FCREATOR,	
+		CREATE_TIME,	
+		RESERVE_ONE,	
+		RESERVE_TWO,	
+		RESERVE_THREE,
+		FPERIOD,
+		FFREQUENCY,
+		FTYPE,
+		EQM_CULTURE_PLAN_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PM_MAINTAIN_ID},	
+		#{MAINTAIN_PLAN_NO},	
+		#{EQM_BASE_ID},	
+		#{MAINTAIN_TYPE},	
+		#{MAINTAIN_SOURCE},	
+		#{MAINTAIN_DEPT},	
+		#{MAINTAIN_PRINCIPAL},	
+		#{PLAN_MAINTAIN_TIME},	
+		#{PRACTICAL_START_TIME},	
+		#{PRACTICAL_END_TIME},	
+		#{MAINTAIN_MANHOUR},	
+		#{IF_LEFTOVER_PROBLEM},	
+		#{LEFTOVER_PROBLEM},	
+		#{REMARK},	
+		#{MAINTAIN_FILE},	
+		#{RUN_STATUS},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{RESERVE_ONE},	
+		#{RESERVE_TWO},	
+		#{RESERVE_THREE},
+		#{FPERIOD},
+		#{FFREQUENCY},
+		#{FTYPE},
+		#{EQM_CULTURE_PLAN_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PM_MAINTAIN_ID = #{PM_MAINTAIN_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MAINTAIN_PLAN_NO = #{MAINTAIN_PLAN_NO},
+			EQM_BASE_ID = #{EQM_BASE_ID},
+			MAINTAIN_TYPE = #{MAINTAIN_TYPE},
+			MAINTAIN_SOURCE = #{MAINTAIN_SOURCE},
+			MAINTAIN_DEPT = #{MAINTAIN_DEPT},
+			MAINTAIN_PRINCIPAL = #{MAINTAIN_PRINCIPAL},
+			PLAN_MAINTAIN_TIME = #{PLAN_MAINTAIN_TIME},
+			PRACTICAL_START_TIME = #{PRACTICAL_START_TIME},
+			PRACTICAL_END_TIME = #{PRACTICAL_END_TIME},
+			MAINTAIN_MANHOUR = #{MAINTAIN_MANHOUR},
+			IF_LEFTOVER_PROBLEM = #{IF_LEFTOVER_PROBLEM},
+			LEFTOVER_PROBLEM = #{LEFTOVER_PROBLEM},
+			REMARK = #{REMARK},
+			MAINTAIN_FILE = #{MAINTAIN_FILE},
+			RUN_STATUS = #{RUN_STATUS},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			RESERVE_ONE = #{RESERVE_ONE},
+			RESERVE_TWO = #{RESERVE_TWO},
+			RESERVE_THREE = #{RESERVE_THREE},
+			FPERIOD = #{FPERIOD},
+			FFREQUENCY = #{FFREQUENCY},
+			FTYPE = #{FTYPE},
+			EQM_CULTURE_PLAN_ID = #{EQM_CULTURE_PLAN_ID},
+			PM_MAINTAIN_ID = PM_MAINTAIN_ID
+		where 
+			PM_MAINTAIN_ID = #{PM_MAINTAIN_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.FNAME AS EQM_BASE_NAME,f1.FIDENTIFY AS EQM_BASE_CODE,f2.NAME FTYPENAME
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_EQM_BASE f1 ON f.EQM_BASE_ID = f1.EQM_BASE_ID  
+		LEFT JOIN SYS_DICTIONARIES f2 ON f.FTYPE = f2.DICTIONARIES_ID 
+		where 
+			f.PM_MAINTAIN_ID = #{PM_MAINTAIN_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.FNAME AS EQM_BASE_NAME,f1.FIDENTIFY AS EQM_BASE_CODE,f2.NAME FTYPENAME
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN MDM_EQM_BASE f1 ON f.EQM_BASE_ID = f1.EQM_BASE_ID  
+		LEFT JOIN SYS_DICTIONARIES f2 ON f.FTYPE = f2.DICTIONARIES_ID 
+		where 1=1
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.MAINTAIN_PLAN_NO LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f1.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f1.FIDENTIFY LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.MAINTAIN_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f.MAINTAIN_DEPT LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f.MAINTAIN_PRINCIPAL LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.FSTATE!= null and pd.FSTATE != ''"><!-- 运行状态 -->
+			and
+				(
+					f.RUN_STATUS = #{pd.FSTATE}
+				)
+		</if>
+		[fhstart] order by f.CREATE_TIME DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.FNAME AS EQM_BASE_NAME,f1.FIDENTIFY AS EQM_BASE_CODE,f2.NAME FTYPENAME
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN MDM_EQM_BASE f1 ON f.EQM_BASE_ID = f1.EQM_BASE_ID  
+		LEFT JOIN SYS_DICTIONARIES f2 ON f.FTYPE = f2.DICTIONARIES_ID 
+		where 1=1
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PM_MAINTAIN_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 删除附件 -->
+	<update id="delFj" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RESERVE_ONE = '',
+			MAINTAIN_FILE = ''
+		where 
+			PM_MAINTAIN_ID = #{PM_MAINTAIN_ID}
+	</update>
+	
+	<!-- 修改运行状态 -->
+	<update id="editIssue" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RUN_STATUS = #{RUN_STATUS}
+		where 
+			PM_MAINTAIN_ID = #{PM_MAINTAIN_ID}
+	</update>
+	
+	<!-- 获取最近一次生成保养任务的天数 -->
+	<select id="findByPlanDateNum" parameterType="pd" resultType="pd">
+		SELECT TOP 1
+			DATEDIFF(day,f.PRACTICAL_START_TIME,LEFT(GETDATE(),10))AS FDate,
+			f.PRACTICAL_START_TIME
+		FROM
+			PM_MAINTAIN f
+		WHERE
+			f.EQM_CULTURE_PLAN_ID = #{EQM_CULTURE_PLAN_ID} 
+		GROUP BY f.PRACTICAL_START_TIME
+		ORDER BY f.PRACTICAL_START_TIME DESC
+	</select>
+	
+		<!-- 获取生成保养任务的数量 -->
+	<select id="findByPlanNum" parameterType="pd" resultType="pd">
+		SELECT COUNT(*) FNUM FROM PM_MAINTAIN f
+		WHERE f.EQM_CULTURE_PLAN_ID = #{EQM_CULTURE_PLAN_ID} 
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

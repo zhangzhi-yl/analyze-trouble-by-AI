@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.StockListDetailMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		MM_StockListDetail
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.RowNum,
+		f.DataSources,
+		f.SourceOrderNum,
+		f.SourceRowNum,
+		f.StockList_ID,
+		f.LineCloseIf,
+		f.QRCodeInformation,
+		f.FItem,
+		f.MaterialBatchNumber,
+		f.FCode,
+		f.MaterialQuantity,
+		f.MaterialSProp,
+		f.MaterialSPropKey,
+		f.WarehouseID,
+		f.PositionID,
+		f.SubordinateInventory,
+		f.QualificationInspection,
+		f.TareWeightOfMaterial,
+		f.NetWeightOfMaterial,
+		f.UnitPrice,
+		f.FUnit,
+		f.FCost,
+		f.FExplanation1,
+		f.FExplanation2,
+		f.FExplanation3,
+		f.StockListDetail_ID,
+		f.FIsScan,
+		f.DemandQuantity,
+		f.SplitQuantity,
+		f.UNIQUE_CODE_WHETHER,
+		f.MAT_CODE,
+		f.MAT_NAME,
+		f.METADATA_WHETHER,
+		f.RelationID,
+		f.SplitStatus
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		RowNum,
+		DataSources,
+		SourceOrderNum,
+		SourceRowNum,
+		StockList_ID,
+		LineCloseIf,
+		QRCodeInformation,
+		FItem,
+		MaterialBatchNumber,
+		FCode,
+		MaterialQuantity,
+		MaterialSProp,
+		MaterialSPropKey,
+		WarehouseID,
+		PositionID,
+		SubordinateInventory,
+		QualificationInspection,
+		TareWeightOfMaterial,
+		NetWeightOfMaterial,
+		UnitPrice,
+		FUnit,
+		FCost,
+		FExplanation1,
+		FExplanation2,
+		FExplanation3,
+		StockListDetail_ID,
+		FIsScan,
+		DemandQuantity,
+		SplitQuantity,
+		UNIQUE_CODE_WHETHER,
+		MAT_CODE,
+		MAT_NAME,
+		METADATA_WHETHER,
+		RelationID,
+		SplitStatus
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{RowNum},
+		#{DataSources},
+		#{SourceOrderNum},
+		#{SourceRowNum},
+		#{StockList_ID},
+		#{LineCloseIf},
+		#{QRCodeInformation},
+		#{FItem},
+		#{MaterialBatchNumber},
+		#{FCode},
+		#{MaterialQuantity},
+		#{MaterialSProp},
+		#{MaterialSPropKey},
+		#{WarehouseID},
+		#{PositionID},
+		#{SubordinateInventory},
+		#{QualificationInspection},
+		#{TareWeightOfMaterial},
+		#{NetWeightOfMaterial},
+		#{UnitPrice},
+		#{FUnit},
+		#{FCost},
+		#{FExplanation1},
+		#{FExplanation2},
+		#{FExplanation3},
+		#{StockListDetail_ID},
+		#{FIsScan},
+		#{DemandQuantity},
+		#{SplitQuantity},
+		#{UNIQUE_CODE_WHETHER},
+		#{MAT_CODE},
+		#{MAT_NAME},
+		#{METADATA_WHETHER},
+		#{RelationID},
+		#{SplitStatus}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		StockListDetail_ID = #{StockListDetail_ID}
+	</delete>
+
+	<!-- 根据主表id删除 -->
+	<delete id="deleteByStockList_ID" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		StockList_ID = #{StockList_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		QRCodeInformation = #{QRCodeInformation},
+		FItem = #{FItem},
+		MaterialBatchNumber = #{MaterialBatchNumber},
+		FCode = #{FCode},
+		MaterialQuantity = #{MaterialQuantity},
+		MaterialSPropKey = #{MaterialSPropKey},
+		WarehouseID = #{WarehouseID},
+		PositionID = #{PositionID},
+		SubordinateInventory = #{SubordinateInventory},
+		QualificationInspection = #{QualificationInspection},
+		TareWeightOfMaterial = #{TareWeightOfMaterial},
+		NetWeightOfMaterial = #{NetWeightOfMaterial},
+		UnitPrice = #{UnitPrice},
+		FUnit = #{FUnit},
+		FCost = #{FCost},
+		FExplanation1 = #{FExplanation1},
+		FExplanation2 = #{FExplanation2},
+		FExplanation3 = #{FExplanation3},
+		FIsScan = #{FIsScan},
+		DemandQuantity = #{DemandQuantity},
+		SplitQuantity = #{SplitQuantity},
+		UNIQUE_CODE_WHETHER = #{UNIQUE_CODE_WHETHER},
+		MAT_CODE = #{MAT_CODE},
+		MAT_NAME = #{MAT_NAME},
+		METADATA_WHETHER = #{METADATA_WHETHER},
+		RelationID = #{RelationID},
+		SplitStatus = #{SplitStatus}
+		where
+		StockListDetail_ID = #{StockListDetail_ID}
+	</update>
+
+	<!-- 更新实际数量、仓库id、库位id -->
+	<update id="editPositionAndQty" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		MaterialQuantity = #{MaterialQuantity},
+		WarehouseID = #{WarehouseID},
+		PositionID = #{PositionID}
+		where
+		StockListDetail_ID = #{StockListDetail_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		(
+		SELECT COUNT(StockListDetail_ID) FROM MM_StockListDetail
+		WHERE FIsScan='N' AND StockList_ID=f.StockList_ID
+		) as ToBeDone,
+		<include refid="Field"></include>
+		,
+		isnull(f2.FCODE,'无编号')+ '-'+isnull(f3.FNAME,'无名称') PositionName,
+		isnull(f1.MAT_CODE,'无编号') + '|'+isnull(f1.MAT_NAME,'无名称')
+		MaterialName,
+		f1.MAT_MAIN_UNIT, f1.MAT_AUXILIARY_ID,
+		isnull(f4.MAT_AUXILIARYMX_NAME,'')
+		MAT_AUXILIARYMX_NAME,isnull(f4.MAT_AUXILIARYMX_CODE,'')
+		MAT_AUXILIARYMX_CODE,
+		f5.FNAME FUnitName,
+		isnull(f6.FNum,'无编号')
+		SupplierNum, isnull(f6.FName,'无名称') SupplierName,
+		m.DocumentTypeBlueRed,m.DocumentTypeInOut,m.FMakeBillsTime,m.DocumentNo,isnull(f7.NAME,'')
+		FCreatorName
+		from
+		<include refid="tableName"></include>
+		f
+		left join MM_StockList m on f.StockList_ID=m.StockList_ID
+		left join
+		MBASE_MAT_BASIC f1 on f1.MAT_BASIC_ID=f.FCode
+		left join
+		MWMS_WH_WAREHOUSE f2 on f2.WH_WAREHOUSE_ID=f.WarehouseID
+		left join
+		MWMS_WH_LOCATION f3 on f3.WH_LOCATION_ID=f.PositionID
+		left join
+		MBASE_MAT_AUXILIARYMX f4 on f4.MAT_AUXILIARYMX_ID=f.MaterialSPropKey
+		left join MBASE_UNIT_INFO f5 on f1.MAT_MAIN_UNIT=f5.UNIT_INFO_ID
+		left join KM_Supplier f6 on m.SupplierID=f6.Supplier_ID
+		left join OA_STAFF f7 on m.FCreator=f7.STAFF_ID
+		where
+		f.StockListDetail_ID = #{StockListDetail_ID}
+	</select>
+
+	<!-- 通过行号和StockList_ID获取数据 -->
+	<select id="findByRowNumAndStockList_ID" parameterType="pd"
+		resultType="pd">
+		select top 1
+		(
+		SELECT COUNT(StockListDetail_ID) FROM MM_StockListDetail
+		WHERE FIsScan='N' AND StockList_ID=f.StockList_ID
+		) as ToBeDone,
+		<include refid="Field"></include>
+		,isnull(f2.FCODE,'无编号')+ '-'+isnull(f3.FNAME,'无名称') PositionName,
+		isnull(f.MAT_CODE,'无编号') + '|'+isnull(f.MAT_NAME,'无名称') MaterialName,
+		f1.MAT_MAIN_UNIT, f1.MAT_AUXILIARY_ID,
+		f4.MAT_AUXILIARYMX_NAME,f4.MAT_AUXILIARYMX_CODE,
+		f5.FNAME FUnitName,
+		isnull(f6.FNum,'无编号') SupplierNum, isnull(f6.FName,'无名称')
+		SupplierName,
+		m.DocumentTypeBlueRed,m.DocumentTypeInOut,m.FMakeBillsTime,m.DocumentNo,isnull(f7.NAME,'')
+		FCreatorName
+		from
+		<include refid="tableName"></include>
+		f
+		left join MM_StockList m on f.StockList_ID=m.StockList_ID
+		left join
+		MBASE_MAT_BASIC f1 on f1.MAT_BASIC_ID=f.FCode
+		left join
+		MWMS_WH_WAREHOUSE f2 on f2.WH_WAREHOUSE_ID=f.WarehouseID
+		left join
+		MWMS_WH_LOCATION f3 on f3.WH_LOCATION_ID=f.PositionID
+		left join
+		MBASE_MAT_AUXILIARYMX f4 on f4.MAT_AUXILIARYMX_ID=f.MaterialSPropKey
+		left join MBASE_UNIT_INFO f5 on f1.MAT_MAIN_UNIT=f5.UNIT_INFO_ID
+		left join KM_Supplier f6 on m.SupplierID=f6.Supplier_ID
+		left join OA_STAFF f7 on m.FCreator=f7.STAFF_ID
+		where
+		m.StockList_ID = #{StockList_ID}
+		and f.RowNum = #{RowNum}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		f.RowNum,
+		f.DataSources,
+		f.SourceOrderNum,
+		f.SourceRowNum,
+		f.StockList_ID,
+		f.LineCloseIf,
+		f.QRCodeInformation,
+		f.FItem,
+		isnull(f.MaterialBatchNumber,'') MaterialBatchNumber,
+		f.FCode,
+		f.MaterialQuantity,
+		f.MaterialSProp,
+		f.MaterialSPropKey,
+		f.WarehouseID,
+		f.PositionID,
+		f.SubordinateInventory,
+		f.QualificationInspection,
+		f.TareWeightOfMaterial,
+		f.NetWeightOfMaterial,
+		f.UnitPrice,
+		f.FUnit,
+		f.FCost,
+		f.FExplanation1,
+		f.FExplanation2,
+		f.FExplanation3,
+		f.StockListDetail_ID,
+		f.FIsScan,
+		f.DemandQuantity,
+		f.SplitQuantity,
+		f.UNIQUE_CODE_WHETHER,
+		f.MAT_CODE,
+		f.MAT_NAME,
+		f.METADATA_WHETHER,
+		f.RelationID,
+		f.SplitStatus,
+		case when
+		f.FCode is null or f.FCode='' then ''
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') end
+		FInMatJoint,
+		case when
+		f.WarehouseID is null or f.WarehouseID='' then ''
+		else isnull(f2.FNAME,'无名称')+'/'+isnull(f2.FCODE,'无编号') end
+		FWAREHOUSEJoint,
+		case when
+		f.PositionID is null or f.PositionID='' then ''
+		else isnull(f3.FNAME,'无名称')+'/'+isnull(f3.FCODE,'无编号') end FLOCATIONJoint,
+		case when
+		f.FUnit is null or f.FUnit='' then ''
+		else isnull(f5.FNAME,'无名称')+'/'+isnull(f5.FCODE,'无编号') end UNITJoint,
+		f1.MAT_MAIN_UNIT,
+		f1.MAT_AUXILIARY_ID,
+		isnull(f4.MAT_AUXILIARYMX_NAME,'')
+		MAT_AUXILIARYMX_NAME,isnull(f4.MAT_AUXILIARYMX_CODE,'')
+		MAT_AUXILIARYMX_CODE,
+		f5.FNAME FUnitName,
+		m.DocumentTypeBlueRed,
+		m.DocumentTypeInOut
+		from
+		<include refid="tableName"></include>
+		f
+		left join MM_StockList m
+		on f.StockList_ID=m.StockList_ID
+		left join
+		MBASE_MAT_BASIC f1
+		on f1.MAT_BASIC_ID=f.FCode
+		left join
+		MWMS_WH_WAREHOUSE f2
+		on f2.WH_WAREHOUSE_ID=f.WarehouseID
+		left join
+		MWMS_WH_LOCATION f3
+		on f3.WH_LOCATION_ID=f.PositionID
+		left join
+		MBASE_MAT_AUXILIARYMX f4
+		on f4.MAT_AUXILIARYMX_ID=f.MaterialSPropKey
+		left join MBASE_UNIT_INFO f5
+		on f1.MAT_MAIN_UNIT=f5.UNIT_INFO_ID
+		where
+		1=1
+		<if test="pd.KEYWORDS_zhuisu == 'NO'">
+			and f.StockList_ID=#{pd.StockList_ID}
+		</if>
+		<if test=" pd.KEYWORDS_zhuisu == 'YES'">
+			<if test=" pd.KEYWORDS_type == 'IN'">
+				and f.SourceOrderNum in (
+				SELECT
+				main.FNum
+				FROM
+				PP_PurchaseMaterialDetails f
+				left join PP_PurchaseList main on main.PurchaseList_ID
+				= f.PurchaseID
+				WHERE
+				f.SourceOrderNum = #{pd.KEYWORDS_WorkOrderNum}
+				group by main.FNum
+				)
+				and
+				m.DocumentTypeInOut = #{pd.KEYWORDS_InOut}
+			</if>
+			<if test=" pd.KEYWORDS_type == 'OUT'">
+				and f.SourceOrderNum in (
+				SELECT
+				so.OrderNum
+				FROM
+				PP_PlanningWorkOrder pwo
+				LEFT JOIN
+				PP_SalesOrderDetail sod ON pwo.SalesOrderDetailID =
+				sod.SalesOrderDetail_ID
+				LEFT JOIN PP_SalesOrder so ON sod.SalesOrderID
+				= so.SalesOrder_ID
+				WHERE
+				1=1
+				and pwo.WorkOrderNum = #{pd.KEYWORDS_WorkOrderNum}
+				group by so.OrderNum
+				)
+				and m.DocumentTypeInOut = #{pd.KEYWORDS_InOut}
+			</if>
+		</if>
+
+
+		and f.LineCloseIf='N'
+		[fhstart] order by cast(RowNum as int) [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		mb.MAT_MAIN_UNIT,mb.MAT_CODE,mb.MAT_CODE OneThingCode,
+		s.DocumentTypeBlueRed,mb.UNIQUE_CODE_WHETHER,ui.FNAME
+		FUnitName,
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		left join MM_StockList s on f.StockList_ID=s.StockList_ID
+		left join MBASE_MAT_BASIC mb on mb.MAT_BASIC_ID=f.FCode
+		left join MBASE_UNIT_INFO ui on mb.MAT_MAIN_UNIT=ui.UNIT_INFO_ID
+		where f.StockList_ID = #{StockList_ID} and f.LineCloseIf='N'
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		StockListDetail_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 删除单据关联行关闭 -->
+	<update id="rowCloseByMainId" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		LineCloseIf = #{LineCloseIf}
+		where
+		StockList_ID = #{StockList_ID}
+	</update>
+
+	<!-- 行关闭/反行关闭 -->
+	<update id="rowClose" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		LineCloseIf = #{LineCloseIf}
+		where
+		StockListDetail_ID = #{StockListDetail_ID}
+	</update>
+
+	<!-- 生成行号 -->
+	<select id="getRowNum" parameterType="pd" resultType="pd">
+		select
+		isnull(max(cast(isnull(RowNum,'0') as int)),0)+1 RowNum
+		from
+		<include refid="tableName"></include>
+		f
+		where StockList_ID = #{StockList_ID}
+	</select>
+
+	<!-- 入库红字单添加物料列表 -->
+	<select id="listAllRedMat" parameterType="pd" resultType="pd">
+		select * from
+		(select
+		<include refid="Field"></include>
+		,
+		case when
+		f.FCode is null or f.FCode='' then ''
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') end
+		FInMatJoint,
+		case when
+		f.WarehouseID is null or f.WarehouseID='' then ''
+		else isnull(f2.FNAME,'无名称')+'/'+isnull(f2.FCODE,'无编号') end
+		FWAREHOUSEJoint,
+		case when
+		f.PositionID is null or f.PositionID='' then ''
+		else isnull(f3.FNAME,'无名称')+'/'+isnull(f3.FCODE,'无编号') end FLOCATIONJoint,
+		f1.MAT_AUXILIARY_ID,
+		f4.MAT_AUXILIARYMX_NAME,f4.MAT_AUXILIARYMX_CODE,m.DocumentNo,
+		cast(isnull(f.MaterialQuantity,'0') as
+		NUMERIC(12,2))-cast(isnull(f.FPushCount,'0') as NUMERIC(12,2))
+		FCanUseCount,
+		n.FNAME FUnitName
+		from
+		<include refid="tableName"></include>
+		f
+		left join MM_StockList m
+		on f.StockList_ID=m.StockList_ID
+		left join
+		MBASE_MAT_BASIC f1
+		on f1.MAT_BASIC_ID=f.FCode
+		left join
+		MWMS_WH_WAREHOUSE f2
+		on f2.WH_WAREHOUSE_ID=f.FCode
+		left join
+		MWMS_WH_LOCATION f3
+		on f3.WH_LOCATION_ID=f.FCode
+		left join
+		MBASE_MAT_AUXILIARYMX f4
+		on f4.MAT_AUXILIARYMX_ID=f.MaterialSPropKey
+		left join MBASE_UNIT_INFO n
+		on f1.MAT_MAIN_UNIT=n.UNIT_INFO_ID
+		where 1=1
+		and DocumentTypeBlueRed='蓝字'
+		and DocumentTypeInOut=#{DocumentTypeInOut}
+		and LineCloseIf='N'
+		<if test="KEYWORDS_DocumentNo != null and KEYWORDS_DocumentNo != ''">
+			and m.DocumentNo = #{KEYWORDS_DocumentNo}
+		</if>
+		<if test="KEYWORDS_MaterialNum != null and KEYWORDS_MaterialNum != ''">
+			and f1.MAT_CODE LIKE '%'+ #{KEYWORDS_MaterialNum}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialName != null and KEYWORDS_MaterialName != ''">
+			and f1.MAT_NAME LIKE '%'+ #{KEYWORDS_MaterialName}+'%'
+		</if>
+		) gy
+		where 1=1 and FCanUseCount>0
+		order by DocumentNo,cast(RowNum as
+		int)
+	</select>
+
+	<!-- 批量选择蓝字入库单物料 -->
+	<select id="selectAllBlueIn" parameterType="String" resultType="pd">
+		select * from(
+		select
+		<include refid="Field"></include>
+		,
+		case when
+		f.FCode is null or f.FCode='' then ''
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') end
+		FInMatJoint,
+		case when
+		f.WarehouseID is null or f.WarehouseID='' then ''
+		else isnull(f2.FNAME,'无名称')+'/'+isnull(f2.FCODE,'无编号') end
+		FWAREHOUSEJoint,
+		case when
+		f.PositionID is null or f.PositionID='' then ''
+		else isnull(f3.FNAME,'无名称')+'/'+isnull(f3.FCODE,'无编号') end FLOCATIONJoint,
+		f1.MAT_AUXILIARY_ID,
+		f4.MAT_AUXILIARYMX_NAME,f4.MAT_AUXILIARYMX_CODE,m.DocumentNo,
+		cast(isnull(f.MaterialQuantity,'0') as
+		NUMERIC(12,2))-cast(isnull(f.FPushCount,'0') as NUMERIC(12,2))
+		FCanUseCount
+
+		from
+		<include refid="tableName"></include>
+		f
+		left join MM_StockList m
+		on f.StockList_ID=m.StockList_ID
+		left join
+		MBASE_MAT_BASIC f1
+		on f1.MAT_BASIC_ID=f.FCode
+		left join
+		MWMS_WH_WAREHOUSE f2
+		on f2.WH_WAREHOUSE_ID=f.FCode
+		left join
+		MWMS_WH_LOCATION f3
+		on f3.WH_LOCATION_ID=f.FCode
+		left join
+		MBASE_MAT_AUXILIARYMX f4
+		on f4.MAT_AUXILIARYMX_ID=f.MaterialSPropKey
+		where 1=1
+		and DocumentTypeBlueRed='蓝字'
+		and DocumentTypeInOut='入库'
+		and
+		LineCloseIf='N'
+		and StockListDetail_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		) gy
+		where 1=1 and FCanUseCount>0
+		order by DocumentNo,cast(RowNum as
+		int)
+	</select>
+
+	<!-- 审核或反审核单据列表(全部) -->
+	<select id="listAllAudit" parameterType="pd" resultType="pd">
+		select mb.MAT_SPECS,mb.MAT_MAIN_UNIT,mb.MAT_CODE,mb.MAT_CODE
+		OneThingCode,f.FCode ItemID,f.SubordinateInventory,
+		f.WarehouseID,f.MaterialSProp,f.MaterialSPropKey,
+		f.MaterialQuantity,f.PositionID,f.MaterialBatchNumber,
+		s.DocumentTypeBlueRed,mb.UNIQUE_CODE_WHETHER,ui.FNAME FUnitName from
+		MM_StockListDetail f
+		left join MM_StockList s on f.StockList_ID=s.StockList_ID
+		left join MBASE_MAT_BASIC mb on mb.MAT_BASIC_ID=f.FCode
+		left join MBASE_UNIT_INFO ui on mb.MAT_MAIN_UNIT=ui.UNIT_INFO_ID
+		where f.StockList_ID = #{StockList_ID}
+		and f.LineCloseIf='N' and f.UNIQUE_CODE_WHETHER='否'
+		UNION ALL
+		select mb.MAT_SPECS,mb.MAT_MAIN_UNIT,mb.MAT_CODE,ms.FUniqueCode
+		OneThingCode,ms.ItemID,f.SubordinateInventory,
+		ms.WH_WAREHOUSE_ID
+		WarehouseID,f.MaterialSProp,f.MaterialSPropKey,
+		ms.FQuantity MaterialQuantity,ms.WH_LOCATION_ID PositionID,f.MaterialBatchNumber,
+		s.DocumentTypeBlueRed,f.UNIQUE_CODE_WHETHER,ui.FNAME FUnitName
+		from MM_MATSPLIT ms
+		left join MM_StockListDetail f on ms.FRelatedID=f.StockListDetail_ID
+		left join MM_StockList s on f.StockList_ID=s.StockList_ID
+		left join MBASE_MAT_BASIC mb on mb.MAT_BASIC_ID=f.FCode
+		left join MBASE_UNIT_INFO ui on mb.MAT_MAIN_UNIT=ui.UNIT_INFO_ID
+		where f.StockList_ID = #{StockList_ID}
+		and f.LineCloseIf='N' AND f.UNIQUE_CODE_WHETHER='是'
+		<!--select <include refid="Field"></include>,m.DocumentTypeBlueRed,f4.WorkOrderNum,f5.UNIQUE_CODE_WHETHER, 
+			f6.FNAME FUnitName from <include refid="tableName"></include> f left join 
+			MM_StockList m on f.StockList_ID=m.StockList_ID left join PP_PurchaseMaterialDetails 
+			f1 on f1.RowNum=f.SourceRowNum left join PP_PurchaseList f2 on (f1.PurchaseID=f2.PurchaseList_ID 
+			and f2.FNum=f.SourceOrderNum) left join MM_MaterialRequirement f3 on f3.RowNum=f1.SourceRowNum 
+			left join PP_PlanningWorkOrder f4 on (f4.PlanningWorkOrder_ID=f3.PlanningWorkOrderID 
+			and f4.WorkOrderNum=f1.SourceOrderNum) left join MBASE_MAT_BASIC f5 on f5.MAT_BASIC_ID=f.FCode 
+			left join MBASE_UNIT_INFO f6 on f5.MAT_MAIN_UNIT=f6.UNIT_INFO_ID where 1=1 
+			and f.StockList_ID=#{StockList_ID} and LineCloseIf='N' order by cast(f.RowNum 
+			as int) -->
+	</select>
+
+	<!-- 计算下推数量 -->
+	<update id="calFPushCount" parameterType="pd">
+		update
+		f set f.FPushCount=
+		isnull((
+		select
+		sum(
+		case when
+		f2.DocumentTypeBlueRed = '红字' then
+		f1.MaterialQuantity
+		ELSE
+		f1.MaterialQuantity
+		end
+		) FNUM
+		from MM_StockListDetail f1
+		inner join MM_StockList f2
+		on f1.StockList_ID=f2.StockList_ID
+		where 1=1 and f2.DocumentTypeInOut=#{DocumentTypeInOut}
+		and SourceOrderNum=gy1.DocumentNo
+		and SourceRowNum=f.RowNum
+		and f1.LineCloseIf='N'
+		and DocumentTypeBlueRed='红字'
+		),0)
+		from
+		MM_StockListDetail f
+		inner join MM_StockList gy1
+		on f.StockList_ID=gy1.StockList_ID
+		where 1=1
+		and gy1.DocumentNo=#{SourceOrderNum}
+		and f.RowNum=#{SourceRowNum}
+
+	</update>
+
+	<!-- 批量选择蓝字入出库单物料 -->
+	<select id="selectAllBlueOut" parameterType="String" resultType="pd">
+		select * from(
+		select
+		<include refid="Field"></include>
+		,
+		case when
+		f.FCode is null or f.FCode='' then ''
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') end
+		FInMatJoint,
+		case when
+		f.WarehouseID is null or f.WarehouseID='' then ''
+		else isnull(f2.FNAME,'无名称')+'/'+isnull(f2.FCODE,'无编号') end
+		FWAREHOUSEJoint,
+		case when
+		f.PositionID is null or f.PositionID='' then ''
+		else isnull(f3.FNAME,'无名称')+'/'+isnull(f3.FCODE,'无编号') end FLOCATIONJoint,
+		f1.MAT_AUXILIARY_ID,
+		f4.MAT_AUXILIARYMX_NAME,f4.MAT_AUXILIARYMX_CODE,m.DocumentNo,
+		cast(isnull(f.MaterialQuantity,'0') as
+		NUMERIC(12,2))-cast(isnull(f.FPushCount,'0') as NUMERIC(12,2))
+		FCanUseCount
+
+		from
+		<include refid="tableName"></include>
+		f
+		left join MM_StockList m
+		on f.StockList_ID=m.StockList_ID
+		left join
+		MBASE_MAT_BASIC f1
+		on f1.MAT_BASIC_ID=f.FCode
+		left join
+		MWMS_WH_WAREHOUSE f2
+		on f2.WH_WAREHOUSE_ID=f.FCode
+		left join
+		MWMS_WH_LOCATION f3
+		on f3.WH_LOCATION_ID=f.FCode
+		left join
+		MBASE_MAT_AUXILIARYMX f4
+		on f4.MAT_AUXILIARYMX_ID=f.MaterialSPropKey
+		where 1=1
+		and DocumentTypeBlueRed='蓝字'
+		and DocumentTypeInOut='出库'
+		and
+		LineCloseIf='N'
+		and StockListDetail_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		) gy
+		where 1=1 and FCanUseCount>0
+		order by DocumentNo,cast(RowNum as
+		int)
+	</select>
+
+	<!-- 打印物料列表 -->
+	<select id="listAllPrintMat" parameterType="pd" resultType="pd">
+		select * from(
+		select * from(
+		select
+		'非唯一码' FTYPE,''
+		FUniqueCode,f.StockListDetail_ID,f.StockList_ID,f7.MAT_AUXILIARY_NAME,f6.MAT_AUXILIARYMX_NAME,f.MaterialBatchNumber,
+		f.RowNum,
+		f.DataSources,
+		f.SourceOrderNum,
+		f.SourceRowNum,f.MaterialQuantity,
+		case when
+		f1.UNIQUE_CODE_WHETHER is null or f1.UNIQUE_CODE_WHETHER='' then '否'
+		else f1.UNIQUE_CODE_WHETHER end UNIQUE_CODE_WHETHER,
+		case when
+		f.FCode is null or f.FCode='' then ''
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') end
+		FMatJoint,
+		f1.MAT_CODE,f1.MAT_NAME,
+		f5.FNAME FUnitName,
+		m.DocumentTypeBlueRed,
+		m.DocumentTypeInOut,
+		m.DocumentNo
+		from
+		MM_StockListDetail f
+		left join MM_StockList m
+		on f.StockList_ID=m.StockList_ID
+		left join MBASE_MAT_BASIC f1
+		on f1.MAT_BASIC_ID=f.FCode
+		left join MBASE_UNIT_INFO f5
+		on f1.MAT_MAIN_UNIT=f5.UNIT_INFO_ID
+		left join MBASE_MAT_AUXILIARYMX f6
+		on f6.MAT_AUXILIARYMX_ID=f.MaterialSPropKey
+		left join MBASE_MAT_AUXILIARY f7
+		on f6.MAT_AUXILIARY_ID=f7.MAT_AUXILIARY_ID
+		where f.StockList_ID=#{StockList_ID} and LineCloseIf='N'
+		)gy
+		where 1=1 and UNIQUE_CODE_WHETHER!='是'
+
+		union ALL
+
+		select
+		'唯一码' FTYPE,f.FUniqueCode
+		FUniqueCode,f1.StockListDetail_ID,f1.StockList_ID,f7.MAT_AUXILIARY_NAME,f6.MAT_AUXILIARYMX_NAME,f1.MaterialBatchNumber,
+		f1.RowNum,
+		f1.DataSources,
+		f1.SourceOrderNum,
+		f1.SourceRowNum,f.FQuantity MaterialQuantity,
+		case when
+		f2.UNIQUE_CODE_WHETHER is null or f2.UNIQUE_CODE_WHETHER='' then '否'
+		else f2.UNIQUE_CODE_WHETHER end UNIQUE_CODE_WHETHER,
+		case when
+		f1.FCode is null or f1.FCode='' then ''
+		else isnull(f2.MAT_CODE,'无编号')+'/'+isnull(f2.MAT_NAME,'无名称') end
+		FMatJoint,
+		f2.MAT_CODE,f2.MAT_NAME,
+		f5.FNAME FUnitName,
+		m.DocumentTypeBlueRed,
+		m.DocumentTypeInOut,
+		m.DocumentNo
+		from MM_MATSPLIT f
+		left join MM_StockListDetail f1
+		on f.FRelatedID=f1.StockListDetail_ID
+		left join MM_StockList m
+		on f1.StockList_ID=m.StockList_ID
+		left join MBASE_MAT_BASIC f2
+		on f2.MAT_BASIC_ID=f1.FCode
+		left join MBASE_UNIT_INFO f5
+		on f2.MAT_MAIN_UNIT=f5.UNIT_INFO_ID
+		left join MBASE_MAT_AUXILIARYMX f6
+		on f6.MAT_AUXILIARYMX_ID=f1.MaterialSPropKey
+		left join MBASE_MAT_AUXILIARY f7
+		on f6.MAT_AUXILIARY_ID=f7.MAT_AUXILIARY_ID
+		where 1=1
+		and FRelatedID in (select StockListDetail_ID from MM_StockListDetail
+		where StockList_ID =#{StockList_ID} and LineCloseIf='N')
+		) hh
+		where 1=1
+		<if test="KEYWORDS_MaterialNum != null and KEYWORDS_MaterialNum != ''">
+			and MAT_CODE LIKE '%'+ #{KEYWORDS_MaterialNum}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialName != null and KEYWORDS_MaterialName != ''">
+			and MAT_NAME LIKE '%'+ #{KEYWORDS_MaterialName}+'%'
+		</if>
+		order by DocumentNo,cast( RowNum as int),FTYPE
+	</select>
+
+	<!-- app入库单列表 -->
+	<select id="appListIn" parameterType="org.yy.controller.app.AppPage"
+		resultType="pd">
+		select
+		<include refid="Field"></include>
+		,
+		isnull(f2.FCODE,'无编号')+ '-'+isnull(f3.FNAME,'无名称') PositionName,
+		case
+		when
+		f.FCode is null or f.FCode='' then ''
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') end
+		MaterialName,
+		f1.MAT_MAIN_UNIT, f1.MAT_AUXILIARY_ID,
+		f4.MAT_AUXILIARYMX_NAME,f4.MAT_AUXILIARYMX_CODE,
+		f5.FNAME FUnitName,
+		isnull(f6.FNum,'无编号') SupplierNum, isnull(f6.FName,'无名称')
+		SupplierName,
+		m.DocumentTypeBlueRed,m.DocumentTypeInOut,m.FMakeBillsTime,m.DocumentNo,isnull(f7.NAME,'')
+		FCreatorName,
+		isnull(f8.FName,'无名称') CustomerName,
+		isnull(f8.FNum,'无编号') CustomerNum
+		from
+		<include refid="tableName"></include>
+		f
+		left join MM_StockList m on f.StockList_ID=m.StockList_ID
+		left join
+		MBASE_MAT_BASIC f1 on f1.MAT_BASIC_ID=f.FCode
+		left join
+		MWMS_WH_WAREHOUSE f2 on f2.WH_WAREHOUSE_ID=f.WarehouseID
+		left join
+		MWMS_WH_LOCATION f3 on f3.WH_LOCATION_ID=f.PositionID
+		left join
+		MBASE_MAT_AUXILIARYMX f4 on f4.MAT_AUXILIARYMX_ID=f.MaterialSPropKey
+		left join MBASE_UNIT_INFO f5 on f1.MAT_MAIN_UNIT=f5.UNIT_INFO_ID
+		left join KM_Supplier f6 on m.SupplierID=f6.Supplier_ID
+		left join OA_STAFF f7 on m.FCreator=f7.STAFF_ID
+		left join KM_Customer f8 on m.FCustomer=f8.Customer_ID
+		where
+		f.LineCloseIf='N' and f.StockList_ID = #{pd.StockList_ID}
+		<if test="pd.MaterialBatchNumber != null and pd.MaterialBatchNumber != ''">
+			and f.MaterialBatchNumber = #{pd.MaterialBatchNumber}
+		</if>
+		<if test="pd.FCode != null and pd.FCode != ''">
+			and f.FCode = #{pd.FCode}
+		</if>
+		<if test="pd.MaterialSPropKey != null and pd.MaterialSPropKey != ''">
+			and f.MaterialSPropKey = #{pd.MaterialSPropKey}
+		</if>
+		<if test="pd.WarehouseID != null and pd.WarehouseID != ''">
+			and f.WarehouseID = #{pd.WarehouseID}
+		</if>
+		<if test="pd.PositionID != null and pd.PositionID != ''">
+			and f.PositionID = #{pd.PositionID}
+		</if>
+		<if test="pd.SourceRowNum != null and pd.SourceRowNum != ''">
+			and f.SourceRowNum = #{pd.SourceRowNum}
+		</if>
+		<if test="pd.MAT_NAME != null and pd.MAT_NAME != ''">
+			and f1.MAT_NAME = #{pd.MAT_NAME}
+		</if>
+		<if test="pd.MAT_CODE != null and pd.MAT_CODE != ''">
+			and f1.MAT_CODE = #{pd.MAT_CODE}
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''">
+			and (
+			f1.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f1.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

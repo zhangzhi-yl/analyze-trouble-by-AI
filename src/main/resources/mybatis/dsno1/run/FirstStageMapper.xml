@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.run.FirstStageMapper">
+
+<!-- 正在执行中和未执行数量 -->
+<select id="findCount" parameterType="pd" resultType="pd">
+	SELECT * FROM AT_MASTER_PLAN_FLOW WHERE NODE_ID in(
+		SELECT BEGIN_NODE FROM AT_MASTER_PLAN_FLOW WHERE END_NODE in(
+			SELECT END_NODE FROM AT_MASTER_PLAN_FLOW WHERE BEGIN_NODE = #{BEGIN_NODE}  AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+		)  AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+	) AND (EXECUTE_STATE='执行中' or EXECUTE_STATE='未执行')  AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+</select>
+<!-- 修改执行状态 -->
+<update id="changeState" parameterType="pd">
+	UPDATE AT_MASTER_PLAN_FLOW SET 	ActualEndTime=#{ActualEndTime},EXECUTE_STATE = #{EXECUTE_STATE} WHERE NODE_ID = #{BEGIN_NODE} AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+</update>
+<!-- 修改状态为未执行 -->
+<update id="updateStateUnexecuted" parameterType="pd">
+	UPDATE AT_MASTER_PLAN_FLOW set EXECUTE_STATE='未执行'  WHERE NODE_ID in ( 
+		SELECT BEGIN_NODE FROM AT_MASTER_PLAN_FLOW 
+		WHERE END_NODE in ( 
+			SELECT END_NODE FROM AT_MASTER_PLAN_FLOW WHERE BEGIN_NODE = #{BEGIN_NODE} AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+		) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+	) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+</update>
+<!-- 根据开始节点id查询所有下一步节点 -->
+<select id="findNextNodes" parameterType="pd" resultType="pd">
+	SELECT * FROM AT_MASTER_PLAN_FLOW WHERE NODE_ID in(
+		SELECT END_NODE FROM AT_MASTER_PLAN_FLOW WHERE BEGIN_NODE = #{BEGIN_NODE} AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+	)  AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+</select>
+
+<!-- 修改O级节点执行中 -->
+<update id="changeOState" parameterType="pd">
+	UPDATE AT_MASTER_PLAN_FLOW set EXECUTE_STATE ='执行中' WHERE MASTER_PLAN_FLOW_ID=#{MASTER_PLAN_FLOW_ID}
+</update>
+<!-- 更改子计划工单状态为执行中 -->
+<update id="setPwoStatusGoing" parameterType="pd">
+UPDATE PP_PlanningWorkOrder set FStatus = '执行中' where 1=1 and NODE_ID = #{NODE_ID} and MasterWorkOrder_ID = #{MASTERPLAN_ID}
+</update>
+
+
+<!-- 更改子计划工单状态为结束 -->
+<update id="setPwoStatusDone" parameterType="pd">
+UPDATE PP_ProcessWorkOrderExample
+SET FStatus = '结束',
+ ActualEndTime = #{ ActualEndTime }
+WHERE
+	ProcessWorkOrderExample_ID IN (
+		SELECT
+			ProcessWorkOrderExample_ID
+		FROM
+			(
+				SELECT
+					SUBPLAN_ID,
+					NODE_ID
+				FROM
+					AT_NEWPLAN_BOM_FLOW
+				WHERE
+					1 = 1
+				AND RUN_O_ID = #{ RUN_O_ID }
+				AND NODE_ID = #{ NODE_ID }
+				AND MASTERPLAN_ID = #{ MASTERPLAN_ID }
+			) t1
+		LEFT JOIN PP_ProcessWorkOrderExample t2 ON t1.NODE_ID = t2.NODE_ID
+		AND t1.SUBPLAN_ID = t2.PlanningWorkOrderID
+	)
+</update>
+
+
+</mapper>

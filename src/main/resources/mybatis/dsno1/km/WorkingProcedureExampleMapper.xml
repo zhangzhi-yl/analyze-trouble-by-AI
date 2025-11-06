@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.WorkingProcedureExampleMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		KM_WorkingProcedureExample
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.BOM_Num,
+		f.SerialNum,
+		f.WP,
+		f.WorkHours,
+		f.WorkHoursUnit,
+		f.ConnectionMode,
+		f.SingleScan,
+		f.OneCodeEnd,
+		f.MaterialTraceability,
+		f.UnqualifiedProducts,
+		f.PreparationTime,
+		f.PreparationTimeUnit,
+		f.WPOutputRatio,
+		f.FStation,
+		f.FrozenIF,
+		f.ProductionDesc,
+		f.FAttachment,
+		f.FCreatePersonID,
+		f.FCreateTime,
+		f.WorkingProcedureExample_ID,
+		f.BOM_ID,
+		f.QIPlanID,
+		f.WPType,
+		f.FNum,
+		f.FName,
+		f.FStatus,
+		f.ReportTemplateID,
+		f.FAttachmentDirect,
+		f.FAttachmentName,
+		f.EnableSOP,
+		f.SOP_ID,
+		f.WorkingProcedure_ID,
+		
+		f.Throughput,
+		f.WokIF,
+		f.WeighingIF,
+		
+		f.NODE_ID,
+		f.EnableTest
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		BOM_Num,
+		SerialNum,
+		WP,
+		WorkHours,
+		WorkHoursUnit,
+		ConnectionMode,
+		SingleScan,
+		OneCodeEnd,
+		MaterialTraceability,
+		UnqualifiedProducts,
+		PreparationTime,
+		PreparationTimeUnit,
+		WPOutputRatio,
+		FStation,
+		FrozenIF,
+		ProductionDesc,
+		FAttachment,
+		FCreatePersonID,
+		FCreateTime,
+		WorkingProcedureExample_ID,
+		BOM_ID,
+		QIPlanID,
+		WPType,
+		FNum,
+		FName,
+		FStatus,
+		ReportTemplateID,
+		FAttachmentDirect,
+		FAttachmentName,
+		EnableSOP,
+		SOP_ID,
+		WorkingProcedure_ID,
+		Throughput,
+		WokIF,
+		WeighingIF,
+		NODE_ID,
+		EnableTest
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{BOM_Num},
+		#{SerialNum},
+		#{WP},
+		#{WorkHours},
+		#{WorkHoursUnit},
+		#{ConnectionMode},
+		#{SingleScan},
+		#{OneCodeEnd},
+		#{MaterialTraceability},
+		#{UnqualifiedProducts},
+		#{PreparationTime},
+		#{PreparationTimeUnit},
+		#{WPOutputRatio},
+		#{FStation},
+		#{FrozenIF},
+		#{ProductionDesc},
+		#{FAttachment},
+		#{FCreatePersonID},
+		#{FCreateTime},
+		#{WorkingProcedureExample_ID},
+		#{BOM_ID},
+		#{QIPlanID},
+		#{WPType},
+		#{FNum},
+		#{FName},
+		#{FStatus},
+		#{ReportTemplateID},
+		#{FAttachmentDirect},
+		#{FAttachmentName},
+		#{EnableSOP},
+		#{SOP_ID},
+		#{WorkingProcedure_ID},
+		#{Throughput},
+		#{WokIF},
+		#{WeighingIF},
+		#{NODE_ID},
+		#{EnableTest}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		WorkingProcedureExample_ID = #{WorkingProcedureExample_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			BOM_Num = #{BOM_Num},
+			SerialNum = #{SerialNum},
+			WP = #{WP},
+			WorkHours = #{WorkHours},
+			WorkHoursUnit = #{WorkHoursUnit},
+			ConnectionMode = #{ConnectionMode},
+			SingleScan = #{SingleScan},
+			OneCodeEnd = #{OneCodeEnd},
+			MaterialTraceability = #{MaterialTraceability},
+			UnqualifiedProducts = #{UnqualifiedProducts},
+			PreparationTime = #{PreparationTime},
+			PreparationTimeUnit = #{PreparationTimeUnit},
+			WPOutputRatio = #{WPOutputRatio},
+			FStation = #{FStation},
+			FrozenIF = #{FrozenIF},
+			ProductionDesc = #{ProductionDesc},
+			FAttachment = #{FAttachment},
+			FCreatePersonID = #{FCreatePersonID},
+			FCreateTime = #{FCreateTime},
+			QIPlanID=#{QIPlanID},
+			WPType = #{WPType},
+			FNum = #{FNum},
+			FName = #{FName},
+			FStatus = #{FStatus},
+			ReportTemplateID = #{ReportTemplateID},
+			FAttachmentDirect = #{FAttachmentDirect},
+			FAttachmentName = #{FAttachmentName},
+			EnableSOP = #{EnableSOP},
+			Throughput = #{Throughput},
+			WokIF = #{WokIF},
+			WeighingIF = #{WeighingIF},		
+			SOP_ID = #{SOP_ID},
+			EnableTest=#{EnableTest}
+		where 
+			WorkingProcedureExample_ID = #{WorkingProcedureExample_ID}
+	</update>
+
+	<!-- 修改状态 -->
+	<update id="editStatus" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FStatus = #{FStatus}
+		where 
+			WorkingProcedureExample_ID = #{WorkingProcedureExample_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where
+		f.WorkingProcedureExample_ID = #{WorkingProcedureExample_ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+	select f.*,isnull(FNum,'无编号')+'/'+isnull(FName,'无名称') FProcessJoint,
+	
+	(
+	select count(*) from KM_InputOutput f1 
+	where f.WorkingProcedureExample_ID=f1.WorkingProcedureExample_ID and f1.TType='投入' AND f1.FStatus='N'
+	and f1.ProductionBOM_ID=#{pd.BOM_ID}
+	) FInNum
+	from KM_WorkingProcedureExample f
+	where 1=1
+	and f.BOM_ID=#{pd.BOM_ID}
+	<if test="pd.NODE_ID != null and pd.NODE_ID != ''">
+		and
+		(
+			f.NODE_ID = #{pd.NODE_ID}
+		)
+	</if>
+	[fhstart] order by cast(SerialNum as int) [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+select f.*,isnull(FNum,'无编号')+'/'+isnull(FName,'无名称') FProcessJoint,
+(select isnull(MAT_CODE,'无编号')+'/'+isnull(MAT_NAME,'无名称')  from KM_InputOutput f1 
+left join MBASE_MAT_BASIC f2
+on f1.MaterialID=f2.MAT_BASIC_ID
+where f.WorkingProcedureExample_ID=f1.WorkingProcedureExample_ID and f1.TType='产出' and f1.ProductionBOM_ID=#{BOM_ID}) FMatOutJoint,
+(select count(*) from KM_InputOutput f1 
+where f.WorkingProcedureExample_ID=f1.WorkingProcedureExample_ID and f1.TType='投入' and f1.ProductionBOM_ID=#{BOM_ID}) FInNum,
+(select isnull(MAT_CODE,'无编号')+'/'+isnull(MAT_NAME,'无名称')  from KM_InputOutput f1 
+left join MBASE_MAT_BASIC f2
+on f1.SubstituteMaterial=f2.MAT_BASIC_ID
+where f.WorkingProcedureExample_ID=f1.WorkingProcedureExample_ID and f1.TType='产出' and f1.ProductionBOM_ID=#{BOM_ID}) FMatFOutJoint
+from KM_WorkingProcedureExample f
+where 1=1
+and f.BOM_ID=#{BOM_ID}
+order by cast(SerialNum as int)
+	</select>
+	<!-- 工序列表(全部) -->
+	<select id="listAllFlow" parameterType="pd" resultType="pd">
+select BOM_ID,WorkingProcedureExample_ID,FName FProcessName,
+isnull(FNum,'无编号')+'/'+isnull(FName,'无名称') FProcessJoint,f.SerialNum,f.ConnectionMode,
+FNum FProcessNum,WPType
+from KM_WorkingProcedureExample f
+where 1=1
+and f.BOM_ID=#{BOM_ID}
+order by cast(SerialNum as int)
+	</select>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		WorkingProcedureExample_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- * 根据bom id获取 工艺工序实例列表 -->
+	<select id="getWorkingProcedureExampleListByBOMId"
+		parameterType="String" resultType="pd">
+		select * from KM_WorkingProcedureExample where BOM_ID = #{BOM_ID}
+	</select>
+	
+		<!-- 删除BOM关联删除实例工序 -->
+	<delete id="deleteByBomId" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		BOM_ID = #{BOM_ID}
+	</delete>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

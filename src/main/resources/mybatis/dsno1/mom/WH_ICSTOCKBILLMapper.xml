@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.WH_ICSTOCKBILLMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MWMS_WH_ICSTOCKBILL
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.WH_ICSTOCKBILL_ID,	
+		f.PICKING_BILLNO,	
+		f.RECEIVE_BILLNO,	
+		f.INFORMATION_BARCODE,	
+		f.RETROSPECT_SYSTEM_BARCODE,	
+		f.WORK_ORDER,	
+		f.FITEM,	
+		f.ICSTOCKBILL_TYPE,	
+		f.MAT_BARCODE,	
+		f.MAT_CODE,	
+		f.MAT_NAME,	
+		f.METERING_UNIT,	
+		f.MAT_QTY,	
+		f.MAT_TARE,
+		f.MAT_SPECS,	
+		f.MAT_BATCH_NUMBER,	
+		f.LOCATION_CODE,	
+		f.LOCATION_FNAME,	
+		f.ICSTOCKBILL_DATE,	
+		f.ICSTOCKBILL_PERSONNEL,	
+		f.CONSUME_NODE_ID,
+		f.CONSUME_WORK_ORDER,
+		f.CONSUME_DATE,	
+		f.CONSUME_PERSONNEL,	
+		f.CONSUME_WHETHER,	
+		f.STORAGE_STATE,	
+		f.WAREHOUSING_END_WHETHER,	
+		f.OUTGOING_END_WHETHER,	
+		f.ICSTOCKBILL_DES,
+		f.PLAN_RECEIVING_BILLMX_ID,
+		f.LAST_MOVE_DATE,
+		f.SCALE_CODE,
+		f.SCALE_NAME,
+		f.SUB_ID,
+		f.RUN_COUTBATCH_ID,
+		f.RUN_COUTBATCHMX_ID,
+		f.FBATCH_NUM,
+		f.SOURCE_STATE,
+		f.PRINT_STATE,
+		f.FEXTEND1
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		WH_ICSTOCKBILL_ID,	
+		PICKING_BILLNO,	
+		RECEIVE_BILLNO,	
+		INFORMATION_BARCODE,	
+		RETROSPECT_SYSTEM_BARCODE,	
+		WORK_ORDER,	
+		FITEM,	
+		ICSTOCKBILL_TYPE,	
+		MAT_BARCODE,	
+		MAT_CODE,	
+		MAT_NAME,	
+		METERING_UNIT,	
+		MAT_QTY,	
+		MAT_TARE,
+		MAT_SPECS,	
+		MAT_BATCH_NUMBER,	
+		LOCATION_CODE,	
+		LOCATION_FNAME,	
+		ICSTOCKBILL_DATE,	
+		ICSTOCKBILL_PERSONNEL,	
+		CONSUME_NODE_ID,
+		CONSUME_WORK_ORDER,
+		CONSUME_DATE,	
+		CONSUME_PERSONNEL,	
+		CONSUME_WHETHER,	
+		STORAGE_STATE,	
+		WAREHOUSING_END_WHETHER,	
+		OUTGOING_END_WHETHER,	
+		ICSTOCKBILL_DES,
+		PLAN_RECEIVING_BILLMX_ID,
+		LAST_MOVE_DATE,
+		SCALE_CODE,
+		SCALE_NAME,
+		SUB_ID,
+		RUN_COUTBATCH_ID,
+		RUN_COUTBATCHMX_ID,
+		FBATCH_NUM,
+		SOURCE_STATE,
+		PRINT_STATE,
+		FEXTEND1
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WH_ICSTOCKBILL_ID},	
+		#{PICKING_BILLNO},	
+		#{RECEIVE_BILLNO},	
+		#{INFORMATION_BARCODE},	
+		#{RETROSPECT_SYSTEM_BARCODE},	
+		#{WORK_ORDER},	
+		#{FITEM},	
+		#{ICSTOCKBILL_TYPE},	
+		#{MAT_BARCODE},	
+		#{MAT_CODE},	
+		#{MAT_NAME},	
+		#{METERING_UNIT},	
+		#{MAT_QTY},	
+		#{MAT_TARE},
+		#{MAT_SPECS},	
+		#{MAT_BATCH_NUMBER},	
+		#{LOCATION_CODE},	
+		#{LOCATION_FNAME},	
+		#{ICSTOCKBILL_DATE},	
+		#{ICSTOCKBILL_PERSONNEL},	
+		#{CONSUME_NODE_ID},
+		#{CONSUME_WORK_ORDER},
+		#{CONSUME_DATE},	
+		#{CONSUME_PERSONNEL},	
+		#{CONSUME_WHETHER},	
+		#{STORAGE_STATE},	
+		#{WAREHOUSING_END_WHETHER},	
+		#{OUTGOING_END_WHETHER},	
+		#{ICSTOCKBILL_DES},
+		#{PLAN_RECEIVING_BILLMX_ID},
+		#{LAST_MOVE_DATE},
+		#{SCALE_CODE},
+		#{SCALE_NAME},
+		#{SUB_ID},
+		#{RUN_COUTBATCH_ID},
+		#{RUN_COUTBATCHMX_ID},
+		#{FBATCH_NUM},
+		#{SOURCE_STATE},
+		#{PRINT_STATE},
+		#{FEXTEND1}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WH_ICSTOCKBILL_ID = #{WH_ICSTOCKBILL_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PICKING_BILLNO = #{PICKING_BILLNO},
+			RECEIVE_BILLNO = #{RECEIVE_BILLNO},
+			INFORMATION_BARCODE = #{INFORMATION_BARCODE},
+			RETROSPECT_SYSTEM_BARCODE = #{RETROSPECT_SYSTEM_BARCODE},
+			WORK_ORDER = #{WORK_ORDER},
+			FITEM = #{FITEM},
+			ICSTOCKBILL_TYPE = #{ICSTOCKBILL_TYPE},
+			MAT_BARCODE = #{MAT_BARCODE},
+			MAT_CODE = #{MAT_CODE},
+			MAT_NAME = #{MAT_NAME},
+			METERING_UNIT = #{METERING_UNIT},
+			MAT_QTY = #{MAT_QTY},
+			MAT_TARE = #{MAT_TARE},
+			MAT_SPECS = #{MAT_SPECS},
+			MAT_BATCH_NUMBER = #{MAT_BATCH_NUMBER},
+			LOCATION_CODE = #{LOCATION_CODE},
+			LOCATION_FNAME = #{LOCATION_FNAME},
+			ICSTOCKBILL_DATE = #{ICSTOCKBILL_DATE},
+			ICSTOCKBILL_PERSONNEL = #{ICSTOCKBILL_PERSONNEL},
+			CONSUME_NODE_ID = #{CONSUME_NODE_ID},
+			CONSUME_WORK_ORDER = #{CONSUME_WORK_ORDER},
+			CONSUME_DATE = #{CONSUME_DATE},
+			CONSUME_PERSONNEL = #{CONSUME_PERSONNEL},
+			CONSUME_WHETHER = #{CONSUME_WHETHER},
+			STORAGE_STATE = #{STORAGE_STATE},
+			WAREHOUSING_END_WHETHER = #{WAREHOUSING_END_WHETHER},
+			OUTGOING_END_WHETHER = #{OUTGOING_END_WHETHER},
+			ICSTOCKBILL_DES = #{ICSTOCKBILL_DES},
+			PLAN_RECEIVING_BILLMX_ID = #{PLAN_RECEIVING_BILLMX_ID},
+			LAST_MOVE_DATE = #{LAST_MOVE_DATE},
+			SCALE_CODE = #{SCALE_CODE},
+			SCALE_NAME = #{SCALE_NAME},
+			SUB_ID = #{SUB_ID},
+			RUN_COUTBATCH_ID = #{RUN_COUTBATCH_ID},
+			RUN_COUTBATCHMX_ID = #{RUN_COUTBATCHMX_ID},
+			FBATCH_NUM = #{FBATCH_NUM},
+			SOURCE_STATE = #{SOURCE_STATE},
+			PRINT_STATE = #{PRINT_STATE}
+		where 
+			WH_ICSTOCKBILL_ID = #{WH_ICSTOCKBILL_ID}
+	</update>
+	
+	<!-- 结束入库， -->
+	<update id="finishStock" parameterType="pd">
+		update 
+		<include refid="tableName"></include> 
+		set 
+			WAREHOUSING_END_WHETHER = 'YES' 
+		where 
+			STORAGE_STATE = '入库' 
+			and WAREHOUSING_END_WHETHER = 'NO' 
+			and ICSTOCKBILL_PERSONNEL = #{ICSTOCKBILL_PERSONNEL} 
+	</update>
+	
+	<!-- 更新库存数量 -->
+	<update id="updateQty" parameterType="pd">
+		update 
+		<include refid="tableName"></include> 
+		set 
+			MAT_QTY = #{MAT_QTY} 
+		where 
+			WH_ICSTOCKBILL_ID = #{WH_ICSTOCKBILL_ID}
+	</update>
+	
+	<!-- 更新条码打印状态 -->
+	<update id="updatePrintState" parameterType="pd">
+		update 
+		<include refid="tableName"></include> 
+		set 
+			PRINT_STATE = #{PRINT_STATE} 
+		where 
+			WH_ICSTOCKBILL_ID = #{WH_ICSTOCKBILL_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.WH_ICSTOCKBILL_ID = #{WH_ICSTOCKBILL_ID}
+	</select>
+	
+	<!-- 通过条码信息获取数据 -->
+	<select id="findByBarCode" parameterType="pd" resultType="pd">
+		select s.WH_STORAGEAREA_ID,s.FNAME areaName,s.FCODE areaCode,
+		l.WH_LOCATION_ID,l.FNAME locationName,l.FCODE locationCode,<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MWMS_WH_LOCATION l ON f.LOCATION_CODE=l.FCODE 
+		LEFT JOIN MWMS_WH_STORAGEAREA s ON l.WH_STORAGEAREA_ID=s.WH_STORAGEAREA_ID 
+		where 
+			f.INFORMATION_BARCODE = #{INFORMATION_BARCODE} AND WAREHOUSING_END_WHETHER = 'YES' 
+	</select>
+	
+	<!-- 查询当前出入库单据最大的流水号 -->
+	<select id="findMaxBarCode" parameterType="pd" resultType="pd">
+		SELECT max(INFORMATION_BARCODE) INFORMATION_BARCODE FROM MWMS_WH_ICSTOCKBILL  
+	</select>
+	
+	<!-- 根据条码信息查询最大的子物料条码 -->
+	<select id="findMaxBarCodeByInformationBarCode" parameterType="pd" resultType="pd">
+		SELECT TOP 1 INFORMATION_BARCODE INFORMATION_BARCODE FROM MWMS_WH_ICSTOCKBILL 
+		WHERE INFORMATION_BARCODE LIKE '%'+ #{INFORMATION_BARCODE}+'%' ORDER BY INFORMATION_BARCODE DESC;
+	</select>
+	
+	<!-- 查询当前库存物料名称（去重,下拉选） -->
+	<select id="getMatList" parameterType="pd" resultType="pd">
+		SELECT DISTINCT MAT_NAME FNAME FROM MWMS_WH_ICSTOCKBILL WHERE CONSUME_WHETHER = '未消耗' 
+	</select>
+	
+	<!-- 查询设备类下的设备列表，根据设备类型id -->
+	<select id="getEqmlistPage" parameterType="page" resultType="pd">
+		SELECT w.FNAME FWORKCENTER_NAME,eqm.* FROM MDM_EQM_BASE eqm 
+		LEFT JOIN MDM_WC_WORKCENTER w ON eqm.FWORKCENTER=w.WC_WORKCENTER_ID 
+		WHERE EQM_CLASS_ID = #{pd.EQM_CLASS_ID}
+	</select>
+	
+	<!-- 根据设备ID查询称（KEY_NAME='Clink'）的规范资料 -->
+	<select id="findEQMSPECIFICATIONByEQMBaseId" parameterType="pd" resultType="pd">
+		SELECT TOP 1 * FROM MDM_EQM_SPECIFICATION eqms 
+		WHERE EQM_BASE_ID = #{EQM_BASE_ID} AND KEY_NAME='Clink'
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select 
+		w.WH_WAREHOUSE_ID,w.FNAME wareHouseName,w.FCODE wareHouseCode,
+		s.WH_STORAGEAREA_ID,s.FNAME areaName,s.FCODE areaCode,
+		l.WH_LOCATION_ID,l.FNAME locationName,l.FCODE locationCode,
+		<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MWMS_WH_LOCATION l ON f.LOCATION_CODE=l.FCODE 
+		LEFT JOIN MWMS_WH_STORAGEAREA s ON l.WH_STORAGEAREA_ID=s.WH_STORAGEAREA_ID 
+		LEFT JOIN MWMS_WH_WAREHOUSE w ON s.WH_WAREHOUSE_ID=w.WH_WAREHOUSE_ID 
+		where 1=1 
+		<if test="pd.LOCATION_FNAME != null and pd.LOCATION_FNAME != ''"><!-- 库位名称 -->
+			and ( f.LOCATION_FNAME = #{pd.LOCATION_FNAME} )
+		</if>
+		<if test="pd.MAT_BATCH_NUMBER != null and pd.MAT_BATCH_NUMBER != ''"><!-- 物料批次号 -->
+			and ( f.MAT_BATCH_NUMBER = #{pd.MAT_BATCH_NUMBER} )
+		</if>
+		<if test="pd.STORAGE_STATE != null and pd.STORAGE_STATE != ''"><!-- 存储状态(入库,出库) -->
+			and ( f.STORAGE_STATE = #{pd.STORAGE_STATE} )
+		</if>
+		<if test="pd.CONSUME_WHETHER != null and pd.CONSUME_WHETHER != ''"><!-- 是否消耗(未消耗,已消耗) -->
+			and ( f.CONSUME_WHETHER = #{pd.CONSUME_WHETHER} )
+		</if>
+		<if test="pd.WH_WAREHOUSE_ID != null and pd.WH_WAREHOUSE_ID != ''"><!-- 仓库id -->
+			and ( w.WH_WAREHOUSE_ID = #{pd.WH_WAREHOUSE_ID} )
+		</if>
+		<if test="pd.WH_STORAGEAREA_ID != null and pd.WH_STORAGEAREA_ID != ''"><!-- 库区id -->
+			and ( s.WH_STORAGEAREA_ID = #{pd.WH_STORAGEAREA_ID} )
+		</if>
+		<if test="pd.WH_LOCATION_ID != null and pd.WH_LOCATION_ID != ''"><!-- 库位id -->
+			and ( l.WH_LOCATION_ID = #{pd.WH_LOCATION_ID} )
+		</if>
+		<if test="pd.PRINT_STATE != null and pd.PRINT_STATE != ''"><!-- 打码状态 -->
+			and ( f.PRINT_STATE = #{pd.PRINT_STATE} )
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and (
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+		[fhstart] ORDER BY LOCATION_CODE,MAT_CODE,ICSTOCKBILL_DATE [fhend]
+	</select>
+	
+	<!-- 非分页 列表-->
+	<select id="stockList" parameterType="pd" resultType="pd">
+		select 
+		w.WH_WAREHOUSE_ID,w.FNAME wareHouseName,w.FCODE wareHouseCode,
+		s.WH_STORAGEAREA_ID,s.FNAME areaName,s.FCODE areaCode,
+		l.WH_LOCATION_ID,l.FNAME locationName,l.FCODE locationCode,
+		<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MWMS_WH_LOCATION l ON f.LOCATION_CODE=l.FCODE 
+		LEFT JOIN MWMS_WH_STORAGEAREA s ON l.WH_STORAGEAREA_ID=s.WH_STORAGEAREA_ID 
+		LEFT JOIN MWMS_WH_WAREHOUSE w ON s.WH_WAREHOUSE_ID=w.WH_WAREHOUSE_ID 
+		where 1=1 and f.MAT_QTY &lt;&gt; 0 
+		<if test="MAT_BATCH_NUMBER != null and MAT_BATCH_NUMBER != ''"><!-- 物料批次号 -->
+			and ( f.MAT_BATCH_NUMBER = #{MAT_BATCH_NUMBER} )
+		</if>
+		<if test="STORAGE_STATE != null and STORAGE_STATE != ''"><!-- 存储状态(入库,出库) -->
+			and ( f.STORAGE_STATE = #{STORAGE_STATE} )
+		</if>
+		<if test="CONSUME_WHETHER != null and CONSUME_WHETHER != ''"><!-- 是否消耗(未消耗,已消耗) -->
+			and ( f.CONSUME_WHETHER = #{CONSUME_WHETHER} )
+		</if>
+		<if test="WH_WAREHOUSE_ID != null and WH_WAREHOUSE_ID != ''"><!-- 仓库id -->
+			and ( w.WH_WAREHOUSE_ID = #{WH_WAREHOUSE_ID} )
+		</if>
+		<if test="WH_STORAGEAREA_ID != null and WH_STORAGEAREA_ID != ''"><!-- 库区id -->
+			and ( s.WH_STORAGEAREA_ID = #{WH_STORAGEAREA_ID} )
+		</if>
+		<if test="WH_LOCATION_ID != null and WH_LOCATION_ID != ''"><!-- 库位id -->
+			and ( l.WH_LOCATION_ID = #{WH_LOCATION_ID} )
+		</if>
+		<if test="MAT_NAME != null and MAT_NAME != ''"><!-- 物料名称 -->
+			and ( f.MAT_NAME = #{MAT_NAME} )
+		</if>
+		<if test="startTime != null and startTime != ''"><!-- 开始时间 -->
+			and ( f.ICSTOCKBILL_DATE &gt;= #{startTime}  )
+		</if>
+		<if test="endTime != null and endTime != ''"><!-- 结束时间 -->
+			and ( f.ICSTOCKBILL_DATE &lt;= #{endTime}  )
+		</if>
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and (
+				<!--	根据需求自己加检索条件	 -->
+				FITEM LIKE '%'+ #{KEYWORDS}+'%'
+				 or 
+				MAT_CODE LIKE '%'+ #{KEYWORDS}+'%'
+				 or 
+				MAT_NAME LIKE '%'+ #{KEYWORDS}+'%'
+				 or 
+				MAT_BATCH_NUMBER LIKE '%'+ #{KEYWORDS}+'%'
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 查询未结束入库列表 -->
+	<select id="unFinishList" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f 
+		WHERE f.STORAGE_STATE = '入库' 
+		and f.WAREHOUSING_END_WHETHER = 'NO' 
+		and f.ICSTOCKBILL_PERSONNEL = #{ICSTOCKBILL_PERSONNEL} 
+	</select>
+	
+	<!-- 通过库位代码获取库存信息列表 -->
+	<select id="findByLocationCodelistPage" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f 
+		where 
+			f.LOCATION_CODE = #{pd.LOCATION_CODE} 
+			and f.MAT_QTY &lt;&gt; 0  
+			and f.STORAGE_STATE = '入库' 
+			and f.CONSUME_WHETHER = '未消耗' 
+		[fhstart] order by f.LAST_MOVE_DATE desc [fhend]
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WH_ICSTOCKBILL_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 根据消耗产出料次明细查询库存 -->
+	<select id="findByCOUTBATCHMXID" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f 
+		WHERE f.RUN_COUTBATCHMX_ID = #{RUN_COUTBATCHMX_ID} AND f.CONSUME_WHETHER = #{CONSUME_WHETHER}
+	</select>
+	
+	<!-- 根据消耗产出料次明细查询库存数量和 -->
+	<select id="findSUMNUMByCOUTBATCHMXID" parameterType="pd" resultType="pd">
+		select 
+		SUM(MAT_QTY) AS SUMNUM 
+		from 
+		<include refid="tableName"></include> f 
+		WHERE f.RUN_COUTBATCHMX_ID = #{RUN_COUTBATCHMX_ID} AND f.CONSUME_WHETHER = #{CONSUME_WHETHER}
+	</select>
+	
+	<!-- 查询该料次下是否存在称量库存总重量低于料次明细中物料要求下限值的数据 -->
+	<select id="findIllegalBatchMxNum" parameterType="pd" resultType="pd">
+		SELECT count(*) num FROM (
+			SELECT t1.RUN_COUTBATCH_ID,t2.RUN_COUTBATCHMX_ID,
+			((ISNULL(t2.FPREDICT_NUM, 0)-ISNULL(t2.FLOW_NUM, 0))-ISNULL((
+				SELECT SUM(MAT_QTY) zcl FROM MWMS_WH_ICSTOCKBILL   
+				WHERE CONSUME_WHETHER='未消耗' AND RUN_COUTBATCHMX_ID=t2.RUN_COUTBATCHMX_ID
+			), 0)) cz from MRECIPE_RUN_COUTBATCH t1
+			LEFT JOIN MRECIPE_RUN_COUTBATCHMX t2 on t1.RUN_COUTBATCH_ID=t2.RUN_COUTBATCH_ID
+			where t1.RUN_COUTBATCH_ID = #{RUN_COUTBATCH_ID} AND FTYPE='IN'
+		) t3 WHERE cz&gt;0
+	</select>
+	
+	<!-- 根据工单id查询物料接收单、领料单信息、产出品物料类型、是否需要检验 -->
+	<select id="findIcsInfo" parameterType="pd" resultType="pd">
+		SELECT TOP 1 rb.RECEIVING_BILLNO,pb.PLAN_PICKINGBILL_BILLNO, mc.FCLASS,p.* FROM MPOT_PLAN p 
+		LEFT JOIN MPOT_PLAN_PICKINGBILL pb ON p.PLAN_ID=pb.FBILLNO 
+		LEFT JOIN MPOT_PLAN_RECEIVING_BILL rb ON p.PLAN_ID=rb.FBILLNO 
+		LEFT JOIN MBASE_MAT_BASIC mb ON p.PRODUCT_NO=mb.MAT_CODE 
+		LEFT JOIN MBASE_MAT_CLASS mc ON mb.MAT_CLASS_ID=mc.MAT_CLASS_ID 
+		WHERE p.PLAN_ID = #{PLAN_ID}
+	</select>
+	<!-- 根据物料代码查询物料类别 -->
+	<select id="findMatByCode" parameterType="pd" resultType="pd">
+		SELECT TOP 1 c.FCLASS,b.* FROM MBASE_MAT_BASIC b 
+		LEFT JOIN MBASE_MAT_CLASS c ON b.MAT_CLASS_ID=c.MAT_CLASS_ID 
+		WHERE MAT_CODE = #{MAT_CODE}
+	</select>
+	
+	<!-- YY 356703572 -->
+</mapper>

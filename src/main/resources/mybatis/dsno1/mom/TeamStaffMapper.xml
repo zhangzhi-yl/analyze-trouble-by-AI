@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.TeamStaffMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_TEAM_STAFF
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.TEAM_STAFF_ID,	
+		f.STATION,	
+		f.DEPARTMENT_ID,	
+		f.AREA_ID,	
+		f.FPHONE,	
+		f.TEAM_LEADER,	
+		f.TEAM_STAFF,	
+		f.FNAME,	
+		f.FCODE,	
+		f.FDES,	
+		f.TEAM_INFO_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		TEAM_STAFF_ID,	
+		STATION,	
+		DEPARTMENT_ID,	
+		AREA_ID,	
+		FPHONE,	
+		TEAM_LEADER,	
+		TEAM_STAFF,	
+		FNAME,	
+		FCODE,	
+		FDES,	
+		TEAM_INFO_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TEAM_STAFF_ID},	
+		#{STATION},	
+		#{DEPARTMENT_ID},	
+		#{AREA_ID},	
+		#{FPHONE},	
+		#{TEAM_LEADER},	
+		#{TEAM_STAFF},	
+		#{FNAME},	
+		#{FCODE},	
+		#{FDES},	
+		#{TEAM_INFO_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEAM_STAFF_ID = #{TEAM_STAFF_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			STATION = #{STATION},
+			DEPARTMENT_ID = #{DEPARTMENT_ID},
+			AREA_ID = #{AREA_ID},
+			FPHONE = #{FPHONE},
+			TEAM_LEADER = #{TEAM_LEADER},
+			TEAM_STAFF = #{TEAM_STAFF},
+			FNAME = #{FNAME},
+			FCODE = #{FCODE},
+			FDES = #{FDES},
+			TEAM_INFO_ID = #{TEAM_INFO_ID}
+		where 
+			TEAM_STAFF_ID = #{TEAM_STAFF_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.TEAM_STAFF_ID = #{TEAM_STAFF_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,dept.NAME as DEPTNAME,team.FNAME as TEAMNAME,area.FNAME as AREANAME 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN OA_DEPARTMENT dept on f.DEPARTMENT_ID = dept.DEPARTMENT_ID 
+		LEFT JOIN MBASE_TEAM_INFO team on f.TEAM_INFO_ID = team.TEAM_INFO_ID  
+		LEFT JOIN MDM_AREA area ON f.AREA_ID=area.AREA_ID 
+		where
+			f.TEAM_INFO_ID = #{pd.TEAM_INFO_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				
+				)
+		</if>
+		[fhstart] ORDER BY f.FCODE [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	<!-- 批量插入数据，入参为list，注意参数格式 -->
+    <insert id="staffBinding">
+    	INSERT INTO <include refid="tableName"></include> 
+    	(
+    	 <include refid="Field2"></include> 
+    	) 
+    	 VALUES 
+    	<foreach collection="list" item="staff" separator=",">
+    	(
+    		#{staff.TEAM_STAFF_ID},	
+			#{staff.STATION},	
+			#{staff.DEPARTMENT_ID},	
+			#{staff.AREA_ID},	
+			#{staff.FPHONE},	
+			#{staff.TEAM_LEADER},	
+			#{staff.TEAM_STAFF},	
+			#{staff.FNAME},	
+			#{staff.FCODE},	
+			#{staff.FDES},	
+			#{staff.TEAM_INFO_ID}
+    	)
+    	</foreach>
+    </insert>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEAM_STAFF_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			TEAM_INFO_ID = #{TEAM_INFO_ID}
+	</select>
+	
+	<!-- 通过人员查询班组信息 -->
+	<select id="findByTeam" parameterType="pd" resultType="pd">
+		SELECT top 1
+          ISNULL(f.FNAME, '')AS FNAME,
+          ISNULL(t.FNAME, '无')AS TEAMNAME,
+          ISNULL(s.START_TIME, '空')AS START_TIME,
+          ISNULL(s.END_TIME, '空')AS END_TIME
+          FROM MBASE_TEAM_STAFF f LEFT JOIN MBASE_TEAM_INFO t ON f.TEAM_INFO_ID=t.TEAM_INFO_ID LEFT JOIN
+          (SELECT s1.TEAM_INFO_ID,s2.START_TIME,s2.END_TIME FROM MBASE_TEAM_INFO s1 LEFT JOIN MBASE_TEAM_CALENDAR s2 ON s1.TEAM_INFO_ID=s2.TEAM_ID WHERE s2.START_TIME &lt; GETDATE() AND s2.END_TIME &gt; GETDATE())s
+          ON f.TEAM_INFO_ID=s.TEAM_INFO_ID WHERE f.FNAME=#{FNAME}
+	</select>
+	
+	<!-- 通过人员查询班组 -->
+	<select id="getTeam" parameterType="pd" resultType="pd">
+		SELECT top 1
+          ISNULL(f.FNAME, '')AS FNAME,
+          ISNULL(t.FNAME, '无')AS TEAMNAME
+          FROM MBASE_TEAM_STAFF f LEFT JOIN MBASE_TEAM_INFO t ON f.TEAM_INFO_ID=t.TEAM_INFO_ID WHERE f.FNAME=#{FNAME}
+	</select>
+	
+	<!-- 查询人员班组列表-->
+	<select id="listAllStaff" parameterType="pd" resultType="pd">
+		SELECT f.FNAME,t.FNAME AS TEAMNAME from MBASE_TEAM_STAFF f LEFT JOIN MBASE_TEAM_INFO t ON f.TEAM_INFO_ID = t.TEAM_INFO_ID 
+		where 1=1
+		<if test="TEAM!= null and TEAM != ''"><!-- 关键词检索 -->
+			and
+				(
+					t.FNAME = #{TEAM}
+				
+				)
+		</if>
+	</select>	<!-- YY 356703572 -->
+</mapper>

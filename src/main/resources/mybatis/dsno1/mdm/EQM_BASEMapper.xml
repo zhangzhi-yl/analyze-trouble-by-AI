@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_BASEMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_BASE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FIDENTIFY,	
+		f.FNAME,	
+		f.FDES,	
+		f.FTYPE,	
+		f.FWORKCENTER,	
+		f.RUN_STATE,	
+		f.FSTATE1,	
+		f.FSTATE2,	
+		f.FSTATE3,	
+		f.FSTATE4,	
+		f.FBARCODE,	
+		f.FBRAND,	
+		f.FSPECS,	
+		f.BARCODE_BATCH,	
+		f.FMANUFACTOR,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.EQM_EXTEND1,	
+		f.EQM_EXTEND2,	
+		f.EQM_EXTEND3,	
+		f.EQM_EXTEND4,	
+		f.EQM_EXTEND5,	
+		f.AUTOSERVE_IDENTIFY,	
+		f.AUTOSERVE_FNAME,	
+		f.AUTOSERVE_ADDRESS,	
+		f.AUTOSERVE_ADDRESS_EXTEND,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,	
+		f.FMAXYIEID,
+		f.FMINIYIEID,
+		f.FUNIT,
+		f.EQM_CLASS_ID,	
+		f.EQM_BASE_ID,
+		f.FPURPOSE,
+		f.OVERALL_DIMENSION,
+		f.MANUFACTURE_DATE,
+		f.MANUFACTURE_NO,
+		f.USE_DEP,
+		f.ORIGINAL_VALUE,
+		f.EX_FACTORY_DATE,
+		f.WEIGHT,
+		f.SUBJECT_MATTER,
+		f.SOURCE,
+		f.SUBJECT_MATTER_WRITE,
+		f.STATUS_OF_EQUIPMENT
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FIDENTIFY,	
+		FNAME,	
+		FDES,	
+		FTYPE,	
+		FWORKCENTER,	
+		RUN_STATE,	
+		FSTATE1,	
+		FSTATE2,	
+		FSTATE3,	
+		FSTATE4,	
+		FBARCODE,	
+		FBRAND,	
+		FSPECS,	
+		BARCODE_BATCH,	
+		FMANUFACTOR,	
+		FCREATOR,	
+		CREATE_TIME,	
+		EQM_EXTEND1,	
+		EQM_EXTEND2,	
+		EQM_EXTEND3,	
+		EQM_EXTEND4,	
+		EQM_EXTEND5,	
+		AUTOSERVE_IDENTIFY,	
+		AUTOSERVE_FNAME,	
+		AUTOSERVE_ADDRESS,	
+		AUTOSERVE_ADDRESS_EXTEND,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		FEXTEND4,	
+		FEXTEND5,
+		FMAXYIEID,
+		FMINIYIEID,
+		FUNIT,	
+		EQM_CLASS_ID,	
+		EQM_BASE_ID,
+		FPURPOSE,
+		OVERALL_DIMENSION,
+		MANUFACTURE_DATE,
+		MANUFACTURE_NO,
+		USE_DEP,
+		ORIGINAL_VALUE,
+		EX_FACTORY_DATE,
+		WEIGHT,
+		SUBJECT_MATTER,
+		SOURCE,
+		SUBJECT_MATTER_WRITE,
+		STATUS_OF_EQUIPMENT
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FIDENTIFY},	
+		#{FNAME},	
+		#{FDES},	
+		#{FTYPE},	
+		#{FWORKCENTER},	
+		#{RUN_STATE},	
+		#{FSTATE1},	
+		#{FSTATE2},	
+		#{FSTATE3},	
+		#{FSTATE4},	
+		#{FBARCODE},	
+		#{FBRAND},	
+		#{FSPECS},	
+		#{BARCODE_BATCH},	
+		#{FMANUFACTOR},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{EQM_EXTEND1},	
+		#{EQM_EXTEND2},	
+		#{EQM_EXTEND3},	
+		#{EQM_EXTEND4},	
+		#{EQM_EXTEND5},	
+		#{AUTOSERVE_IDENTIFY},	
+		#{AUTOSERVE_FNAME},	
+		#{AUTOSERVE_ADDRESS},	
+		#{AUTOSERVE_ADDRESS_EXTEND},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{FEXTEND4},	
+		#{FEXTEND5},
+		#{FMAXYIEID},
+		#{FMINIYIEID},
+		#{FUNIT},	
+		#{EQM_CLASS_ID},	
+		#{EQM_BASE_ID},
+		#{FPURPOSE},
+		#{OVERALL_DIMENSION},
+		#{MANUFACTURE_DATE},
+		#{MANUFACTURE_NO},
+		#{USE_DEP},
+		#{ORIGINAL_VALUE},
+		#{EX_FACTORY_DATE},
+		#{WEIGHT},
+		#{SUBJECT_MATTER},
+		#{SOURCE},
+		#{SUBJECT_MATTER_WRITE},
+		#{STATUS_OF_EQUIPMENT}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FIDENTIFY = #{FIDENTIFY},
+			FNAME = #{FNAME},
+			FDES = #{FDES},
+			FTYPE = #{FTYPE},
+			FWORKCENTER = #{FWORKCENTER},
+			RUN_STATE = #{RUN_STATE},
+			FSTATE1 = #{FSTATE1},
+			FSTATE2 = #{FSTATE2},
+			FSTATE3 = #{FSTATE3},
+			FSTATE4 = #{FSTATE4},
+			FBARCODE = #{FBARCODE},
+			FBRAND = #{FBRAND},
+			FSPECS = #{FSPECS},
+			BARCODE_BATCH = #{BARCODE_BATCH},
+			FMANUFACTOR = #{FMANUFACTOR},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			EQM_EXTEND1 = #{EQM_EXTEND1},
+			EQM_EXTEND2 = #{EQM_EXTEND2},
+			EQM_EXTEND3 = #{EQM_EXTEND3},
+			EQM_EXTEND4 = #{EQM_EXTEND4},
+			EQM_EXTEND5 = #{EQM_EXTEND5},
+			AUTOSERVE_IDENTIFY = #{AUTOSERVE_IDENTIFY},
+			AUTOSERVE_FNAME = #{AUTOSERVE_FNAME},
+			AUTOSERVE_ADDRESS = #{AUTOSERVE_ADDRESS},
+			AUTOSERVE_ADDRESS_EXTEND = #{AUTOSERVE_ADDRESS_EXTEND},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FEXTEND4 = #{FEXTEND4},
+			FEXTEND5 = #{FEXTEND5},
+			FMAXYIEID = #{FMAXYIEID},
+		    FMINIYIEID = #{FMINIYIEID},
+		    FUNIT = #{FUNIT},
+			EQM_CLASS_ID = #{EQM_CLASS_ID},
+			FPURPOSE = #{FPURPOSE},
+			OVERALL_DIMENSION = #{OVERALL_DIMENSION},
+			MANUFACTURE_DATE = #{MANUFACTURE_DATE},
+			MANUFACTURE_NO = #{MANUFACTURE_NO},
+			USE_DEP = #{USE_DEP},
+			ORIGINAL_VALUE = #{ORIGINAL_VALUE},
+			EX_FACTORY_DATE = #{EX_FACTORY_DATE},
+			WEIGHT = #{WEIGHT},
+			STATUS_OF_EQUIPMENT = #{STATUS_OF_EQUIPMENT}
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,t.CLASS_NAME,t.EQM_COLOR,t.EQM_FONT_COLOR,t.EQM_ICON,t.PICTURE_PATH,d.WORKCENTER_NAME,gy.NAME FDEPT_NAME
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_EQM_CLASS t ON f.EQM_CLASS_ID = t.EQM_CLASS_ID <!-- 通过设备类ID查出设备类名 -->
+		LEFT JOIN (SELECT s.WC_WORKCENTER_ID,s.FNAME AS WORKCENTER_NAME FROM MDM_WC_WORKCENTER s)d on f.FWORKCENTER=d.WC_WORKCENTER_ID<!-- 通过工作中心ID查询工作中心名称 -->
+		LEFT JOIN OA_DEPARTMENT gy on f.USE_DEP=gy.DEPARTMENT_ID
+		where 
+			f.EQM_BASE_ID = #{EQM_BASE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,t.CLASS_NAME,t.EQM_COLOR,t.EQM_FONT_COLOR,t.EQM_ICON,t.PICTURE_PATH,d.WORKCENTER_NAME,
+		gy.NAME FDEPT_NAME,bp.FHEAD EQM_HEAD 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_EQM_CLASS t ON f.EQM_CLASS_ID = t.EQM_CLASS_ID <!-- 通过设备类ID查出设备类名 -->
+		LEFT JOIN (SELECT s.WC_WORKCENTER_ID,s.FNAME AS WORKCENTER_NAME FROM MDM_WC_WORKCENTER s)d on f.FWORKCENTER=d.WC_WORKCENTER_ID<!-- 通过工作中心ID查询工作中心名称 -->
+		LEFT JOIN OA_DEPARTMENT gy on f.USE_DEP=gy.DEPARTMENT_ID 
+		LEFT JOIN MDM_EQM_BASE_PARAMETER bp ON f.EQM_BASE_ID=bp.EQM_BASE_ID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FIDENTIFY LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FBARCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.FSPECS LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 关键词检索 -->
+			and
+				(
+					t.CLASS_NAME LIKE '%'+ #{pd.FTYPE}+'%'
+				)
+		</if>
+		<if test="pd.FWORKCENTER != null and pd.FWORKCENTER != ''"><!-- 关键词检索 -->
+			and
+				(
+					d.WORKCENTER_NAME LIKE '%'+ #{pd.FWORKCENTER}+'%'
+				)
+		</if>
+		<if test="pd.RUN_STATE != null and pd.RUN_STATE != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.RUN_STATE LIKE '%'+ #{pd.RUN_STATE}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.STATUS_OF_EQUIPMENT LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		 [fhstart] order by f.CREATE_TIME DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,t.CLASS_NAME,t.EQM_COLOR,t.EQM_FONT_COLOR,
+		t.EQM_ICON,t.PICTURE_PATH,d.WORKCENTER_NAME,od.NAME DEPARTMENT_NAME
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_EQM_CLASS t ON f.EQM_CLASS_ID = t.EQM_CLASS_ID <!-- 通过设备类ID查出设备类名 -->
+		LEFT JOIN (SELECT s.WC_WORKCENTER_ID,s.FNAME AS WORKCENTER_NAME FROM MDM_WC_WORKCENTER s)d on f.FWORKCENTER=d.WC_WORKCENTER_ID<!-- 通过工作中心ID查询工作中心名称 -->
+		LEFT JOIN OA_DEPARTMENT od ON f.USE_DEP=od.DEPARTMENT_ID 
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 根据物料关键字查询数据 -->
+	<select id="getBasic" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,t.CLASS_NAME,t.EQM_COLOR,t.EQM_FONT_COLOR,t.EQM_ICON,t.PICTURE_PATH,d.WORKCENTER_NAME
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_EQM_CLASS t ON f.EQM_CLASS_ID = t.EQM_CLASS_ID <!-- 通过设备类ID查出设备类名 -->
+		LEFT JOIN (SELECT s.WC_WORKCENTER_ID,s.FNAME AS WORKCENTER_NAME FROM MDM_WC_WORKCENTER s)d on f.FWORKCENTER=d.WC_WORKCENTER_ID<!-- 通过工作中心ID查询工作中心名称 -->
+		WHERE 1=1
+		<if test="inputName!= null and inputName != ''"><!-- 关键词检索 -->
+		  and(
+		     f.FNAME LIKE '%'+#{inputName}+'%'<!-- 物料代码 -->
+		     or
+		     f.FIDENTIFY LIKE '%'+#{inputName}+'%'<!-- 物料名称 -->
+		  )
+		</if>
+	</select>
+	
+	<!-- 通过设备标识获取数据 -->
+	<select id="findByNumber" parameterType="pd" resultType="pd">
+		select top 1
+		<include refid="Field"></include>,t.CLASS_NAME,t.EQM_COLOR,t.EQM_FONT_COLOR,t.EQM_ICON,t.PICTURE_PATH,d.WORKCENTER_NAME
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_EQM_CLASS t ON f.EQM_CLASS_ID = t.EQM_CLASS_ID <!-- 通过设备类ID查出设备类名 -->
+		LEFT JOIN (SELECT s.WC_WORKCENTER_ID,s.FNAME AS WORKCENTER_NAME FROM MDM_WC_WORKCENTER s)d on f.FWORKCENTER=d.WC_WORKCENTER_ID<!-- 通过工作中心ID查询工作中心名称 -->
+		where 
+			f.FIDENTIFY = #{FNUMBER}
+	</select>
+	
+	<!-- 修改设备运行状态 -->
+	<update id="stateEdit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RUN_STATE = #{RUN_STATE}
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</update>
+	
+	<!-- 检修待办列表 -->
+	<select id="datalistPageJX" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,t.CLASS_NAME,t.EQM_COLOR,t.EQM_FONT_COLOR,t.EQM_ICON,t.PICTURE_PATH,d.WORKCENTER_NAME,ISNULL(n.FNUM, 0)AS FNUM
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_EQM_CLASS t ON f.EQM_CLASS_ID = t.EQM_CLASS_ID <!-- 通过设备类ID查出设备类名 -->
+		LEFT JOIN (SELECT s.WC_WORKCENTER_ID,s.FNAME AS WORKCENTER_NAME FROM MDM_WC_WORKCENTER s)d on f.FWORKCENTER=d.WC_WORKCENTER_ID<!-- 通过工作中心ID查询工作中心名称 -->
+		LEFT JOIN(SELECT n.EQM_BASE_ID,COUNT(n.EQM_BASE_ID) FNUM FROM MDM_EQM_OVERHAUL n WHERE n.FEXTEND1='YES' and
+				(
+					n.FASSIGN_CONTENT LIKE '%'+ #{pd.USERNAME}+'%'
+					 or 
+					n.FASSIGN_CONTENT LIKE '%'+ #{pd.DEPTNAME}+'%' 
+				) GROUP BY n.EQM_BASE_ID)n ON n.EQM_BASE_ID=f.EQM_BASE_ID<!-- 查询是否有检修待办 -->
+		where FNUM &gt; 0
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FIDENTIFY LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FBARCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.FSPECS LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 关键词检索 -->
+			and
+				(
+					t.CLASS_NAME LIKE '%'+ #{pd.FTYPE}+'%'
+				)
+		</if>
+		<if test="pd.FWORKCENTER != null and pd.FWORKCENTER != ''"><!-- 关键词检索 -->
+			and
+				(
+					d.WORKCENTER_NAME LIKE '%'+ #{pd.FWORKCENTER}+'%'
+				)
+		</if>
+		<if test="pd.RUN_STATE != null and pd.RUN_STATE != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.RUN_STATE LIKE '%'+ #{pd.RUN_STATE}+'%'
+				)
+		</if>
+		 [fhstart] order by f.CREATE_TIME DESC [fhend] 
+	</select>
+	
+	<!-- 根据关键字查询数据 -->
+	<select id="getEQMList" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,isnull(f.FNAME,'无名称')+'/'+isnull(f.FIDENTIFY,'无编号')  FSelectOption,t.CLASS_NAME,t.EQM_COLOR,t.EQM_FONT_COLOR,t.EQM_ICON,t.PICTURE_PATH,d.WORKCENTER_NAME
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_EQM_CLASS t ON f.EQM_CLASS_ID = t.EQM_CLASS_ID <!-- 通过设备类ID查出设备类名 -->
+		LEFT JOIN (SELECT s.WC_WORKCENTER_ID,s.FNAME AS WORKCENTER_NAME FROM MDM_WC_WORKCENTER s)d on f.FWORKCENTER=d.WC_WORKCENTER_ID<!-- 通过工作中心ID查询工作中心名称 -->
+		WHERE 1=1
+		<if test="KEYWORDS!= null and KEYWORDS != ''"><!-- 关键词检索 -->
+		  and(
+		     f.FNAME LIKE '%'+#{KEYWORDS}+'%'<!-- 物料代码 -->
+		     or
+		     f.FIDENTIFY LIKE '%'+#{KEYWORDS}+'%'<!-- 物料名称 -->
+		  )
+		</if>
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.ProcessWorkOrderExample_SopStepMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PP_ProcessWorkOrderExample_SopStep
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FSortTime,	
+		f.ProcessWorkOrderExample_ID,	
+		f.FIsFirst,	
+		f.FStepName,	
+		f.FShowName,	
+		f.FIsAlarm,	
+		f.FType,	
+		f.SopSchemeTemplate_ID,	
+		f.FStandardHour,	
+		f.Begin_Time,	
+		f.End_Time,	
+		f.FOperator,	
+		f.OperationComment,	
+		f.FCreatePersonID,	
+		f.FCreateTime,	
+		f.FNumber,	
+		f.PlanningWorkOrderID,
+		isnull(f.FAnnex_Name,'') FAnnex_Name,
+		isnull(f.FANNEX_Path,'') FANNEX_Path,
+		f.FPart_Number,
+		f.FPart_Dosage,
+		f.FMotion_Time,
+		f.FSmbol,
+		f.FTool,
+		f.FCraft_Para,
+		f.FKey_Point,
+		f.FCause,
+		f.FSelf_Project,
+		f.ProcessWorkOrderExample_SopStep_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FSortTime,	
+		ProcessWorkOrderExample_ID,	
+		FIsFirst,	
+		FStepName,	
+		FShowName,	
+		FIsAlarm,	
+		FType,	
+		SopSchemeTemplate_ID,	
+		FStandardHour,	
+		Begin_Time,	
+		End_Time,	
+		FOperator,	
+		OperationComment,	
+		FCreatePersonID,	
+		FCreateTime,	
+		FNumber,	
+		PlanningWorkOrderID,
+		FAnnex_Name,
+		FANNEX_Path,
+		FPart_Number,
+		FPart_Dosage,
+		FMotion_Time,
+		FSmbol,
+		FTool,
+		FCraft_Para,
+		FKey_Point,
+		FCause,
+		FSelf_Project,
+		ProcessWorkOrderExample_SopStep_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FSortTime},	
+		#{ProcessWorkOrderExample_ID},	
+		#{FIsFirst},	
+		#{FStepName},	
+		#{FShowName},	
+		#{FIsAlarm},	
+		#{FType},	
+		#{SopSchemeTemplate_ID},	
+		#{FStandardHour},	
+		#{Begin_Time},	
+		#{End_Time},	
+		#{FOperator},	
+		#{OperationComment},	
+		#{FCreatePersonID},	
+		#{FCreateTime},	
+		#{FNumber},	
+		#{PlanningWorkOrderID},
+		#{FAnnex_Name},	
+		#{FANNEX_Path},	
+		#{FPart_Number},	
+		#{FPart_Dosage},	
+		#{FMotion_Time},	
+		#{FSmbol},	
+		#{FTool},	
+		#{FCraft_Para},	
+		#{FKey_Point},	
+		#{FCause},	
+		#{FSelf_Project},	
+		#{ProcessWorkOrderExample_SopStep_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProcessWorkOrderExample_SopStep_ID = #{ProcessWorkOrderExample_SopStep_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FSortTime = #{FSortTime},
+			ProcessWorkOrderExample_ID = #{ProcessWorkOrderExample_ID},
+			FIsFirst = #{FIsFirst},
+			FStepName = #{FStepName},
+			FShowName = #{FShowName},
+			FIsAlarm = #{FIsAlarm},
+			FType = #{FType},
+			SopSchemeTemplate_ID = #{SopSchemeTemplate_ID},
+			FStandardHour = #{FStandardHour},
+			Begin_Time = #{Begin_Time},
+			End_Time = #{End_Time},
+			FOperator = #{FOperator},
+			OperationComment = #{OperationComment},
+			FCreatePersonID = #{FCreatePersonID},
+			FCreateTime = #{FCreateTime},
+			FNumber = #{FNumber},
+			PlanningWorkOrderID =#{PlanningWorkOrderID},
+			FAnnex_Name = #{FAnnex_Name},	
+			FANNEX_Path = #{FANNEX_Path},	
+			FPart_Number = #{FPart_Number},	
+			FPart_Dosage = #{FPart_Dosage},	
+			FMotion_Time = #{FMotion_Time},	
+			FSmbol = #{FSmbol},	
+			FTool = #{FTool},	
+			FCraft_Para = #{FCraft_Para},	
+			FKey_Point = #{FKey_Point},	
+			FCause = #{FCause},	
+			FSelf_Project = #{FSelf_Project},	
+			ProcessWorkOrderExample_SopStep_ID = ProcessWorkOrderExample_SopStep_ID
+		where 
+			ProcessWorkOrderExample_SopStep_ID = #{ProcessWorkOrderExample_SopStep_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.ProcessWorkOrderExample_SopStep_ID = #{ProcessWorkOrderExample_SopStep_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		f1.NAME as FTypeName
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1 on f1.DICTIONARIES_ID = f.FType
+		where 1=1
+		<if test="pd.SopSchemeTemplate_ID != null and pd.SopSchemeTemplate_ID != ''">
+			and
+				(
+					f.SopSchemeTemplate_ID = #{pd.SopSchemeTemplate_ID}
+				
+				)
+		</if>
+		<if test="pd.ProcessWorkOrderExample_ID != null and pd.ProcessWorkOrderExample_ID != ''">
+			and
+				(
+					f.ProcessWorkOrderExample_ID = #{pd.ProcessWorkOrderExample_ID}
+				
+				)
+		</if>
+		[fhstart] order by f.FSortTime [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 
+		<if test="SopSchemeTemplate_ID != null and SopSchemeTemplate_ID != ''">
+			and
+				(
+					f.SopSchemeTemplate_ID = #{SopSchemeTemplate_ID}
+				
+				)
+		</if>
+		
+		order by f.FSortTime
+	</select>
+	
+	<select id = "appListPage" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+	select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 
+		<if test="pd.SopSchemeTemplate_ID != null and pd.SopSchemeTemplate_ID != ''">
+			and
+				(
+					f.SopSchemeTemplate_ID = #{pd.SopSchemeTemplate_ID}
+				
+				)
+		</if>
+		<if test="pd.ProcessWorkOrderExample_ID != null and pd.ProcessWorkOrderExample_ID != ''">
+			and
+				(
+					f.ProcessWorkOrderExample_ID = #{pd.ProcessWorkOrderExample_ID}
+				
+				)
+		</if>
+		order by f.FSortTime
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProcessWorkOrderExample_SopStep_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+		<delete id="deleteProcessWorkOrderExampleSopStepByPlanningWorkOrderID" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PlanningWorkOrderID = #{planningWorkOrderID}
+	</delete>
+	
+	<delete id="deleteByTaskID" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+		ProcessWorkOrderExample_ID = #{taskId}
+	</delete>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

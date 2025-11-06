@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.zm.ReportMapper">
+
+    <!-- 电能能耗日用能-->
+    <select id="dayElectricReport" resultType="pd" parameterType="pd">
+        SELECT ${QueryField},DATEPART(HOUR, f.TimeStamp) TimeStamp  FROM T_PatraElectric f
+        WHERE 1=1
+        <if test="morning != null and morning != ''"><!-- 关键词检索 -->
+            and
+            DATEPART(HOUR, f.TimeStamp)  IN (8,9,10,11,12,13,14,15,16,17,18,19)
+        </if>
+        <if test="night != null and night != ''"><!-- 关键词检索 -->
+            and
+            DATEPART(HOUR, f.TimeStamp)  IN (20,21,22,23,0,1,2,3,4,5,6,7)
+        </if>
+        <if test="FTime != null and FTime != ''"><!-- 关键词检索 -->
+            and
+            SUBSTRING(f.TimeStamp,0,11) = #{FTime}
+        </if>
+        GROUP BY
+        DATEPART(HOUR, f.TimeStamp)
+    </select>
+
+    <!-- 电能能耗月用能-->
+    <select id="monthElectricReport" resultType="pd" parameterType="pd">
+        SELECT ${QueryField},DATEPART(DAY, f.TimeStamp) TimeStamp  FROM T_PatraElectric f
+        WHERE 1=1
+        <if test="before != null and before != ''"><!-- 关键词检索 -->
+            and
+            DATEPART(DAY, f.TimeStamp) &gt;= 1
+            and
+            DATEPART(DAY, f.TimeStamp) &lt;= ${halfDay}
+        </if>
+        <if test="FTime != null and FTime != ''"><!-- 关键词检索 -->
+            and
+            SUBSTRING(f.TimeStamp,0,8) = #{FTime}
+        </if>
+        GROUP BY
+        DATEPART(DAY, f.TimeStamp)
+    </select>
+
+    <!-- 电能能耗日用能-->
+    <select id="dayElectricUseReport" resultType="pd" parameterType="pd">
+        SELECT ${QueryField}  FROM T_PatraElectric f
+        WHERE 1=1
+        <if test="morning != null and morning != ''"><!-- 关键词检索 -->
+            and
+            DATEPART(HOUR, f.TimeStamp)  IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23)
+        </if>
+        <if test="night != null and night != ''"><!-- 关键词检索 -->
+            and
+            DATEPART(HOUR, f.TimeStamp)  IN ()
+        </if>
+        <if test="FTime != null and FTime != ''"><!-- 关键词检索 -->
+            and
+            SUBSTRING(f.TimeStamp,0,11) = #{FTime}
+        </if>
+    </select>
+
+    <!-- 电能能耗月用能-->
+    <select id="monthElectricUseReport" resultType="pd" parameterType="pd">
+        SELECT ${QueryField}  FROM T_PatraElectric f
+        WHERE 1=1
+        <if test="before != null and before != ''"><!-- 关键词检索 -->
+            and
+            DATEPART(DAY, f.TimeStamp) &gt;= 1
+            and
+            DATEPART(DAY, f.TimeStamp) &lt;= ${halfDay}
+        </if>
+        <if test="after != null and after != ''"><!-- 关键词检索 -->
+            and
+            DATEPART(DAY, f.TimeStamp) &gt; ${halfDay}
+            and DATEPART(DAY, f.TimeStamp) &lt;= ${endDay}
+        </if>
+        <if test="FTime != null and FTime != ''"><!-- 关键词检索 -->
+            and
+            SUBSTRING(f.TimeStamp,0,8) = #{FTime}
+        </if>
+    </select>
+
+
+
+    <!-- yy356703572qq(彬耶) -->
+</mapper>

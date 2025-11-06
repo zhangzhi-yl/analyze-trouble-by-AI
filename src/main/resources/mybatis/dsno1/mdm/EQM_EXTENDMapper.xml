@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_EXTENDMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_EXTEND
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,	
+		f.FEXTEND6,	
+		f.FEXTEND8,	
+		f.FEXTEND7,	
+		f.FEXTEND9,	
+		f.FEXTEND10,
+		f.FCREATOR,	
+		f.CREATE_TIME,
+		f.EQM_BASE_ID,	
+		f.EQM_EXTEND_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		FEXTEND4,	
+		FEXTEND5,	
+		FEXTEND6,	
+		FEXTEND8,	
+		FEXTEND7,	
+		FEXTEND9,	
+		FEXTEND10,	
+		FCREATOR,	
+		CREATE_TIME,
+		EQM_BASE_ID,	
+		EQM_EXTEND_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{FEXTEND4},	
+		#{FEXTEND5},	
+		#{FEXTEND6},	
+		#{FEXTEND8},	
+		#{FEXTEND7},	
+		#{FEXTEND9},	
+		#{FEXTEND10},
+		#{FCREATOR},	
+		#{CREATE_TIME},
+		#{EQM_BASE_ID},			
+		#{EQM_EXTEND_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_EXTEND_ID = #{EQM_EXTEND_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FEXTEND4 = #{FEXTEND4},
+			FEXTEND5 = #{FEXTEND5},
+			FEXTEND6 = #{FEXTEND6},
+			FEXTEND8 = #{FEXTEND8},
+			FEXTEND7 = #{FEXTEND7},
+			FEXTEND9 = #{FEXTEND9},
+			FEXTEND10 = #{FEXTEND10},
+			FCREATOR = #{FCREATOR},	
+		    CREATE_TIME = #{CREATE_TIME},
+		    EQM_BASE_ID = #{EQM_BASE_ID},	
+			EQM_EXTEND_ID = EQM_EXTEND_ID
+		where 
+			EQM_EXTEND_ID = #{EQM_EXTEND_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.EQM_EXTEND_ID = #{EQM_EXTEND_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where EQM_BASE_ID = #{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_EXTEND_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过设备基础资料ID删除信息-->
+	<delete id="deleteBase" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</delete>
+	<!-- YY 356703572 -->
+</mapper>

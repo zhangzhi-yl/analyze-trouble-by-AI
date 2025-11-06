@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.PlineClassMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_PLINE_CLASS
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PLINE_CLASS_ID,	
+		f.FCODE,	
+		f.FNAME,	
+		f.FKIND,	
+		f.FTYPE,	
+		f.FCREATOR,	
+		f.CREATE_TIME
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PLINE_CLASS_ID,	
+		FCODE,	
+		FNAME,	
+		FKIND,	
+		FTYPE,	
+		FCREATOR,	
+		CREATE_TIME
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PLINE_CLASS_ID},	
+		#{FCODE},	
+		#{FNAME},	
+		#{FKIND},	
+		#{FTYPE},	
+		#{FCREATOR},	
+		#{CREATE_TIME}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PLINE_CLASS_ID = #{PLINE_CLASS_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},	
+			FNAME = #{FNAME},	
+			FKIND = #{FKIND},	
+			FTYPE = #{FTYPE},	
+			FCREATOR = #{FCREATOR},	
+			CREATE_TIME = #{CREATE_TIME}
+		where 
+			PLINE_CLASS_ID = #{PLINE_CLASS_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PLINE_CLASS_ID = #{PLINE_CLASS_ID}
+	</select>
+	
+	<!-- 通过FCODE获取数据 -->
+	<select id="findByFCODE" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FCODE = #{pd.FCODE}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FCODE = #{FCODE} 
+		<if test="PLINE_CLASS_ID != null and PLINE_CLASS_ID != ''"><!-- 产线种类id -->
+			and f.PLINE_CLASS_ID &lt;&gt; #{PLINE_CLASS_ID}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FKIND LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FTYPE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FNAME != null and pd.FNAME != ''"><!-- 名称 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.FNAME}+'%' 
+				)
+		</if>
+		<if test="pd.FCODE != null and pd.FCODE != ''"><!-- 代码 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{pd.FCODE}+'%'
+				)
+		</if>
+		<if test="pd.FKIND != null and pd.FKIND != ''"><!-- 种类 -->
+			and
+				(
+					f.FKIND = #{pd.FKIND}
+				)
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 类型 -->
+			and
+				(
+					f.FTYPE = #{pd.FTYPE}
+				)
+		</if>
+		<if test="pd.startTime != null and pd.startTime != ''"><!-- 开始时间 -->
+			and
+				(
+					f.CREATE_TIME &gt;= #{pd.startTime} 
+				)
+		</if>
+		<if test="pd.endTime != null and pd.endTime != ''"><!-- 结束时间 -->
+			and
+				(
+					f.CREATE_TIME &lt;= #{pd.endTime} 
+				)
+		</if>
+		[fhstart] ORDER BY f.CREATE_TIME DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PLINE_CLASS_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

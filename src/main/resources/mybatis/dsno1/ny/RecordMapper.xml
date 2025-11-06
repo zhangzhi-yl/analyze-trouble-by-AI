@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.ny.RecordMapper">
+
+
+    <!-- 新增-->
+    <insert id="save" parameterType="list">
+        <foreach collection="list" item="item">
+            ${item.INSERTSQL}
+        </foreach>
+    </insert>
+
+    <!--    查询用电概况字段-->
+    <select id="getTotalField" parameterType="pd" resultType="pd">
+        SELECT * from NY_PLC
+        WHERE SaveTable = #{FType}
+        <if test="Loop != null and Loop != ''">
+            AND Loop = #{Loop}
+        </if>
+        <if test="ParamType != null and ParamType != ''">
+            AND ParamType = #{ParamType}
+        </if>
+    </select>
+
+    <select id="useEnergyPlcList" resultType="pd" parameterType="pd">
+        select
+        *
+        from
+        NY_PLC
+        f
+        where FStatus = '启用' and SaveField != 'A00'
+        <if test="ParamType != null and ParamType != ''">
+            AND ParamType = #{ParamType}
+        </if>
+        <if test="FType != null and FType != ''">
+            AND SaveTable = #{FType}
+        </if>
+    </select>
+
+    <select id="MaxA00" resultType="pd" parameterType="pd">
+        select
+            ${field}
+        from
+            ${SaveTable} f
+    </select>
+
+    <!--    查询当日用能量-->
+    <select id="getTotalPower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField},SUBSTRING(f.TimeStamp, 0, 14) TimeStamp
+        FROM ${SaveTable} f
+        WHERE datediff(day, f.TimeStamp,getdate())=0
+        GROUP BY SUBSTRING(f.TimeStamp, 0, 14)
+        ORDER BY SUBSTRING(f.TimeStamp, 0, 14)
+    </select>
+
+    <!--    昨日最大用能-->
+    <select id="getBeforeOneMaxPower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        from ${SaveTable} f
+        WHERE datediff(day, f.TimeStamp,getdate()) = 0
+    </select>
+
+    <!--    前日最大用能-->
+    <select id="getBeforeTwoMaxPower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        from ${SaveTable} f
+        WHERE datediff(day, f.TimeStamp,getdate()) = 1
+    </select>
+
+    <!--    上月最大用能-->
+    <select id="getBeforeOneMonthMaxPower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        from ${SaveTable} f
+        WHERE datediff(month, f.TimeStamp,getdate()) = 0
+    </select>
+
+    <!--    上上月最大用能-->
+    <select id="getBeforeTwoMonthMaxPower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        from ${SaveTable} f
+        WHERE datediff(month, f.TimeStamp,getdate()) = 1
+    </select>
+
+    <!--    去年最大用能-->
+    <select id="getBeforeOneYearMaxPower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        from ${SaveTable} f
+        WHERE datediff(year, f.TimeStamp,getdate()) = 0
+    </select>
+
+    <!--    前年最大用能-->
+    <select id="getBeforeTwoYearMaxPower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        from ${SaveTable} f
+        WHERE datediff(year, f.TimeStamp,getdate()) = 1
+    </select>
+
+    <!--    昨日同期用能-->
+    <select id="getBeforeDayUsePower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        from ${SaveTable} f
+        WHERE 1=1
+        <if test="FTime != null and FTime != ''">
+            and datediff(day, f.TimeStamp,#{FTime}) = 1
+            AND SUBSTRING(f.TimeStamp, 12, 5) = SUBSTRING(#{FTime}, 12, 5)
+        </if>
+    </select>
+
+    <!--    上月同期用能-->
+    <select id="getBeforeMonthUsePower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        from ${SaveTable} f
+        WHERE 1=1
+        <if test="FTime != null and FTime != ''">
+            and datediff(month, f.TimeStamp,#{FTime}) = 1
+            and SUBSTRING(f.TimeStamp, 9, 2) = SUBSTRING(#{FTime}, 9, 2)
+            AND SUBSTRING(f.TimeStamp, 12, 5) = SUBSTRING(#{FTime}, 12, 5)
+        </if>
+    </select>
+
+    <!--    去年同期用能-->
+    <select id="getBeforeYearUsePower" parameterType="pd" resultType="pd">
+        SELECT ${SaveField}
+        from ${SaveTable} f
+        WHERE 1=1
+        <if test="FTime != null and FTime != ''">
+            and datediff(year, f.TimeStamp,#{FTime}) = 1
+            and SUBSTRING(f.TimeStamp, 6, 2) = SUBSTRING(#{FTime}, 6, 2)
+            and SUBSTRING(f.TimeStamp, 9, 2) = SUBSTRING(#{FTime}, 9, 2)
+            AND SUBSTRING(f.TimeStamp, 12, 5) = SUBSTRING(#{FTime}, 12, 5)
+        </if>
+    </select>
+
+
+    <select id="getTopNum" parameterType="pd" resultType="pd">
+        select TOP(1) ${field}
+        from T_PatraElectric
+        where ${field} IS NOT NULL
+        ORDER BY TimeStamp desc
+    </select>
+
+</mapper>

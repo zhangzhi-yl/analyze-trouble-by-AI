@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.PurchaseListMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PP_PurchaseList
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.DeliveryPlace,	
+		f.FNum,	
+		f.FOperatorID,	
+		f.SupplierID,	
+		f.EstimatedTimeOfArrival,	
+		f.FMakeBillsPersoID,	
+		f.FMakeBillsTime,	
+		f.FExplanation,	
+		f.FStatus,	
+		f.FCheckPersonID,	
+		f.FCheckTime,	
+		f.FCheckFlag,	
+		f.FCustomer,	
+		f.SourceOrderType,	
+		f.RelationID,	
+		f.PurchaseList_ID,
+		f.ExpenseType,
+		f.GENERATE_PROGRESS,
+		f.RUN_STATUS,
+		f.PROC_INST_ID_,
+		f.PROJECT_ID
+		</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		DeliveryPlace,	
+		FNum,	
+		FOperatorID,	
+		SupplierID,	
+		EstimatedTimeOfArrival,	
+		FMakeBillsPersoID,	
+		FMakeBillsTime,	
+		FExplanation,	
+		FStatus,	
+		FCheckPersonID,	
+		FCheckTime,	
+		FCheckFlag,	
+		FCustomer,	
+		SourceOrderType,	
+		RelationID,	
+		PurchaseList_ID,
+		ExpenseType,
+		PROJECT_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{DeliveryPlace},	
+		#{FNum},	
+		#{FOperatorID},	
+		#{SupplierID},	
+		#{EstimatedTimeOfArrival},	
+		#{FMakeBillsPersoID},	
+		#{FMakeBillsTime},	
+		#{FExplanation},	
+		#{FStatus},	
+		#{FCheckPersonID},	
+		#{FCheckTime},	
+		#{FCheckFlag},	
+		#{FCustomer},	
+		#{SourceOrderType},	
+		#{RelationID},	
+		#{PurchaseList_ID},
+		#{ExpenseType},
+		#{PROJECT_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PurchaseList_ID = #{PurchaseList_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			DeliveryPlace = #{DeliveryPlace},
+			FNum = #{FNum},
+			FOperatorID = #{FOperatorID},
+			SupplierID = #{SupplierID},
+			EstimatedTimeOfArrival = #{EstimatedTimeOfArrival},
+			FExplanation = #{FExplanation},
+			FCustomer = #{FCustomer},
+			SourceOrderType = #{SourceOrderType},
+			RelationID = #{RelationID},
+			ExpenseType=#{ExpenseType},
+			PROJECT_ID=#{PROJECT_ID},
+			PurchaseList_ID = PurchaseList_ID
+		where 
+			PurchaseList_ID = #{PurchaseList_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		PPROJECT_NAME,PPROJECT_CODE,<include refid="Field"></include>,<!-- f8.FUrl,f8.FName FileName, -->
+		case when 
+		f.SupplierID is null or f.SupplierID='' then '' 
+		else isnull(f4.FName,'无名称')+'/'+isnull(f4.FNum,'无编号')  end FSupplierJoint,
+		case when 
+		f.FCustomer is null or f.FCustomer='' then '' 
+		else isnull(f7.FName,'无名称')  +'/'+isnull(f7.FNum,'无编号')  end FCustomerJoint,
+		f6.NAME FDealMan
+		from 
+		<include refid="tableName"></include> f
+		left join KM_Supplier f4
+		on f.SupplierID=f4.Supplier_ID
+		left join OA_STAFF f6
+		on f.FOperatorID=f6.STAFF_ID
+		left join KM_Customer f7
+		on f.FCustomer=f7.Customer_ID
+		left join DT_PROJECT f8
+		on f.PROJECT_ID=f8.PROJECT_ID
+		<!-- left join 
+		(select * from KM_AttachmentSet where 1=1 and FStatus='使用') f8
+		on f.PurchaseList_ID=f8.AssociationID -->
+		where 1=1
+		and	f.PurchaseList_ID = #{PurchaseList_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		PPROJECT_NAME,PPROJECT_CODE,
+		<include refid="Field"></include>,
+		case when 
+		f.SupplierID is null or f.SupplierID='' then '' 
+		else isnull(f4.FName,'无名称')+'/'+isnull(f4.FNum,'无编号')  end FSupplierJoint,
+		case when 
+		f.FCustomer is null or f.FCustomer='' then '' 
+		else isnull(f7.FName,'无名称')  +'/'+isnull(f7.FNum,'无编号')  end FCustomerJoint,
+
+<!-- 		isnull((
+		select count(*) from
+		(select m.RowNum,v.FNum from  
+		PP_PurchaseMaterialDetails m 
+		inner join PP_PurchaseList v
+		on m.PurchaseList_ID=v.PurchaseID where 1=1 and m.RowClose='N' and v.PurchaseList_ID=f.PurchaseList_ID
+		) gy
+		inner join MM_StockListDetail n 
+		on( gy.RowNum=n.SourceRowNum and n.SourceOrderNum=gy.FNum)
+		where 1=1 and DocumentTypeInOut='入库'  and DocumentTypeBlueRed='蓝字'
+		),'0') -->
+		
+		cast(isnull(
+		(select count(*) from PP_PurchaseMaterialDetails m 
+		inner join
+		(
+		select SourceOrderNum,SourceRowNum from PP_PurchaseMaterialDetails b 
+		where b.PurchaseID=f.PurchaseList_ID and b.RowClose='N'
+		group by SourceOrderNum,SourceRowNum
+		) gy on (m.SourceOrderNum=gy.SourceOrderNum and m.SourceRowNum=gy.SourceRowNum)
+		where  1=1  and m.RowClose='N' 
+		),'0') as varchar)
+		+'/'+
+		cast(isnull(
+		(select count(*) from PP_PurchaseMaterialDetails m 
+		where  1=1 and m.PurchaseID=f.PurchaseList_ID and m.RowClose='N'
+		),'0') as varchar) FProgress,
+		isnull(
+		STUFF(
+		(SELECT ',' +OrderNum
+		FROM 
+		(select c.OrderNum
+		from PP_PlanningWorkOrder a
+		inner join PP_PurchaseMaterialDetails b
+		on a.PlanningWorkOrder_ID=b.PlanningWorkOrderID
+		inner join PP_SalesOrderDetail g
+		on a.SalesOrderDetailID=g.SalesOrderDetail_ID
+		inner join PP_SalesOrder c
+		on g.SalesOrderID=c.SalesOrder_ID
+		where 1=1 and b.PurchaseID=f.PurchaseList_ID and b.RowClose='N'
+		) tt
+		FOR xml path('')
+		),1,1,''
+		),'') OrderNum,
+		isnull(
+		STUFF(
+		(SELECT ',' +WorkOrderNum
+		FROM 
+		(select a.WorkOrderNum
+		from PP_PlanningWorkOrder a
+		inner join PP_PurchaseMaterialDetails b
+		on a.PlanningWorkOrder_ID=b.PlanningWorkOrderID
+		where 1=1 and b.PurchaseID=f.PurchaseList_ID and b.RowClose='N'
+		) tt
+		FOR xml path('')
+		),1,1,''
+		),'') WorkOrderNum,
+		f6.NAME FDealMan
+	<!-- 	,f8.FUrl,f8.FName FileName -->
+		from 
+		<include refid="tableName"></include> f
+		left join KM_Supplier f4
+		on f.SupplierID=f4.Supplier_ID
+		left join OA_STAFF f6
+		on f.FOperatorID=f6.STAFF_ID
+		left join KM_Customer f7
+		on f.FCustomer=f7.Customer_ID
+		left join DT_PROJECT f8
+		on f.PROJECT_ID=f8.PROJECT_ID
+	<!-- 	left join (select * from KM_AttachmentSet where 1=1 and FStatus='使用')  f8
+		on f.PurchaseList_ID=f8.AssociationID -->
+		where 1=1
+		<if test="pd.KEYWORDS_FNum != null and pd.KEYWORDS_FNum != ''">
+			and f.FNum LIKE '%'+ #{pd.KEYWORDS_FNum}+'%'
+		</if>
+		<if test="pd.KEYWORDS_XM != null and pd.KEYWORDS_XM != ''">
+			and (
+			PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS_XM}+'%'
+			or
+			PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS_XM}+'%'
+			)
+		</if>
+		<if test="pd.KEYWORDS_FStatus != null and pd.KEYWORDS_FStatus != ''">
+			and f.FStatus in ${pd.KEYWORDS_FStatus}
+		</if>
+		<if test="pd.KEYWORDS_OrderNum != null and pd.KEYWORDS_OrderNum != ''">
+		and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PlanningWorkOrder a
+				inner join PP_PurchaseMaterialDetails b
+				on a.PlanningWorkOrder_ID=b.PlanningWorkOrderID
+				inner join PP_SalesOrderDetail g
+				on a.SalesOrderDetailID=g.SalesOrderDetail_ID
+				inner join PP_SalesOrder c
+				on g.SalesOrderID=c.SalesOrder_ID
+				where  1=1 and c.OrderNum = #{pd.KEYWORDS_OrderNum} and b.RowClose='N'
+				)
+			)
+		</if>
+		<if test="pd.KEYWORDS_WorkOrderNum != null and pd.KEYWORDS_WorkOrderNum != ''">
+		and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PlanningWorkOrder a
+				inner join PP_PurchaseMaterialDetails b
+				on a.PlanningWorkOrder_ID=b.PlanningWorkOrderID
+				where  1=1 and a.WorkOrderNum = #{pd.KEYWORDS_WorkOrderNum} and b.RowClose='N'
+				)
+			)
+		</if>
+		<if test="pd.KEYWORDS_Supplier != null and pd.KEYWORDS_Supplier != ''">
+			and 
+			(
+				f4.FName LIKE '%'+ #{pd.KEYWORDS_Supplier}+'%'
+				or
+				f4.FNum LIKE '%'+ #{pd.KEYWORDS_Supplier}+'%'
+			)
+		</if>
+		<if test="pd.KEYWORDS_MaterialNum != null and pd.KEYWORDS_MaterialNum != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from MBASE_MAT_BASIC a
+				inner join PP_PurchaseMaterialDetails b
+				on a.MAT_BASIC_ID=b.MaterialID
+				where  1=1 and a.MAT_CODE LIKE '%'+ #{pd.KEYWORDS_MaterialNum}+'%' and b.RowClose='N'
+				)
+			)
+		</if>
+		<if test="pd.KEYWORDS_MaterialName != null and pd.KEYWORDS_MaterialName != ''">
+		and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from MBASE_MAT_BASIC a
+				inner join PP_PurchaseMaterialDetails b
+				on a.MAT_BASIC_ID=b.MaterialID
+				where  1=1 and a.MAT_NAME LIKE '%'+ #{pd.KEYWORDS_MaterialName}+'%' and b.RowClose='N'
+				)
+			)
+			
+		</if>
+		<if test="pd.KEYWORDS_FMakeBillsTimeStart != null and pd.KEYWORDS_FMakeBillsTimeStart != ''">
+		and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.FCreatetime) &gt;= #{pd.KEYWORDS_FMakeBillsTimeStart} and b.RowClose='N'
+				)
+			)
+		</if>
+		<if test="pd.KEYWORDS_FMakeBillsTimeEnd != null and pd.KEYWORDS_FMakeBillsTimeEnd != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.FCreatetime) &lt;= #{pd.KEYWORDS_FMakeBillsTimeEnd} and b.RowClose='N'
+				)
+			)
+			
+		</if>
+		<if test="pd.KEYWORDS_DeMandTimeStart != null and pd.KEYWORDS_DeMandTimeStart != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.DemandTime) &gt;= #{pd.KEYWORDS_DeMandTimeStart} and b.RowClose='N'
+				)
+			)
+			
+		</if>
+		<if test="pd.KEYWORDS_DeMandTimeEnd != null and pd.KEYWORDS_DeMandTimeEnd != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.DemandTime) &lt;= #{pd.KEYWORDS_DeMandTimeEnd} and b.RowClose='N'
+				)
+			)
+		</if>
+		
+		<if test="pd.KEYWORDS_EstimatedTimeOfArrivalStart != null and pd.KEYWORDS_EstimatedTimeOfArrivalStart != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.EstimatedTimeOfArrival) &gt;= #{pd.KEYWORDS_EstimatedTimeOfArrivalStart} and b.RowClose='N'
+				)
+			)	
+		</if>
+		<if test="pd.KEYWORDS_EstimatedTimeOfArrivalEnd != null and pd.KEYWORDS_EstimatedTimeOfArrivalEnd != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.EstimatedTimeOfArrival) &lt;= #{pd.KEYWORDS_EstimatedTimeOfArrivalEnd} and b.RowClose='N'
+				)
+			)	
+		</if>
+		<if test="pd.FCheckFlag != null and pd.FCheckFlag != ''">
+			and
+			(
+				f.FCheckFlag = #{pd.FCheckFlag}
+			)	
+		</if>
+		[fhstart] order by  FMakeBillsTime desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PurchaseList_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 审核或反审核采购订单 -->
+	<update id="editAudit" parameterType="pd">
+        update
+		<include refid="tableName"></include>
+		set 
+		FCheckTime = #{FCheckTime},
+		FCheckPersonID = #{FCheckPersonID},
+		FStatus = #{FStatus},
+		FCheckFlag = #{FCheckFlag}
+		where 
+		PurchaseList_ID = #{PurchaseList_ID}
+	</update>
+	
+	<!-- 单号验重 -->
+	<select id="getRepeatNum" parameterType="pd" resultType="pd">
+		select
+		isnull(count(*),0) RepeatNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and FNum=#{FNum}
+		<if test="PurchaseList_ID != null and PurchaseList_ID != ''">
+			and f.PurchaseList_ID != #{PurchaseList_ID}
+		</if>
+	</select>
+	
+		<!-- 结束采购订单 -->
+	<update id="over" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FStatus = #{FStatus}
+		where 
+			PurchaseList_ID = #{PurchaseList_ID}
+	</update>
+	
+	<!-- 获取采购订单编号列表-可搜索-前100条-->
+	<select id="getFNumList" parameterType="pd" resultType="pd">
+		select
+		top 100 FNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			FNum LIKE '%'+ #{KEYWORDS}+'%'
+			
+			)	
+		</if>
+		<if test="FStatus != null and FStatus != ''"><!-- 状态为创建/已申请(表示采购订单已结束) -->
+			and f.FStatus = #{FStatus} 
+		</if>
+		<if test="FCheckFlag != null and FCheckFlag != ''"><!-- 审核状态，N/Y -->
+			and f.FCheckFlag = #{FCheckFlag} 
+		</if>
+		<if test="FCustomer != null and FCustomer != ''"><!-- 客户id -->
+			and f.FCustomer = #{FCustomer}
+		</if>
+		 order by f.FNum 
+	</select>
+	
+	<!-- 列表 -->
+	<select id="listXMCGlistPage" parameterType="page" resultType="pd">
+		select
+		PPROJECT_NAME,PPROJECT_CODE,
+		<include refid="Field"></include>,
+		case when 
+		f.SupplierID is null or f.SupplierID='' then '' 
+		else isnull(f4.FName,'无名称')+'/'+isnull(f4.FNum,'无编号')  end FSupplierJoint,
+		case when 
+		f.FCustomer is null or f.FCustomer='' then '' 
+		else isnull(f7.FName,'无名称')  +'/'+isnull(f7.FNum,'无编号')  end FCustomerJoint,
+		
+		cast(isnull(
+		(select count(*) from PP_PurchaseMaterialDetails m 
+		inner join
+		(
+		select SourceOrderNum,SourceRowNum from PP_PurchaseMaterialDetails b 
+		where b.PurchaseID=f.PurchaseList_ID and b.RowClose='N'
+		group by SourceOrderNum,SourceRowNum
+		) gy on (m.SourceOrderNum=gy.SourceOrderNum and m.SourceRowNum=gy.SourceRowNum)
+		where  1=1  and m.RowClose='N' 
+		),'0') as varchar)
+		+'/'+
+		cast(isnull(
+		(select count(*) from PP_PurchaseMaterialDetails m 
+		where  1=1 and m.PurchaseID=f.PurchaseList_ID and m.RowClose='N'
+		),'0') as varchar) FProgress,
+		isnull(
+		STUFF(
+		(SELECT ',' +OrderNum
+		FROM 
+		(select c.OrderNum
+		from PP_PlanningWorkOrder a
+		inner join PP_PurchaseMaterialDetails b
+		on a.PlanningWorkOrder_ID=b.PlanningWorkOrderID
+		inner join PP_SalesOrderDetail g
+		on a.SalesOrderDetailID=g.SalesOrderDetail_ID
+		inner join PP_SalesOrder c
+		on g.SalesOrderID=c.SalesOrder_ID
+		where 1=1 and b.PurchaseID=f.PurchaseList_ID and b.RowClose='N'
+		) tt
+		FOR xml path('')
+		),1,1,''
+		),'') OrderNum,
+		isnull(
+		STUFF(
+		(SELECT ',' +WorkOrderNum
+		FROM 
+		(select a.WorkOrderNum
+		from PP_PlanningWorkOrder a
+		inner join PP_PurchaseMaterialDetails b
+		on a.PlanningWorkOrder_ID=b.PlanningWorkOrderID
+		where 1=1 and b.PurchaseID=f.PurchaseList_ID and b.RowClose='N'
+		) tt
+		FOR xml path('')
+		),1,1,''
+		),'') WorkOrderNum,
+		f6.NAME FDealMan
+	<!-- 	,f8.FUrl,f8.FName FileName -->
+		from 
+		<include refid="tableName"></include> f
+		left join KM_Supplier f4
+		on f.SupplierID=f4.Supplier_ID
+		left join OA_STAFF f6
+		on f.FOperatorID=f6.STAFF_ID
+		left join KM_Customer f7
+		on f.FCustomer=f7.Customer_ID
+		left join DT_PROJECT f8
+		on f.PROJECT_ID=f8.PROJECT_ID
+	<!-- 	left join (select * from KM_AttachmentSet where 1=1 and FStatus='使用')  f8
+		on f.PurchaseList_ID=f8.AssociationID -->
+		where 1=1
+		and f.PurchaseList_ID in(
+		
+		select distinct f4.PurchaseList_ID 
+from PMS_Cabinet_Assembly_Detail f1
+inner join DT_PROJECT f2 on f2.PROJECT_ID =f1.PROJECT_ID
+inner join PP_PurchaseMaterialDetails f3 on f1.Cabinet_No =f3.Cabinet_No
+inner join PP_PurchaseList f4 on f4.PurchaseList_ID =f3.PurchaseID
+ where If_Purchase_Done='是' and f2.PPROJECT_MANAGER=#{pd.FNAME} and f4.FStatus !='结束' 
+		)
+		
+		<if test="pd.KEYWORDS_FNum != null and pd.KEYWORDS_FNum != ''">
+			and f.FNum LIKE '%'+ #{pd.KEYWORDS_FNum}+'%'
+		</if>
+		<if test="pd.KEYWORDS_FStatus != null and pd.KEYWORDS_FStatus != ''">
+			and f.FStatus in ${pd.KEYWORDS_FStatus}
+		</if>
+		<if test="pd.KEYWORDS_OrderNum != null and pd.KEYWORDS_OrderNum != ''">
+		and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PlanningWorkOrder a
+				inner join PP_PurchaseMaterialDetails b
+				on a.PlanningWorkOrder_ID=b.PlanningWorkOrderID
+				inner join PP_SalesOrderDetail g
+				on a.SalesOrderDetailID=g.SalesOrderDetail_ID
+				inner join PP_SalesOrder c
+				on g.SalesOrderID=c.SalesOrder_ID
+				where  1=1 and c.OrderNum = #{pd.KEYWORDS_OrderNum} and b.RowClose='N'
+				)
+			)
+		</if>
+		<if test="pd.KEYWORDS_WorkOrderNum != null and pd.KEYWORDS_WorkOrderNum != ''">
+		and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PlanningWorkOrder a
+				inner join PP_PurchaseMaterialDetails b
+				on a.PlanningWorkOrder_ID=b.PlanningWorkOrderID
+				where  1=1 and a.WorkOrderNum = #{pd.KEYWORDS_WorkOrderNum} and b.RowClose='N'
+				)
+			)
+		</if>
+		<if test="pd.KEYWORDS_Supplier != null and pd.KEYWORDS_Supplier != ''">
+			and 
+			(
+				f4.FName LIKE '%'+ #{pd.KEYWORDS_Supplier}+'%'
+				or
+				f4.FNum LIKE '%'+ #{pd.KEYWORDS_Supplier}+'%'
+			)
+		</if>
+		<if test="pd.KEYWORDS_MaterialNum != null and pd.KEYWORDS_MaterialNum != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from MBASE_MAT_BASIC a
+				inner join PP_PurchaseMaterialDetails b
+				on a.MAT_BASIC_ID=b.MaterialID
+				where  1=1 and a.MAT_CODE LIKE '%'+ #{pd.KEYWORDS_MaterialNum}+'%' and b.RowClose='N'
+				)
+			)
+		</if>
+		<if test="pd.KEYWORDS_MaterialName != null and pd.KEYWORDS_MaterialName != ''">
+		and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from MBASE_MAT_BASIC a
+				inner join PP_PurchaseMaterialDetails b
+				on a.MAT_BASIC_ID=b.MaterialID
+				where  1=1 and a.MAT_NAME LIKE '%'+ #{pd.KEYWORDS_MaterialName}+'%' and b.RowClose='N'
+				)
+			)
+			
+		</if>
+		<if test="pd.KEYWORDS_FMakeBillsTimeStart != null and pd.KEYWORDS_FMakeBillsTimeStart != ''">
+		and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.FCreatetime) &gt;= #{pd.KEYWORDS_FMakeBillsTimeStart} and b.RowClose='N'
+				)
+			)
+		</if>
+		<if test="pd.KEYWORDS_FMakeBillsTimeEnd != null and pd.KEYWORDS_FMakeBillsTimeEnd != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.FCreatetime) &lt;= #{pd.KEYWORDS_FMakeBillsTimeEnd} and b.RowClose='N'
+				)
+			)
+			
+		</if>
+		<if test="pd.KEYWORDS_DeMandTimeStart != null and pd.KEYWORDS_DeMandTimeStart != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.DemandTime) &gt;= #{pd.KEYWORDS_DeMandTimeStart} and b.RowClose='N'
+				)
+			)
+			
+		</if>
+		<if test="pd.KEYWORDS_DeMandTimeEnd != null and pd.KEYWORDS_DeMandTimeEnd != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.DemandTime) &lt;= #{pd.KEYWORDS_DeMandTimeEnd} and b.RowClose='N'
+				)
+			)
+		</if>
+		
+		<if test="pd.KEYWORDS_EstimatedTimeOfArrivalStart != null and pd.KEYWORDS_EstimatedTimeOfArrivalStart != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.EstimatedTimeOfArrival) &gt;= #{pd.KEYWORDS_EstimatedTimeOfArrivalStart} and b.RowClose='N'
+				)
+			)	
+		</if>
+		<if test="pd.KEYWORDS_EstimatedTimeOfArrivalEnd != null and pd.KEYWORDS_EstimatedTimeOfArrivalEnd != ''">
+			and
+			(
+				f.PurchaseList_ID in
+				(
+				select distinct b.PurchaseID 
+				from PP_PurchaseMaterialDetails b
+				where  1=1 
+				and convert(varchar(10),b.EstimatedTimeOfArrival) &lt;= #{pd.KEYWORDS_EstimatedTimeOfArrivalEnd} and b.RowClose='N'
+				)
+			)	
+		</if>
+		<if test="pd.FCheckFlag != null and pd.FCheckFlag != ''">
+			and
+			(
+				f.FCheckFlag = #{pd.FCheckFlag}
+			)	
+		</if>
+		[fhstart] order by  FMakeBillsTime desc [fhend]
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

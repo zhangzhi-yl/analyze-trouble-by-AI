@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_SPECIFICATIONMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_SPECIFICATION
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.KEY_NAME,	
+		f.FVALUES,	
+		f.FDES,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,	
+		f.PARM_U,	
+		f.EQM_BASE_ID,	
+		f.FCREATOR,	
+		f.CREATE_TIME,
+		f.EQM_SPECIFICATION_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		KEY_NAME,	
+		FVALUES,	
+		FDES,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		FEXTEND4,	
+		FEXTEND5,	
+		PARM_U,	
+		EQM_BASE_ID,
+		FCREATOR,	
+		CREATE_TIME,		
+		EQM_SPECIFICATION_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{KEY_NAME},	
+		#{FVALUES},	
+		#{FDES},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{FEXTEND4},	
+		#{FEXTEND5},	
+		#{PARM_U},	
+		#{EQM_BASE_ID},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{EQM_SPECIFICATION_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_SPECIFICATION_ID = #{EQM_SPECIFICATION_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			KEY_NAME = #{KEY_NAME},
+			FVALUES = #{FVALUES},
+			FDES = #{FDES},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FEXTEND4 = #{FEXTEND4},
+			FEXTEND5 = #{FEXTEND5},
+			PARM_U = #{PARM_U},
+			EQM_BASE_ID = #{EQM_BASE_ID},
+			FCREATOR = #{FCREATOR},	
+		    CREATE_TIME = #{CREATE_TIME},	
+			EQM_SPECIFICATION_ID = EQM_SPECIFICATION_ID
+		where 
+			EQM_SPECIFICATION_ID = #{EQM_SPECIFICATION_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.EQM_SPECIFICATION_ID = #{EQM_SPECIFICATION_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where EQM_BASE_ID = #{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.KEY_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FVALUES LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		WHERE 
+		EQM_BASE_ID = #{EQM_BASE_ID}
+	</select>
+	
+	<!-- 根据列KEY名和设备id查询列VALUE值 -->
+	<select id="findByKeyNameAndEQM_BASE_ID" parameterType="pd" resultType="pd">
+		select top 1 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		where KEY_NAME=#{KEY_NAME} 
+		and EQM_BASE_ID = #{EQM_BASE_ID}
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_SPECIFICATION_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过设备基础资料ID删除信息-->
+	<delete id="deleteBase" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</delete>
+	<!-- YY 356703572 -->
+</mapper>

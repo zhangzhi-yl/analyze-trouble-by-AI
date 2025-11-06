@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.WH_WareHouseMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MWMS_WH_WAREHOUSE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.WH_WAREHOUSE_ID,	
+		f.FCODE,	
+		f.FNAME,	
+		f.FAREA,	
+		f.FADMIN,	
+		f.FADDRESS,	
+		f.FPHONE,	
+		f.PROHIBIT_WHETHER,
+		f.FTYPE,
+		f.IsQuality,
+		f.IsCapacity,
+		f.QRcode,
+		f.Fremarks,
+		f.WorkShop,
+		f.FClass
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		WH_WAREHOUSE_ID,	
+		FCODE,	
+		FNAME,	
+		FAREA,	
+		FADMIN,	
+		FADDRESS,	
+		FPHONE,	
+		PROHIBIT_WHETHER,
+		FTYPE,
+		IsQuality,
+		IsCapacity,
+		QRcode,
+		Fremarks,
+		WorkShop,
+		FClass
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WH_WAREHOUSE_ID},	
+		#{FCODE},	
+		#{FNAME},	
+		#{FAREA},	
+		#{FADMIN},	
+		#{FADDRESS},	
+		#{FPHONE},	
+		#{PROHIBIT_WHETHER},
+		#{FTYPE},
+		#{IsQuality},
+		#{IsCapacity},
+		#{QRcode},
+		#{Fremarks},
+		#{WorkShop},
+		#{FClass}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WH_WAREHOUSE_ID = #{WH_WAREHOUSE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FAREA = #{FAREA},
+			FADMIN = #{FADMIN},
+			FADDRESS = #{FADDRESS},
+			FPHONE = #{FPHONE},
+			PROHIBIT_WHETHER = #{PROHIBIT_WHETHER},
+			FTYPE = #{FTYPE},
+			IsQuality = #{IsQuality},
+			IsCapacity = #{IsCapacity},
+			QRcode = #{QRcode},
+			Fremarks = #{Fremarks},
+			WorkShop = #{WorkShop},
+			FClass = #{FClass}
+		where 
+			WH_WAREHOUSE_ID = #{WH_WAREHOUSE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.WH_WAREHOUSE_ID = #{WH_WAREHOUSE_ID}
+	</select>
+	
+	<!-- 通过coDe获取数据 -->
+	<select id="findByCode" parameterType="pd" resultType="pd">
+		select TOP 1 
+		<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f  
+		WHERE 
+			f.FCODE = #{FCODE}
+	</select>
+	
+	<!-- 通过FCODE获取数据 -->
+	<select id="findByFCODE" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FCODE = #{pd.FCODE}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FCODE = #{FCODE} 
+		<if test="WH_WAREHOUSE_ID != null and WH_WAREHOUSE_ID != ''"><!-- 仓库id -->
+			and f.WH_WAREHOUSE_ID &lt;&gt; #{WH_WAREHOUSE_ID}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FNAME != null and pd.FNAME != ''"><!-- 名称 -->
+			and f.FNAME LIKE '%'+ #{pd.FNAME}+'%' 
+		</if>
+		<if test="pd.FCODE != null and pd.FCODE != ''"><!-- 代码 -->
+			and f.FCODE LIKE '%'+ #{pd.FCODE}+'%'
+		</if>
+		<if test="pd.PROHIBIT_WHETHER != null and pd.PROHIBIT_WHETHER != ''"><!-- 仓库是否禁用 -->
+			and f.PROHIBIT_WHETHER = #{pd.PROHIBIT_WHETHER}
+		</if>
+		<if test="pd.FClass != null and pd.FClass != ''"><!-- 仓库种类 -->
+			and f.FClass = #{pd.FClass}
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 仓库类型，工厂、车间 -->
+			and f.FTYPE = #{pd.FTYPE}
+		</if>
+		[fhstart] ORDER BY f.FCODE [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="FNAME != null and FNAME != ''"><!-- 名称 -->
+			and f.FNAME LIKE '%'+ #{FNAME}+'%' 
+		</if>
+		<if test="FCODE != null and FCODE != ''"><!-- 代码 -->
+			and f.FCODE LIKE '%'+ #{FCODE}+'%'
+		</if>
+		<if test="PROHIBIT_WHETHER != null and PROHIBIT_WHETHER != ''"><!-- 仓库是否禁用 -->
+			and f.PROHIBIT_WHETHER = #{PROHIBIT_WHETHER}
+		</if>
+		<if test="FClass != null and FClass != ''"><!-- 仓库种类 -->
+			and f.FClass = #{FClass}
+		</if>
+		<if test="FTYPE != null and FTYPE != ''"><!-- 仓库类型，工厂、车间 -->
+			and f.FTYPE = #{FTYPE}
+		</if>
+		ORDER BY f.FCODE
+	</select>
+	
+	<!-- 仓库列表（是否禁用，下拉选用） -->
+	<select id="wareHouseList" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f 
+		where 1=1 
+		<if test="FNAME != null and FNAME != ''"><!-- 名称 -->
+			and f.FNAME LIKE '%'+ #{FNAME}+'%' 
+		</if>
+		<if test="FCODE != null and FCODE != ''"><!-- 代码 -->
+			and f.FCODE LIKE '%'+ #{FCODE}+'%'
+		</if>
+		<if test="PROHIBIT_WHETHER != null and PROHIBIT_WHETHER != ''"><!-- 仓库是否禁用 -->
+			and f.PROHIBIT_WHETHER = #{PROHIBIT_WHETHER}
+		</if>
+		<if test="FClass != null and FClass != ''"><!-- 仓库种类 -->
+			and f.FClass = #{FClass}
+		</if>
+		<if test="FTYPE != null and FTYPE != ''"><!-- 仓库类型，工厂、车间 -->
+			and f.FTYPE = #{FTYPE}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WH_WAREHOUSE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 获取仓库列表-可搜索-前100条-->
+	<select id="getWarehouseList" parameterType="pd" resultType="pd">
+		select
+		top 100 WH_WAREHOUSE_ID,FNAME,FCODE,isnull(FNAME,'无名称')+'/'+isnull(FCODE,'无编号')  FSelectOption
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			FCODE LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			FNAME LIKE '%'+ #{KEYWORDS}+'%'
+			)	
+		</if>
+		and f.PROHIBIT_WHETHER = 'NO'
+		 order by f.FCODE 
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

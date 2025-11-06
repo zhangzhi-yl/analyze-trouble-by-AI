@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.MaterialRequirementMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_MaterialRequirement
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.RowNum,	
+		f.RowClose,	
+		f.PlanningWorkOrderID,	
+		f.MaterialNum,	
+		f.MaterialName,	
+		f.SProp,	
+		f.SPropKey,	
+		f.DemandCount,	
+		f.PurchaseCount,
+		f.IssuedQuantity,	
+		f.DeliveryWarehouse,	
+		f.TargetPosition,	
+		f.DemandTime,	
+		f.WorkOrderNum,	
+		f.DateBatch,	
+		f.WP,	
+		f.TType,	
+		f.FStatus,	
+		f.OccupationOfInventory,	
+		f.FMakeBillsPersoID,	
+		f.FMakeBillsTime,	
+		f.PushDownTransferIF,	
+		f.PushDownPurchaseIF,	
+		f.MaterialRequirement_ID,
+		f.BatchNum,
+		f.MRCode,
+		f.DeliveryPosition,
+		f.TargetWarehouse,
+		f.MaterialID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		RowNum,	
+		RowClose,	
+		PlanningWorkOrderID,	
+		MaterialNum,	
+		MaterialName,	
+		SProp,	
+		SPropKey,	
+		DemandCount,	
+		PurchaseCount,
+		IssuedQuantity,	
+		DeliveryWarehouse,	
+		TargetPosition,	
+		DemandTime,	
+		WorkOrderNum,	
+		DateBatch,	
+		WP,	
+		TType,	
+		FStatus,	
+		OccupationOfInventory,	
+		FMakeBillsPersoID,	
+		FMakeBillsTime,	
+		PushDownTransferIF,	
+		PushDownPurchaseIF,	
+		MaterialRequirement_ID,
+		BatchNum,
+		MRCode,
+		DeliveryPosition,
+		TargetWarehouse,
+		MaterialID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{RowNum},	
+		#{RowClose},	
+		#{PlanningWorkOrderID},	
+		#{MaterialNum},	
+		#{MaterialName},	
+		#{SProp},	
+		#{SPropKey},	
+		#{DemandCount},	
+		#{PurchaseCount},
+		#{IssuedQuantity},	
+		#{DeliveryWarehouse},	
+		#{TargetPosition},	
+		#{DemandTime},	
+		#{WorkOrderNum},	
+		#{DateBatch},	
+		#{WP},	
+		#{TType},	
+		#{FStatus},	
+		#{OccupationOfInventory},	
+		#{FMakeBillsPersoID},	
+		#{FMakeBillsTime},	
+		#{PushDownTransferIF},	
+		#{PushDownPurchaseIF},	
+		#{MaterialRequirement_ID},
+		#{BatchNum},
+		#{MRCode},
+		#{DeliveryPosition},
+		#{TargetWarehouse},
+		#{MaterialID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MaterialRequirement_ID = #{MaterialRequirement_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RowNum = #{RowNum},
+			RowClose = #{RowClose},
+			PlanningWorkOrderID = #{PlanningWorkOrderID},
+			MaterialNum = #{MaterialNum},
+			MaterialName = #{MaterialName},
+			SProp = #{SProp},
+			SPropKey = #{SPropKey},
+			DemandCount = #{DemandCount},
+			PurchaseCount = #{PurchaseCount},
+			IssuedQuantity = #{IssuedQuantity},
+			DeliveryWarehouse = #{DeliveryWarehouse},
+			TargetPosition = #{TargetPosition},
+			DemandTime = #{DemandTime},
+			WorkOrderNum = #{WorkOrderNum},
+			DateBatch = #{DateBatch},
+			WP = #{WP},
+			TType = #{TType},
+			FStatus = #{FStatus},
+			OccupationOfInventory = #{OccupationOfInventory},
+			FMakeBillsPersoID = #{FMakeBillsPersoID},
+			FMakeBillsTime = #{FMakeBillsTime},
+			PushDownTransferIF = #{PushDownTransferIF},
+			PushDownPurchaseIF = #{PushDownPurchaseIF},
+			MaterialRequirement_ID = MaterialRequirement_ID,
+			BatchNum = #{BatchNum},
+			MRCode = #{MRCode},
+			DeliveryPosition = #{DeliveryPosition},
+			TargetWarehouse = #{TargetWarehouse},
+			MaterialID = #{MaterialID}
+		where 
+			MaterialRequirement_ID = #{MaterialRequirement_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		,unit.FNAME UnitName,
+		warehouse1.FNAME DeliveryWarehouseName,
+		location1.FNAME DeliveryPositionName,
+		warehouse2.FNAME TargetWarehouseName,
+		location2.FNAME TargetPositionName
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_MAT_BASIC basic on basic.MAT_BASIC_ID = f.MaterialID
+		LEFT join MBASE_UNIT_INFO unit on unit.UNIT_INFO_ID = basic.MAT_MAIN_UNIT
+		left join MWMS_WH_WAREHOUSE warehouse1 on f.DeliveryWarehouse = warehouse1.WH_WAREHOUSE_ID
+		left join MWMS_WH_WAREHOUSE warehouse2 on f.TargetWarehouse = warehouse2.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION location1 on f.DeliveryPosition = location1.WH_LOCATION_ID
+		left join MWMS_WH_LOCATION location2 on f.TargetPosition = location2.WH_LOCATION_ID
+		where 
+			f.MaterialRequirement_ID = #{MaterialRequirement_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+	</select>
+	<select id="MaterialRequirementlistPage" parameterType="page" resultType="pd">
+	SELECT
+		MaterialRequirement_ID,
+		MRCode,
+		ISNULL(WorkOrderNum, '') WorkOrderNum,
+		MaterialName,
+		MaterialNum,
+		DemandCount,
+		unit.FNAME UnitName,
+		BatchNum,
+		warehouse1.FNAME DeliveryWarehouseName,
+		location1.FNAME DeliveryPositionName,
+		warehouse2.FNAME TargetWarehouseName,
+		location2.FNAME TargetPositionName,
+		f.FStatus,
+		f.FMakeBillsTime
+	FROM
+		MM_MaterialRequirement f
+	left join MBASE_MAT_BASIC basic on basic.MAT_BASIC_ID = f.MaterialID
+	LEFT join MBASE_UNIT_INFO unit on unit.UNIT_INFO_ID = basic.MAT_MAIN_UNIT
+	left join MWMS_WH_WAREHOUSE warehouse1 on f.DeliveryWarehouse = warehouse1.WH_WAREHOUSE_ID
+	left join MWMS_WH_WAREHOUSE warehouse2 on f.TargetWarehouse = warehouse2.WH_WAREHOUSE_ID
+	left join MWMS_WH_LOCATION location1 on f.DeliveryPosition = location1.WH_LOCATION_ID
+	left join MWMS_WH_LOCATION location2 on f.TargetPosition = location2.WH_LOCATION_ID
+	where 1=1 
+	<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+		and WorkOrderNum = #{pd.WorkOrderNum}
+	</if>
+	<if test="pd.BeginTime != null and pd.BeginTime != ''">
+		and CONVERT (VARCHAR (10),f.FMakeBillsTime,120) &gt;= #{pd.BeginTime}
+	</if>
+	<if test="pd.EndTime != null and pd.EndTime != ''">
+		and CONVERT (VARCHAR (10),f.FMakeBillsTime,120) &lt;= #{pd.EndTime}
+	</if>
+
+	[fhstart] ORDER BY f.FMakeBillsTime DESC [fhend]
+	
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MaterialRequirement_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 根据计划工单获取行号 -->
+	<select id="getRowNumByPlanningWorkOrderID" parameterType="String" resultType="string">
+		select
+		  	 isnull(max(cast(isnull(RowNum,'0') as int)),0)+1 RowNum
+		from 
+	  		<include refid="tableName"></include> f
+	 	where PlanningWorkOrderID = #{PlanningWorkOrderID}
+	</select>
+	
+	<!-- 物料需求单列表 -->
+	<select id="getMaterialRequirementList" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,p.FName WP_Name,
+		w.FNAME DeliveryWarehouseName,w.FCODE DeliveryWarehouseCode,
+		l.FNAME DeliveryPositionName,l.FCODE DeliveryPositionCode,
+		warehouse.FNAME TargetWarehouseName,warehouse.FCODE TargetWarehouseCode,
+		location.FNAME TargetPositionName,location.FCODE TargetPositionCode  
+		from 
+		<include refid="tableName"></include> f 
+		left join KM_ProcessDefinition p on p.ProcessDefinition_ID=f.WP 
+		left join MWMS_WH_WAREHOUSE w on f.DeliveryWarehouse=w.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION l on f.DeliveryPosition=l.WH_LOCATION_ID 
+		left join MWMS_WH_WAREHOUSE warehouse on f.TargetWarehouse=warehouse.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION location on f.TargetPosition=location.WH_LOCATION_ID 
+		left join MBASE_MAT_BASIC basic on basic.MAT_CODE = f.MaterialNum and basic.MAT_NAME = f.MaterialName
+		left join MBASE_MAT_CLASS clz on clz.MAT_CLASS_ID = basic.MAT_CLASS_ID
+		where 1=1 
+		and clz.FCLASS not in ('中间品','产成品','半成品') 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.MaterialNum LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.MaterialName LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="PlanningWorkOrder_ID != null and PlanningWorkOrder_ID != ''"><!-- 计划工单id -->
+			and f.PlanningWorkOrderID = #{PlanningWorkOrder_ID}
+		</if>
+		<if test="WorkOrderNum != null and WorkOrderNum != ''"><!-- 计划工单编号 -->
+			and f.WorkOrderNum = #{WorkOrderNum}
+		</if>
+		<if test="MaterialNum != null and MaterialNum != ''"><!-- 物料编码 -->
+			and f.MaterialNum = #{MaterialNum}
+		</if>
+		<if test="MaterialName != null and MaterialName != ''"><!-- 物料名称 -->
+			and f.MaterialName = #{MaterialName}
+		</if>
+		<if test="MaterialID != null and MaterialID != ''"><!-- 物料ID -->
+			and f.MaterialID = #{MaterialID}
+		</if>
+		<if test="PushDownTransferIF != null and PushDownTransferIF != ''"><!-- 是否下推物料转移 -->
+			and PushDownTransferIF = #{PushDownTransferIF}
+		</if>
+		
+		<if test="MasterWorkOrder_ID != null and MasterWorkOrder_ID != ''"><!-- 计划工单id -->
+			AND f.PlanningWorkOrderID IN (
+				SELECT
+					PlanningWorkOrder_ID
+				FROM
+					PP_PlanningWorkOrder
+				WHERE
+					MasterWorkOrder_ID = #{MasterWorkOrder_ID}
+			)
+		</if>
+		order by f.RowNum 
+	</select>
+	
+	<!-- 根据物料需求单id修改是否下推采购状态 -->
+	<update id="updatePushDownPurchaseByMaterialRequirement_ID" parameterType="pd">
+		update <include refid="tableName"></include> 
+		set 
+			PushDownPurchaseIF=#{PushDownPurchaseIF}
+		where 
+			MaterialRequirement_ID = #{MaterialRequirement_ID}
+	</update>
+	
+	<!-- -->
+	<update id="updateState" parameterType="pd">
+		update 
+		f set f.PushDownPurchaseIF=#{PushDownPurchaseIF}
+		from 
+		MM_MaterialRequirement f
+		left join PP_PlanningWorkOrder f1
+		on f.PlanningWorkOrderID=f1.PlanningWorkOrder_ID
+		where 1=1 
+		and f1.WorkOrderNum=#{SourceOrderNum}
+		and f.RowNum=#{SourceRowNum}
+
+	</update>
+	
+		<!-- -->
+	<update id="updateStateAll" parameterType="pd">
+		update 
+		f set f.PushDownPurchaseIF=#{PushDownPurchaseIF}
+		from 
+		MM_MaterialRequirement f
+		left join PP_PlanningWorkOrder f1
+		on f.PlanningWorkOrderID=f1.PlanningWorkOrder_ID
+		left join PP_PurchaseMaterialDetails f2
+		on (f1.FOrderNum=f2.SourceOrderNum and f.RowNum=f2.SourceRowNum)
+		where 1=1 
+		and f2.RowClose='N'
+		and f2.PurchaseID=#{PurchaseID}
+	</update>
+	<!-- 根据计划工单id和物料id反写源单是否下推转移状态(Y,N) -->
+	<update id="updateTransferStateByWorkOrderIdAndMaterialId" parameterType="pd">
+		update 
+		f set f.PushDownTransferIF=#{PushDownTransferIF}
+		from 
+		MM_MaterialRequirement f 
+		where PlanningWorkOrderID = #{PlanningWorkOrderID}
+		and MaterialID in 
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	<!-- 反写源单是否下推转移状态(Y,N) -->
+	<update id="updateTransferState" parameterType="pd">
+		update 
+		f set f.PushDownTransferIF=#{PushDownTransferIF}
+		from 
+		MM_MaterialRequirement f 
+		where MaterialRequirement_ID in 
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+<!-- 获取物料需求编号列表-可搜索-前100条-->
+	<select id="getNumList" parameterType="pd" resultType="pd">
+		select
+		top 100 MRCode
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			MRCode LIKE '%'+ #{KEYWORDS}+'%'
+			
+			)	
+		</if>
+		<if test="PlanningWorkOrderID != null and PlanningWorkOrderID != ''">
+			and 
+			(
+			PlanningWorkOrderID =#{PlanningWorkOrderID}
+			
+			)	
+		</if>
+			<if test="WorkOrderNum != null and WorkOrderNum != ''">
+			and 
+			(
+			WorkOrderNum =#{WorkOrderNum}
+			
+			)	
+		</if>
+		 order by f.MRCode 
+	</select>
+	<!-- 总物料需求单 汇总 -->
+	<select id="getTotalMRByMasterPlanningWorkOrderIDlistPage" parameterType="page" resultType="pd">
+		SELECT t.*,t2.MAT_NAME from (
+			SELECT
+				f.WorkOrderNum,
+				f.MaterialID,
+				SUM (f.DemandCount) AS DemandCount
+			FROM
+				MM_MaterialRequirement f
+			WHERE
+				1 = 1
+			AND f.PlanningWorkOrderID IN (
+				SELECT
+					PlanningWorkOrder_ID
+				FROM
+					PP_PlanningWorkOrder
+				WHERE
+					MasterWorkOrder_ID =  #{pd.MasterWorkOrder_ID}
+			)
+			AND f.TType = '投入'
+			GROUP BY
+				f.WorkOrderNum,
+				f.MaterialID,
+				f.DeliveryWarehouse,
+				f.DeliveryPosition,
+				f.TargetPosition,
+				f.TargetWarehouse
+		)t 
+		left join MBASE_MAT_BASIC t2 on t.MaterialID = t2.MAT_BASIC_ID
+		[fhstart] order by t.WorkOrderNum  [fhend]
+	</select>
+	
+	<!--总物料需求单 明细 -->
+	<select id="getTotalMRDetailByMasterPlanningWorkOrderIDlistPage" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>,p.FName WP_Name,
+		w.FNAME DeliveryWarehouseName,w.FCODE DeliveryWarehouseCode,
+		l.FNAME DeliveryPositionName,l.FCODE DeliveryPositionCode,
+		warehouse.FNAME TargetWarehouseName,warehouse.FCODE TargetWarehouseCode,
+		location.FNAME TargetPositionName,location.FCODE TargetPositionCode  
+		from 
+		<include refid="tableName"></include> f 
+		left join KM_ProcessDefinition p on p.ProcessDefinition_ID=f.WP 
+		left join MWMS_WH_WAREHOUSE w on f.DeliveryWarehouse=w.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION l on f.DeliveryPosition=l.WH_LOCATION_ID 
+		left join MWMS_WH_WAREHOUSE warehouse on f.TargetWarehouse=warehouse.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION location on f.TargetPosition=location.WH_LOCATION_ID 
+		left join MBASE_MAT_BASIC basic on basic.MAT_CODE = f.MaterialNum and basic.MAT_NAME = f.MaterialName
+		left join MBASE_MAT_CLASS clz on clz.MAT_CLASS_ID = basic.MAT_CLASS_ID
+		where 1=1 
+		and clz.FCLASS not in ('中间品','产成品','半成品')
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''"><!-- 计划工单id -->
+			and f.WorkOrderNum like '%' +#{pd.WorkOrderNum} +'%'
+		</if>
+		<if test="pd.MasterWorkOrder_ID != null and pd.MasterWorkOrder_ID != ''"><!-- 计划工单id -->
+			AND f.PlanningWorkOrderID IN (
+				SELECT
+					PlanningWorkOrder_ID
+				FROM
+					PP_PlanningWorkOrder
+				WHERE
+					MasterWorkOrder_ID = #{pd.MasterWorkOrder_ID}
+			)
+		</if>
+		[fhstart] order by f.RowNum [fhend]
+	</select>
+	
+	
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

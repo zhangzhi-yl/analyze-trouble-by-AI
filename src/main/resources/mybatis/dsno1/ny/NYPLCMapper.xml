@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.ny.NYPLCMapper">
+
+    <!--表名 -->
+    <sql id="tableName">
+        NY_PLC
+    </sql>
+
+    <!--数据字典表名 -->
+    <sql id="dicTableName">
+        SYS_DICTIONARIES
+    </sql>
+
+    <!-- 字段 -->
+    <sql id="Field">
+        f.ParamName,
+		f.Address,	
+		f.ConnectType,	
+		f.SymbolName,	
+		f.FStatus,	
+		f.Remarks,	
+		f.CreateTime,	
+		f.Creator,	
+		f.Modified,	
+		f.ModifiedTime,	
+		f.SaveTable,	
+		f.SaveField,	
+		f.Loop,	
+		f.ParamType,	
+		f.Extend1,	
+		f.Extend2,	
+		f.Extend3,
+        f.isFormula,
+        f.Passageway,
+        f.MappingPath,
+        f.IsSnapshot,
+		f.PLC_ID
+    </sql>
+
+    <!-- 字段用于新增 -->
+    <sql id="Field2">
+        ParamName,
+		Address,	
+		ConnectType,	
+		SymbolName,	
+		FStatus,	
+		Remarks,	
+		CreateTime,	
+		Creator,	
+		Modified,	
+		ModifiedTime,	
+		SaveTable,	
+		SaveField,	
+		Loop,	
+		ParamType,	
+		Extend1,	
+		Extend2,	
+		Extend3,
+        isFormula,
+        Passageway,
+        MappingPath,
+        IsSnapshot,
+		PLC_ID
+    </sql>
+
+    <!-- 字段值 -->
+    <sql id="FieldValue">
+        #{ParamName}
+        ,
+        #{Address},
+        #{ConnectType},
+        #{SymbolName},
+        #{FStatus},
+        #{Remarks},
+        #{CreateTime},
+        #{Creator},
+        #{Modified},
+        #{ModifiedTime},
+        #{SaveTable},
+        #{SaveField},
+        #{Loop},
+        #{ParamType},
+        #{Extend1},
+        #{Extend2},
+        #{Extend3},
+        #{isFormula},
+        #{Passageway},
+        #{MappingPath},
+        #{IsSnapshot},
+        #{PLC_ID}
+    </sql>
+
+    <!-- 新增-->
+    <insert id="save" parameterType="pd">
+        insert into
+        <include refid="tableName"></include>
+        (
+        <include refid="Field2"></include>
+        ) values (
+        <include refid="FieldValue"></include>
+        )
+    </insert>
+
+    <!-- 删除-->
+    <delete id="delete" parameterType="pd">
+        delete from
+        <include refid="tableName"></include>
+        where
+        PLC_ID = #{PLC_ID}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="pd">
+        update
+        <include refid="tableName"></include>
+        set
+        ParamName = #{ParamName},
+        Address = #{Address},
+        ConnectType = #{ConnectType},
+        SymbolName = #{SymbolName},
+        Loop = #{Loop},
+        ParamType = #{ParamType},
+        Extend1 = #{Extend1},
+        Extend2 = #{Extend2},
+        Extend3 = #{Extend3},
+        FStatus = #{FStatus},
+        Remarks = #{Remarks},
+        Passageway = #{Passageway},
+        isFormula = #{isFormula},
+        Modified = #{Modified},
+        ModifiedTime = #{ModifiedTime},
+        MappingPath = #{MappingPath},
+        IsSnapshot = #{IsSnapshot},
+        PLC_ID = PLC_ID
+        where
+        PLC_ID = #{PLC_ID}
+    </update>
+
+    <!-- 通过ID获取数据 -->
+    <select id="findById" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3,e.FName EquipmentName,
+        p.temp_1,
+        p.temp_2,
+        p.pt,
+        p.ct
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_Loop l on f.Loop = l.Loop_ID
+        left join MDM_SITE s on f.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on f.Loop = a.AREA_ID
+        left join NY_EQUIPMENT e on e.EQUIPMENT_ID = f.Extend2
+        left join NY_FormulaParam p on p.PLC_ID = f.PLC_ID
+        where
+        f.PLC_ID = #{PLC_ID}
+    </select>
+
+    <select id="useListByLoop" resultType="pd" parameterType="pd">
+        select
+        <include refid="Field"></include>,l.FName LoopName
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_LOOP l on f.Loop = l.LOOP_ID
+        where f.FStatus = '启用'
+        <if test="LOOP_ID != null and LOOP_ID != ''"><!-- 关键词检索 -->
+            and
+            f.LOOP_ID = #{LOOP_ID}
+        </if>
+        ORDER BY f.CreateTime DESC
+    </select>
+
+    <!-- 通过ID获取数据 -->
+    <select id="findUseEnergyByLoop" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        f
+        where
+        f.Loop = #{Loop_ID} and ParamType like '%能耗%'
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+    </select>
+
+    <select id="getFieldMaxValue" parameterType="pd" resultType="pd">
+        select ISNULL(MAX(CAST (${QueryField} AS NUMERIC(10,2))),0) AS value from ${SaveTable} f
+        where 1=1
+        <if test="time != null and time != ''"><!-- 关键词检索 -->
+            and SUBSTRING (f.TimeStamp,0,11) = #{time}
+        </if>
+    </select>
+    <select id="getFieldMinValue" parameterType="pd" resultType="pd">
+        select ISNULL(MIN(CAST (${QueryField} AS NUMERIC(10,2))),0) AS value from ${SaveTable} f
+        where 1=1
+        <if test="time != null and time != ''"><!-- 关键词检索 -->
+            and SUBSTRING (f.TimeStamp,0,11) = #{time}
+        </if>
+    </select>
+
+    <!-- 列表 -->
+    <select id="datalistPage" parameterType="page" resultType="pd">
+        select
+        <include refid="Field"></include>,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3,e.FName EquipmentName
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_Loop l on f.Loop = l.Loop_ID
+        left join MDM_SITE s on f.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on f.Loop = a.AREA_ID
+        left join NY_EQUIPMENT e on e.EQUIPMENT_ID = f.Extend2
+        where 1=1
+        <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+            and ParamName LIKE '%'+ #{pd.KEYWORDS}+'%'
+        </if>
+        [fhstart] ORDER BY CreateTime DESC [fhend]
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listAll" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3,e.FName EquipmentName
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_Loop l on f.Loop = l.Loop_ID
+        left join MDM_SITE s on f.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on f.Loop = a.AREA_ID
+        left join NY_EQUIPMENT e on e.EQUIPMENT_ID = f.Extend2
+        where 1=1
+        <if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+            and f.ParamName LIKE '%'+ #{KEYWORDS}+'%'
+        </if>
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            and f.ParamType = #{ParamType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and f.SaveTable = #{SaveTable}
+        </if>
+        <if test="isUse != null and isUse != ''"><!-- 关键词检索 -->
+            and f.FStatus = '启用'
+        </if>
+    </select>
+
+    <select id="listAllPlc" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        f
+        where 1=1
+    </select>
+
+    <select id="getPLCByEquipment" parameterType="pd" resultType="pd">
+        select
+        ParamName
+        from
+        <include refid="tableName"></include>
+        f
+        where 1=1
+        <if test="EQUIPMENT_ID != null and EQUIPMENT_ID != ''"><!-- 关键词检索 -->
+            and Extend2 = #{EQUIPMENT_ID}
+        </if>
+    </select>
+
+    <select id="useList" resultType="pd">
+        select
+        <include refid="Field"></include>, p.temp_1,p.temp_2,p.pt,p.ct
+        from
+        <include refid="tableName"></include> f
+        left join NY_FormulaParam p on p.PLC_ID = f.PLC_ID
+        where FStatus = '启用'
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="deleteAll" parameterType="String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        PLC_ID in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="getField" parameterType="pd" resultType="pd">
+        SELECT
+        f.FIELD
+        FROM
+        (
+        SELECT
+        'A00' FIELD UNION ALL
+        SELECT
+        'A01' FIELD UNION ALL
+        SELECT
+        'A02' FIELD UNION ALL
+        SELECT
+        'A03' FIELD UNION ALL
+        SELECT
+        'A04' FIELD UNION ALL
+        SELECT
+        'A05' FIELD UNION ALL
+        SELECT
+        'A06' FIELD UNION ALL
+        SELECT
+        'A07' FIELD UNION ALL
+        SELECT
+        'A08' FIELD UNION ALL
+        SELECT
+        'A09' FIELD UNION ALL
+        SELECT
+        'A10' FIELD UNION ALL
+        SELECT
+        'A11' FIELD UNION ALL
+        SELECT
+        'A12' FIELD UNION ALL
+        SELECT
+        'A13' FIELD UNION ALL
+        SELECT
+        'A14' FIELD UNION ALL
+        SELECT
+        'A15' FIELD UNION ALL
+        SELECT
+        'A16' FIELD UNION ALL
+        SELECT
+        'A17' FIELD UNION ALL
+        SELECT
+        'A18' FIELD UNION ALL
+        SELECT
+        'A19' FIELD UNION ALL
+        SELECT
+        'A20' FIELD UNION ALL
+        SELECT
+        'A21' FIELD UNION ALL
+        SELECT
+        'A22' FIELD UNION ALL
+        SELECT
+        'A23' FIELD UNION ALL
+        SELECT
+        'A24' FIELD UNION ALL
+        SELECT
+        'A25' FIELD UNION ALL
+        SELECT
+        'A26' FIELD UNION ALL
+        SELECT
+        'A27' FIELD UNION ALL
+        SELECT
+        'A28' FIELD UNION ALL
+        SELECT
+        'A29' FIELD UNION ALL
+        SELECT
+        'A30' FIELD UNION ALL
+        SELECT
+        'A31' FIELD UNION ALL
+        SELECT
+        'A32' FIELD UNION ALL
+        SELECT
+        'A33' FIELD UNION ALL
+        SELECT
+        'A34' FIELD UNION ALL
+        SELECT
+        'A35' FIELD UNION ALL
+        SELECT
+        'A36' FIELD UNION ALL
+        SELECT
+        'A37' FIELD UNION ALL
+        SELECT
+        'A38' FIELD UNION ALL
+        SELECT
+        'A39' FIELD UNION ALL
+        SELECT
+        'A40' FIELD UNION ALL
+        SELECT
+        'A41' FIELD UNION ALL
+        SELECT
+        'A42' FIELD UNION ALL
+        SELECT
+        'A43' FIELD UNION ALL
+        SELECT
+        'A44' FIELD UNION ALL
+        SELECT
+        'A45' FIELD UNION ALL
+        SELECT
+        'A46' FIELD UNION ALL
+        SELECT
+        'A47' FIELD UNION ALL
+        SELECT
+        'A48' FIELD UNION ALL
+        SELECT
+        'A49' FIELD UNION ALL
+        SELECT
+        'A50' FIELD UNION ALL
+        SELECT
+        'A51' FIELD UNION ALL
+        SELECT
+        'A52' FIELD UNION ALL
+        SELECT
+        'A53' FIELD UNION ALL
+        SELECT
+        'A54' FIELD UNION ALL
+        SELECT
+        'A55' FIELD UNION ALL
+        SELECT
+        'A56' FIELD UNION ALL
+        SELECT
+        'A57' FIELD UNION ALL
+        SELECT
+        'A58' FIELD UNION ALL
+        SELECT
+        'A59' FIELD UNION ALL
+        SELECT
+        'A60' FIELD UNION ALL
+        SELECT
+        'A61' FIELD UNION ALL
+        SELECT
+        'A62' FIELD UNION ALL
+        SELECT
+        'A63' FIELD UNION ALL
+        SELECT
+        'A64' FIELD UNION ALL
+        SELECT
+        'A65' FIELD UNION ALL
+        SELECT
+        'A66' FIELD UNION ALL
+        SELECT
+        'A67' FIELD UNION ALL
+        SELECT
+        'A68' FIELD UNION ALL
+        SELECT
+        'A69' FIELD UNION ALL
+        SELECT
+        'A70' FIELD UNION ALL
+        SELECT
+        'A71' FIELD UNION ALL
+        SELECT
+        'A72' FIELD UNION ALL
+        SELECT
+        'A73' FIELD UNION ALL
+        SELECT
+        'A74' FIELD UNION ALL
+        SELECT
+        'A75' FIELD UNION ALL
+        SELECT
+        'A76' FIELD UNION ALL
+        SELECT
+        'A77' FIELD UNION ALL
+        SELECT
+        'A78' FIELD UNION ALL
+        SELECT
+        'A79' FIELD UNION ALL
+        SELECT
+        'A80' FIELD UNION ALL
+        SELECT
+        'A81' FIELD UNION ALL
+        SELECT
+        'A82' FIELD UNION ALL
+        SELECT
+        'A83' FIELD UNION ALL
+        SELECT
+        'A84' FIELD UNION ALL
+        SELECT
+        'A85' FIELD UNION ALL
+        SELECT
+        'A86' FIELD UNION ALL
+        SELECT
+        'A87' FIELD UNION ALL
+        SELECT
+        'A88' FIELD UNION ALL
+        SELECT
+        'A89' FIELD UNION ALL
+        SELECT
+        'A90' FIELD UNION ALL
+        SELECT
+        'A91' FIELD UNION ALL
+        SELECT
+        'A92' FIELD UNION ALL
+        SELECT
+        'A93' FIELD UNION ALL
+        SELECT
+        'A94' FIELD UNION ALL
+        SELECT
+        'A95' FIELD UNION ALL
+        SELECT
+        'A96' FIELD UNION ALL
+        SELECT
+        'A97' FIELD UNION ALL
+        SELECT
+        'A98' FIELD UNION ALL
+        SELECT
+        'A99' FIELD
+        ) f
+        WHERE
+        f.FIELD NOT IN (
+        SELECT p.SaveField
+        FROM NY_PLC p
+        WHERE 1=1
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and p.SaveTable = #{SaveTable}
+        </if>
+        )
+    </select>
+
+    <update id="deletePlcData" parameterType="pd">
+        update ${SaveTable} set ${SaveField} = null
+    </update>
+
+    <!-- yy356703572qq(彬耶) -->
+</mapper>

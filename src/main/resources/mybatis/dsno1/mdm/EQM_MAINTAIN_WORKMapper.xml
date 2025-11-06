@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_MAINTAIN_WORKMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_MAINTAIN_WORK
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FMAINTAIN_NUMBER,	
+		f.EQM_BASE_ID,	
+		f.FEQM_NAME,	
+		f.FEQM_FNUMBER,	
+		f.FEQM_TYPE,	
+		f.FWORKCENTER,	
+		f.FCLAIMER_DATE,	
+		f.FBREAKBOWN_DATE,	
+		f.FMAINTAIN_START_DATE,	
+		f.FMAINTAIN_END_DATE,	
+		f.FBREAKBOWN_GRADE,	
+		f.FBREAKBOWN_CAUSE,	
+		f.FBREAKBOWN_ISSUE,	
+		f.FVERIFICAT_RESULT,	
+		f.FACCEPTOR,	
+		f.FRESULT_ANALYSIS,	
+		f.FADJUSTER,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.EQM_MAINTAIN_WORK_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		FMAINTAIN_NUMBER,	
+		EQM_BASE_ID,	
+		FEQM_NAME,	
+		FEQM_FNUMBER,	
+		FEQM_TYPE,	
+		FWORKCENTER,	
+		FCLAIMER_DATE,	
+		FBREAKBOWN_DATE,	
+		FMAINTAIN_START_DATE,	
+		FMAINTAIN_END_DATE,	
+		FBREAKBOWN_GRADE,	
+		FBREAKBOWN_CAUSE,	
+		FBREAKBOWN_ISSUE,	
+		FVERIFICAT_RESULT,	
+		FACCEPTOR,	
+		FRESULT_ANALYSIS,	
+		FADJUSTER,	
+		FCREATOR,	
+		CREATE_TIME,	
+		EQM_MAINTAIN_WORK_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FMAINTAIN_NUMBER},	
+		#{EQM_BASE_ID},	
+		#{FEQM_NAME},	
+		#{FEQM_FNUMBER},	
+		#{FEQM_TYPE},	
+		#{FWORKCENTER},	
+		#{FCLAIMER_DATE},	
+		#{FBREAKBOWN_DATE},	
+		#{FMAINTAIN_START_DATE},	
+		#{FMAINTAIN_END_DATE},	
+		#{FBREAKBOWN_GRADE},	
+		#{FBREAKBOWN_CAUSE},	
+		#{FBREAKBOWN_ISSUE},	
+		#{FVERIFICAT_RESULT},	
+		#{FACCEPTOR},	
+		#{FRESULT_ANALYSIS},	
+		#{FADJUSTER},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{EQM_MAINTAIN_WORK_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_MAINTAIN_WORK_ID = #{EQM_MAINTAIN_WORK_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FMAINTAIN_NUMBER = #{FMAINTAIN_NUMBER},
+			EQM_BASE_ID = #{EQM_BASE_ID},
+			FEQM_NAME = #{FEQM_NAME},
+			FEQM_FNUMBER = #{FEQM_FNUMBER},
+			FEQM_TYPE = #{FEQM_TYPE},
+			FWORKCENTER = #{FWORKCENTER},
+			FCLAIMER_DATE = #{FCLAIMER_DATE},
+			FBREAKBOWN_DATE = #{FBREAKBOWN_DATE},
+			FMAINTAIN_START_DATE = #{FMAINTAIN_START_DATE},
+			FMAINTAIN_END_DATE = #{FMAINTAIN_END_DATE},
+			FBREAKBOWN_GRADE = #{FBREAKBOWN_GRADE},
+			FBREAKBOWN_CAUSE = #{FBREAKBOWN_CAUSE},
+			FBREAKBOWN_ISSUE = #{FBREAKBOWN_ISSUE},
+			FVERIFICAT_RESULT = #{FVERIFICAT_RESULT},
+			FACCEPTOR = #{FACCEPTOR},
+			FRESULT_ANALYSIS = #{FRESULT_ANALYSIS},
+			FADJUSTER = #{FADJUSTER},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			EQM_MAINTAIN_WORK_ID = EQM_MAINTAIN_WORK_ID
+		where 
+			EQM_MAINTAIN_WORK_ID = #{EQM_MAINTAIN_WORK_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.EQM_MAINTAIN_WORK_ID = #{EQM_MAINTAIN_WORK_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FMAINTAIN_NUMBER LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FEQM_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FEQM_FNUMBER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FEQM_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] order by f.CREATE_TIME DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_MAINTAIN_WORK_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	<!--通过时间获取编号数据-->
+	<select id="findByNum" parameterType="pd" resultType="pd">
+		select right('00'+isnull((select cast(max(substring(f.FMAINTAIN_NUMBER,11,3))+1 as nvarchar) from MDM_EQM_MAINTAIN_WORK f WHERE SUBSTRING(f.FMAINTAIN_NUMBER, 3, 8) =#{FDATE}),'001'),3) FNUMBER
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

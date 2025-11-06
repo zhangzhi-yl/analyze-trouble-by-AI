@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.ListProblemsMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOMP_LISTPROBLEMS
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		isnull(f.SERIALNUMBER,'') SERIALNUMBER,	
+		isnull(f.DEPARTMENTNAME,'') DEPARTMENTNAME,	
+		isnull(f.DEPARTMENTNAME_ID,'') DEPARTMENTNAME_ID,	
+		isnull(f.QUESTIONTYPE,'') QUESTIONTYPE,	
+		isnull(f.PROBLEMSTAGE,'') PROBLEMSTAGE,	
+		isnull(f.PROPOSEPEOPLE,'') PROPOSEPEOPLE,	
+		isnull(f.PROPOSETIME,'') PROPOSETIME,	
+		isnull(f.PROBLEMNAME,'') PROBLEMNAME,	
+		isnull(f.PROBLEMDESCRIPTION,'') PROBLEMDESCRIPTION,	
+		isnull(f.PRIORITY,'') PRIORITY,	
+		isnull(f.INFLUENCE,'') INFLUENCE,	
+		isnull(f.COMPLEXITY,'') COMPLEXITY,	
+		isnull(f.IMPACTDESCRIPTION,'') IMPACTDESCRIPTION,
+		isnull(f.SOLUTIONDESCRIPTION,'') SOLUTIONDESCRIPTION,	
+		isnull(f.PERSONINCHARGE,'') PERSONINCHARGE,	
+		isnull(f.FSTATE,'') FSTATE,	
+		isnull(f.CURRENTPROGRESS,'') CURRENTPROGRESS,	
+		isnull(f.SETTLINGTIME,'') SETTLINGTIME,	
+		isnull(f.RESULTDESCRIPTION,'') RESULTDESCRIPTION,
+		isnull(f.AUDITOR,'') AUDITOR,	
+		isnull(f.REMARKS,'') REMARKS,	
+		f.PLANINSTANCE_ID,	
+		isnull(f.UPDATETIME,'') UPDATETIME,	
+		isnull(f.STOPTIME,'') STOPTIME,	
+		f.LISTPROBLEMS_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		SERIALNUMBER,	
+		DEPARTMENTNAME,	
+		DEPARTMENTNAME_ID,	
+		QUESTIONTYPE,	
+		PROBLEMSTAGE,	
+		PROPOSEPEOPLE,	
+		PROPOSETIME,	
+		PROBLEMNAME,	
+		PROBLEMDESCRIPTION,	
+		PRIORITY,	
+		INFLUENCE,	
+		COMPLEXITY,	
+		IMPACTDESCRIPTION,	
+		SOLUTIONDESCRIPTION,	
+		PERSONINCHARGE,	
+		FSTATE,	
+		CURRENTPROGRESS,	
+		SETTLINGTIME,	
+		RESULTDESCRIPTION,	
+		AUDITOR,	
+		REMARKS,	
+		PLANINSTANCE_ID,	
+		UPDATETIME,
+		STOPTIME,
+		LISTPROBLEMS_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{SERIALNUMBER},	
+		#{DEPARTMENTNAME},	
+		#{DEPARTMENTNAME_ID},	
+		#{QUESTIONTYPE},	
+		#{PROBLEMSTAGE},	
+		#{PROPOSEPEOPLE},	
+		#{PROPOSETIME},	
+		#{PROBLEMNAME},	
+		#{PROBLEMDESCRIPTION},	
+		#{PRIORITY},	
+		#{INFLUENCE},	
+		#{COMPLEXITY},	
+		#{IMPACTDESCRIPTION},	
+		#{SOLUTIONDESCRIPTION},	
+		#{PERSONINCHARGE},	
+		#{FSTATE},	
+		#{CURRENTPROGRESS},	
+		#{SETTLINGTIME},	
+		#{RESULTDESCRIPTION},	
+		#{AUDITOR},	
+		#{REMARKS},	
+		#{PLANINSTANCE_ID},	
+		#{UPDATETIME},
+		#{STOPTIME},
+		#{LISTPROBLEMS_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			LISTPROBLEMS_ID = #{LISTPROBLEMS_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			SERIALNUMBER = #{SERIALNUMBER},
+			DEPARTMENTNAME = #{DEPARTMENTNAME},
+			DEPARTMENTNAME_ID = #{DEPARTMENTNAME_ID},
+			QUESTIONTYPE = #{QUESTIONTYPE},
+			PROBLEMSTAGE = #{PROBLEMSTAGE},
+			PROPOSEPEOPLE = #{PROPOSEPEOPLE},
+			PROPOSETIME = #{PROPOSETIME},
+			PROBLEMNAME = #{PROBLEMNAME},
+			PROBLEMDESCRIPTION = #{PROBLEMDESCRIPTION},
+			PRIORITY = #{PRIORITY},
+			INFLUENCE = #{INFLUENCE},
+			COMPLEXITY = #{COMPLEXITY},
+			IMPACTDESCRIPTION = #{IMPACTDESCRIPTION},
+			SOLUTIONDESCRIPTION = #{SOLUTIONDESCRIPTION},
+			PERSONINCHARGE = #{PERSONINCHARGE},
+			FSTATE = #{FSTATE},
+			CURRENTPROGRESS = #{CURRENTPROGRESS},
+			SETTLINGTIME = #{SETTLINGTIME},
+			RESULTDESCRIPTION = #{RESULTDESCRIPTION},
+			AUDITOR = #{AUDITOR},
+			REMARKS = #{REMARKS},
+			STOPTIME = #{STOPTIME},
+			PLANINSTANCE_ID = #{PLANINSTANCE_ID},
+			LISTPROBLEMS_ID = LISTPROBLEMS_ID
+		where 
+			LISTPROBLEMS_ID = #{LISTPROBLEMS_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.LISTPROBLEMS_ID = #{LISTPROBLEMS_ID}
+	</select>
+	
+		<!-- 通过父ID获取数据 -->
+	<select id="findByMainId" parameterType="pd" resultType="pd">
+			select top 1 UPDATETIME as UPDATETIME
+		
+		from 
+		MOMP_LISTPROBLEMS
+		where 
+			PLANINSTANCE_ID = #{PLANINSTANCE_ID}  ORDER BY UPDATETIME desc
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and f.PLANINSTANCE_ID= #{pd.PLANINSTANCE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.PROBLEMNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.PRIORITY LIKE '%'+ #{pd.KEYWORDS}+'%' 
+										 or 
+					f.INFLUENCE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+						 or 
+					f.COMPLEXITY LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FSTATE != null and pd.FSTATE != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FSTATE=#{pd.FSTATE}
+				)
+		</if>
+				[fhstart]  order by  CAST (SERIALNUMBER AS INT)   [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f where f.PLANINSTANCE_ID=#{PLANINSTANCE_ID}
+		 order by  CAST (SERIALNUMBER AS INT) 
+	</select>
+	
+	<select id="findlistByRisk" parameterType="pd" resultType="pd">
+			select t1.* from EPM_DOUBLE_PLAN_WEEK_RISK t1 LEFT JOIN EPM_DOUBLE_PLAN_WEEK_MAIN t2 on t1.DOUBLE_PLAN_WEEK_MAIN_ID=t2.DOUBLE_PLAN_WEEK_MAIN_ID
+			LEFT JOIN EPM_PLANINSTANCE t3 ON t2.FEPNAME=t3.FPINAME
+			where t3.PLANINSTANCE_ID=#{PLANINSTANCE_ID}
+	</select>
+	<select id="findlistByItem" parameterType="pd" resultType="pd">
+			select f.* from MOMP_MEETINGITEM f LEFT JOIN MOMP_MEETINGINFORMATION t on f.MEETINGINFORMATION_ID= t.MEETINGINFORMATION_ID
+			where t.PHASETEMPLATE_ID=#{PLANINSTANCE_ID}
+	</select>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			LISTPROBLEMS_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+		<!-- 批量删除按父id -->
+	<delete id="deleteByMainId" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PLANINSTANCE_ID = #{PLANINSTANCE_ID}
+	</delete>
+	<!-- YY 356703572 -->
+</mapper>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.ProcessDefinitionMapper">
+
+	<!--工序定义表名 -->
+	<sql id="tableName">
+		KM_ProcessDefinition
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ProcessDefinition_ID,
+		f.FNum,
+		f.FName,
+		f.FStatus,
+		f.FStationID,
+		f.WordScannedIF,
+		f.OneYardToTheEndIF,
+		f.MaterialTraceability,
+		f.UnqualifiedProducts,
+		f.FrozenIF,
+		f.ReportTemplateID,
+		f.ProductionDesc,
+		f.QIPlanID,
+		f.FAttachmentName,
+		f.FAttachmentDirect,
+		f.FAttachmentIF,
+		f.EnableSOP,
+		f.SOP_ID,
+		f.WPType,
+		f.FCreatePersonID,
+		f.FCreateTime,
+		f.LastModifiedBy,
+		f.LastModificationTime,
+		f.WorkHoursUnit,
+		f.WorkHours
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field2">
+		ProcessDefinition_ID,
+		FNum,
+		FName,
+		FStatus,
+		FStationID,
+		WordScannedIF,
+		OneYardToTheEndIF,
+		MaterialTraceability,
+		UnqualifiedProducts,
+		FrozenIF,
+		ReportTemplateID,
+		ProductionDesc,
+		QIPlanID,
+		FAttachmentName,
+		FAttachmentDirect,
+		FAttachmentIF,
+		EnableSOP,
+		SOP_ID,
+		WPType,
+		FCreatePersonID,
+		FCreateTime,
+		LastModifiedBy,
+		LastModificationTime,
+		WorkHoursUnit,
+		WorkHours
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ProcessDefinition_ID},
+		#{FNum},
+		#{FName},
+		#{FStatus},
+		#{FStationID},
+		#{WordScannedIF},
+		#{OneYardToTheEndIF},
+		#{MaterialTraceability},
+		#{UnqualifiedProducts},
+		#{FrozenIF},
+		#{ReportTemplateID},
+		#{ProductionDesc},
+		#{QIPlanID},
+		#{FAttachmentName},
+		#{FAttachmentDirect},
+		#{FAttachmentIF},
+		#{EnableSOP},
+		#{SOP_ID},
+		#{WPType},
+		#{FCreatePersonID},
+		#{FCreateTime},
+		#{LastModifiedBy},
+		#{LastModificationTime},
+		#{WorkHoursUnit},
+		#{WorkHours}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		ProcessDefinition_ID = #{ProcessDefinition_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		FNum = #{FNum},
+		FName = #{FName},
+		FStatus = #{FStatus},
+		FStationID = #{FStationID},
+		WordScannedIF = #{WordScannedIF},
+		OneYardToTheEndIF = #{OneYardToTheEndIF},
+		MaterialTraceability = #{MaterialTraceability},
+		UnqualifiedProducts = #{UnqualifiedProducts},
+		FrozenIF = #{FrozenIF},
+		ReportTemplateID = #{ReportTemplateID},
+		ProductionDesc = #{ProductionDesc},
+		QIPlanID = #{QIPlanID},
+		FAttachmentName = #{FAttachmentName},
+		FAttachmentDirect = #{FAttachmentDirect},
+		FAttachmentIF = #{FAttachmentIF},
+		EnableSOP = #{EnableSOP},
+		SOP_ID = #{SOP_ID},
+		WPType = #{WPType},
+		FCreatePersonID = #{FCreatePersonID},
+		FCreateTime = #{FCreateTime},
+		LastModifiedBy = #{LastModifiedBy},
+		LastModificationTime = #{LastModificationTime},
+		WorkHoursUnit = #{WorkHoursUnit},
+		WorkHours = #{WorkHours}
+		where
+		ProcessDefinition_ID = #{ProcessDefinition_ID}
+	</update>
+
+	<!-- 修改状态，根据id -->
+	<update id="editStatus" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		FStatus = #{FStatus}
+		where
+		ProcessDefinition_ID = #{ProcessDefinition_ID}
+	</update>
+	<!-- 查询编号数据数量 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from
+		<include refid="tableName"></include>
+		f
+		where f.FNum = #{FNum}
+		<if test="ProcessDefinition_ID != null and ProcessDefinition_ID != ''"><!-- 工序定义id -->
+			and f.ProcessDefinition_ID &lt;&gt; #{ProcessDefinition_ID}
+		</if>
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		s.name FCreatePerson,s1.name LastModifiedPerson,qp.FName QIPlanName,
+		<include refid="Field"></include>
+		<!-- ,a.FName AttachmentName,a.FUrl AttachmentUrl -->
+		from
+		<include refid="tableName"></include>
+		f
+		<!-- left join (SELECT TOP 1 * FROM KM_AttachmentSet WHERE AssociationID =
+		#{ProcessDefinition_ID} and FStatus='使用' AND DataSources = '工序定义') a
+		on f.ProcessDefinition_ID=a.AssociationID -->
+		left join KM_QualityInspectionPlan qp on
+		f.QIPlanID=qp.QualityInspectionPlan_ID
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id
+		LEFT JOIN OA_STAFF s1 ON f.LastModifiedBy=s1.staff_id
+		where
+		f.ProcessDefinition_ID = #{ProcessDefinition_ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		s.name FCreatePerson,s1.name LastModifiedPerson,
+		qp.FName
+		QIPlanName,
+		<include refid="Field"></include>
+		<!-- ,a.FName AttachmentName,a.FUrl AttachmentUrl -->
+		from
+		<include refid="tableName"></include>
+		f
+	<!-- 	left join (SELECT * FROM KM_AttachmentSet WHERE FStatus='使用' AND
+		DataSources = '工序定义') a on f.ProcessDefinition_ID=a.AssociationID -->
+		left join KM_QualityInspectionPlan qp on
+		f.QIPlanID=qp.QualityInspectionPlan_ID
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id
+		LEFT JOIN OA_STAFF s1 ON f.LastModifiedBy=s1.staff_id
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.FNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		<if test="pd.FNum != null and pd.FNum != ''"><!-- 编号 -->
+			and f.FNum = #{pd.FNum}
+		</if>
+		<if test="pd.FName != null and pd.FName != ''"><!-- 名称 -->
+			and f.FName = #{pd.FName}
+		</if>
+		<if test="pd.FStatus != null and pd.FStatus != ''"><!-- 状态 -->
+			and f.FStatus = #{pd.FStatus}
+		</if>
+		[fhstart] ORDER BY f.FNum [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select top 10
+		s.name FCreatePerson,s1.name LastModifiedPerson,
+		qp.FName
+		QIPlanName,
+		<include refid="Field"></include>
+	<!-- 	,a.FName AttachmentName,a.FUrl AttachmentUrl -->
+		from
+		<include refid="tableName"></include>
+		f
+		<!-- left join (SELECT * FROM KM_AttachmentSet WHERE FStatus='使用' AND
+		DataSources = '工序定义') a on f.ProcessDefinition_ID=a.AssociationID -->
+		left join KM_QualityInspectionPlan qp on
+		f.QIPlanID=qp.QualityInspectionPlan_ID
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id
+		LEFT JOIN OA_STAFF s1 ON f.LastModifiedBy=s1.staff_id
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.FNum LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.FName LIKE '%'+ #{KEYWORDS}+'%'
+			)
+		</if>
+		<if test="FNum != null and FNum != ''"><!-- 编号 -->
+			and f.FNum = #{FNum}
+		</if>
+		<if test="FName != null and FName != ''"><!-- 名称 -->
+			and f.FName = #{FName}
+		</if>
+		<if test="FStatus != null and FStatus != ''"><!-- 状态 -->
+			and f.FStatus = #{FStatus}
+		</if>
+		ORDER BY f.FNum
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		ProcessDefinition_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

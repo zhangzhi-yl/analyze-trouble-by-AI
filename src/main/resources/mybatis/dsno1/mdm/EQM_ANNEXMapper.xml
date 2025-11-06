@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_ANNEXMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_ANNEX
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FCODE,	
+		f.FNAME,	
+		f.FPATH,	
+		f.FKIND,	
+		f.FTYPE,	
+		f.FDES,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FCREATOR,	
+		f.CREATE_TIME,
+		f.EQM_BASE_ID,
+		f.EQM_ANNEX_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FCODE,	
+		FNAME,	
+		FPATH,	
+		FKIND,	
+		FTYPE,	
+		FDES,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,
+		FCREATOR,	
+		CREATE_TIME,
+		EQM_BASE_ID,		
+		EQM_ANNEX_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FCODE},	
+		#{FNAME},	
+		#{FPATH},	
+		#{FKIND},	
+		#{FTYPE},	
+		#{FDES},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{EQM_BASE_ID},		
+		#{EQM_ANNEX_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_ANNEX_ID = #{EQM_ANNEX_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FPATH = #{FPATH},
+			FKIND = #{FKIND},
+			FTYPE = #{FTYPE},
+			FDES = #{FDES},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FCREATOR = #{FCREATOR},	
+		    CREATE_TIME = #{CREATE_TIME},
+		    EQM_BASE_ID = #{EQM_BASE_ID},	
+			EQM_ANNEX_ID = EQM_ANNEX_ID
+		where 
+			EQM_ANNEX_ID = #{EQM_ANNEX_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		f.FCODE,	
+		f.FNAME,	
+		f.FKIND,	
+		f.FTYPE,	
+		f.FDES,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FCREATOR,	
+		f.CREATE_TIME,
+		f.EQM_BASE_ID,
+		f.EQM_ANNEX_ID,
+		a.FUrl FPATH
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN KM_AttachmentSet a ON f.EQM_ANNEX_ID = a.AssociationID 
+		where a.FStatus = '使用'
+			and f.EQM_ANNEX_ID = #{EQM_ANNEX_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where EQM_BASE_ID=#{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FKIND LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.FTYPE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		 [fhstart] order by f.CREATE_TIME DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_ANNEX_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过设备基础资料ID删除信息-->
+	<delete id="deleteBase" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</delete>
+	
+	<!-- 删除附件 -->
+	<update id="delFj" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FNAME = '',
+			FPATH = ''
+		where 
+			EQM_ANNEX_ID = #{EQM_ANNEX_ID}
+	</update>
+	<!-- YY 356703572 -->
+</mapper>

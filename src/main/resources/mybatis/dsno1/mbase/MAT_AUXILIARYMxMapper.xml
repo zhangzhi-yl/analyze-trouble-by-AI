@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mbase.MAT_AUXILIARYMxMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_MAT_AUXILIARYMX
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.MAT_AUXILIARYMX_ID,	
+		f.MAT_AUXILIARYMX_CODE,	
+		f.MAT_AUXILIARYMX_NAME,	
+		f.MAT_AUXILIARY_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		MAT_AUXILIARYMX_ID,	
+		MAT_AUXILIARYMX_CODE,	
+		MAT_AUXILIARYMX_NAME,	
+		MAT_AUXILIARY_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MAT_AUXILIARYMX_ID},	
+		#{MAT_AUXILIARYMX_CODE},	
+		#{MAT_AUXILIARYMX_NAME},	
+		#{MAT_AUXILIARY_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_AUXILIARYMX_ID = #{MAT_AUXILIARYMX_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MAT_AUXILIARYMX_CODE = #{MAT_AUXILIARYMX_CODE},
+			MAT_AUXILIARYMX_NAME = #{MAT_AUXILIARYMX_NAME}
+		where 
+			MAT_AUXILIARYMX_ID = #{MAT_AUXILIARYMX_ID}
+	</update>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.MAT_AUXILIARYMX_CODE = #{MAT_AUXILIARYMX_CODE} 
+		<if test="MAT_AUXILIARYMX_ID != null and MAT_AUXILIARYMX_ID != ''"><!-- 辅助属性值id -->
+			and f.MAT_AUXILIARYMX_ID &lt;&gt; #{MAT_AUXILIARYMX_ID}
+		</if>
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.MAT_AUXILIARYMX_ID = #{MAT_AUXILIARYMX_ID}
+	</select>
+	
+	<!-- 通过MAT_AUXILIARYMX_CODE获取数据 -->
+	<select id="findByMAT_AUXILIARYMX_CODE" parameterType="pd" resultType="pd">
+		select top 1 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.MAT_AUXILIARYMX_CODE = #{MAT_AUXILIARYMX_CODE}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where
+			f.MAT_AUXILIARY_ID = #{pd.MAT_AUXILIARY_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.MAT_AUXILIARYMX_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.MAT_AUXILIARYMX_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.MAT_AUXILIARYMX_CODE != null and pd.MAT_AUXILIARYMX_CODE != ''"><!-- 代码 -->
+			and f.MAT_AUXILIARYMX_CODE = #{pd.MAT_AUXILIARYMX_CODE}
+		</if>
+		<if test="pd.MAT_AUXILIARYMX_NAME != null and pd.MAT_AUXILIARYMX_NAME != ''"><!-- 名字 -->
+			and f.MAT_AUXILIARYMX_NAME = #{pd.MAT_AUXILIARYMX_NAME}
+		</if>
+		[fhstart] order by f.MAT_AUXILIARYMX_CODE [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		where
+			f.MAT_AUXILIARY_ID = #{MAT_AUXILIARY_ID}
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.MAT_AUXILIARYMX_CODE LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.MAT_AUXILIARYMX_NAME LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="MAT_AUXILIARYMX_CODE != null and MAT_AUXILIARYMX_CODE != ''"><!-- 代码 -->
+			and f.MAT_AUXILIARYMX_CODE = #{MAT_AUXILIARYMX_CODE}
+		</if>
+		<if test="MAT_AUXILIARYMX_NAME != null and MAT_AUXILIARYMX_NAME != ''"><!-- 名字 -->
+			and f.MAT_AUXILIARYMX_NAME = #{MAT_AUXILIARYMX_NAME}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_AUXILIARYMX_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			MAT_AUXILIARY_ID = #{MAT_AUXILIARY_ID}
+	</select>
+	<!-- 获取辅助属性值列表-可搜索-前100条-->
+	<select id="getAuxiliaryList" parameterType="pd" resultType="pd">
+		select
+		top 100 MAT_AUXILIARYMX_ID,MAT_AUXILIARYMX_NAME,MAT_AUXILIARYMX_CODE,isnull(MAT_AUXILIARYMX_NAME,'无名称')+'/'+isnull(MAT_AUXILIARYMX_CODE,'无编号')  FSelectOption 
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and MAT_AUXILIARY_ID=#{MAT_AUXILIARY_ID}
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			MAT_AUXILIARYMX_NAME LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			MAT_AUXILIARYMX_CODE LIKE '%'+ #{KEYWORDS}+'%'
+			)	
+		</if>
+		<if test="MAT_AUXILIARY_ID != null and MAT_AUXILIARY_ID != ''">
+			and f.MAT_AUXILIARY_ID = #{MAT_AUXILIARY_ID}
+		</if>
+		 order by f.MAT_AUXILIARYMX_CODE 
+	</select>
+	<!-- 根据计划工单编号类型id和物料辅助属性值编码删除-->
+	<delete id="deleteByMAT_AUXILIARY_IDAndMAT_AUXILIARYMX_CODE" parameterType="pd">
+		delete from 
+		<include refid="tableName"></include> 
+		where MAT_AUXILIARY_ID = #{MAT_AUXILIARY_ID} 
+		and MAT_AUXILIARYMX_CODE = #{MAT_AUXILIARYMX_CODE} 
+	</delete>
+	<select id="getByMAT_AUXILIARY_IDAndMAT_AUXILIARYMX_CODE" parameterType="pd" resultType="pd">
+		select * from 
+		<include refid="tableName"></include> 
+		where MAT_AUXILIARY_ID = #{MAT_AUXILIARY_ID} 
+		and MAT_AUXILIARYMX_CODE = #{MAT_AUXILIARYMX_CODE} 
+	</select>	<!-- yy356703572qq(彬耶) -->
+</mapper>

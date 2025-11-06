@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.TeamCalendarMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_TEAM_CALENDAR
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.TEAM_CALENDAR_ID,	
+		f.CLASSES_NAME,	
+		f.START_DATE,	
+		f.END_DATE,	
+		f.TEAM_POWER,	
+		f.ACROSSDAY,	
+		f.AREA_ID,	
+		f.TEAM_ID,	
+		f.START_TIME,	
+		f.END_TIME,	
+		f.FDES,
+		f.FSHIFT,
+		f.MAN_HOUR,
+		f.TEAMS_INFO,
+		f.START_TEAM
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		TEAM_CALENDAR_ID,	
+		CLASSES_NAME,	
+		START_DATE,	
+		END_DATE,	
+		TEAM_POWER,	
+		ACROSSDAY,	
+		AREA_ID,	
+		TEAM_ID,	
+		START_TIME,	
+		END_TIME,	
+		FDES,
+		FSHIFT,
+		MAN_HOUR,
+		TEAMS_INFO,
+		START_TEAM
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TEAM_CALENDAR_ID},	
+		#{CLASSES_NAME},	
+		#{START_DATE},	
+		#{END_DATE},	
+		#{TEAM_POWER},	
+		#{ACROSSDAY},	
+		#{AREA_ID},	
+		#{TEAM_ID},	
+		#{START_TIME},	
+		#{END_TIME},	
+		#{FDES},
+		#{FSHIFT},
+		#{MAN_HOUR},
+		#{TEAMS_INFO},
+		#{START_TEAM}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEAM_CALENDAR_ID = #{TEAM_CALENDAR_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CLASSES_NAME = #{CLASSES_NAME},
+			START_DATE = #{START_DATE},
+			END_DATE = #{END_DATE},
+			TEAM_POWER = #{TEAM_POWER},
+			ACROSSDAY = #{ACROSSDAY},
+			AREA_ID = #{AREA_ID},
+			TEAM_ID = #{TEAM_ID},
+			START_TIME = #{START_TIME},
+			END_TIME = #{END_TIME},
+			FDES = #{FDES},
+			FSHIFT = #{FSHIFT},
+			MAN_HOUR = #{MAN_HOUR},
+			TEAMS_INFO = #{TEAMS_INFO},
+			START_TEAM = #{START_TEAM}
+		where 
+			TEAM_CALENDAR_ID = #{TEAM_CALENDAR_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.TEAM_CALENDAR_ID = #{TEAM_CALENDAR_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,area.FNAME AS AREANAME,t.FNAME AS TEAMNAME 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_AREA area ON f.AREA_ID = area.AREA_ID 
+		LEFT JOIN MBASE_TEAM_INFO t ON f.TEAM_ID = t.TEAM_INFO_ID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					area.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					t.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.lastStart != null and pd.lastStart != ''"><!-- 开始时间检索 -->
+			and
+				(
+					f.START_TIME &gt;= #{pd.lastStart}
+				)
+		</if>
+		<if test="pd.lastEnd != null and pd.lastEnd != ''"><!-- 结束时间检索 -->
+			and
+				(
+					f.START_TIME &lt;= #{pd.lastEnd}
+				)
+		</if>
+		<if test="pd.AREA_ID != null and pd.AREA_ID != ''"><!-- 车间检索 -->
+			and
+				(
+					f.AREA_ID = #{pd.AREA_ID}
+				)
+		</if>
+		<if test="pd.TEAM_ID != null and pd.TEAM_ID != ''"><!-- 班组检索 -->
+			and
+				(
+					f.TEAM_ID = #{pd.TEAM_ID}
+				)
+		</if>
+		and f.START_TIME &gt;= CONVERT(varchar,GETDATE(),120) 
+		[fhstart] ORDER BY f.START_TIME [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,area.FNAME AS AREANAME,t.FNAME AS TEAMNAME 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_AREA area ON f.AREA_ID = area.AREA_ID 
+		LEFT JOIN MBASE_TEAM_INFO t ON f.TEAM_ID = t.TEAM_INFO_ID 
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					area.FNAME LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					t.FNAME LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="lastStart != null and lastStart != ''"><!-- 开始时间检索 -->
+			and
+				(
+					f.START_TIME &gt;= #{lastStart}
+				)
+		</if>
+		<if test="lastEnd != null and lastEnd != ''"><!-- 结束时间检索 -->
+			and
+				(
+					f.START_TIME &lt;= #{lastEnd}
+				)
+		</if>
+		<if test="AREA_ID != null and AREA_ID != ''"><!-- 车间检索 -->
+			and
+				(
+					f.AREA_ID = #{AREA_ID}
+				)
+		</if>
+		<if test="TEAM_ID != null and TEAM_ID != ''"><!-- 班组检索 -->
+			and
+				(
+					f.TEAM_ID = #{TEAM_ID}
+				)
+		</if>
+		and f.START_TIME &gt;= CONVERT(varchar,GETDATE(),120) 
+	</select>
+	
+	<!-- 验证是否重复-->
+	<select id="checkRepeat" parameterType="pd" resultType="pd">
+		DECLARE
+			@starttime datetime ,@endtime datetime
+		SET @starttime = #{START_TIME}
+		SET @endtime = #{END_TIME}
+		SELECT
+			count(*) as num
+		FROM
+			MBASE_TEAM_CALENDAR f
+		WHERE
+			1 = 1
+		AND (
+			f.TEAM_ID = #{TEAM_ID}
+		) 
+		AND (
+			(
+				f.START_TIME &gt; @starttime
+				AND f.START_TIME &lt; @endtime
+			)
+			OR (
+				f.START_TIME &lt; @starttime
+				AND f.END_TIME &gt; @endtime
+			)
+			OR (
+				f.END_TIME &gt; @starttime
+				AND f.END_TIME &lt; @endtime
+			)
+		)
+	</select>
+	
+	<!-- 批量插入数据，入参为list，注意参数格式 -->
+	<insert id="batchInsert">
+    	INSERT INTO <include refid="tableName"></include> 
+    	(
+    	 <include refid="Field2"></include> 
+    	) 
+    	 VALUES 
+    	<foreach collection="list" item="item" separator=",">
+    	(
+			#{item.TEAM_CALENDAR_ID},	
+			#{item.CLASSES_NAME},	
+			#{item.START_DATE},	
+			#{item.END_DATE},	
+			#{item.TEAM_POWER},	
+			#{item.ACROSSDAY},	
+			#{item.AREA_ID},	
+			#{item.TEAM_ID},	
+			#{item.START_TIME},	
+			#{item.END_TIME},	
+			#{item.FDES},
+			#{item.FSHIFT},
+			#{item.MAN_HOUR},
+			#{item.TEAMS_INFO},
+			#{item.START_TEAM}
+    	)
+    	</foreach>
+    </insert>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEAM_CALENDAR_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 列表(All) -->
+	<select id="dayList" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,CONVERT(varchar(10),f.START_TIME,120) AS START_TIMEDAY,CONVERT(varchar(10),f.END_TIME,120) AS END_TIMEDAY,area.FNAME AS AREANAME,t.FNAME AS TEAMNAME 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_AREA area ON f.AREA_ID = area.AREA_ID 
+		LEFT JOIN MBASE_TEAM_INFO t ON f.TEAM_ID = t.TEAM_INFO_ID 
+		where 1=1 
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

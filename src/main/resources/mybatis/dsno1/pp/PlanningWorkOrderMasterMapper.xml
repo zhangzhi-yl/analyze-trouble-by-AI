@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.PlanningWorkOrderMasterMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		PP_PlanningWorkOrderMaster
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f
+		.
+		FCustomer
+		,
+		f.WorkOrderType,
+		f.SalesOrderDetailID,
+		f.WorkOrderNum,
+		f.OutputMaterial,
+		f.OutputMaterialID,
+		f.FSpecifications,
+		f.FCount,
+		f.FPriorityID,
+		f.PlannedBeginTime,
+		f.PlannedEndTime,
+		f.ActualBeginTime,
+		f.ActualEndTime,
+		f.FExplanation,
+		f.FStatus,
+		f.WorkOrderCreateTime,
+		f.FPlanner,
+		f.OrderNum,
+		f.PlannerType,
+		f.FPlannerID,
+		f.StandardType,	
+		f.ReferenceCount,
+		f.ReferenceType,
+		f.PlanningWorkOrderMaster_ID
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FCustomer
+		,
+		WorkOrderType,
+		SalesOrderDetailID,
+		WorkOrderNum,
+		OutputMaterial,
+		OutputMaterialID,
+		FSpecifications,
+		FCount,
+		FPriorityID,
+		PlannedBeginTime,
+		PlannedEndTime,
+		ActualBeginTime,
+		ActualEndTime,
+		FExplanation,
+		FStatus,
+		WorkOrderCreateTime,
+		FPlanner,
+		OrderNum,
+		PlannerType,
+		FPlannerID,
+		StandardType,
+		ReferenceCount,
+		ReferenceType,
+		PlanningWorkOrderMaster_ID
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FCustomer}
+		,
+		#{WorkOrderType},
+		#{SalesOrderDetailID},
+		#{WorkOrderNum},
+		#{OutputMaterial},
+		#{OutputMaterialID},
+		#{FSpecifications},
+		#{FCount},
+		#{FPriorityID},
+		#{PlannedBeginTime},
+		#{PlannedEndTime},
+		#{ActualBeginTime},
+		#{ActualEndTime},
+		#{FExplanation},
+		#{FStatus},
+		#{WorkOrderCreateTime},
+		#{FPlanner},
+		#{OrderNum},
+		#{PlannerType},
+		#{FPlannerID},
+		#{StandardType},
+		#{ReferenceCount},
+		#{ReferenceType},
+		#{PlanningWorkOrderMaster_ID}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		PlanningWorkOrderMaster_ID = #{PlanningWorkOrderMaster_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		FCustomer = #{FCustomer},
+		WorkOrderType = #{WorkOrderType},
+		SalesOrderDetailID = #{SalesOrderDetailID},
+		WorkOrderNum = #{WorkOrderNum},
+		OutputMaterial = #{OutputMaterial},
+		OutputMaterialID = #{OutputMaterialID},
+		FSpecifications = #{FSpecifications},
+		FCount = #{FCount},
+		FPriorityID = #{FPriorityID},
+		PlannedBeginTime = #{PlannedBeginTime},
+		PlannedEndTime = #{PlannedEndTime},
+		ActualBeginTime=#{ActualBeginTime},
+		ActualEndTime=#{ActualEndTime},
+		FExplanation = #{FExplanation},
+		FStatus = #{FStatus},
+		WorkOrderCreateTime = #{WorkOrderCreateTime},
+		FPlanner = #{FPlanner},
+		PlannerType = #{PlannerType},
+		OrderNum = #{OrderNum},
+		FPlannerID = #{FPlannerID},
+		StandardType = #{StandardType},
+		ReferenceCount = #{ReferenceCount},
+		ReferenceType = #{ReferenceType},
+		PlanningWorkOrderMaster_ID = PlanningWorkOrderMaster_ID
+		where
+		PlanningWorkOrderMaster_ID = #{PlanningWorkOrderMaster_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where
+		f.PlanningWorkOrderMaster_ID = #{PlanningWorkOrderMaster_ID}
+	</select>
+	
+	<!-- 通过销售订单明细ID获取数据 -->
+	<select id="findBySalesOrderDetailID" parameterType="pd" resultType="pd">
+		select top 1 
+		<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f 
+		where 
+		f.SalesOrderDetailID = #{SalesOrderDetailID} 
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT
+		pwo.*
+		FROM
+		PP_PlanningWorkOrderMaster pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		WHERE
+		1=1
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND so.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.WorkOrderType != null and pd.WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{pd.WorkOrderType}
+		</if>
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			AND pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>		
+		[fhstart] order by pwo.WorkOrderCreateTime desc [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		SELECT
+		f.*
+		FROM
+		PP_PlanningWorkOrderMaster f
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON f.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		WHERE
+		1=1
+		<if test="SalesOrderDetailID != null and SalesOrderDetailID != ''">
+			AND f.SalesOrderDetailID = #{SalesOrderDetailID}
+		</if>
+		<if test="WorkOrderNum != null and WorkOrderNum != ''">
+			AND f.WorkOrderNum = #{WorkOrderNum}
+		</if>
+		<if test="WorkOrderType != null and WorkOrderType != ''">
+			AND f.WorkOrderType = #{WorkOrderType}
+		</if>
+		<if test="OrderNumS != null">
+			and f.OrderNum in 
+			<foreach item="item" index="index" collection="OrderNumS" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		order by f.WorkOrderCreateTime
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		PlanningWorkOrderMaster_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 获取编号列表-可搜索-前100条 -->
+	<select id="getWorkOrderNumList" parameterType="pd" resultType="pd">
+		select
+		top 100 PlanningWorkOrderMaster_ID,WorkOrderNum,OutputMaterial
+		from
+		<include refid="tableName"></include>
+		f
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			WorkOrderNum LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			MasterWorkOrder_ID = #{KEYWORDS}
+			)
+		</if>
+		<if test="OrderNum != null and OrderNum != ''"><!-- 订单号 -->
+			and  f.OrderNum = #{OrderNum}
+		</if>
+		order by f.WorkOrderNum
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

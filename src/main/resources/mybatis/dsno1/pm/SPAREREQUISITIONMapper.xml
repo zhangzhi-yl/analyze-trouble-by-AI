@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pm.SPAREREQUISITIONMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_SPAREREQUISITION
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.REQUISITIONNUM,	
+		f.EQUIPMENTNAME,	
+		f.FSTATE,	
+		f.FREMARKS,	
+		f.FRECEIVER,	
+		f.FCREATEPERSONID,	
+		f.FCREATETIME,	
+		f.S_001,	
+		f.S_002,	
+		f.S_003,	
+		f.S_004,	
+		f.S_005,	
+		f.SPAREREQUISITION_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		REQUISITIONNUM,	
+		EQUIPMENTNAME,	
+		FSTATE,	
+		FREMARKS,	
+		FRECEIVER,	
+		FCREATEPERSONID,	
+		FCREATETIME,	
+		S_001,	
+		S_002,	
+		S_003,	
+		S_004,	
+		S_005,	
+		SPAREREQUISITION_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{REQUISITIONNUM},	
+		#{EQUIPMENTNAME},	
+		#{FSTATE},	
+		#{FREMARKS},	
+		#{FRECEIVER},	
+		#{FCREATEPERSONID},	
+		#{FCREATETIME},	
+		#{S_001},	
+		#{S_002},	
+		#{S_003},	
+		#{S_004},	
+		#{S_005},	
+		#{SPAREREQUISITION_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SPAREREQUISITION_ID = #{SPAREREQUISITION_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			REQUISITIONNUM = #{REQUISITIONNUM},
+			EQUIPMENTNAME = #{EQUIPMENTNAME},
+			FSTATE = #{FSTATE},
+			FREMARKS = #{FREMARKS},
+			FRECEIVER = #{FRECEIVER},
+			FCREATEPERSONID = #{FCREATEPERSONID},
+			FCREATETIME = #{FCREATETIME},
+			S_001 = #{S_001},
+			S_002 = #{S_002},
+			S_003 = #{S_003},
+			S_004 = #{S_004},
+			S_005 = #{S_005},
+			SPAREREQUISITION_ID = SPAREREQUISITION_ID
+		where 
+			SPAREREQUISITION_ID = #{SPAREREQUISITION_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.SPAREREQUISITION_ID = #{SPAREREQUISITION_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件-->
+					f.REQUISITIONNUM LIKE '%'+ #{pd.KEYWORDS}+'%'
+				
+				)
+		</if>
+		<if test="pd.EQUIPMENTNAME != null and pd.EQUIPMENTNAME != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件-->
+					f.EQUIPMENTNAME = #{pd.EQUIPMENTNAME}
+				
+				)
+		</if>
+		<if test="pd.FSTATES != null and pd.FSTATES != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件-->
+					f.FSTATE = #{pd.FSTATES}
+				
+				)
+		</if>
+		[fhstart] ORDER BY f.FCREATETIME DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SPAREREQUISITION_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 备品备件详情列表 -->
+	<select id="datalistPageEqm" parameterType="page" resultType="pd">
+		SELECT 
+			f.REQUISITIONNUM,	
+			f.EQUIPMENTNAME,	
+			f.FSTATE,	
+			f.FREMARKS,	
+			f.FRECEIVER,	
+			f.FCREATEPERSONID,	
+			f.FCREATETIME,	
+			f.S_001 EQM_ID,	
+			f.S_002 FRECEIVER_TIME,	
+			f.S_003 FTYPE,	
+			f.S_004 BILLNO,	
+			f.S_005 BILLID,	
+			f.SPAREREQUISITION_ID,
+			f1.MATERIALNUM,
+			f1.MATERIALNAME,
+			f1.FUNIT,	
+			f1.ACTUALQUANTITY,	
+			f1.WAREHOUSEID,	
+			f1.POSITIONID
+		FROM MDM_EQM_SPAREREQUISITION f
+		RIGHT JOIN MDM_EQM_SPAREREQUISITIONMX f1 ON f.SPAREREQUISITION_ID = f1.SPAREREQUISITION_ID
+		WHERE 1=1 AND f.FSTATE = '已领' 
+		<if test="pd.BILLID != null and pd.BILLID != ''"><!-- 关键词检索 -->
+			and f.S_005=#{pd.BILLID}
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.REQUISITIONNUM LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.EQUIPMENTNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FRECEIVER LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FCREATEPERSONID LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.S_003 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.S_004 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f1.MATERIALNUM LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f1.MATERIALNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f1.WAREHOUSEID LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f1.POSITIONID LIKE '%'+ #{pd.KEYWORDS}+'%'
+				
+				)
+		</if>
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 单号 -->
+			and
+				(
+					f.REQUISITIONNUM LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 设备 -->
+			and
+				(
+					f.EQUIPMENTNAME LIKE '%'+ #{pd.KEYWORDS2}+'%'
+				
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 物料 -->
+			and
+				(
+					f1.MATERIALNUM LIKE '%'+ #{pd.KEYWORDS3}+'%'
+					or
+					f1.MATERIALNAME LIKE '%'+ #{pd.KEYWORDS3}+'%'
+				
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 库位 -->
+			and
+				(
+					f1.POSITIONID LIKE '%'+ #{pd.KEYWORDS4}+'%'
+				
+				)
+		</if>
+		[fhstart] ORDER BY f.FCREATETIME DESC [fhend]
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

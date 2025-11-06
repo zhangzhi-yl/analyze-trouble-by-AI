@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.PhaseTemplateMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		EPM_PHASETEMPLATE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		isnull(f.FHTNAME,'') FHTNAME, 
+		isnull(f.FHTDESCRIPTION,'') FHTDESCRIPTION ,
+		isnull(f.FHTLEVEL,'') FHTLEVEL,
+		isnull(f.FHTREMARK,'')  FHTREMARK,
+		isnull(f.PLANTEMPLATE_ID,'') PLANTEMPLATE_ID,
+		isnull(f.FRF1,'') FRF1, 
+		isnull(f.FRF2,'') FRF2,
+		isnull(f.PHASETEMPLATE_ID,'')  PHASETEMPLATE_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FHTNAME,	
+		FHTDESCRIPTION,	
+		FHTLEVEL,	
+		FHTREMARK,	
+		PLANTEMPLATE_ID,	
+		FRF1,	
+		FRF2,	
+		PHASETEMPLATE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FHTNAME},	
+		#{FHTDESCRIPTION},	
+		#{FHTLEVEL},	
+		#{FHTREMARK},	
+		#{PLANTEMPLATE_ID},	
+		#{FRF1},	
+		#{FRF2},	
+		#{PHASETEMPLATE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PHASETEMPLATE_ID = #{PHASETEMPLATE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FHTNAME = #{FHTNAME},
+			FHTDESCRIPTION = #{FHTDESCRIPTION},
+			FHTLEVEL = #{FHTLEVEL},
+			FHTREMARK = #{FHTREMARK},
+			PHASETEMPLATE_ID = PHASETEMPLATE_ID
+		where 
+			PHASETEMPLATE_ID = #{PHASETEMPLATE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PHASETEMPLATE_ID = #{PHASETEMPLATE_ID}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByIdTwo" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PLANTEMPLATE_ID = #{PLANTEMPLATE_ID}
+			ORDER BY  f.FHTLEVEL
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and f.PLANTEMPLATE_ID=#{pd.PLANTEMPLATE_ID} 
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.keywords}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.keywords}+'%' 
+				-->
+				)
+		</if>
+		[fhstart]  ORDER BY  cast(FHTLEVEL as int) [fhend]
+	</select>
+	
+	<select id="listByParentId" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where  f.PLANTEMPLATE_ID=#{PLANTEMPLATE_ID} 
+		ORDER BY  f.FHTLEVEL
+		
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 
+		<if test="PLANTEMPLATE_ID != null and PLANTEMPLATE_ID != ''">
+		 and f.PLANTEMPLATE_ID=#{PLANTEMPLATE_ID} 
+		</if>
+		order by cast(isnull(FHTLEVEL,0) as int)
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PHASETEMPLATE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 获得最大编号 -->
+	<select id="getOrder" parameterType="pd" resultType="pd">
+		select
+		max(CAST(isnull(f.FHTLEVEL,'0') AS int)) FORDER
+		from 
+		DT_DEPPLAN f
+		where 1=1 
+		and VISIABLE='1'
+		and f.PRO_PLAN_ID=#{PRO_PLAN_ID} 
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

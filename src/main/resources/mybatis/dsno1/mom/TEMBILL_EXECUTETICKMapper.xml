@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.TEMBILL_EXECUTETICKMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOM_TEMBILL_EXECUTETICK
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.TEMBILL_EXECUTE_ID,	
+		f.FTICK_TIME,	
+		f.FTICK_PERSON,	
+		f.FTICK_CAPTION,	
+		f.FTICK_MATTER,	
+		f.TEMBILL_EXECUTETICK_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		TEMBILL_EXECUTE_ID,	
+		FTICK_TIME,	
+		FTICK_PERSON,	
+		FTICK_CAPTION,	
+		FTICK_MATTER,	
+		TEMBILL_EXECUTETICK_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TEMBILL_EXECUTE_ID},	
+		#{FTICK_TIME},	
+		#{FTICK_PERSON},	
+		#{FTICK_CAPTION},	
+		#{FTICK_MATTER},	
+		#{TEMBILL_EXECUTETICK_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEMBILL_EXECUTETICK_ID = #{TEMBILL_EXECUTETICK_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID},
+			FTICK_TIME = #{FTICK_TIME},
+			FTICK_PERSON = #{FTICK_PERSON},
+			FTICK_CAPTION = #{FTICK_CAPTION},
+			FTICK_MATTER = #{FTICK_MATTER},
+			TEMBILL_EXECUTETICK_ID = TEMBILL_EXECUTETICK_ID
+		where 
+			TEMBILL_EXECUTETICK_ID = #{TEMBILL_EXECUTETICK_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.TEMBILL_EXECUTETICK_ID = #{TEMBILL_EXECUTETICK_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where f.TEMBILL_EXECUTE_ID = #{pd.TEMBILL_EXECUTE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FTICK_PERSON LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FTICK_CAPTION LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FTICK_MATTER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] order by f.FTICK_TIME DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEMBILL_EXECUTETICK_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	<!--根据主表ID删除数据-->
+	<delete id="deleteId" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID}
+	</delete>
+	<!-- YY 356703572 -->
+</mapper>

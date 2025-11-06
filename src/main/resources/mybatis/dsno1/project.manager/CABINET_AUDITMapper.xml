@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.CABINET_AUDITMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PMS_CABINET_AUDIT
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.CABINET_ASSEMBLY_DETAIL_ID,	
+		f.FAUDIT_MAN,	
+		f.FAUDIT_TIME,	
+		f.FAUDIT_STATE,	
+		f.FAUDIT_FNOTE,	
+		f.FCREATOR,	
+		f.FCTIME,	
+		f.CABINET_AUDIT_ID,
+		f.FTYPE
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		CABINET_ASSEMBLY_DETAIL_ID,	
+		FAUDIT_MAN,	
+		FAUDIT_TIME,	
+		FAUDIT_STATE,	
+		FAUDIT_FNOTE,	
+		FCREATOR,	
+		FCTIME,	
+		CABINET_AUDIT_ID,
+		FTYPE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{CABINET_ASSEMBLY_DETAIL_ID},	
+		#{FAUDIT_MAN},	
+		#{FAUDIT_TIME},	
+		#{FAUDIT_STATE},	
+		#{FAUDIT_FNOTE},	
+		#{FCREATOR},	
+		#{FCTIME},	
+		#{CABINET_AUDIT_ID},
+		#{FTYPE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CABINET_AUDIT_ID = #{CABINET_AUDIT_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CABINET_ASSEMBLY_DETAIL_ID = #{CABINET_ASSEMBLY_DETAIL_ID},
+			FAUDIT_MAN = #{FAUDIT_MAN},
+			FAUDIT_TIME = #{FAUDIT_TIME},
+			FAUDIT_STATE = #{FAUDIT_STATE},
+			FAUDIT_FNOTE = #{FAUDIT_FNOTE},
+			FCREATOR = #{FCREATOR},
+			FCTIME = #{FCTIME},
+			FTYPE=#{FTYPE},
+			CABINET_AUDIT_ID = CABINET_AUDIT_ID
+		where 
+			CABINET_AUDIT_ID = #{CABINET_AUDIT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.CABINET_AUDIT_ID = #{CABINET_AUDIT_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		f1.Cabinet_Assembly_ID,
+		f1.Cabinet_No,
+		f1.Cabinet_Aliases,
+		f1.Responsible_Technology,
+		f1.If_Bom_Done,
+		f1.If_Drawings_Done,
+		f1.FStatus,
+		f1.Distribute_Time,
+		f1.PRO_PLAN_ID,
+		f1.PROJECT_ID,
+		f1.Load_Status,
+		f1.Bom_Done_Time,
+		f1.Drawings_Done_Time,
+		f1.BatchNum,
+		f1.If_Sync_Done,
+		f1.If_Purchase_Done,
+		f1.Load_Dispach_Time,
+		f1.FAudit_State FAudit_State1,
+		f1.FAudit_CabinetDJ_State,
+		f1.FAudit_Cabinet_State,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		staff.NAME as Responsible_Technology_Name
+		from 
+		<include refid="tableName"></include> f
+		inner join PMS_Cabinet_Assembly_Detail f1
+		on f.CABINET_ASSEMBLY_DETAIL_ID=f1.CABINET_ASSEMBLY_DETAIL_ID
+		left join oa_staff staff on staff.STAFF_ID = f1.Responsible_Technology
+		left join DT_PROJECT project on project.PROJECT_ID =
+		f1.PROJECT_ID
+		where 1=1
+		and (FIs_Need_Audit ='是' or FIs_NeedDJ_Audit ='是')
+		and (staff.NAME =#{pd.Responsible_Technology_Name} or project.PPROJECT_MANAGER =#{pd.Responsible_Technology_Name})
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			project.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+			OR
+			project.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		<if test="pd.Cabinet_Type != null and pd.Cabinet_Type != ''">
+			and f1.Cabinet_Type = #{pd.Cabinet_Type}
+		</if>
+		<if test="pd.BTStatus != null and pd.BTStatus != ''">
+			and f.FTYPE = #{pd.BTStatus}
+		</if>
+		and (f.FAUDIT_STATE = #{pd.FAudit_State})
+		[fhstart] order by FCTIME desc  [fhend]
+	</select>
+	<!-- 柜体审核记录列表 -->
+	<select id="listSHlistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include> 
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and CABINET_ASSEMBLY_DETAIL_ID=#{pd.CABINET_ASSEMBLY_DETAIL_ID} 
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					FAUDIT_FNOTE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					FAUDIT_STATE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.BTStatus != null and pd.BTStatus != ''">
+			and f.FTYPE = #{pd.BTStatus}
+		</if>
+		[fhstart] order by FCTIME desc  [fhend]
+	</select>
+	<!-- 异常立项待审核 -->
+	<select id="listXMlistPage" parameterType="page" resultType="pd">
+		select
+		f.CABINET_ASSEMBLY_DETAIL_ID,	
+		f.FAUDIT_MAN,	
+		f.FAUDIT_TIME,	
+		f.FAUDIT_STATE FAUDIT_STATE1,	
+		f.FAUDIT_FNOTE,	
+		f.FCREATOR,	
+		f.FCTIME,	
+		f.CABINET_AUDIT_ID,
+		f.FTYPE,
+		staff.Name as Responsible_Technology_Name,
+		pro.*
+		from 
+		<include refid="tableName"></include> f
+		inner join DT_PROJECT pro on pro.PROJECT_ID = f.CABINET_ASSEMBLY_DETAIL_ID
+		
+		left join oa_staff staff on staff.STAFF_ID = pro.Responsible_Technology
+		where 1=1
+		and pro.FAudit_State='待审核'  and f.FAUDIT_STATE='待审核'
+		[fhstart] order by PCREATE_TIME desc  [fhend]
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CABINET_AUDIT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

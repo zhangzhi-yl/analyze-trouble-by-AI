@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_CLASSMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_CLASS
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FIDENTIFY,	
+		f.CLASS_NAME,	
+		f.FDES,	
+		f.FSTATE,	
+		f.EQM_COLOR,	
+		f.EQM_FONT_COLOR,	
+		f.EQM_ICON,	
+		f.PICTURE_PATH,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,
+		f.FCREATOR,	
+		f.CREATE_TIME,
+		f.EQM_CLASS_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		FIDENTIFY,	
+		CLASS_NAME,	
+		FDES,	
+		FSTATE,	
+		EQM_COLOR,	
+		EQM_FONT_COLOR,	
+		EQM_ICON,	
+		PICTURE_PATH,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		FEXTEND4,	
+		FEXTEND5,
+		FCREATOR,	
+		CREATE_TIME,	
+		EQM_CLASS_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FIDENTIFY},	
+		#{CLASS_NAME},	
+		#{FDES},	
+		#{FSTATE},	
+		#{EQM_COLOR},	
+		#{EQM_FONT_COLOR},	
+		#{EQM_ICON},	
+		#{PICTURE_PATH},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{FEXTEND4},	
+		#{FEXTEND5},
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{EQM_CLASS_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_CLASS_ID = #{EQM_CLASS_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FIDENTIFY = #{FIDENTIFY},
+			CLASS_NAME = #{CLASS_NAME},
+			FDES = #{FDES},
+			FSTATE = #{FSTATE},
+			EQM_COLOR = #{EQM_COLOR},
+			EQM_FONT_COLOR = #{EQM_FONT_COLOR},
+			EQM_ICON = #{EQM_ICON},
+			PICTURE_PATH = #{PICTURE_PATH},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FEXTEND4 = #{FEXTEND4},
+			FEXTEND5 = #{FEXTEND5},
+			FCREATOR = #{FCREATOR},	
+		    CREATE_TIME = #{CREATE_TIME},	
+			EQM_CLASS_ID = EQM_CLASS_ID
+		where 
+			EQM_CLASS_ID = #{EQM_CLASS_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.EQM_CLASS_ID = #{EQM_CLASS_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.CLASS_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FIDENTIFY LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FSTATE!= null and pd.FSTATE != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FSTATE = #{pd.FSTATE}
+				)
+		</if>
+		[fhstart] order by f.CREATE_TIME DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_CLASS_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 设备类下拉列表 -->
+	<select id="classList" parameterType="pd" resultType="pd">
+		SELECT f.EQM_CLASS_ID,f.CLASS_NAME FROM MDM_EQM_CLASS f where 1=1
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.CLASS_NAME LIKE '%'+ #{keywords}+'%'
+				)
+		</if>
+	</select>
+	<!-- 删除图片 -->
+	<update id="delTp" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			EQM_ICON = '',
+			PICTURE_PATH = ''
+		where 
+			EQM_CLASS_ID = #{EQM_CLASS_ID}
+	</update>
+	
+	<!-- YY 356703572 -->
+</mapper>

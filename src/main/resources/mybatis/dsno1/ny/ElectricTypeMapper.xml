@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.ny.ElectricTypeMapper">
+
+    <!--表名 -->
+    <sql id="tableName">
+        NY_ELECTRICTYPE
+    </sql>
+
+    <!--数据字典表名 -->
+    <sql id="dicTableName">
+        SYS_DICTIONARIES
+    </sql>
+
+    <!-- 字段 -->
+    <sql id="Field">
+        f.FName,
+		f.FType,
+		f.StartTime,
+		f.EndTime,
+		f.FPrice,
+		f.ELECTRICTYPE_ID
+    </sql>
+
+    <!-- 字段用于新增 -->
+    <sql id="Field2">
+        FName,
+		FType,
+		StartTime,
+		EndTime,
+		FPrice,
+		ELECTRICTYPE_ID
+    </sql>
+
+    <!-- 字段值 -->
+    <sql id="FieldValue">
+        #{FName},
+        #{FType},
+        #{StartTime},
+        #{EndTime},
+        #{FPrice},
+        #{ELECTRICTYPE_ID}
+    </sql>
+
+    <!-- 新增-->
+    <insert id="save" parameterType="pd">
+        insert into
+        <include refid="tableName"></include>
+        (
+        <include refid="Field2"></include>
+        ) values (
+        <include refid="FieldValue"></include>
+        )
+    </insert>
+
+    <!-- 删除-->
+    <delete id="delete" parameterType="pd">
+        delete from
+        <include refid="tableName"></include>
+        where
+        ELECTRICTYPE_ID = #{ELECTRICTYPE_ID}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="pd">
+        update
+        <include refid="tableName"></include>
+        set
+        FName = #{FName},
+        FType = #{FType},
+        StartTime = #{StartTime},
+        EndTime = #{EndTime},
+        FPrice = #{FPrice},
+        ELECTRICTYPE_ID = ELECTRICTYPE_ID
+        where
+        ELECTRICTYPE_ID = #{ELECTRICTYPE_ID}
+    </update>
+
+    <!-- 通过ID获取数据 -->
+    <select id="findById" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include> f
+        where
+        f.ELECTRICTYPE_ID = #{ELECTRICTYPE_ID}
+    </select>
+
+    <!-- 列表 -->
+    <select id="datalistPage" parameterType="page" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include> f
+        where 1=1
+        <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+            and FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+        </if>
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="deleteAll" parameterType="String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        ELECTRICTYPE_ID in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="listAll" resultType="pd" parameterType="pd">
+        select ElectricType_ID,FName,FType,StartTime,EndTime,FPrice
+        from NY_ElectricType
+    </select>
+
+</mapper>

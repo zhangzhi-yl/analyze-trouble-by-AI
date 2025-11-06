@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.app.AppMapper">
+	
+	<select id="appMaintenanceList" parameterType="org.yy.controller.app.AppPage"
+		resultType="pd">
+		select f.*,f1.FNAME as EQM_BASE_NAME,f1.FIDENTIFY as EQM_BASE_NUMBER from PM_MAINTAIN f 
+		LEFT JOIN MDM_EQM_BASE f1 on f.EQM_BASE_ID = f1.EQM_BASE_ID
+		where f.RUN_STATUS='下发'
+		<if test="pd.MAINTAIN_PLAN_NO != null and pd.MAINTAIN_PLAN_NO != ''">
+			and MAINTAIN_PLAN_NO like '%'+ #{pd.MAINTAIN_PLAN_NO}+'%'
+		</if>
+
+		<if test="pd.EQM_BASE_NAME != null and pd.EQM_BASE_NAME != ''">
+			and EQM_BASE_NAME like '%' + #{pd.EQM_BASE_NAME} +
+			'%'
+		</if>
+		<if
+			test="pd.EQM_BASE_NUMBER != null and pd.EQM_BASE_NUMBER != ''">
+			and EQM_BASE_NUMBER like '%' + #{pd.EQM_BASE_NUMBER} +
+			'%'
+		</if>
+	</select>
+	
+	<select id="appMaintenanceMxList" parameterType="org.yy.controller.app.AppPage"
+		resultType="pd">
+		select 
+		f.MAINTAIN_PART,	
+		f.MAINTAIN_CONTENT,	
+		f.MAINTAIN_NORM,	
+		f.MAINTAIN_NORM_FILE,	
+		case when f.IF_SIGNIN is null or f.IF_SIGNIN ='' then 'false' else 'true' end as IF_SIGNIN,	
+		f.SIGNIN_TIME,	
+		f.SIGNIN_RERSON,	
+		f.DESCRIBE,	
+		f.RESERVE_ONE,	
+		f.RESERVE_TWO,	
+		f.RESERVE_THREE,	
+		f.PM_MAINTAINMX_ID,
+		f.PM_MAINTAIN_ID
+		 from PM_MAINTAINMX f
+		where
+		f.PM_MAINTAIN_ID = #{pd.PM_MAINTAIN_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''">
+			and MAINTAIN_PART like '%'+ #{pd.KEYWORDS}+'%'
+		</if>
+	</select>
+	
+	<select id="appMaintainConsumeList" parameterType="org.yy.controller.app.AppPage"
+		resultType="pd">
+		select
+		f.*,f1.MAT_NAME AS MAT_BASIC_NAME,f1.MAT_CODE
+		from 
+		PM_MAINTAIN_CONSUME f
+		LEFT JOIN MBASE_MAT_BASIC f1 ON f.MAT_BASIC_ID = f1.MAT_BASIC_ID
+		where
+			f.PM_MAINTAIN_ID = #{pd.PM_MAINTAIN_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.SOURCE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f1.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.IF_CREATE_PICKING LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+	</select>
+	<select id="appMaintainManHourList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		select
+		f.PM_MAINTAIN_ID,	
+		b.NAME AS DEPARTMENT_ID,	
+		c.NAME AS STAFF_ID,	
+		f.MANHOUR_TYPE,	
+		f.DESCRIBE,	
+		f.ACTUAL_START_TIME,	
+		f.ACTUAL_END_TIME,	
+		f.ACTUAL_MANHOUR,	
+		f.RESERVE_ONE,	
+		f.RESERVE_TWO,	
+		f.RESERVE_THREE,	
+		f.PM_MAINTAIN_MANHOUR_ID
+		from 
+		PM_MAINTAIN_MANHOUR f 
+		LEFT JOIN OA_DEPARTMENT b on f.DEPARTMENT_ID = b.DEPARTMENT_ID 
+		LEFT JOIN OA_STAFF c on f.STAFF_ID = c.STAFF_ID 
+		where
+			f.PM_MAINTAIN_ID = #{pd.PM_MAINTAIN_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					MANHOUR_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+	</select>
+	
+</mapper>

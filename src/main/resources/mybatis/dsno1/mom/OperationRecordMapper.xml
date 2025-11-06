@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.OperationRecordMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		KM_OperationRecord
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.OperationRecord_ID,	
+		f.FunctionType,	
+		f.FunctionItem,	
+		f.OperationType,	
+		f.DeleteTagID,	
+		f.FOperateTime,	
+		f.FOperatorID,	
+		f.FDescribe
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		OperationRecord_ID,	
+		FunctionType,	
+		FunctionItem,	
+		OperationType,	
+		DeleteTagID,	
+		FOperateTime,	
+		FOperatorID,	
+		FDescribe
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{OperationRecord_ID},	
+		#{FunctionType},	
+		#{FunctionItem},	
+		#{OperationType},	
+		#{DeleteTagID},	
+		#{FOperateTime},	
+		#{FOperatorID},	
+		#{FDescribe}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			OperationRecord_ID = #{OperationRecord_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FunctionType = #{FunctionType},
+			FunctionItem = #{FunctionItem},
+			OperationType = #{OperationType},
+			DeleteTagID = #{DeleteTagID},
+			FOperateTime = #{FOperateTime},
+			FOperatorID = #{FOperatorID},
+			FDescribe = #{FDescribe}
+		where 
+			OperationRecord_ID = #{OperationRecord_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		s.NAME StaffName,<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join OA_STAFF s on f.FOperatorID=s.STAFF_ID 
+		where 
+			f.OperationRecord_ID = #{OperationRecord_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		s.NAME StaffName,<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join OA_STAFF s on f.FOperatorID=s.STAFF_ID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FunctionType LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FunctionItem LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.OperationType LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FOperatorID LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					s.NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FunctionType != null and pd.FunctionType != ''"><!-- 功能类 -->
+			and f.FunctionType = #{pd.FunctionType}
+		</if>
+		<if test="pd.FunctionItem != null and pd.FunctionItem != ''"><!-- 功能项 -->
+			and f.FunctionItem = #{pd.FunctionItem}
+		</if>
+		<if test="pd.OperationType != null and pd.OperationType != ''"><!-- 操作类型，如增删改 -->
+			and f.OperationType = #{pd.OperationType}
+		</if>
+		<if test="pd.StaffName != null and pd.StaffName != ''"><!-- 操作人姓名 -->
+			and s.NAME = #{pd.StaffName}
+		</if>
+		[fhstart] ORDER BY f.FOperateTime DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		s.NAME StaffName,<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join OA_STAFF s on f.FOperatorID=s.STAFF_ID 
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FunctionType LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.FunctionItem LIKE '%'+ #{KEYWORDS}+'%' 
+					 or 
+					f.OperationType LIKE '%'+ #{KEYWORDS}+'%' 
+					 or 
+					f.FOperatorID LIKE '%'+ #{KEYWORDS}+'%' 
+					 or 
+					s.NAME LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="FunctionType != null and FunctionType != ''"><!-- 功能类 -->
+			and f.FunctionType = #{FunctionType}
+		</if>
+		<if test="FunctionItem != null and FunctionItem != ''"><!-- 功能项 -->
+			and f.FunctionItem = #{FunctionItem}
+		</if>
+		<if test="OperationType != null and OperationType != ''"><!-- 操作类型，如增删改 -->
+			and f.OperationType = #{OperationType}
+		</if>
+		<if test="StaffName != null and StaffName != ''"><!-- 操作人姓名 -->
+			and s.NAME = #{StaffName}
+		</if>
+		 ORDER BY f.FOperateTime DESC 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			OperationRecord_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

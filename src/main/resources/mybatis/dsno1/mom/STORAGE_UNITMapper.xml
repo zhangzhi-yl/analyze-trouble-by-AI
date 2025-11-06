@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.STORAGE_UNITMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MPOT_STORAGE_UNIT
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FCODE,	
+		f.FNAME,	
+		f.FSTATE,	
+		f.BLEND_TYPE,	
+		f.STORAGE_TYPE,	
+		f.OUTGOING_TYPE,	
+		f.MAT_CODE,	
+		f.ACTUAL_AMOUNT,	
+		f.STOCK_UNIT,	
+		f.STOCK_TOTAL_AMOUNT,	
+		f.STOCK_QTY_H,	
+		f.STOCK_QTY_L,	
+		f.WORKCENTER_CODE,	
+		f.FDES,	
+		f.STORAGE_UNIT_ID,
+		f.STORAGE_UNITCLASS_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FCODE,	
+		FNAME,	
+		FSTATE,	
+		BLEND_TYPE,	
+		STORAGE_TYPE,	
+		OUTGOING_TYPE,	
+		MAT_CODE,	
+		ACTUAL_AMOUNT,	
+		STOCK_UNIT,	
+		STOCK_TOTAL_AMOUNT,	
+		STOCK_QTY_H,	
+		STOCK_QTY_L,	
+		WORKCENTER_CODE,	
+		FDES,	
+		STORAGE_UNIT_ID,
+		STORAGE_UNITCLASS_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FCODE},	
+		#{FNAME},	
+		#{FSTATE},	
+		#{BLEND_TYPE},	
+		#{STORAGE_TYPE},	
+		#{OUTGOING_TYPE},	
+		#{MAT_CODE},	
+		#{ACTUAL_AMOUNT},	
+		#{STOCK_UNIT},	
+		#{STOCK_TOTAL_AMOUNT},	
+		#{STOCK_QTY_H},	
+		#{STOCK_QTY_L},	
+		#{WORKCENTER_CODE},	
+		#{FDES},	
+		#{STORAGE_UNIT_ID},
+		#{STORAGE_UNITCLASS_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			STORAGE_UNIT_ID = #{STORAGE_UNIT_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FSTATE = #{FSTATE},
+			BLEND_TYPE = #{BLEND_TYPE},
+			STORAGE_TYPE = #{STORAGE_TYPE},
+			OUTGOING_TYPE = #{OUTGOING_TYPE},
+			MAT_CODE = #{MAT_CODE},
+			ACTUAL_AMOUNT = #{ACTUAL_AMOUNT},
+			STOCK_UNIT = #{STOCK_UNIT},
+			STOCK_TOTAL_AMOUNT = #{STOCK_TOTAL_AMOUNT},
+			STOCK_QTY_H = #{STOCK_QTY_H},
+			STOCK_QTY_L = #{STOCK_QTY_L},
+			WORKCENTER_CODE = #{WORKCENTER_CODE},
+			FDES = #{FDES},
+			STORAGE_UNIT_ID = STORAGE_UNIT_ID
+		where 
+			STORAGE_UNIT_ID = #{STORAGE_UNIT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.MAT_NAME,f2.FNAME FCLASS_NAME,f3.FNAME WORKCENTER_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_MAT_BASIC f1
+		on f.MAT_CODE=f1.MAT_BASIC_ID
+		left join MPOT_STORAGE_UNITCLASS f2
+		on f.STORAGE_UNITCLASS_ID=f2.STORAGE_UNITCLASS_ID
+		left join MDM_WC_WORKCENTER f3
+		on f.WORKCENTER_CODE=f3.WC_WORKCENTER_ID
+		where 
+			f.STORAGE_UNIT_ID = #{STORAGE_UNIT_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.MAT_NAME,f2.FNAME FCLASS_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_MAT_BASIC f1
+		on f.MAT_CODE=f1.MAT_BASIC_ID
+		left join MPOT_STORAGE_UNITCLASS f2
+		on f.STORAGE_UNITCLASS_ID=f2.STORAGE_UNITCLASS_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f1.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					  or 
+					f1.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f1.MAT_ALIAS LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f1.MAT_BRAND LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f1.MAT_FULL_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or				
+					f2.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.BLENDTYPE != null and pd.BLENDTYPE != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.BLEND_TYPE LIKE '%'+ #{pd.BLENDTYPE}+'%'
+				)
+		</if>
+		<if test="pd.FSTATE != null and pd.FSTATE != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FSTATE LIKE '%'+ #{pd.FSTATE}+'%'
+				)
+		</if>
+		<if test="pd.STORAGEUNITCLASS != null and pd.STORAGEUNITCLASS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.STORAGE_UNITCLASS_ID LIKE '%'+ #{pd.STORAGEUNITCLASS}+'%'
+				)
+		</if>
+		<if test="pd.WORKCENTER != null and pd.WORKCENTER != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.WORKCENTER_CODE LIKE '%'+ #{pd.WORKCENTER}+'%'
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			STORAGE_UNIT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!--存储单元实体-选择存储单元类列表-->
+	<select id="getSTORAGE_UNITCLASS_IDList" parameterType="pd" resultType="pd">
+		select
+		STORAGE_UNITCLASS_ID value,
+		FNAME text
+		from 
+		MPOT_STORAGE_UNITCLASS f order by FCODE
+	</select>
+	<!--存储单元实体-选择工作中心列表-->
+	<select id="getWORKCENTER_CODEList" parameterType="pd" resultType="pd">
+		select
+		WC_WORKCENTER_ID value,
+		FNAME text
+		from 
+		MDM_WC_WORKCENTER f order by FCODE
+	</select>
+		<!--存储单元实体-选择物料列表-->
+	<select id="getMAT_CODEList" parameterType="pd" resultType="pd">
+		select top 10 
+		MAT_BASIC_ID value,
+		MAT_CODE text
+		from 
+		MBASE_MAT_BASIC f 
+		where 
+		1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					MAT_CODE LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					MAT_NAME LIKE '%'+ #{KEYWORDS}+'%' 
+					 or 
+					MAT_ALIAS LIKE '%'+ #{KEYWORDS}+'%' 
+					or 
+					MAT_FULL_NAME LIKE '%'+ #{KEYWORDS}+'%' 
+					or
+					MAT_SPECS LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		order by MAT_BASIC_ID
+	</select>
+	
+	<!-- 更新容器实际数量-->
+	<update id="editQty" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ACTUAL_AMOUNT = #{ACTUAL_AMOUNT}
+		where 
+			STORAGE_UNIT_ID = #{STORAGE_UNIT_ID}
+	</update>
+	
+	<!-- 获取容器列表 -->
+	<select id="getVesselList" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,isnull(FNAME,'无名称')+'/'+isnull(FCODE,'无编号')  FSelectOption
+		from 
+		<include refid="tableName"></include> f
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			f.FNAME LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.FCODE LIKE '%'+ #{KEYWORDS}+'%'
+			)	
+		</if>
+		 order by f.FCODE 
+	</select>
+	
+	<!-- 通过编号获取数据数量 -->
+	<select id="getVesselNum" parameterType="pd" resultType="pd">
+		SELECT COUNT(*) NUM FROM MPOT_STORAGE_UNIT f WHERE f.FCODE=#{FCODE}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="getVesselVerify" parameterType="pd" resultType="pd">
+		select top 1
+		<include refid="Field"></include>,f1.MAT_NAME,f2.FNAME FCLASS_NAME,f3.FNAME WORKCENTER_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_MAT_BASIC f1
+		on f.MAT_CODE=f1.MAT_BASIC_ID
+		left join MPOT_STORAGE_UNITCLASS f2
+		on f.STORAGE_UNITCLASS_ID=f2.STORAGE_UNITCLASS_ID
+		left join MDM_WC_WORKCENTER f3
+		on f.WORKCENTER_CODE=f3.WC_WORKCENTER_ID
+		where 
+			f.FCODE=#{FCODE}
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

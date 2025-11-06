@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.KeyCustomers.CustomerYJ_GCMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		CUS_CustomerYJ_GC
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.CUSTOMER_NAME,	
+		f.TTYPE,	
+		f.PRONAME,	
+		f.PROTYPE,	
+		f.PROJINE,	
+		f.PROSTATE,	
+		f.FSUCCESS,	
+		f.FAILED,	
+		f.FCREATER,	
+		f.FCREATTIME,	
+		f.CustomerYJ_GC_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		CUSTOMER_NAME,	
+		TTYPE,	
+		PRONAME,	
+		PROTYPE,	
+		PROJINE,	
+		PROSTATE,	
+		FSUCCESS,	
+		FAILED,	
+		FCREATER,	
+		FCREATTIME,	
+		CustomerYJ_GC_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{CUSTOMER_NAME},	
+		#{TTYPE},	
+		#{PRONAME},	
+		#{PROTYPE},	
+		#{PROJINE},	
+		#{PROSTATE},	
+		#{FSUCCESS},	
+		#{FAILED},	
+		#{FCREATER},	
+		#{FCREATTIME},	
+		#{CustomerYJ_GC_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CustomerYJ_GC_ID = #{CustomerYJ_GC_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CUSTOMER_NAME = #{CUSTOMER_NAME},
+			TTYPE = #{TTYPE},
+			PRONAME = #{PRONAME},
+			PROTYPE = #{PROTYPE},
+			PROJINE = #{PROJINE},
+			PROSTATE = #{PROSTATE},
+			FSUCCESS = #{FSUCCESS},
+			FAILED = #{FAILED},
+			CustomerYJ_GC_ID = CustomerYJ_GC_ID
+		where 
+			CustomerYJ_GC_ID = #{CustomerYJ_GC_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.CustomerYJ_GC_ID = #{CustomerYJ_GC_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.FName != null and pd.FName != ''">
+			and f.CUSTOMER_NAME = #{pd.FName}
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					<!-- 根据需求自己加检索条件 -->
+					f.PRONAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		[fhstart] order by f.FCREATTIME desc[fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CustomerYJ_GC_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_SUBSIDIARYMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_SUBSIDIARY
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.EQM_SUBSIDIARY_ID,	
+		f.EQM_BASE_ID,	
+		f.FNAME,	
+		f.FCODE,	
+		f.FAMOUNT,	
+		f.FMANUFACTURER,	
+		f.FPURPOSE,	
+		f.UNIT_ORIGINAL_VALUE ,	
+		f.FREMARKS,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		EQM_SUBSIDIARY_ID,	
+		EQM_BASE_ID,	
+		FNAME,	
+		FCODE,	
+		FAMOUNT,	
+		FMANUFACTURER,	
+		FPURPOSE,	
+		UNIT_ORIGINAL_VALUE ,	
+		FREMARKS,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		FEXTEND4,	
+		FEXTEND5
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{EQM_SUBSIDIARY_ID},	
+		#{EQM_BASE_ID},	
+		#{FNAME},	
+		#{FCODE},	
+		#{FAMOUNT},	
+		#{FMANUFACTURER},	
+		#{FPURPOSE},	
+		#{UNIT_ORIGINAL_VALUE },	
+		#{FREMARKS},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{FEXTEND4},	
+		#{FEXTEND5}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_SUBSIDIARY_ID = #{EQM_SUBSIDIARY_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FNAME = #{FNAME},
+			FCODE = #{FCODE},
+			FAMOUNT = #{FAMOUNT},
+			FMANUFACTURER = #{FMANUFACTURER},
+			FPURPOSE = #{FPURPOSE},
+			UNIT_ORIGINAL_VALUE  = #{UNIT_ORIGINAL_VALUE },
+			FREMARKS = #{FREMARKS}
+		where 
+			EQM_SUBSIDIARY_ID = #{EQM_SUBSIDIARY_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select b.FNAME EQM_BASE_NAME,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MDM_EQM_BASE b on f.EQM_BASE_ID=b.EQM_BASE_ID 
+		where 
+			f.EQM_SUBSIDIARY_ID = #{EQM_SUBSIDIARY_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select b.FNAME EQM_BASE_NAME,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MDM_EQM_BASE b on f.EQM_BASE_ID=b.EQM_BASE_ID 
+		where
+			f.EQM_BASE_ID = #{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FMANUFACTURER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select b.FNAME EQM_BASE_NAME,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MDM_EQM_BASE b on f.EQM_BASE_ID=b.EQM_BASE_ID 
+	</select>
+	
+	<!-- 通过设备基础资料ID删除信息-->
+	<delete id="deleteBase" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_SUBSIDIARY_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</select>
+		<!-- YY 356703572 -->
+</mapper>

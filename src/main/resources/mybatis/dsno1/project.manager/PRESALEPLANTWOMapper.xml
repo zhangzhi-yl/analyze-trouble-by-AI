@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.PRESALEPLANTWOMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		DT_PRESALEPLANTWO
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FNUMBER,	
+		f.FNAME,	
+		f.FORDERNUMBER,	
+		f.FTECHNICALDESCRIPTION,	
+		f.FUNIT,	
+		f.FQUANTITY,	
+		f.FUNITPRICE,	
+		f.FTOTALAMOUNT,	
+		f.FALTERNATIVEMODEL,	
+		f.FAVAILABLESTOCK,	
+		f.FWAREHOUSENUMBER,	
+		f.FMANUFACTURER,	
+		f.FCABINETNAME,	
+		f.FCREATETIME,	
+		f.FFOUNDER,	
+		f.FFOUNDERACCOUNT,	
+		f.FMODIFIERS,	
+		f.FMODIFIERSACCOUNT,	
+		f.FMODIFIERSTIME,	
+		f.FRESERVE1,	
+		f.FRESERVE2,	
+		f.FRESERVE3,	
+		f.FRESERVE4,	
+		f.FRESERVE5,	
+		f.PRESALEPLAN_ID,	
+		f.PRESALEPLANONE_ID,	
+		f.PRESALEPLANTWO_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FNUMBER,	
+		FNAME,	
+		FORDERNUMBER,	
+		FTECHNICALDESCRIPTION,	
+		FUNIT,	
+		FQUANTITY,	
+		FUNITPRICE,	
+		FTOTALAMOUNT,	
+		FALTERNATIVEMODEL,	
+		FAVAILABLESTOCK,	
+		FWAREHOUSENUMBER,	
+		FMANUFACTURER,	
+		FCABINETNAME,	
+		FCREATETIME,	
+		FFOUNDER,	
+		FFOUNDERACCOUNT,	
+		FMODIFIERS,	
+		FMODIFIERSACCOUNT,	
+		FMODIFIERSTIME,	
+		FRESERVE1,	
+		FRESERVE2,	
+		FRESERVE3,	
+		FRESERVE4,	
+		FRESERVE5,	
+		PRESALEPLAN_ID,	
+		PRESALEPLANONE_ID,	
+		PRESALEPLANTWO_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FNUMBER},	
+		#{FNAME},	
+		#{FORDERNUMBER},	
+		#{FTECHNICALDESCRIPTION},	
+		#{FUNIT},	
+		#{FQUANTITY},	
+		#{FUNITPRICE},	
+		#{FTOTALAMOUNT},	
+		#{FALTERNATIVEMODEL},	
+		#{FAVAILABLESTOCK},	
+		#{FWAREHOUSENUMBER},	
+		#{FMANUFACTURER},	
+		#{FCABINETNAME},	
+		#{FCREATETIME},	
+		#{FFOUNDER},	
+		#{FFOUNDERACCOUNT},	
+		#{FMODIFIERS},	
+		#{FMODIFIERSACCOUNT},	
+		#{FMODIFIERSTIME},	
+		#{FRESERVE1},	
+		#{FRESERVE2},	
+		#{FRESERVE3},	
+		#{FRESERVE4},	
+		#{FRESERVE5},	
+		#{PRESALEPLAN_ID},	
+		#{PRESALEPLANONE_ID},	
+		#{PRESALEPLANTWO_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PRESALEPLANTWO_ID = #{PRESALEPLANTWO_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FNAME = #{FNAME},
+			FORDERNUMBER = #{FORDERNUMBER},
+			FTECHNICALDESCRIPTION = #{FTECHNICALDESCRIPTION},
+			FUNIT = #{FUNIT},
+			FQUANTITY = #{FQUANTITY},
+			FUNITPRICE = #{FUNITPRICE},
+			FTOTALAMOUNT = #{FTOTALAMOUNT},
+			FALTERNATIVEMODEL = #{FALTERNATIVEMODEL},
+			FAVAILABLESTOCK = #{FAVAILABLESTOCK},
+			FWAREHOUSENUMBER = #{FWAREHOUSENUMBER},
+			FMANUFACTURER = #{FMANUFACTURER},
+			FCABINETNAME = #{FCABINETNAME},
+			FMODIFIERS = #{FMODIFIERS},
+			FMODIFIERSACCOUNT = #{FMODIFIERSACCOUNT},
+			FMODIFIERSTIME = #{FMODIFIERSTIME},
+			PRESALEPLANTWO_ID = PRESALEPLANTWO_ID
+		where 
+			PRESALEPLANTWO_ID = #{PRESALEPLANTWO_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PRESALEPLANTWO_ID = #{PRESALEPLANTWO_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 AND PRESALEPLANONE_ID = #{pd.PRESALEPLANONE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+		[fhstart]ORDER BY CAST(FNUMBER AS NUMERIC(18,6))[fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		WHERE 
+		PRESALEPLANONE_ID = #{PRESALEPLANONE_ID}
+		AND
+			(
+				FNAME != '设计工时'
+				AND
+				FNAME != '分料工时'
+				AND
+				FNAME != '装配工时'
+				AND
+				FNAME != '接线工时'
+				AND
+				FNAME != '上电工时'
+				AND
+				FNAME != '终检工时'
+				AND
+				FNAME != '包装工时'
+			)
+		ORDER BY CAST(FNUMBER AS NUMERIC(18,6))
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PRESALEPLANONE_ID = #{PRESALEPLANONE_ID}
+	</delete>
+	
+	<!-- 删除已读-->
+	<delete id="deleteFBTwo" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PRESALEPLAN_ID = #{PRESALEPLAN_ID}
+	</delete>
+	
+	<!-- 获取材料费、技术费、主要成本 -->
+	<select id="listProchance" parameterType="pd" resultType="pd">
+		select
+         (
+	        select Convert(decimal(18,2),isnull(SUM(cast (isnull(FTOTALAMOUNT,0) as NUMERIC(18,2))),0)) 
+	        from DT_PRESALEPLANTWO f2
+	        where 1=1 and
+	        f2.PRESALEPLAN_ID=f1.PRESALEPLAN_ID
+	        and f2.FTOTALAMOUNT !=''
+	        and 
+	        	(
+	        		f2.FNAME != '设计工时'
+					and f2.FNAME != '分料工时'
+					and f2.FNAME != '装配工时'
+					and f2.FNAME != '接线工时'
+					and f2.FNAME != '上电工时'
+					and f2.FNAME != '终检工时'
+					and f2.FNAME != '包装工时'
+	        	)
+	     ) ZJCL,
+         (
+        	select Convert(decimal(18,2),isnull(SUM(cast (isnull(FTOTALAMOUNT,0) as NUMERIC(18,2))),0)) 
+        	from 
+        	DT_PRESALEPLANTWO f2
+	        LEFT JOIN
+				DT_PRESALEPLANONE f ON f2.PRESALEPLANONE_ID = f.PRESALEPLANONE_ID
+			WHERE 
+				1 = 1 
+				AND f.FCABINETTYPE IN (SELECT Cabinet_Type_Name FROM PMS_Cabinet_Type) 
+			and f2.PRESALEPLAN_ID=f1.PRESALEPLAN_ID
+	        and f2.FTOTALAMOUNT !=''
+	        and 
+		        (
+		        	f2.FNAME = '设计工时'
+					or f2.FNAME = '分料工时'
+					or f2.FNAME = '装配工时'
+					or f2.FNAME = '接线工时'
+					or f2.FNAME = '上电工时'
+					or f2.FNAME = '终检工时'
+					or f2.FNAME = '包装工时'
+		        )
+	     ) JSGSF,
+         (
+	        select Convert(decimal(18,2),isnull(SUM(cast (isnull(FTOTALAMOUNT,0) as NUMERIC(18,2))),0)) 
+	        from DT_PRESALEPLANTWO f2
+	        where 1=1 and
+	        f2.PRESALEPLAN_ID=f1.PRESALEPLAN_ID
+	        and f2.FTOTALAMOUNT !=''
+	     ) xmzycb
+        from DT_PRESALEPLAN f1
+        WHERE 1=1 
+        AND PRESALEPLAN_ID = #{PRESALEPLAN_ID}
+	</select>
+	
+	<!-- 获取各个工时费用 -->
+	<select id="findByJHNew" parameterType="pd" resultType="pd">
+		( 
+			SELECT
+				'设计工时' FTYPE,
+				isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FQUANTITY,
+				CAST(isnull(isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' )/isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '1' ),0) AS NUMERIC ( 18, 2 ) ) FUNITPRICE,
+				<!-- isnull( SUM ( CAST ( f2.FUNITPRICE AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FUNITPRICE, -->
+				isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FTOTALAMOUNT 
+			FROM
+				DT_PRESALEPLANTWO f2 
+			LEFT JOIN
+				DT_PRESALEPLANONE f1 ON f2.PRESALEPLANONE_ID = f1.PRESALEPLANONE_ID
+			WHERE 
+				1 = 1 
+				AND f1.FCABINETTYPE IN (SELECT Cabinet_Type_Name FROM PMS_Cabinet_Type) 
+				AND f2.FTOTALAMOUNT != '' 
+				AND f2.PRESALEPLAN_ID=#{ PRESALEPLAN_ID } 
+				AND f2.FNAME = '设计工时'
+		) 
+		UNION ALL
+		(
+			SELECT
+				'分料工时' FTYPE,
+				isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FQUANTITY,
+				CAST(isnull(
+					isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' )/isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '1' ),0) AS NUMERIC ( 18, 2 ) ) FUNITPRICE,
+				<!-- isnull( SUM ( CAST ( f2.FUNITPRICE AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FUNITPRICE, -->
+				isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FTOTALAMOUNT 
+			FROM
+				DT_PRESALEPLANTWO f2 
+			LEFT JOIN
+				DT_PRESALEPLANONE f1 ON f2.PRESALEPLANONE_ID = f1.PRESALEPLANONE_ID
+			WHERE
+				1 = 1 
+				AND f1.FCABINETTYPE IN (SELECT Cabinet_Type_Name FROM PMS_Cabinet_Type) 
+				AND f2.FTOTALAMOUNT != '' 
+				AND f2.PRESALEPLAN_ID=#{ PRESALEPLAN_ID } 
+				AND f2.FNAME = '分料工时'
+		) 
+		UNION ALL
+		(
+			SELECT
+				'装配工时' FTYPE,
+				isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FQUANTITY,
+				CAST(isnull(isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' )/isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '1' ),0) AS NUMERIC ( 18, 2 ) ) FUNITPRICE,
+				<!-- isnull( SUM ( CAST ( f2.FUNITPRICE AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FUNITPRICE, -->
+				isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FTOTALAMOUNT 
+			FROM
+				DT_PRESALEPLANTWO f2 
+			LEFT JOIN
+				DT_PRESALEPLANONE f1 ON f2.PRESALEPLANONE_ID = f1.PRESALEPLANONE_ID
+			WHERE
+				1 = 1 
+				AND f1.FCABINETTYPE IN (SELECT Cabinet_Type_Name FROM PMS_Cabinet_Type) 
+				AND f2.FTOTALAMOUNT != '' 
+				AND f2.PRESALEPLAN_ID=#{ PRESALEPLAN_ID } 
+				AND f2.FNAME = '装配工时'
+		) 
+		UNION ALL
+		(
+			SELECT
+				'接线工时' FTYPE,
+				isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FQUANTITY,
+				CAST(isnull(isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' )/isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '1' ),0) AS NUMERIC ( 18, 2 ) ) FUNITPRICE,
+				<!-- isnull( SUM ( CAST ( f2.FUNITPRICE AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FUNITPRICE, -->
+				isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FTOTALAMOUNT 
+			FROM
+				DT_PRESALEPLANTWO f2 
+			LEFT JOIN
+				DT_PRESALEPLANONE f1 ON f2.PRESALEPLANONE_ID = f1.PRESALEPLANONE_ID
+			WHERE
+				1 = 1 
+				AND f1.FCABINETTYPE IN (SELECT Cabinet_Type_Name FROM PMS_Cabinet_Type) 
+				AND f2.FTOTALAMOUNT != '' 
+				AND f2.PRESALEPLAN_ID=#{ PRESALEPLAN_ID } 
+				AND f2.FNAME = '接线工时'
+		)
+		UNION ALL
+		(
+			SELECT
+				'上电工时' FTYPE,
+				isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FQUANTITY,
+				CAST(isnull(isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' )/isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '1' ),0) AS NUMERIC ( 18, 2 ) ) FUNITPRICE,
+				<!-- isnull( SUM ( CAST ( f2.FUNITPRICE AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FUNITPRICE, -->
+				isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FTOTALAMOUNT 
+			FROM
+				DT_PRESALEPLANTWO f2 
+			LEFT JOIN
+				DT_PRESALEPLANONE f1 ON f2.PRESALEPLANONE_ID = f1.PRESALEPLANONE_ID
+			WHERE
+				1 = 1 
+				AND f1.FCABINETTYPE IN (SELECT Cabinet_Type_Name FROM PMS_Cabinet_Type) 
+				AND f2.FTOTALAMOUNT != '' 
+				AND f2.PRESALEPLAN_ID=#{ PRESALEPLAN_ID } 
+				AND f2.FNAME = '上电工时'
+		)
+		UNION ALL
+		(
+			SELECT
+				'终检工时' FTYPE,
+				isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FQUANTITY,
+				CAST(isnull(isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' )/isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '1' ),0) AS NUMERIC ( 18, 2 ) ) FUNITPRICE,
+				<!-- isnull( SUM ( CAST ( f2.FUNITPRICE AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FUNITPRICE, -->
+				isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FTOTALAMOUNT 
+			FROM
+				DT_PRESALEPLANTWO f2 
+			LEFT JOIN
+				DT_PRESALEPLANONE f1 ON f2.PRESALEPLANONE_ID = f1.PRESALEPLANONE_ID
+			WHERE
+				1 = 1 
+				AND f1.FCABINETTYPE IN (SELECT Cabinet_Type_Name FROM PMS_Cabinet_Type) 
+				AND f2.FTOTALAMOUNT != '' 
+				AND f2.PRESALEPLAN_ID=#{ PRESALEPLAN_ID } 
+				AND f2.FNAME = '终检工时'
+		)
+		UNION ALL
+		(
+			SELECT
+				'包装工时' FTYPE,
+				isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FQUANTITY,
+				CAST(isnull(isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' )/isnull( SUM ( CAST ( f2.FQUANTITY AS NUMERIC ( 18, 2 ) ) ), '1' ),0) AS NUMERIC ( 18, 2 ) ) FUNITPRICE,
+				<!-- isnull( SUM ( CAST ( f2.FUNITPRICE AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FUNITPRICE, -->
+				isnull( SUM ( CAST ( f2.FTOTALAMOUNT AS NUMERIC ( 18, 2 ) ) ), '0.00' ) FTOTALAMOUNT 
+			FROM
+				DT_PRESALEPLANTWO f2 
+			LEFT JOIN
+				DT_PRESALEPLANONE f1 ON f2.PRESALEPLANONE_ID = f1.PRESALEPLANONE_ID
+			WHERE
+				1 = 1 
+				AND f1.FCABINETTYPE IN (SELECT Cabinet_Type_Name FROM PMS_Cabinet_Type) 
+				AND f2.FTOTALAMOUNT != '' 
+				AND f2.PRESALEPLAN_ID=#{ PRESALEPLAN_ID } 
+				AND f2.FNAME = '包装工时'
+		) 
+	</select>
+	
+	<!-- 依据一级明细ID获取二级明细工时数据 -->
+	<select id="getHourByID" parameterType="pd" resultType="pd">
+		SELECT 
+		ISNULL(FQUANTITY, '0') FQUANTITY,
+		FNAME
+		FROM DT_PRESALEPLANTWO 
+		WHERE 
+		FNAME IN ('设计工时','分料工时','装配工时','接线工时','上电工时','终检工时','包装工时')
+		AND PRESALEPLANONE_ID = #{PRESALEPLANONE_ID}
+		ORDER BY CHARINDEX(FNAME, '设计工时分料工时装配工时接线工时上电工时终检工时包装工时')
+	</select>
+</mapper>

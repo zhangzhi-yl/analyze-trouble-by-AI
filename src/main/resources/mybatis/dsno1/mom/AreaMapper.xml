@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.AreaMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_AREA
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.AREA_ID,	
+		f.FNAME,	
+		f.FCODE,	
+		f.DM_SITE_ID,	
+		f.FDES
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		AREA_ID,	
+		FNAME,	
+		FCODE,	
+		DM_SITE_ID,	
+		FDES
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{AREA_ID},	
+		#{FNAME},	
+		#{FCODE},	
+		#{DM_SITE_ID},	
+		#{FDES}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			AREA_ID = #{AREA_ID}
+	</delete>
+
+	<delete id="deleteBySite" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		DM_SITE_ID = #{DM_SITE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FNAME = #{FNAME},
+			FCODE = #{FCODE},
+			FDES = #{FDES},
+			DM_SITE_ID = #{DM_SITE_ID}
+		where 
+			AREA_ID = #{AREA_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,s.FNAME DM_SITE_NAME,S.FCODE DM_SITE_CODE 
+		from 
+		<include refid="tableName"></include> f LEFT JOIN MDM_SITE s ON f.DM_SITE_ID=s.DM_SITE_ID 
+		where 
+			f.AREA_ID = #{AREA_ID}
+	</select>
+	
+	<!-- 通过FCODE获取数据 -->
+	<select id="findByFCODE" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FCODE = #{pd.FCODE}
+	</select>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select 
+			count(*) zs 
+		from 
+			<include refid="tableName"></include>
+		where 
+			DM_SITE_ID = #{DM_SITE_ID}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FCODE = #{FCODE} 
+		<if test="AREA_ID != null and AREA_ID != ''"><!-- 车间id -->
+			and f.AREA_ID &lt;&gt; #{AREA_ID}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,s.FNAME DM_SITE_NAME,S.FCODE DM_SITE_CODE 
+		from 
+		<include refid="tableName"></include> f LEFT JOIN MDM_SITE s ON f.DM_SITE_ID=s.DM_SITE_ID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FNAME != null and pd.FNAME != ''"><!-- 车间名称 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.FNAME}+'%' 
+				)
+		</if>
+		<if test="pd.FCODE != null and pd.FCODE != ''"><!-- 车间代码 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{pd.FCODE}+'%'
+				)
+		</if>
+		<if test="pd.DM_SITE_ID != null and pd.DM_SITE_ID != ''"><!-- 隶属工厂ID -->
+			and
+				(
+					f.DM_SITE_ID = #{pd.DM_SITE_ID} 
+				)
+		</if>
+		[fhstart] ORDER BY f.FCODE [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,s.FNAME DM_SITE_NAME,S.FCODE DM_SITE_CODE 
+		from 
+		<include refid="tableName"></include> f LEFT JOIN MDM_SITE s ON f.DM_SITE_ID=s.DM_SITE_ID 
+		where 1=1 
+		<if test="DM_SITE_ID != null and DM_SITE_ID != ''"><!-- 隶属工厂ID -->
+			and f.DM_SITE_ID = #{DM_SITE_ID} 
+		</if>
+	</select>
+	<select id="Arealist"  parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,s.FNAME DM_SITE_NAME,S.FCODE DM_SITE_CODE
+		from
+		<include refid="tableName"></include> f LEFT JOIN MDM_SITE s ON f.DM_SITE_ID=s.DM_SITE_ID
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			AREA_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

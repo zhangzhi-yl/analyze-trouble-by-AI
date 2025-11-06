@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.excel.ExcelMapper">
+
+<!--    获取工作簿配置-->
+    <select id="getExcelOptions" parameterType="pd" resultType="pd">
+        select * from EXCEL_OPTIONS where gridKey =#{gridKey}
+    </select>
+
+<!--    获取表格sheet信息-->
+    <select id="getExcelDataByOptionsID" parameterType="pd" resultType="pd">
+        select f.name AS name,f.[Findex],f.[Forder],f.Fstatus,f.DATA_ID,f.columnlen,f.rowlen,f.[Fmerge],f.borderInfo  from EXCEL_DATA f
+        LEFT JOIN EXCEL_OPTIONS f1 ON f.OPTIONS_ID = f1.OPTIONS_ID
+
+        where f1.gridKey = #{gridKey}
+    </select>
+
+<!--    获取表格内初始数据-->
+    <select id="getExcelCellData" parameterType="pd" resultType="pd">
+        select f.r ,f.c,f.v,f.m,f.fa,f.t,f.f,f.bl,f.fc,f.bg,f.fs,f.ff,f.tb,f.ht from EXCEL_CELLDATA f
+        LEFT JOIN EXCEL_DATA f1 ON f.DATA_ID = f1.DATA_ID
+        where f.DATA_ID = #{DATA_ID}
+    </select>
+
+<!--    查询数据是否存在-->
+    <select id="getIfExcelCellData" parameterType="pd" resultType="pd">
+        select f.r ,f.c,f.v,f.m,f.fa,f.t,f.f,f.bl,f.fc,f.bg,f.fs,f.ff,f.tb,f.ht from EXCEL_CELLDATA f
+        LEFT JOIN EXCEL_DATA f1 ON f.DATA_ID = f1.DATA_ID
+        LEFT JOIN EXCEL_OPTIONS f2 ON f1.OPTIONS_ID = f2.OPTIONS_ID
+        where f2.gridKey = #{gridKey} and f.r = #{r} and f.c = #{c} and f1.[Findex] = #{i}
+    </select>
+
+<!--    单个单元格数据删除-->
+    <delete id="delCellDataOne" parameterType="pd">
+        delete from EXCEL_CELLDATA
+        where  r = #{r} and c = #{c} and DATA_ID = #{DATA_ID}
+    </delete>
+
+
+<!--    单个单元格数据更新-->
+    <update id="updataCellDataOne" parameterType="pd">
+        update EXCEL_CELLDATA
+        set v = #{v},m = #{v},fa = #{fa},t = #{t}
+		<if test="f != null and f != ''">
+        ,f=#{f}
+        </if>
+		<if test="bl != null and bl != ''">
+        ,bl=#{bl}
+        </if>
+		<if test="fc != null and fc != ''">
+        ,fc=#{fc}
+        </if>
+		<if test="bg != null and bg != ''">
+        ,bg=#{bg}
+        </if>
+		<if test="fs != null and fs != ''">
+        ,fs=#{fs}
+        </if>
+		<if test="ff != null and ff != ''">
+        ,ff=#{ff}
+        </if>
+		<if test="tb != null and tb != ''">
+        ,tb=#{tb}
+        </if>
+		<if test="ht != null and ht != ''">
+        ,ht=#{ht}
+        </if>
+        where r = #{r} and c = #{c} and DATA_ID = #{DATA_ID}
+    </update>
+
+<!--    单个单元格保存-->
+    <insert id="saveCellDataOne" parameterType="pd">
+        insert into EXCEL_CELLDATA values (#{CELLDATA_ID},#{r},#{c},#{v},#{m},#{fa},#{t},#{DATA_ID},#{f},#{bl},#{fc},#{bg},#{fs},#{ff},#{tb},#{ht})
+    </insert>
+
+<!--    获取sheet信息 通过工作簿标识和sheet索引-->
+    <select id="getDataByIndex" parameterType="pd" resultType="pd">
+        select f.name AS name,f.[Findex],f.[Forder],f.Fstatus,f.DATA_ID from EXCEL_DATA f
+            LEFT JOIN EXCEL_OPTIONS f1 ON f.OPTIONS_ID = f1.OPTIONS_ID
+        where f1.gridKey = #{gridKey} and f.[Findex] = #{i}
+    </select>
+
+<!--    批量删除数据-->
+    <delete id="delAllCellData" parameterType="list">
+        delete from EXCEL_CELLDATA
+        <where>
+            <foreach collection="list" item="item" index="index" separator="or">
+            (
+                <if test="item.r != null">
+                    r = #{item.r}
+                </if>
+                <if test="item.c != null">
+                    and c = #{item.c}
+                </if>
+                <if test="item.DATA_ID != null">
+                    and DATA_ID = #{item.DATA_ID}
+                </if>
+            )
+            </foreach>
+        </where>
+    </delete>
+
+<!--    批量更新数据-->
+    <update id="editAllCellData" parameterType="list">
+
+    </update>
+
+    <insert id="saveAllCellData" parameterType="list">
+        insert into EXCEL_CELLDATA values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.CELLDATA_ID},#{item.r},#{item.c},#{item.v},#{item.m},#{item.fa},#{item.t},#{item.DATA_ID},#{item.f},#{item.bl},#{item.fc},#{item.bg},#{item.fs},#{item.ff},#{item.tb},#{item.ht})
+        </foreach>
+    </insert>
+
+    <insert id="saveSheet" parameterType="list">
+        insert into EXCEL_DATA(DATA_ID,name,Fstatus,[Forder],[Findex],OPTIONS_ID) values (#{DATA_ID},#{name},#{Fstatus},#{order},#{index},#{OPTIONS_ID})
+    </insert>
+
+    <update id="editSheetName" parameterType="pd">
+        update EXCEL_DATA set name = #{v} where [Findex] = #{i} and OPTIONS_ID = #{OPTIONS_ID}
+    </update>
+<!--    更新sheet的列宽-->
+    <update id="updataColumnlen" parameterType="pd">
+        UPDATE  EXCEL_DATA set columnlen=#{columnlen} where OPTIONS_ID=#{OPTIONS_ID} and [Findex] =#{index}
+    </update>
+<!--    更新sheet的行高-->
+    <update id="updataRowlen" parameterType="pd">
+        UPDATE  EXCEL_DATA set rowlen=#{rowlen} where OPTIONS_ID=#{OPTIONS_ID} and [Findex] =#{index}
+    </update>
+<!--    更新sheet的合并-->
+    <update id="updataMerge" parameterType="pd">
+        UPDATE  EXCEL_DATA set [Fmerge]=#{merge} where OPTIONS_ID=#{OPTIONS_ID} and [Findex] =#{index}
+    </update>
+    <update id="updataBorderInfo" parameterType="pd">
+        UPDATE  EXCEL_DATA set [borderInfo]=#{borderInfo} where OPTIONS_ID=#{OPTIONS_ID} and [Findex] =#{index}
+    </update>
+
+</mapper>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.AttachmentSetMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		KM_AttachmentSet
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.DataSources,	
+		f.AssociationIDTable,	
+		f.AssociationID,	
+		f.FName,	
+		f.FUrl,	
+		f.FExtension,	
+		f.TType,	
+		f.FStatus,	
+		f.FAttachment,	
+		isnull(f.FExplanation,'') FExplanation,	
+		f.FCreatePersonID,	
+		f.FCreateTime,	
+		f.AttachmentSet_ID,
+		f.FAudit_State
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		DataSources,	
+		AssociationIDTable,	
+		AssociationID,	
+		FName,	
+		FUrl,	
+		FExtension,	
+		TType,	
+		FStatus,	
+		FAttachment,	
+		FExplanation,	
+		FCreatePersonID,	
+		FCreateTime,	
+		AttachmentSet_ID,
+		FAudit_State
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{DataSources},	
+		#{AssociationIDTable},	
+		#{AssociationID},	
+		#{FName},	
+		#{FUrl},	
+		#{FExtension},	
+		#{TType},	
+		#{FStatus},	
+		#{FAttachment},	
+		#{FExplanation},	
+		#{FCreatePersonID},	
+		#{FCreateTime},	
+		#{AttachmentSet_ID},
+		#{FAudit_State}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 变更新增-->
+	<insert id="changesave" parameterType="pd">
+		insert into 
+		PMS_Change
+		(
+		Change_ID,Relation_ID,FType,Change_Duty,Change_Description,CC,Change_Date,Attachment,FRelation_ID
+		) values (
+		#{Change_ID},#{Relation_ID},#{FType},#{Change_Duty},#{Change_Description},#{CC},#{Change_Date},#{Attachment},#{FRelation_ID}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where  
+			AssociationID = #{AssociationID}
+	</delete>
+	
+	<!-- 修改(状态) -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FStatus = #{FStatus}
+		where 
+			AttachmentSet_ID = #{AttachmentSet_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.AttachmentSet_ID = #{AttachmentSet_ID}
+	</select>
+	<!-- 通过ID获取数据 -->
+	<select id="findByAId" parameterType="pd" resultType="pd">
+		select COUNT ( AttachmentSet_ID )+1 versNUM
+		FROM
+			KM_AttachmentSet f
+		where 
+			f.AssociationID = #{AssociationID}
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,s.NAME
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID = s.STAFF_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				DataSources LIKE '%'+ #{pd.KEYWORDS}+'%'
+		</if>
+		<if test="pd.KEYTYPE != null and pd.KEYTYPE != ''"><!-- 关键词检索 -->
+			and
+				FStatus LIKE '%'+ #{pd.KEYTYPE}+'%'
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPageQR" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,s.NAME,d.NAME TNAME
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID = s.STAFF_ID
+		LEFT JOIN SYS_DICTIONARIES d ON f.TType = d.DICTIONARIES_ID
+		where 1=1
+		AND f.AssociationID = #{pd.AssociationID}
+		[fhstart] ORDER BY f.FStatus DESC,FCreateTime DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,s.NAME
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID = s.STAFF_ID
+		where 1=1 
+		<if test=" AssociationID != null and AssociationID != ''">
+			and f.AssociationID = #{AssociationID}		
+		</if>
+		<if test=" DataSources != null and DataSources != ''">
+			and f.DataSources = #{DataSources}		
+		</if>
+		<if test=" AssociationIDTable != null and AssociationIDTable != ''">
+			and f.AssociationIDTable = #{AssociationIDTable}		
+		</if>
+		ORDER BY f.FStatus DESC
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			AttachmentSet_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查找是否已经上传过文档 -->
+	<select id="findByFid" parameterType="String" resultType="pd">
+		SELECT AttachmentSet_ID FROM KM_AttachmentSet 
+		WHERE AssociationID = #{AssociationID} AND FStatus = '使用'
+	</select>
+	
+	<!-- 通过关联ID获取数据 -->
+	<select id="findByAssId" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.AssociationID = #{AssociationID} and f.FStatus = '使用'
+	</select>
+	
+	<!-- 修改文件归档状态 -->
+	<update id="updateStatus" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FStatus = '归档'
+		where 
+			AttachmentSet_ID = #{AttachmentSet_ID}
+	</update>
+	
+	<!-- 根据数据id将状态为使用的文件修改为归档状态 -->
+	<update id="updateStatusByAssociationID" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FStatus = '归档' 
+		where 
+			AssociationID = #{AssociationID} AND FStatus = '使用'
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

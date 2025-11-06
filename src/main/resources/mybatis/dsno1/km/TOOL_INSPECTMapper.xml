@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.TOOL_INSPECTMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		KM_TOOL_INSPECT
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.TOOL_BASICS_ID,	
+		f.FType,	
+		f.FAS_Date,	
+		f.FInspect_State,	
+		f.FDESCRIBE,	
+		f.FCreatePerson,	
+		f.FCreateTime,	
+		f.FReservedOne,	
+		f.FReservedTwo,	
+		f.FReservedThree,	
+		f.TOOL_INSPECT_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		TOOL_BASICS_ID,	
+		FType,	
+		FAS_Date,	
+		FInspect_State,	
+		FDESCRIBE,	
+		FCreatePerson,	
+		FCreateTime,	
+		FReservedOne,	
+		FReservedTwo,	
+		FReservedThree,	
+		TOOL_INSPECT_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TOOL_BASICS_ID},	
+		#{FType},	
+		#{FAS_Date},	
+		#{FInspect_State},	
+		#{FDESCRIBE},	
+		#{FCreatePerson},	
+		#{FCreateTime},	
+		#{FReservedOne},	
+		#{FReservedTwo},	
+		#{FReservedThree},	
+		#{TOOL_INSPECT_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TOOL_INSPECT_ID = #{TOOL_INSPECT_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			TOOL_BASICS_ID = #{TOOL_BASICS_ID},
+			FType = #{FType},
+			FAS_Date = #{FAS_Date},
+			FInspect_State = #{FInspect_State},
+			FDESCRIBE = #{FDESCRIBE},
+			FCreatePerson = #{FCreatePerson},
+			FCreateTime = #{FCreateTime},
+			FReservedOne = #{FReservedOne},
+			FReservedTwo = #{FReservedTwo},
+			FReservedThree = #{FReservedThree},
+			TOOL_INSPECT_ID = TOOL_INSPECT_ID
+		where 
+			TOOL_INSPECT_ID = #{TOOL_INSPECT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.NAME FTypeName 
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.FType = f1.DICTIONARIES_ID
+		where 
+			f.TOOL_INSPECT_ID = #{TOOL_INSPECT_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FTypeName 
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.FType = f1.DICTIONARIES_ID
+		where f.TOOL_BASICS_ID=#{pd.TOOL_BASICS_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f1.NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FInspect_State LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] ORDER BY f.FCreateTime DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TOOL_INSPECT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过主表ID删除数据-->
+	<delete id="deleteBASICS" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TOOL_BASICS_ID = #{TOOL_BASICS_ID}
+	</delete>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

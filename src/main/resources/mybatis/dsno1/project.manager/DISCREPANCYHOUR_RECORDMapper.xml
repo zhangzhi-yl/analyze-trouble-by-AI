@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.DISCREPANCYHOUR_RECORDMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		DT_DISCREPANCYHOUR_RECORD
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FTYPE,	
+		f.FPlanHours,	
+		f.FUseHours,	
+		f.PROJECT_NAME,	
+		f.PROJECT_NUMBER,	
+		f.CUSTOMER_NAME,	
+		f.PROJECT_ID,	
+		f.FCREATE_TIME,	
+		f.FFOUNDER,	
+		f.FMODIFY_TIME,	
+		f.FMODIFY_NAME,	
+		f.CAUSE_OF_DIFFERENCE,	
+		f.DISCREPANCYHOUR_RECORD_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FTYPE,	
+		FPlanHours,	
+		FUseHours,	
+		PROJECT_NAME,	
+		PROJECT_NUMBER,	
+		CUSTOMER_NAME,	
+		PROJECT_ID,	
+		FCREATE_TIME,	
+		FFOUNDER,	
+		FMODIFY_TIME,	
+		FMODIFY_NAME,	
+		CAUSE_OF_DIFFERENCE,	
+		DISCREPANCYHOUR_RECORD_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FTYPE},	
+		#{FPlanHours},	
+		#{FUseHours},	
+		#{PROJECT_NAME},	
+		#{PROJECT_NUMBER},	
+		#{CUSTOMER_NAME},	
+		#{PROJECT_ID},	
+		#{FCREATE_TIME},	
+		#{FFOUNDER},	
+		#{FMODIFY_TIME},	
+		#{FMODIFY_NAME},	
+		#{CAUSE_OF_DIFFERENCE},	
+		#{DISCREPANCYHOUR_RECORD_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+		PROJECT_ID =#{PROJECT_ID}
+
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FMODIFY_TIME = #{FMODIFY_TIME},
+			FMODIFY_NAME = #{FMODIFY_NAME},
+			CAUSE_OF_DIFFERENCE = #{CAUSE_OF_DIFFERENCE}
+		where 
+			DISCREPANCYHOUR_RECORD_ID = #{DISCREPANCYHOUR_RECORD_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.DISCREPANCYHOUR_RECORD_ID = #{DISCREPANCYHOUR_RECORD_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and PROJECT_ID =#{pd.PROJECT_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and PROJECT_ID =#{PROJECT_ID}
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DISCREPANCYHOUR_RECORD_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- v1 管悦 20210929 项目工时对比差异列表 -->
+	<select id="getAllListGXDB" parameterType="page" resultType="pd">
+	select * from(
+	select 
+gy11.FNAME FTYPE,cast(isnull(gy1.FQUANTITY,0) as NUMERIC(24,2)) FPlanHours,
+case when (
+				gy11.FNAME ='装配工时'
+				or
+				gy11.FNAME = '接线工时'
+				or
+				gy11.FNAME = '上电工时'
+				or
+				gy11.FNAME = '终检工时'
+				or
+				gy11.FNAME = '包装工时'
+			)  then 
+
+(case when isnull(gy3.FUseHours,0.00)=0 then isnull(gy2.FUseHours,0.00) else isnull(gy3.FUseHours,0.00) end) 
+WHEN
+(
+
+				gy11.FNAME = '分料工时'
+				
+			)
+then isnull(gy4.FUseHours,0.00)
+WHEN
+(
+
+				gy11.FNAME = '设计工时'
+				
+			)
+then isnull(gy5.FUseHours,0.00)
+
+end FUseHours
+ from
+
+(
+select #{PROJECT_ID} PROJECT_ID,'设计工时' FNAME union ALL
+select #{PROJECT_ID},'分料工时' union ALL
+select #{PROJECT_ID},'装配工时' union ALL
+select #{PROJECT_ID},'接线工时' union ALL
+select #{PROJECT_ID},'上电工时' union ALL
+select #{PROJECT_ID},'终检工时' union ALL
+select #{PROJECT_ID},'包装工时' 
+
+) gy11
+--计划工时
+left join 
+(
+select sum(cast(f1.FQUANTITY as NUMERIC(24,2))) FQUANTITY,FNAME from DT_PRESALEPLANTWO f1
+left join (select * from MBASE_MAT_BASIC where MAT_SPECS !='' and MAT_SPECS is not null) f2 on f1.FORDERNUMBER=f2.MAT_SPECS
+ LEFT JOIN DT_PRESALEPLANONE f6 ON f1.PRESALEPLANONE_ID = f6.PRESALEPLANONE_ID
+where 1=1 
+and f1.PRESALEPLAN_ID=(select PRESALEPLAN_ID from DT_PROJECT where 1=1 and PROJECT_ID=#{PROJECT_ID})
+AND
+			(
+				FNAME = '设计工时'
+				or
+				FNAME = '分料工时'
+				or
+				FNAME ='装配工时'
+				or
+				FNAME = '接线工时'
+				or
+				FNAME = '上电工时'
+				or
+				FNAME = '终检工时'
+				or
+				FNAME = '包装工时'
+			)
+AND FCABINETTYPE != '' 
+AND FCABINETTYPE IS NOT NULL
+group by FNAME
+) gy1 
+on gy11.FNAME=gy1.FNAME
+--生产执行工时
+left join 
+(
+select cast(sum(FUseHours)as NUMERIC(24,2))  FUseHours,WPName from(
+select 
+sum(cast(DATEDIFF( mi, BeginTime, EndTime)*1.0/60 as NUMERIC(24,2))) FUseHours,case when WPName='上电检测' then '上电' else WPName end WPName
+ from PP_O_RECORD h1
+left join PP_ProcessWorkOrderExample h2 on h1.WorkingProcedureExampleID=h2.ProcessWorkOrderExample_ID
+left join PMS_Cabinet_Assembly_Detail h3 
+on h2.ProcessIMaterielCode =h3.Cabinet_No
+where 1=1  and PROJECT_ID =#{PROJECT_ID}
+group by case when WPName='上电检测' then '上电' else WPName end 
+
+union ALL
+select 
+sum(cast(DATEDIFF( mi, BEGIN_TIME, END_TIME)*1.0/60 as NUMERIC(24,2))) FUseHours,case when WP_ID='上电检测' then '上电' else WP_ID end WPName
+ from QM_O_RECORD_QualityTask h1
+left join QM_QualityInspectionPlanExecute h2
+on h1.ASSOCIATED_ID=h2.QualityInspectionPlanExecute_ID
+LEFT JOIN PP_PlanningWorkOrder g on h2.WorkOrderIDRel = g.PlanningWorkOrder_ID
+left join PMS_Cabinet_Assembly_Detail h3 
+on g.WorkOrderNum =h3.Cabinet_No
+where 1=1  and PROJECT_ID =#{PROJECT_ID}
+
+group by case when WP_ID='上电检测' then '上电' else WP_ID end 
+) hhh
+group by WPName 
+
+
+) gy2
+on (gy11.FNAME=gy2.WPName+'工时')
+
+--工时填报工时
+left join 
+(
+select 
+sum(cast(h1.ActualManHour as NUMERIC(24,2))) FUseHours,case when WPName='上电检测' then '上电' else WPName end WPName
+ from PP_WorkingHours h1
+left join PP_ProcessWorkOrderExample h2 on h1.ProcessWorkOrderExample_ID=h2.ProcessWorkOrderExample_ID
+left join PMS_Cabinet_Assembly_Detail h3 
+on h2.ProcessIMaterielCode =h3.Cabinet_No
+where 1=1  and PROJECT_ID =#{PROJECT_ID} AND h1.AuditMark='通过'
+
+group by case when WPName='上电检测' then '上电' else WPName end 
+) gy3
+on (gy11.FNAME=gy3.WPName+'工时')
+--分料工时
+left join
+(select PROJECT_ID,sum(cast(DATEDIFF( mi, MakeTime, FTime1)*1.0/60 as NUMERIC(24,2))) FUseHours from MM_CallMaterialFL h2
+left join PMS_Cabinet_Assembly_Detail h3 
+on h2.PlanningWorkOrderNum =h3.Cabinet_No
+where h2.FState='分料完成' and PROJECT_ID =#{PROJECT_ID}
+
+group by PROJECT_ID) gy4
+on  (gy11.FNAME='分料工时')
+--设计工时
+left join
+
+(
+select PROJECT_ID,sum(cast(DATEDIFF( mi, Distribute_Time, FIs_NeedDJ_Time)*1.0/60 as NUMERIC(24,2))) FUseHours  from PMS_Cabinet_Assembly_Detail 
+where FAudit_CabinetDJ_State='通过' and PROJECT_ID =#{PROJECT_ID}
+group by PROJECT_ID 
+) gy5
+on  (gy11.FNAME='设计工时')
+
+	) hh where cast(isnull(FUseHours,0) as NUMERIC(24,2)) &gt; cast(isnull(FPlanHours,0) as NUMERIC(24,2))
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

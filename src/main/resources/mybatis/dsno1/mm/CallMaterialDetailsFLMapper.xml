@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.CallMaterialDetailsFLMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_CALLMATERIALDETAILSFL
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.CallMaterial_ID,	
+		f.Material_ID,	
+		f.MaterialName,	
+		f.Specification,	
+		f.DemandNum,	
+		f.QuantityCount,	
+		f.SProp,	
+		f.BatchNum,	
+		f.DeliveryWarehouse,	
+		f.DeliveryPosition,	
+		f.TargetWarehouse,	
+		f.TargetPosition,	
+		f.TType,	
+		f.OperatePersion,	
+		f.OperateTime,	
+		f.DeliveryWarehouseID,	
+		f.DeliveryPositionID,	
+		f.TargetWarehouseID,	
+		f.TargetPositionID,	
+		f.MAT_AUXILIARY_ID,	
+		f.FUnitName,	
+		f.UNIT_INFO_ID,	
+		f.MaterialCode,	
+		f.MAT_AUXILIARYMX_ID,	
+		f.IsCheck,	
+		f.CallMaterialFL_ID,	
+		f.CallMaterialDetails_ID,	
+		f.CallMaterialDetailsFL_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		CallMaterial_ID,	
+		Material_ID,	
+		MaterialName,	
+		Specification,	
+		DemandNum,	
+		QuantityCount,	
+		SProp,	
+		BatchNum,	
+		DeliveryWarehouse,	
+		DeliveryPosition,	
+		TargetWarehouse,	
+		TargetPosition,	
+		TType,	
+		OperatePersion,	
+		OperateTime,	
+		DeliveryWarehouseID,	
+		DeliveryPositionID,	
+		TargetWarehouseID,	
+		TargetPositionID,	
+		MAT_AUXILIARY_ID,	
+		FUnitName,	
+		UNIT_INFO_ID,	
+		MaterialCode,	
+		MAT_AUXILIARYMX_ID,	
+		IsCheck,	
+		CallMaterialFL_ID,	
+		CallMaterialDetails_ID,	
+		CallMaterialDetailsFL_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{CallMaterial_ID},	
+		#{Material_ID},	
+		#{MaterialName},	
+		#{Specification},	
+		#{DemandNum},	
+		#{QuantityCount},	
+		#{SProp},	
+		#{BatchNum},	
+		#{DeliveryWarehouse},	
+		#{DeliveryPosition},	
+		#{TargetWarehouse},	
+		#{TargetPosition},	
+		#{TType},	
+		#{OperatePersion},	
+		#{OperateTime},	
+		#{DeliveryWarehouseID},	
+		#{DeliveryPositionID},	
+		#{TargetWarehouseID},	
+		#{TargetPositionID},	
+		#{MAT_AUXILIARY_ID},	
+		#{FUnitName},	
+		#{UNIT_INFO_ID},	
+		#{MaterialCode},	
+		#{MAT_AUXILIARYMX_ID},	
+		#{IsCheck},	
+		#{CallMaterialFL_ID},	
+		#{CallMaterialDetails_ID},	
+		#{CallMaterialDetailsFL_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CallMaterialDetailsFL_ID = #{CallMaterialDetailsFL_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CallMaterial_ID = #{CallMaterial_ID},
+			Material_ID = #{Material_ID},
+			MaterialName = #{MaterialName},
+			Specification = #{Specification},
+			DemandNum = #{DemandNum},
+			QuantityCount = #{QuantityCount},
+			SProp = #{SProp},
+			BatchNum = #{BatchNum},
+			DeliveryWarehouse = #{DeliveryWarehouse},
+			DeliveryPosition = #{DeliveryPosition},
+			TargetWarehouse = #{TargetWarehouse},
+			TargetPosition = #{TargetPosition},
+			TType = #{TType},
+			OperatePersion = #{OperatePersion},
+			OperateTime = #{OperateTime},
+			DeliveryWarehouseID = #{DeliveryWarehouseID},
+			DeliveryPositionID = #{DeliveryPositionID},
+			TargetWarehouseID = #{TargetWarehouseID},
+			TargetPositionID = #{TargetPositionID},
+			MAT_AUXILIARY_ID = #{MAT_AUXILIARY_ID},
+			FUnitName = #{FUnitName},
+			UNIT_INFO_ID = #{UNIT_INFO_ID},
+			MaterialCode = #{MaterialCode},
+			MAT_AUXILIARYMX_ID = #{MAT_AUXILIARYMX_ID},
+			IsCheck = #{IsCheck},
+			CallMaterialFL_ID = #{CallMaterialFL_ID},
+			CallMaterialDetails_ID = #{CallMaterialDetails_ID},
+			CallMaterialDetailsFL_ID = CallMaterialDetailsFL_ID
+		where 
+			CallMaterialDetailsFL_ID = #{CallMaterialDetailsFL_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.CallMaterialDetailsFL_ID = #{CallMaterialDetailsFL_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		isnull((cast(DemandNum as NUMERIC(24,0))-cast(QuantityCount as NUMERIC(24,0))),0) DiffNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and f.CallMaterialFL_ID = #{pd.CallMaterialFL_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					MaterialName LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					Specification LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					MaterialCode LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		isnull((cast(DemandNum as NUMERIC(24,0))-cast(QuantityCount as NUMERIC(24,0))),0) DiffNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="CallMaterial_ID != null and CallMaterial_ID != ''">
+		and f.CallMaterialFL_ID = #{CallMaterialFL_ID}
+		</if>
+	</select>
+	<!-- 待分料列表 -->
+	<select id="listAllQL" parameterType="pd" resultType="pd">
+		select * from(select
+		<include refid="Field"></include>,
+		isnull((cast(DemandNum as NUMERIC(24,0))-cast(QuantityCount as NUMERIC(24,0))),0) DiffNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="CallMaterialFL_ID != null and CallMaterialFL_ID != ''">
+		and f.CallMaterialFL_ID = #{CallMaterialFL_ID}
+		</if>) gy 
+		where 1=1
+		and DiffNum>0
+	</select>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CallMaterialDetailsFL_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- v1 管悦 20210825 库房分料单通过物料ID更新分料组任务的接收仓库 -->
+	<update id="editTargetWarehouse" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			TargetWarehouse = #{TargetWarehouse},
+			TargetPosition = #{TargetPosition},
+			TargetWarehouseID = #{TargetWarehouseID},
+			TargetPositionID = #{TargetPositionID}
+		
+		where 
+			CallMaterial_ID = #{CallMaterial_ID}
+		and Material_ID = #{Material_ID}
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

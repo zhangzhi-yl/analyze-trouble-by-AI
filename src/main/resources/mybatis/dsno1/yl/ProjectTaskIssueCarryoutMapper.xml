@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.yl.ProjectTaskIssueCarryoutMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		YL_ProjectTaskIssueCarryout
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+	    f.FTaskSource,
+		f.FStage,	
+		f.FTaskType,	
+		f.FTask,	
+		f.FTaskDescribe,	
+		f.FTaskState,	
+		f.PlanBeginTime,	
+		f.PlanEndTime,	
+		isnull(f.NormalHours,0) NormalHours,	
+		f.FTaskOperator,	
+		f.FTaskIssuer,	
+		f.FTaskIssueTime,	
+		f.FCreator,	
+		f.FCrerteTime,	
+		f.FCatualBeginTime,	
+		f.FCatualEndTime,
+		isnull(f.FCatualHour,0) FCatualHour,		
+		f.FeedbackDescribe,	
+		f.FeedbackPeople,	
+		f.FeedbackTime,	
+		f.FreservedOne,	
+		f.FreservedTwo,	
+		f.FreservedThree,	
+		f.ProjectTaskIssueCarryout_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+	    FTaskSource,
+		FStage,	
+		FTaskType,	
+		FTask,	
+		FTaskDescribe,	
+		FTaskState,	
+		PlanBeginTime,	
+		PlanEndTime,	
+		NormalHours,	
+		FTaskOperator,	
+		FTaskIssuer,	
+		FTaskIssueTime,	
+		FCreator,	
+		FCrerteTime,	
+		FCatualBeginTime,	
+		FCatualEndTime,	
+		FCatualHour,	
+		FeedbackDescribe,	
+		FeedbackPeople,	
+		FeedbackTime,	
+		FreservedOne,	
+		FreservedTwo,	
+		FreservedThree,	
+		ProjectTaskIssueCarryout_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+	    #{FTaskSource},
+		#{FStage},	
+		#{FTaskType},	
+		#{FTask},	
+		#{FTaskDescribe},	
+		#{FTaskState},	
+		#{PlanBeginTime},	
+		#{PlanEndTime},	
+		#{NormalHours},	
+		#{FTaskOperator},	
+		#{FTaskIssuer},	
+		#{FTaskIssueTime},	
+		#{FCreator},	
+		#{FCrerteTime},	
+		#{FCatualBeginTime},	
+		#{FCatualEndTime},	
+		#{FCatualHour},	
+		#{FeedbackDescribe},	
+		#{FeedbackPeople},	
+		#{FeedbackTime},	
+		#{FreservedOne},	
+		#{FreservedTwo},	
+		#{FreservedThree},	
+		#{ProjectTaskIssueCarryout_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProjectTaskIssueCarryout_ID = #{ProjectTaskIssueCarryout_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		    FTaskSource = #{FTaskSource},
+			FStage = #{FStage},
+			FTaskType = #{FTaskType},
+			FTask = #{FTask},
+			FTaskDescribe = #{FTaskDescribe},
+			FTaskState = #{FTaskState},
+			PlanBeginTime = #{PlanBeginTime},
+			PlanEndTime = #{PlanEndTime},
+			NormalHours = #{NormalHours},
+			FTaskOperator = #{FTaskOperator},
+			FTaskIssuer = #{FTaskIssuer},
+			FTaskIssueTime = #{FTaskIssueTime},
+			FCreator = #{FCreator},
+			FCrerteTime = #{FCrerteTime},
+			FCatualBeginTime = #{FCatualBeginTime},
+			FCatualEndTime = #{FCatualEndTime},
+			FCatualHour = #{FCatualHour},
+			FeedbackDescribe = #{FeedbackDescribe},
+			FeedbackPeople = #{FeedbackPeople},
+			FeedbackTime = #{FeedbackTime},
+			FreservedOne = #{FreservedOne},
+			FreservedTwo = #{FreservedTwo},
+			FreservedThree = #{FreservedThree},
+			ProjectTaskIssueCarryout_ID = ProjectTaskIssueCarryout_ID
+		where 
+			ProjectTaskIssueCarryout_ID = #{ProjectTaskIssueCarryout_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.NAME FStageName,f2.NAME FTaskTypeName,f3.NAME FTaskSourceName
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.FStage=f1.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f2 ON f.FTaskType=f2.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f3 ON f.FTaskSource=f3.DICTIONARIES_ID
+		where 
+			f.ProjectTaskIssueCarryout_ID = #{ProjectTaskIssueCarryout_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FStageName,f2.NAME FTaskTypeName,f3.NAME FTaskSourceName,
+		CASE WHEN f.FTaskState='完成' THEN '3' WHEN f.FTaskState='下发' THEN '2' ELSE '1' END AS STATE
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.FStage=f1.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f2 ON f.FTaskType=f2.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f3 ON f.FTaskSource=f3.DICTIONARIES_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FTask LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FTaskOperator LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FCreator LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.TaskState != null and pd.TaskState != ''"><!-- 任务状态 -->
+			and
+				(
+					f.FTaskState LIKE '%'+ #{pd.TaskState}+'%'
+					 
+				)
+		</if>
+		<if test="pd.TaskSource != null and pd.TaskSource != ''"><!-- 任务状态 -->
+			and
+				(
+					f3.NAME LIKE '%'+ #{pd.TaskSource}+'%'
+					 
+				)
+		</if>
+		<if test="pd.Stage != null and pd.Stage != ''"><!-- 任务状态 -->
+			and
+				(
+					f1.NAME LIKE '%'+ #{pd.Stage}+'%'
+					 
+				)
+		</if>
+		[fhstart] ORDER BY STATE,FCrerteTime DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FStageName,f2.NAME FTaskTypeName,f3.NAME FTaskSourceName,
+		CASE WHEN f.FTaskState='完成' THEN '3' WHEN f.FTaskState='下发' THEN '2' ELSE '1' END AS STATE
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.FStage=f1.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f2 ON f.FTaskType=f2.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f3 ON f.FTaskSource=f3.DICTIONARIES_ID
+		where 1=1
+		<!-- <if test="Plan == 'yes'">关键词检索
+			and
+				(
+					f.FCreator=#{NAME}
+				)
+		</if> -->
+		<if test="Carryout == 'yes'"><!-- 关键词检索 -->
+			and
+				(
+					f.FTaskOperator=#{NAME} and f.FTaskState !='创建'
+				)
+		</if>
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FTask LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.FTaskOperator LIKE '%'+ #{KEYWORDS}+'%' 
+					 or 
+					f.FCreator LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="TaskState != null and TaskState != ''"><!-- 任务状态 -->
+			and
+				(
+					f.FTaskState LIKE '%'+ #{TaskState}+'%'
+					 
+				)
+		</if>
+		<if test="TaskSource != null and TaskSource != ''"><!-- 任务状态 -->
+			and
+				(
+					f3.NAME LIKE '%'+ #{TaskSource}+'%'
+					 
+				)
+		</if>
+		<if test="Stage != null and Stage != ''"><!-- 任务状态 -->
+			and
+				(
+					f1.NAME LIKE '%'+ #{Stage}+'%'
+					 
+				)
+		</if>
+		ORDER BY STATE,FCrerteTime DESC 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProjectTaskIssueCarryout_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 计划制定列表 -->
+	<select id="datalistPagePlan" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FStageName,f2.NAME FTaskTypeName,f3.NAME FTaskSourceName,
+		CASE WHEN f.FTaskState='完成' THEN '3' WHEN f.FTaskState='下发' THEN '2' ELSE '1' END AS STATE
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.FStage=f1.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f2 ON f.FTaskType=f2.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f3 ON f.FTaskSource=f3.DICTIONARIES_ID
+		where 1=1 <!-- f.FCreator=#{pd.NAME} -->
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FTask LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FTaskOperator LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FCreator LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.TaskState != null and pd.TaskState != ''"><!-- 任务状态 -->
+			and
+				(
+					f.FTaskState LIKE '%'+ #{pd.TaskState}+'%'
+					 
+				)
+		</if>
+		<if test="pd.TaskSource != null and pd.TaskSource != ''"><!-- 任务状态 -->
+			and
+				(
+					f3.NAME LIKE '%'+ #{pd.TaskSource}+'%'
+					 
+				)
+		</if>
+		<if test="pd.Stage != null and pd.Stage != ''"><!-- 任务状态 -->
+			and
+				(
+					f1.NAME LIKE '%'+ #{pd.Stage}+'%'
+					 
+				)
+		</if>
+		[fhstart] ORDER BY STATE,FCrerteTime DESC [fhend]
+	</select>
+	
+	<!--下发任务 -->
+	<update id="editIssue" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FTaskState = #{FTaskState},
+			FTaskIssuer = #{FTaskIssuer},
+			FTaskIssueTime = #{FTaskIssueTime}
+		where 
+			ProjectTaskIssueCarryout_ID = #{ProjectTaskIssueCarryout_ID}
+	</update>
+	
+	<!--完成任务 -->
+	<update id="editOver" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		    FTaskState = #{FTaskState},
+			FeedbackPeople = #{FeedbackPeople},
+			FeedbackTime = #{FeedbackTime}
+		where 
+			ProjectTaskIssueCarryout_ID = #{ProjectTaskIssueCarryout_ID}
+	</update>
+	
+	<!--执行反馈列表 -->
+	<select id="datalistPageCarryOut" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FStageName,f2.NAME FTaskTypeName,f3.NAME FTaskSourceName,
+		CASE WHEN f.FTaskState='完成' THEN '3' WHEN f.FTaskState='下发' THEN '2' ELSE '1' END AS STATE
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.FStage=f1.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f2 ON f.FTaskType=f2.DICTIONARIES_ID
+		LEFT JOIN SYS_DICTIONARIES f3 ON f.FTaskSource=f3.DICTIONARIES_ID
+		where f.FTaskOperator=#{pd.NAME} and f.FTaskState !='创建'
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FTask LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FTaskOperator LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FCreator LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.TaskState != null and pd.TaskState != ''"><!-- 任务状态 -->
+			and
+				(
+					f.FTaskState LIKE '%'+ #{pd.TaskState}+'%'
+					 
+				)
+		</if>
+		<if test="pd.TaskSource != null and pd.TaskSource != ''"><!-- 任务状态 -->
+			and
+				(
+					f3.NAME LIKE '%'+ #{pd.TaskSource}+'%'
+					 
+				)
+		</if>
+		<if test="pd.Stage != null and pd.Stage != ''"><!-- 任务状态 -->
+			and
+				(
+					f1.NAME LIKE '%'+ #{pd.Stage}+'%'
+					 
+				)
+		</if>
+		[fhstart] ORDER BY STATE,FCrerteTime DESC [fhend]
+	</select>
+	
+	<!-- 通过数据字典名称获取数据 -->
+	<select id="findByDICTIONARIESId" parameterType="pd" resultType="pd">
+		SELECT top 1 f.* FROM SYS_DICTIONARIES f
+		LEFT JOIN SYS_DICTIONARIES f1 ON f.PARENT_ID = f1.DICTIONARIES_ID
+		where f.NAME=#{NAME}
+		
+	</select>
+	
+	<!-- 通过人员名称判断人员是否存在 -->
+	<select id="findByStaffId" parameterType="pd" resultType="pd">
+		SELECT COUNT(*) AS NUM FROM OA_STAFF f WHERE f.NAME=#{NAME}
+		
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.trouble.TroubleLocalMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		HSE_TROUBLELOCAL
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FACTORY_AREA,	
+		f.FNAME,	
+		f.FCODE,	
+		f.LONGITUDE,	
+		f.DIMENSION,	
+		f.RESPONSIBLE_DEP,	
+		f.RESPONSIBLE_PEOPLE,	
+		f.CREATE_BY,	
+		f.CREATE_TIME,	
+		f.UPDATE_BY,	
+		f.UPDATE_TIME,	
+		f.REMARK,	
+		f.URL,	
+		f.CATCH_SWITCH,	
+		f.CATCH_INTERVAL,	
+		f.TROUBLELOCAL_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FACTORY_AREA,	
+		FNAME,	
+		FCODE,	
+		LONGITUDE,	
+		DIMENSION,	
+		RESPONSIBLE_DEP,	
+		RESPONSIBLE_PEOPLE,	
+		CREATE_BY,	
+		CREATE_TIME,	
+		UPDATE_BY,	
+		UPDATE_TIME,	
+		REMARK,	
+		URL,	
+		CATCH_SWITCH,	
+		CATCH_INTERVAL,	
+		TROUBLELOCAL_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FACTORY_AREA},	
+		#{FNAME},	
+		#{FCODE},	
+		#{LONGITUDE},	
+		#{DIMENSION},	
+		#{RESPONSIBLE_DEP},	
+		#{RESPONSIBLE_PEOPLE},	
+		#{CREATE_BY},	
+		#{CREATE_TIME},	
+		#{UPDATE_BY},	
+		#{UPDATE_TIME},	
+		#{REMARK},	
+		#{URL},	
+		#{CATCH_SWITCH},	
+		#{CATCH_INTERVAL},	
+		#{TROUBLELOCAL_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TROUBLELOCAL_ID = #{TROUBLELOCAL_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FACTORY_AREA = #{FACTORY_AREA},
+			FNAME = #{FNAME},
+			FCODE = #{FCODE},
+			LONGITUDE = #{LONGITUDE},
+			DIMENSION = #{DIMENSION},
+			RESPONSIBLE_DEP = #{RESPONSIBLE_DEP},
+			RESPONSIBLE_PEOPLE = #{RESPONSIBLE_PEOPLE},
+			CREATE_BY = #{CREATE_BY},
+			CREATE_TIME = #{CREATE_TIME},
+			UPDATE_BY = #{UPDATE_BY},
+			UPDATE_TIME = #{UPDATE_TIME},
+			REMARK = #{REMARK},
+			URL = #{URL},
+			CATCH_SWITCH = #{CATCH_SWITCH},
+			CATCH_INTERVAL = #{CATCH_INTERVAL},
+			TROUBLELOCAL_ID = TROUBLELOCAL_ID
+		where 
+			TROUBLELOCAL_ID = #{TROUBLELOCAL_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.TROUBLELOCAL_ID = #{TROUBLELOCAL_ID}
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FACTORY_AREA LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.FNAME LIKE '%'+ #{pd.KEYWORDS2}+'%'
+			)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.FCODE LIKE '%'+ #{pd.KEYWORDS3}+'%'
+			)
+		</if>
+		[fhstart] order by f.CREATE_TIME desc[fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="CATCH_SWITCH != null and CATCH_SWITCH != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.CATCH_SWITCH LIKE '%'+ #{CATCH_SWITCH}+'%'
+			)
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TROUBLELOCAL_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

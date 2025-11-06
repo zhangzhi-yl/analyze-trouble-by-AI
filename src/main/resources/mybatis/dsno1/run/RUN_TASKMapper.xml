@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.run.RUN_TASKMapper">
+	<select id="findStartPH" parameterType="pd" resultType="pd">
+SELECT ph1.*
+FROM (
+	SELECT *
+	FROM AT_NEWPLAN_BOM_FLOW
+	WHERE NODE_ID IN (
+			SELECT END_NODE
+			FROM AT_NEWPLAN_BOM_FLOW
+			WHERE BEGIN_NODE IN (
+					SELECT NODE_ID
+					FROM AT_NEWPLAN_BOM_FLOW
+					WHERE RUN_O_ID IN (
+							SELECT MASTER_PLAN_FLOW_ID
+							FROM AT_MASTER_PLAN_FLOW
+							WHERE NODE_ID IN (
+									SELECT END_NODE
+									FROM AT_MASTER_PLAN_FLOW
+									WHERE BEGIN_NODE IN (
+											SELECT NODE_ID
+											FROM AT_MASTER_PLAN_FLOW
+											WHERE NODE_TYPE = 'start round'
+												AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+										)
+										AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+								)
+								AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+						)
+						AND NODE_TYPE = 'start round'
+						AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+				)
+				AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+		)
+		AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+) ph1
+WHERE SUBPLAN_ID IN (
+	SELECT t2.PlanningWorkOrder_ID
+	FROM (
+		SELECT MASTER_PLAN_FLOW_ID, NODE_ID
+		FROM AT_MASTER_PLAN_FLOW
+		WHERE NODE_ID IN (
+				SELECT END_NODE
+				FROM AT_MASTER_PLAN_FLOW
+				WHERE BEGIN_NODE IN (
+						SELECT NODE_ID
+						FROM AT_MASTER_PLAN_FLOW
+						WHERE NODE_TYPE = 'start round'
+							AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+					)
+					AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+			)
+			AND MASTERPLAN_ID = #{MASTERPLAN_ID}
+	) t1
+		LEFT JOIN PP_PlanningWorkOrder t2 ON t1.NODE_ID = t2.NODE_ID
+)
+	</select>
+	<select id="openSubPlan" parameterType="pd" resultType="pd">
+		SELECT *
+		FROM AT_MASTER_PLAN_FLOW WHERE NODE_ID in(
+		SELECT END_NODE FROM
+		AT_MASTER_PLAN_FLOW WHERE BEGIN_NODE in(
+		SELECT NODE_ID FROM
+		AT_MASTER_PLAN_FLOW WHERE NODE_TYPE='start round'
+		AND
+		MASTERPLAN_ID=#{MASTERPLAN_ID}
+		) AND MASTERPLAN_ID=#{MASTERPLAN_ID}
+		)
+		AND
+		MASTERPLAN_ID=#{MASTERPLAN_ID}
+	</select>
+
+</mapper>

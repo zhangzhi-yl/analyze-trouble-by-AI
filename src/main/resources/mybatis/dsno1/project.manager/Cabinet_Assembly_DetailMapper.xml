@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.yy.mapper.dsno1.project.manager.Cabinet_Assembly_DetailMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		PMS_Cabinet_Assembly_Detail
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.Cabinet_Assembly_ID,
+		f.Cabinet_No,
+		f.Cabinet_Aliases,
+		f.Responsible_Technology,
+		f.If_Bom_Done,
+		f.If_Drawings_Done,
+		f.FStatus,
+		f.Distribute_Time,
+		f.PRO_PLAN_ID,
+		f.PROJECT_ID,
+		f.Load_Status,
+		f.Bom_Done_Time,
+		f.Drawings_Done_Time,
+		f.BatchNum,
+		f.If_Sync_Done,
+		f.If_Purchase_Done,
+		f.Load_Dispach_Time,
+		f.Cabinet_Assembly_Detail_ID,
+		f.FAudit_Cabinet_State,
+		f.FAudit_Bom_State,
+		f.FIs_Need_Audit,
+		f.FAudit_State,
+		f.FEnd_Time,
+		f.FDESIGNHOUR,
+		f.FDIVISIONHOUR,
+		f.FASSEMBLYHOUR,
+		f.FWIRINGHOUR,
+		f.FEXAMINATIONHOUR,
+		f.FFINALINSPECTIONHOUR,
+		f.FPACKINGHOUR,
+		f.FAudit_CabinetDJ_State,
+		f.FIs_NeedDJ_Audit,
+		f.PRESALEPLANONE_ID,
+		f.TOTALHOUR,
+		f.FIs_NeedDJ_Time
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		Cabinet_Assembly_ID,
+		Cabinet_No,
+		Cabinet_Aliases,
+		Responsible_Technology,
+		If_Bom_Done,
+		If_Drawings_Done,
+		FStatus,
+		Distribute_Time,
+		PRO_PLAN_ID,
+		PROJECT_ID,
+		Load_Status,
+		Bom_Done_Time,
+		Drawings_Done_Time,
+		BatchNum,
+		If_Sync_Done,
+		If_Purchase_Done,
+		Load_Dispach_Time,
+		Cabinet_Assembly_Detail_ID,
+		FAudit_Cabinet_State,
+		FAudit_Bom_State,
+		FIs_Need_Audit,
+		FAudit_State,
+		FEnd_Time,
+		FDESIGNHOUR,
+		FDIVISIONHOUR,
+		FASSEMBLYHOUR,
+		FWIRINGHOUR,
+		FEXAMINATIONHOUR,
+		FFINALINSPECTIONHOUR,
+		FPACKINGHOUR,
+		FAudit_CabinetDJ_State,
+		FIs_NeedDJ_Audit,
+		PRESALEPLANONE_ID,
+		TOTALHOUR,
+		FIs_NeedDJ_Time
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{Cabinet_Assembly_ID},
+		#{Cabinet_No},
+		#{Cabinet_Aliases},
+		#{Responsible_Technology},
+		#{If_Bom_Done},
+		#{If_Drawings_Done},
+		#{FStatus},
+		#{Distribute_Time},
+		#{PRO_PLAN_ID},
+		#{PROJECT_ID},
+		#{Load_Status},
+		#{Bom_Done_Time},
+		#{Drawings_Done_Time},
+		#{BatchNum},
+		#{If_Sync_Done},
+		#{If_Purchase_Done},
+		#{Load_Dispach_Time},
+		#{Cabinet_Assembly_Detail_ID},
+		#{FAudit_Cabinet_State},
+		#{FAudit_Bom_State},
+		#{FIs_Need_Audit},
+		#{FAudit_State},
+		#{FEnd_Time},
+		#{FDESIGNHOUR},
+		#{FDIVISIONHOUR},
+		#{FASSEMBLYHOUR},
+		#{FWIRINGHOUR},
+		#{FEXAMINATIONHOUR},
+		#{FFINALINSPECTIONHOUR},
+		#{FPACKINGHOUR},
+		#{FAudit_CabinetDJ_State},
+		#{FIs_NeedDJ_Audit},
+		#{PRESALEPLANONE_ID},
+		#{TOTALHOUR},
+		#{FIs_NeedDJ_Time}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		Cabinet_Assembly_Detail_ID = #{Cabinet_Assembly_Detail_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		Cabinet_Assembly_ID = #{Cabinet_Assembly_ID},
+		Cabinet_No =
+		#{Cabinet_No},
+		Cabinet_Aliases = #{Cabinet_Aliases},
+		Responsible_Technology = #{Responsible_Technology},
+		If_Bom_Done =
+		#{If_Bom_Done},
+		If_Drawings_Done = #{If_Drawings_Done},
+		FStatus =
+		#{FStatus},
+		Distribute_Time = #{Distribute_Time},
+		PRO_PLAN_ID =
+		#{PRO_PLAN_ID},
+		PROJECT_ID = #{PROJECT_ID},
+		Load_Status =
+		#{Load_Status},
+		Bom_Done_Time = #{Bom_Done_Time},
+		Drawings_Done_Time =
+		#{Drawings_Done_Time},
+		BatchNum = #{BatchNum},
+		If_Sync_Done =
+		#{If_Sync_Done},
+		If_Purchase_Done = #{If_Purchase_Done},
+		Load_Dispach_Time = #{Load_Dispach_Time},
+		FAudit_Cabinet_State=#{FAudit_Cabinet_State},
+		FAudit_Bom_State=#{FAudit_Bom_State},
+		FIs_Need_Audit=#{FIs_Need_Audit},
+		FAudit_State=#{FAudit_State},
+		FEnd_Time=#{FEnd_Time},
+		FAudit_CabinetDJ_State=#{FAudit_CabinetDJ_State},
+		FIs_NeedDJ_Audit=#{FIs_NeedDJ_Audit},
+		FIs_NeedDJ_Time=#{FIs_NeedDJ_Time},
+		Cabinet_Assembly_Detail_ID =
+		Cabinet_Assembly_Detail_ID,
+		FDESIGNHOUR = #{FDESIGNHOUR},
+		FDIVISIONHOUR = #{FDIVISIONHOUR},
+		FASSEMBLYHOUR = #{FASSEMBLYHOUR},
+		FWIRINGHOUR = #{FWIRINGHOUR},
+		FEXAMINATIONHOUR = #{FEXAMINATIONHOUR},
+		FFINALINSPECTIONHOUR = #{FFINALINSPECTIONHOUR},
+		FPACKINGHOUR = #{FPACKINGHOUR},
+		TOTALHOUR = #{TOTALHOUR}
+		where
+		Cabinet_Assembly_Detail_ID =
+		#{Cabinet_Assembly_Detail_ID}
+	</update>
+	<update id="editByUser" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		Responsible_Technology = #{Responsible_Technology}
+		where
+		Cabinet_Assembly_Detail_ID =
+		#{Cabinet_Assembly_Detail_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		isnull((
+select 
+count(*)	
+from(
+select 
+		case when f1.MAT_BASIC_ID is null then '新增' when f2.MAT_BASIC_ID is null then '删除' when (f1.BOM_COUNT != f2.BOM_COUNT or f1.MAT_CATEGRAY != f2.MAT_CATEGRAY) then '修改' else '不变' end FChangeState
+from 
+(select * from PMS_Cabinet_BOM_change where 1=1
+and Cabinet_Assembly_Detail_ID=f.Cabinet_Assembly_Detail_ID and MAT_BASIC_ID is not null and MAT_BASIC_ID !='') f1
+FULL OUTER JOIN 
+(select * from PMS_Cabinet_BOM where 1=1
+and Cabinet_Assembly_Detail_ID=f.Cabinet_Assembly_Detail_ID and MAT_BASIC_ID is not null and MAT_BASIC_ID !='') f2
+on (f1.Cabinet_Assembly_Detail_ID=f2.Cabinet_Assembly_Detail_ID and f1.MAT_BASIC_ID= f2.MAT_BASIC_ID)
+) gy where FChangeState!='不变'
+),0) FNUMCH,
+		ass.Cabinet_Type,
+		ass.Buffer_Period,
+		ass.Estimate_Start_Date,
+		ass.Project_End_Date,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		<include refid="Field"></include>
+		,staff.NAME as Responsible_Technology_Name,staff1.Name as
+		Technical_Officer_Name
+		from
+		<include refid="tableName"></include>
+		f
+		left join oa_staff staff on staff.STAFF_ID = f.Responsible_Technology
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f.Cabinet_Assembly_ID
+		left join oa_staff staff1 on staff1.STAFF_ID =
+		ass.Technical_Officer
+		left join DT_PRO_PLAN planS on planS.PRO_PLAN_ID
+		= ass.PRO_PLAN_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		where
+		f.Cabinet_Assembly_Detail_ID =
+		#{Cabinet_Assembly_Detail_ID}
+	</select>
+
+	<select id="findByAssemblyID" parameterType="pd" resultType="pd">
+		select
+		ass.Cabinet_Type,
+		ass.Buffer_Period,
+		ass.Estimate_Start_Date,
+		ass.Project_End_Date,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		<include refid="Field"></include>
+		,staff.NAME as Responsible_Technology_Name,staff1.Name as
+		Technical_Officer_Name
+		from
+		<include refid="tableName"></include>
+		f
+		left join oa_staff staff on staff.STAFF_ID = f.Responsible_Technology
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f.Cabinet_Assembly_ID
+		left join oa_staff staff1 on staff1.STAFF_ID =
+		ass.Technical_Officer
+		left join DT_PRO_PLAN planS on planS.PRO_PLAN_ID
+		= ass.PRO_PLAN_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		planS.PROJECT_ID
+		where
+		f.Cabinet_Assembly_ID =
+		#{Cabinet_Assembly_ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,ca.Cabinet_Type
+		,staff.NAME as Responsible_Technology_Name,project.PDELIVERY_DATE,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME
+		from
+		<include refid="tableName"></include>
+		f
+		left join oa_staff staff on staff.STAFF_ID = f.Responsible_Technology
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = f.Cabinet_Assembly_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ca.PROJECT_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.Cabinet_No LIKE '%'+ #{pd.KEYWORDS}+'%'
+			OR
+			f.Cabinet_Aliases LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		<if test="pd.Cabinet_Assembly_ID != null and pd.Cabinet_Assembly_ID != '' and pd.Cabinet_Assembly_ID != 'null'">
+			and f.Cabinet_Assembly_ID = #{pd.Cabinet_Assembly_ID}
+		</if>
+		<if test="pd.Load_Status != null and pd.Load_Status != ''">
+			and f.Load_Status = #{pd.Load_Status}
+		</if>
+		
+		<if test="pd.If_Bom_Done != null and pd.If_Bom_Done != ''">
+			and f.If_Bom_Done = #{pd.If_Bom_Done}
+		</if>
+		<if test="pd.If_Drawings_Done != null and pd.If_Drawings_Done != ''">
+			and f.If_Drawings_Done = #{pd.If_Drawings_Done}
+		</if>
+		<if test="pd.If_Purchase_Done != null and pd.If_Purchase_Done != ''">
+			and f.If_Purchase_Done = #{pd.If_Purchase_Done}
+		</if>
+		<if test="pd.Load_Status != null and pd.Load_Status != ''">
+			and f.Load_Status = #{pd.Load_Status}
+		</if>
+		
+		<if test="pd.PRO_PLAN_ID != null and pd.PRO_PLAN_ID != ''and pd.PRO_PLAN_ID != 'null'">
+			and ca.PRO_PLAN_ID = #{pd.PRO_PLAN_ID}
+		</if>
+		<if test="pd.Cabinet_Type != null and pd.Cabinet_Type != ''">
+			and ca.Cabinet_Type = #{pd.Cabinet_Type}
+		</if>
+		[fhstart] order by FStatus ASC ,Cabinet_No ASC [fhend]
+	</select>
+
+	<!-- 技术视角列表 -->
+	<select id="JssJdatalistPage" parameterType="page" resultType="pd">
+		select
+		ass.Cabinet_Type,
+		ass.Buffer_Period,
+		ass.Estimate_Start_Date,
+		ass.Project_End_Date,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		<include refid="Field"></include>
+		,staff.NAME as Responsible_Technology_Name,staff1.Name as
+		Technical_Officer_Name
+		from
+		<include refid="tableName"></include>
+		f
+		left join oa_staff staff on staff.STAFF_ID = f.Responsible_Technology
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f.Cabinet_Assembly_ID
+		left join oa_staff staff1 on staff1.STAFF_ID =
+		ass.Technical_Officer
+		left join DT_PRO_PLAN planS on planS.PRO_PLAN_ID
+		= ass.PRO_PLAN_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		where 1=1 
+		 <choose>
+          <when test="pd.NOTICE_TYPE == 'ALL'">
+
+         </when >
+        <otherwise>
+			and f.FStatus in ('下发','设计结束','设计冻结')
+			and (staff.NAME=#{pd.CREATORMAN})
+			
+       </otherwise>
+   		</choose>
+		
+		<!-- and project.FSTATE='已审核' -->
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			project.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+			OR
+			project.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		<if test="pd.PRO_PLAN_ID != null and pd.PRO_PLAN_ID != '' and pd.PRO_PLAN_ID != 'null'">
+			and ass.PRO_PLAN_ID = #{pd.PRO_PLAN_ID}
+		</if>
+		<if test="pd.Cabinet_Type != null and pd.Cabinet_Type != ''">
+			and ass.Cabinet_Type = #{pd.Cabinet_Type}
+		</if>
+
+		<if test="pd.If_Bom_Done != null and pd.If_Bom_Done != ''">
+			and f.If_Bom_Done = #{pd.If_Bom_Done}
+		</if>
+		<if test="pd.If_Drawings_Done != null and pd.If_Drawings_Done != ''">
+			and f.If_Drawings_Done = #{pd.If_Drawings_Done}
+		</if>
+		<if
+			test="pd.Responsible_Technology != null and pd.Responsible_Technology != '' and pd.Responsible_Technology != 'null'">
+			and f.Responsible_Technology = #{pd.Responsible_Technology}
+		</if>
+		<if test="pd.Load_Status != null and pd.Load_Status != ''">
+			and f.Load_Status = #{pd.Load_Status}
+		</if>
+		<if test="pd.If_Sync_Done != null and pd.If_Sync_Done != ''">
+			and f.If_Sync_Done = #{pd.If_Sync_Done}
+		</if>
+		<if test="pd.If_Purchase_Done != null and pd.If_Purchase_Done != ''">
+			and f.If_Purchase_Done = #{pd.If_Purchase_Done}
+		</if>
+	<!-- 	 and (staff.NAME=#{pd.CREATORMAN} or staff1.NAME=#{pd.CREATORMAN}) -->
+		<if test="pd.Cabinet_Assembly_Detail_ID != null and pd.Cabinet_Assembly_Detail_ID != ''">
+			and f.Cabinet_Assembly_Detail_ID = #{pd.Cabinet_Assembly_Detail_ID}
+		</if>
+		<!-- <if test="pd.Cabinet_Assembly_Detail_ID == null || pd.Cabinet_Assembly_Detail_ID == ''">
+		</if> -->
+     	 <if test="pd.PROJECT_ID != null and pd.PROJECT_ID != ''">
+			and f.PROJECT_ID = #{pd.PROJECT_ID}
+		</if>
+		 <if test="pd.FStatus != null and pd.FStatus != ''">
+			and f.FStatus = #{pd.FStatus}
+		</if>
+		[fhstart] order by ass.Estimate_Start_Date ASC [fhend]
+		<!-- [fhstart] order by FStatus ASC ,Cabinet_No ASC [fhend] -->
+	</select>
+<!-- 项目看板-技术待设计 -->
+	<select id="listXMJSSJdatalistPage" parameterType="page" resultType="pd">
+		select
+		ass.Cabinet_Type,
+		ass.Buffer_Period,
+		ass.Estimate_Start_Date,
+		ass.Project_End_Date,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		<include refid="Field"></include>
+		,staff.NAME as Responsible_Technology_Name,staff1.Name as
+		Technical_Officer_Name
+		from
+		<include refid="tableName"></include>
+		f
+		left join oa_staff staff on staff.STAFF_ID = f.Responsible_Technology
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f.Cabinet_Assembly_ID
+		left join oa_staff staff1 on staff1.STAFF_ID =
+		ass.Technical_Officer
+		left join DT_PRO_PLAN planS on planS.PRO_PLAN_ID
+		= ass.PRO_PLAN_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		where 1=1 
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			project.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+			OR
+			project.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		<if test="pd.PRO_PLAN_ID != null and pd.PRO_PLAN_ID != '' and pd.PRO_PLAN_ID != 'null'">
+			and ass.PRO_PLAN_ID = #{pd.PRO_PLAN_ID}
+		</if>
+		<if test="pd.Cabinet_Type != null and pd.Cabinet_Type != ''">
+			and ass.Cabinet_Type = #{pd.Cabinet_Type}
+		</if>
+
+		<if test="pd.If_Bom_Done != null and pd.If_Bom_Done != ''">
+			and f.If_Bom_Done = #{pd.If_Bom_Done}
+		</if>
+		<if test="pd.If_Drawings_Done != null and pd.If_Drawings_Done != ''">
+			and f.If_Drawings_Done = #{pd.If_Drawings_Done}
+		</if>
+		<if
+			test="pd.Responsible_Technology != null and pd.Responsible_Technology != '' and pd.Responsible_Technology != 'null'">
+			and f.Responsible_Technology = #{pd.Responsible_Technology}
+		</if>
+		<if test="pd.Load_Status != null and pd.Load_Status != ''">
+			and f.Load_Status = #{pd.Load_Status}
+		</if>
+		<if test="pd.If_Sync_Done != null and pd.If_Sync_Done != ''">
+			and f.If_Sync_Done = #{pd.If_Sync_Done}
+		</if>
+		<if test="pd.If_Purchase_Done != null and pd.If_Purchase_Done != ''">
+			and f.If_Purchase_Done = #{pd.If_Purchase_Done}
+		</if>
+	
+     	 <if test="pd.PROJECT_ID != null and pd.PROJECT_ID != ''">
+			and f.PROJECT_ID = #{pd.PROJECT_ID}
+		</if>
+		 <if test="pd.FStatus != null and pd.FStatus != ''">
+			and f.FStatus = #{pd.FStatus}
+		</if>
+and f.Cabinet_Assembly_Detail_ID in(
+select distinct f1.Cabinet_Assembly_Detail_ID from PMS_Cabinet_Assembly_Detail f1
+inner join DT_PROJECT project on project.PROJECT_ID =
+f1.PROJECT_ID
+ where FStatus='下发' and project.PPROJECT_MANAGER=#{pd.CREATORMAN}
+)
+		[fhstart] order by ass.Estimate_Start_Date ASC [fhend]
+		<!-- [fhstart] order by FStatus ASC ,Cabinet_No ASC [fhend] -->
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		ass.Cabinet_Type,
+		ass.Buffer_Period,
+		ass.Estimate_Start_Date,
+		ass.Project_End_Date,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		<include refid="Field"></include>
+		,staff.NAME as Responsible_Technology_Name,staff1.Name as
+		Technical_Officer_Name
+		from
+		<include refid="tableName"></include>
+		f
+		left join oa_staff staff on staff.STAFF_ID = f.Responsible_Technology
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f.Cabinet_Assembly_ID
+		left join oa_staff staff1 on staff1.STAFF_ID =
+		ass.Technical_Officer
+		left join DT_PRO_PLAN planS on planS.PRO_PLAN_ID
+		= ass.PRO_PLAN_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		planS.PROJECT_ID
+		where 1=1
+		<if test="Cabinet_Assembly_ID != null and Cabinet_Assembly_ID != ''">
+			and f.Cabinet_Assembly_ID = #{Cabinet_Assembly_ID}
+		</if>
+		<if test="PRO_PLAN_ID != null and PRO_PLAN_ID != ''">
+			and f.PRO_PLAN_ID = #{PRO_PLAN_ID}
+		</if>
+		<if test="PROJECT_ID != null and PROJECT_ID != ''">
+			and f.PROJECT_ID = #{PROJECT_ID}
+		</if>
+		<if test="FStatus != null and FStatus != ''">
+			and f.FStatus = #{FStatus}
+		</if>
+		<if test="Cabinet_Aliases != null and Cabinet_Aliases != ''">
+			and f.Cabinet_Aliases = #{Cabinet_Aliases}
+		</if>
+		<if test="Cabinet_No != null and Cabinet_No != ''">
+			and f.Cabinet_No = #{Cabinet_No}
+		</if>
+		<if test="Cabinet_Edit_ID != null and Cabinet_Edit_ID != ''">
+			and f.Cabinet_Assembly_Detail_ID not in
+			('${Cabinet_Edit_ID}')
+		</if>
+
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		Cabinet_Assembly_Detail_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<select id="mesTocStatus" parameterType="pd" resultType="pd">
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+		SELECT m.*,
+		CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21)
+		[预计开始日期],
+		CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21)
+		[预计交期]
+		FROM
+		(
+		SELECT l.*,[缓冲期]/3 [区间值] FROM
+		(
+		SELECT
+		pro.PPROJECT_NAME[项目名称],
+		pro.PPROJECT_CODE[项目号],
+		pwo.BatchNum[批次号],
+		mat.MAT_CODE[柜体号],
+		CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+		CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+		pwo.FStatus[柜体状态],
+		staff.NAME [负责技术],
+		DATEDIFF(DAY, pwo.WorkOrderBeginTime, pwo.WorkOrderEndTime) [缓冲期]
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+		LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No =
+		mat.MAT_CODE
+		LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+		left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology
+		) l
+		) m
+		) k where [柜体号] = #{ProcessIMaterielCode}
+	</select>
+
+	<select id="mesTocStatusCountByYJBS" parameterType="pd"
+		resultType="pd">
+
+		SELECT CONVERT(nvarchar,COUNT(1)) as num FROM
+		(
+		SELECT *,
+		CASE
+		WHEN k.[系统当前时间] &lt;= DATEADD(dd, k.[区间值], k.[预计开始日期]) THEN '正常范围'
+		WHEN DATEADD(dd, k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间] &lt;=
+		DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) THEN '可控范围'
+		WHEN DATEADD(dd, 2*k.[区间值], k.[预计开始日期]) &lt; k.[系统当前时间] AND k.[系统当前时间]
+		&lt;= DATEADD(dd, 3*k.[区间值], k.[预计开始日期]) THEN '即将超期'
+		WHEN k.[系统当前时间] &gt; k.[要求完成日期] THEN '超期生产' ELSE '超期生产' END [预警标识]
+		FROM
+		(
+		SELECT *,
+		CONVERT(VARCHAR(10),DATEADD(dd, -CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), [要求完成日期]),21)
+		[预计开始日期],
+		CONVERT(VARCHAR(10),DATEADD(dd, CAST(CEILING(CAST([缓冲期] AS DECIMAL(10,1))) AS INT), GETDATE()),21)
+		[预计交期]
+		FROM
+		(
+		SELECT *,[缓冲期]/3 [区间值] FROM
+		(
+		SELECT
+		pro.PPROJECT_NAME[项目名称],
+		pro.PPROJECT_CODE[项目号],
+		pwo.BatchNum[批次号],
+		mat.MAT_CODE[柜体号],
+		CONVERT(VARCHAR(10),GETDATE(),21) [系统当前时间],
+		CONVERT(VARCHAR(10),pwo.WorkOrderEndTime,21) [要求完成日期],
+		pwo.FStatus[柜体状态],
+		staff.NAME [负责技术],
+		DATEDIFF(DAY, pwo.WorkOrderBeginTime, pwo.WorkOrderEndTime) [缓冲期]
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN MBASE_MAT_BASIC mat ON mat.MAT_BASIC_ID = pwo.OutputMaterialID
+		LEFT JOIN PMS_Cabinet_Assembly_Detail cad ON cad.Cabinet_No =
+		mat.MAT_CODE
+		LEFT JOIN DT_PROJECT pro ON pro.PROJECT_ID = cad.PROJECT_ID
+		left join OA_STAFF staff on staff.STAFF_ID = cad.Responsible_Technology
+		) l
+		) m
+		) k
+		) u
+		where 1=1 AND [预警标识] = #{yjbs}
+
+	</select>
+	<select id="LoadCountByBeginEndTime" parameterType="pd"
+		resultType="pd">
+		SELECT
+		count(1) as num
+		FROM
+		PMS_Cabinet_Assembly_Detail cad
+		where cad.Cabinet_Assembly_ID in (
+			SELECT
+				Cabinet_Assembly_ID
+			FROM
+				PMS_Cabinet_Assembly ca
+			WHERE
+				ca.Estimate_Start_Date &gt;= #{beginB}
+			AND ca.Estimate_Start_Date &lt;= #{beginE}
+		) 
+		<if test="Load_Status != '' and Load_Status != null">
+			and Load_Status = #{Load_Status}
+		</if>
+	</select>
+	<select id="getBeginEndTime" resultType="pd">
+		with t(n) as (
+		  select 0
+		  union all
+		  select n+7 from t where n &lt; 100
+		)
+		select CONVERT(varchar(10),DATEADD(day,n,CONVERT(VARCHAR(10), GETDATE(),120)), 23) beginB,CONVERT(varchar(10),DATEADD(day,6,CONVERT(VARCHAR(10), DATEADD(day,n,CONVERT(VARCHAR(10), GETDATE(),120)),120)), 23) beginE  from t
+	</select>
+		<update id="updateMx" parameterType="pd">
+		update
+		PMS_Cabinet_BOM
+		set
+		FAudit_State = '是'
+		where
+		Cabinet_Assembly_Detail_ID =
+		#{Cabinet_Assembly_Detail_ID};
+		update
+		KM_AttachmentSet
+		set
+		FAudit_State = '是'
+		where
+		AssociationID =
+		#{Cabinet_Assembly_Detail_ID}
+	</update>
+		<!-- v1 管悦 2021-08-30 项目经理列表 -->
+	<select id="listXMJLByIDS" parameterType="String" resultType="pd">
+		select
+		distinct f1.USER_ID PPROJECT_MANAGER,project.PPROJECT_CODE,
+		project.PPROJECT_NAME,f.Cabinet_No
+		from 
+		<include refid="tableName"></include> f
+		
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f.Cabinet_Assembly_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		left join OA_STAFF f1 on project.PPROJECT_MANAGER=f1.NAME 
+		where 1=1 
+		and f.Cabinet_Assembly_Detail_ID in 
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</select>
+		<!-- v1 管悦 2021-08-30 技术负责人列表 -->
+	<select id="listJSFZRByIDS" parameterType="String" resultType="pd">
+		select
+		distinct staff.USER_ID as Responsible_Technology,project.PPROJECT_CODE,
+		project.PPROJECT_NAME,f.Cabinet_No
+		from 
+		<include refid="tableName"></include> f
+		
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f.Cabinet_Assembly_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		left join OA_STAFF f1 on project.PPROJECT_MANAGER=f1.NAME 
+		left join oa_staff staff on staff.STAFF_ID = project.Responsible_Technology
+		where 1=1 
+		and f.Cabinet_Assembly_Detail_ID in 
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</select>
+	<!-- v1 管悦 20320906 实际甘特图列表-排程时间 -->
+	<select id="listAllPC" parameterType="pd" resultType="pd">
+	SELECT
+gy2.PPROJECT_CODE,gy2.PPROJECT_NAME,
+		ca.Cabinet_Type,
+		pwo.*,
+  'A' as FTYPE,pwo.PlanningWorkOrder_ID id,	isnull(pwo.progress,0) progress,
+  ca.Cabinet_Type text,
+   right('00'+cast(day(PlannedBeginTime) as VARCHAR),2)+'-'+right('00'+cast(month(PlannedBeginTime) as VARCHAR),2)+'-'+right('00'+cast(year(PlannedBeginTime) as VARCHAR),4)+' 00:00:00' start_date,
+  right('00'+cast(day(PlannedEndTime) as VARCHAR),2)+'-'+right('00'+cast(month(PlannedEndTime) as VARCHAR),2)+'-'+right('00'+cast(year(PlannedEndTime) as VARCHAR),4)+' 23:59:59' end_date
+  FROM
+  PP_PlanningWorkOrder pwo
+	inner join
+		PMS_Cabinet_Assembly_Detail gy1 on pwo.WorkOrderNum =
+		gy1.Cabinet_No
+		left join
+		DT_PROJECT gy2 on gy1.PROJECT_ID =
+		gy2.PROJECT_ID
+		left join PMS_Cabinet_Assembly ca on ca.Cabinet_Assembly_ID = gy1.Cabinet_Assembly_ID
+where gy1.PROJECT_ID=#{PROJECT_ID}
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

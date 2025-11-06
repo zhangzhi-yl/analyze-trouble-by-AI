@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.Cabinet_AssemblyMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PMS_Cabinet_Assembly
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.Cabinet_Type,	
+		f.Cabinet_Count,	
+		f.Buffer_Period,	
+		f.Estimate_Start_Date,	
+		f.Project_End_Date,	
+		f.Technical_Officer,	
+		f.PRO_PLAN_ID,	
+		f.PROJECT_ID,
+		f.Cabinet_Assembly_ID,
+		f.FCREATOR,
+		f.FCTIME
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		Cabinet_Type,	
+		Cabinet_Count,	
+		Buffer_Period,	
+		Estimate_Start_Date,	
+		Project_End_Date,	
+		Technical_Officer,	
+		PRO_PLAN_ID,	
+		PROJECT_ID,
+		Cabinet_Assembly_ID,
+		FCREATOR,
+		FCTIME
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{Cabinet_Type},	
+		#{Cabinet_Count},	
+		#{Buffer_Period},	
+		#{Estimate_Start_Date},	
+		#{Project_End_Date},	
+		#{Technical_Officer},	
+		#{PRO_PLAN_ID},	
+		#{PROJECT_ID},
+		#{Cabinet_Assembly_ID},
+		#{FCREATOR},
+		#{FCTIME}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			Cabinet_Assembly_ID = #{Cabinet_Assembly_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			Cabinet_Type = #{Cabinet_Type},
+			Cabinet_Count = #{Cabinet_Count},
+			Buffer_Period = #{Buffer_Period},
+			Estimate_Start_Date = #{Estimate_Start_Date},
+			Project_End_Date = #{Project_End_Date},
+			Technical_Officer = #{Technical_Officer},
+			PRO_PLAN_ID = #{PRO_PLAN_ID},
+			PROJECT_ID = #{PROJECT_ID},
+			Cabinet_Assembly_ID = Cabinet_Assembly_ID
+		where 
+			Cabinet_Assembly_ID = #{Cabinet_Assembly_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.Cabinet_Assembly_ID = #{Cabinet_Assembly_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		project.PDELIVERY_DATE,
+		(case when (f.Cabinet_Type is null or f.Cabinet_Type ='') then 1 else 0 end) isEdit,
+		(case when (f.Cabinet_Type is null or f.Cabinet_Type ='') then 'add' else 'edit' end) FFTYPE,
+		<include refid="Field"></include>,staff.Name as Technical_Officer_Name,
+		isnull((select count(*) from PMS_Cabinet_Assembly_Detail where Cabinet_Assembly_ID=f.Cabinet_Assembly_ID and FStatus='创建') ,0) FNUM_WXF,
+		isnull((select count(*) from PMS_Cabinet_Assembly_Detail where Cabinet_Assembly_ID=f.Cabinet_Assembly_ID and FStatus!='创建') ,0) FNUM_YXF
+		from 
+		<include refid="tableName"></include> f
+		left join oa_staff staff on staff.STAFF_ID = f.Technical_Officer
+		left join DT_PROJECT project on project.PROJECT_ID =
+		f.PROJECT_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+		<if test="pd.PRO_PLAN_ID != null and pd.PRO_PLAN_ID != ''">
+				and PRO_PLAN_ID = #{pd.PRO_PLAN_ID}
+		</if>
+		<if test="pd.PROJECT_ID != null and pd.PROJECT_ID != ''">
+				and PROJECT_ID = #{pd.PROJECT_ID}
+		</if>
+		[fhstart] order by FCTIME desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="PROJECT_ID != null and PROJECT_ID != ''">
+				and PROJECT_ID = #{PROJECT_ID}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			Cabinet_Assembly_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过项目ID和柜体类型获取柜体类型汇总ID -->
+	<select id="findByIdAndType" parameterType="pd" resultType="pd">
+		SELECT
+		Cabinet_Assembly_ID
+		FROM 
+		<include refid="tableName"></include>
+		WHERE 
+		PROJECT_ID = #{PROJECT_ID}
+		AND
+		Cabinet_Type = #{Cabinet_Type_Name}
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

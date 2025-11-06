@@ -1,0 +1,2946 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.dprojectManager.DPROJECTMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		DT_PROJECT
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PPROJECT_CODE,	
+		f.PPROJECT_NAME,	
+		f.PCUSTOMER_NAME,	
+		f.PDELIVERY_PLACE,	
+		f.PDELIVERY_DATE,	
+		f.PSIGN_DATE,	
+		f.PCHANGE_DATE,	
+		f.PCONTRACT_AMOUNT,	
+		f.PCUSTOMER_PLACE,	
+		f.PPROJECT_MANAGER,	
+		f.PPROJECT_PRINCIPAL,	
+		f.PNOTE,	
+		f.PVISIBLE,	
+		f.PCREATOR,	
+		f.PCREATE_TIME,	
+		f.PLAST_MODIFIER,	
+		f.PLAST_MODIFIED_TIME,	
+		f.PROJECT_ID,
+		f.PENGINEER_DESIGN,
+		f.PELECTRIC_DESIGN,
+		f.FSTATE,
+		f.FEND_MAN,
+		f.FEND_TIME,
+		f.FEND_NOTE,
+		f.FEND_STATE,
+		f.Responsible_Technology,
+		f.PDELIVERYNEW_DATE,
+		f.PRESALEPLAN_ID,
+		f.PlannedBeginTimeXM,
+		f.PlannedEndTimeXM,
+		f.progressXM,
+		f.FAudit_State
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PPROJECT_CODE,	
+		PPROJECT_NAME,	
+		PCUSTOMER_NAME,	
+		PDELIVERY_PLACE,	
+		PDELIVERY_DATE,	
+		PSIGN_DATE,	
+		PCHANGE_DATE,	
+		PCONTRACT_AMOUNT,	
+		PCUSTOMER_PLACE,	
+		PPROJECT_MANAGER,	
+		PPROJECT_PRINCIPAL,	
+		PNOTE,	
+		PVISIBLE,	
+		PCREATOR,	
+		PCREATE_TIME,	
+		PLAST_MODIFIER,	
+		PLAST_MODIFIED_TIME,	
+		PROJECT_ID,
+		PENGINEER_DESIGN,
+		PELECTRIC_DESIGN,
+		PDEPARTMENT_ID,
+		FSTATE,
+		FEND_MAN,
+		FEND_TIME,
+		FEND_NOTE,
+		FEND_STATE,
+		Responsible_Technology,
+		PDELIVERYNEW_DATE,
+		PRESALEPLAN_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PPROJECT_CODE},	
+		#{PPROJECT_NAME},	
+		#{PCUSTOMER_NAME},	
+		#{PDELIVERY_PLACE},	
+		#{PDELIVERY_DATE},	
+		#{PSIGN_DATE},	
+		#{PCHANGE_DATE},	
+		#{PCONTRACT_AMOUNT},	
+		#{PCUSTOMER_PLACE},	
+		#{PPROJECT_MANAGER},	
+		#{PPROJECT_PRINCIPAL},	
+		#{PNOTE},	
+		#{PVISIBLE},	
+		#{PCREATOR},	
+		#{PCREATE_TIME},	
+		#{PLAST_MODIFIER},	
+		#{PLAST_MODIFIED_TIME},	
+		#{PROJECT_ID},
+		#{PENGINEER_DESIGN},
+		#{PELECTRIC_DESIGN},
+		#{PDEPARTMENT_ID},
+		#{FSTATE},
+		#{FEND_MAN},
+		#{FEND_TIME},
+		#{FEND_NOTE},
+		#{FEND_STATE},
+		#{Responsible_Technology},
+		#{PDELIVERYNEW_DATE},
+		#{PRESALEPLAN_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROJECT_ID = #{PROJECT_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		FEND_NOTE=#{FEND_NOTE},
+			PPROJECT_CODE = #{PPROJECT_CODE},
+			PPROJECT_NAME = #{PPROJECT_NAME},
+			PCUSTOMER_NAME = #{PCUSTOMER_NAME},
+			PDELIVERY_PLACE = #{PDELIVERY_PLACE},
+			PDELIVERY_DATE = #{PDELIVERY_DATE},
+			PSIGN_DATE = #{PSIGN_DATE},
+			PCHANGE_DATE = #{PCHANGE_DATE},
+			PCONTRACT_AMOUNT = #{PCONTRACT_AMOUNT},
+			PCUSTOMER_PLACE = #{PCUSTOMER_PLACE},
+			PPROJECT_MANAGER = #{PPROJECT_MANAGER},
+			PPROJECT_PRINCIPAL = #{PPROJECT_PRINCIPAL},
+			PNOTE = #{PNOTE},
+			PVISIBLE = #{PVISIBLE},
+			PCREATOR = #{PCREATOR},
+			PCREATE_TIME = #{PCREATE_TIME},
+			PLAST_MODIFIER = #{PLAST_MODIFIER},
+			PLAST_MODIFIED_TIME = #{PLAST_MODIFIED_TIME},
+			PENGINEER_DESIGN=#{PENGINEER_DESIGN},
+			PELECTRIC_DESIGN=#{PELECTRIC_DESIGN},
+			FSTATE=#{FSTATE},
+			Responsible_Technology=#{Responsible_Technology},
+			PDELIVERYNEW_DATE=#{PDELIVERYNEW_DATE},
+			FAudit_State=#{FAudit_State},
+			PROJECT_ID = PROJECT_ID
+		where 
+			PROJECT_ID = #{PROJECT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.FBUDGETNAME,f1.FBUDGETNUMBER,
+		staff.Name as Responsible_Technology_Name
+		from 
+		<include refid="tableName"></include> f
+		left join oa_staff staff on staff.STAFF_ID = f.Responsible_Technology
+		left join DT_PRESALEPLAN f1
+		on f.PRESALEPLAN_ID=f1.PRESALEPLAN_ID
+		where 
+			f.PROJECT_ID = #{PROJECT_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		staff.Name as Responsible_Technology_Name,
+		(
+		select  count(*) FNUMCY from(
+select 
+case 
+when (gy1.FORDERNUMBER is  null or gy1.FORDERNUMBER ='') and (gy2.MAT_SPECS is  null or gy2.MAT_SPECS ='') then '型号为空' 
+when (gy2.MAT_SPECS is not null and gy2.MAT_SPECS !='' and (gy1.FORDERNUMBER is  null or gy1.FORDERNUMBER =''))  then '新增' 
+when ((gy1.FORDERNUMBER is not null and gy1.FORDERNUMBER !='') and (gy2.MAT_SPECS is  null or gy2.MAT_SPECS ='') ) then '删除' when (gy2.BOM_COUNT != gy1.FQUANTITY) then '修改' else '不变' end FChangeState,
+gy1.FNAME MAT_NAME1,gy1.FORDERNUMBER MAT_SPECS1,gy1.FQUANTITY BOM_COUNT1,gy1.MAT_CODE MAT_CODE1,
+gy2.MAT_CODE MAT_CODE2,
+gy2.MAT_NAME MAT_NAME2,
+gy2.MAT_SPECS MAT_SPECS2,
+gy2.BOM_COUNT BOM_COUNT2
+ from
+(
+select FNAME,FORDERNUMBER,MAT_CODE,sum(cast(f1.FQUANTITY as NUMERIC(24,2))) FQUANTITY from DT_PRESALEPLANTWO f1
+left join (select * from MBASE_MAT_BASIC where MAT_SPECS !='' and MAT_SPECS is not null) f2 on f1.FORDERNUMBER=f2.MAT_SPECS
+ LEFT JOIN DT_PRESALEPLANONE f6 ON f1.PRESALEPLANONE_ID = f6.PRESALEPLANONE_ID
+where 1=1 and f1.PRESALEPLAN_ID=(select PRESALEPLAN_ID from DT_PROJECT where 1=1 and PROJECT_ID=f.PROJECT_ID)
+AND
+			(
+				FNAME != '设计工时'
+				AND
+				FNAME != '分料工时'
+				AND
+				FNAME != '装配工时'
+				AND
+				FNAME != '接线工时'
+				AND
+				FNAME != '上电工时'
+				AND
+				FNAME != '终检工时'
+				AND
+				FNAME != '包装工时'
+			)
+AND FCABINETTYPE != '' 
+AND FCABINETTYPE IS NOT NULL
+group by FNAME,FORDERNUMBER,MAT_CODE
+) gy1 
+full OUTER join 
+(
+select 
+bom.MAT_CODE,
+bom.MAT_NAME,
+bom.MAT_SPECS,
+sum(cast(bom.BOM_COUNT as NUMERIC(24,2))) BOM_COUNT
+from PMS_Cabinet_BOM bom
+left join PMS_Cabinet_Assembly_Detail detail on detail.Cabinet_Assembly_Detail_ID = bom.Cabinet_Assembly_Detail_ID
+left join DT_PROJECT project on project.PROJECT_ID =detail.PROJECT_ID
+where 1=1 and project.PROJECT_ID=f.PROJECT_ID AND detail.FAudit_CabinetDJ_State='通过'
+group by 
+bom.MAT_CODE,
+bom.MAT_NAME,
+bom.MAT_SPECS
+) gy2
+on (gy1.FORDERNUMBER=gy2.MAT_SPECS and ((gy2.MAT_SPECS is not null and gy2.MAT_SPECS !='') or (gy1.FORDERNUMBER is not null and gy1.FORDERNUMBER !='')))
+where 1=1 
+) hh
+where FChangeState!='不变'
+		) FNUMCY
+		from 
+		<include refid="tableName"></include> f
+		left join oa_staff staff on staff.STAFF_ID = f.Responsible_Technology
+		where 1=1
+		 <choose>
+          <when test="pd.NOTICE_TYPE == 'ALL' ">
+
+         </when >
+        <otherwise>
+        	<if test="pd.PPROJECT_MANAGER != null and pd.PPROJECT_MANAGER != ''">
+			and f.PPROJECT_MANAGER = #{pd.PPROJECT_MANAGER}
+			</if>
+			<if test="pd.ISALL== 'NO'.toString()">
+			<if test="pd.ISBZ== 'NO'.toString()">
+			and 
+			(
+			f.PCREATOR=#{pd.Guan} 
+			or f.PPROJECT_MANAGER=#{pd.Guan}
+			or f.PENGINEER_DESIGN=#{pd.Guan}
+			or f.PELECTRIC_DESIGN=#{pd.Guan}
+			)
+			</if>
+			<if test="pd.ISBZ== 'YES'.toString()">
+			 and f.PDEPARTMENT_ID = #{pd.DEPARTMENT_ID}   
+			</if>
+		</if>
+       </otherwise>
+   		</choose>
+		and PVISIBLE='1'
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 项目编号检索 -->
+			and
+				(
+					PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 项目名称检索 -->
+			and
+				(
+					PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS2}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != '' and pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 设备号和设备名称检索 -->
+			and
+				(
+					PROJECT_ID in(select distinct EPROJECT_ID from DT_EQUIPMENT where 1=1 and EVISIBLE='1' and EEQM_NO LIKE '%'+ #{pd.KEYWORDS3}+'%' and EEQM_NAME LIKE '%'+ #{pd.KEYWORDS4}+'%')
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 设备号和设备名称检索 -->
+			and
+				(
+					PROJECT_ID in(select distinct EPROJECT_ID from DT_EQUIPMENT where  1=1 and EVISIBLE='1' and EEQM_NO LIKE '%'+ #{pd.KEYWORDS3}+'%' )
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 设备名称检索 -->
+			and
+				(
+					PROJECT_ID in(select distinct EPROJECT_ID from DT_EQUIPMENT where  1=1 and EVISIBLE='1' and EEQM_NAME LIKE '%'+ #{pd.KEYWORDS4}+'%')
+				)
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != ''"><!-- 设备状态检索 -->
+			and
+				(
+					PROJECT_ID in(select distinct EPROJECT_ID from DT_EQUIPMENT where  1=1 and EVISIBLE='1' and ERUN_STATE = #{pd.KEYWORDS5})
+				)
+		</if>
+		
+	
+		<if test="pd.PROJECT_ID != null and pd.PROJECT_ID != ''">
+		and f.PROJECT_ID = #{pd.PROJECT_ID}
+		</if>
+		[fhstart] order by PCREATE_TIME desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and FSTATE='已审核'
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 项目编号检索 -->
+			and
+				(
+					PPROJECT_CODE LIKE '%'+ #{KEYWORDS}+'%'
+				)
+		</if>
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 项目名称检索 -->
+			and
+				(
+					PPROJECT_NAME LIKE '%'+ #{KEYWORDS}+'%'
+				)
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROJECT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 生成项目编号-->
+	<select id="generateNo" parameterType="pd" resultType="pd">
+		select 'D'+SUBSTRING(cast(YEAR(GETDATE()) as varchar(4)),3,2)+		
+		RIGHT('000'+CONVERT(VARCHAR(50),		
+		isnull((select max(isnull(cast(SUBSTRING(PPROJECT_CODE ,4,3) as int),0))+1
+		from DT_PROJECT
+		where 
+		SUBSTRING(PPROJECT_CODE ,1,3)='D'+SUBSTRING(cast(YEAR(GETDATE()) as varchar(4)),3,2)
+		),1)),3) PPROJECT_CODE
+		
+	</select>
+	<!-- 项目编号验重-->
+	<select id="testNo" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) FNUM
+		from DT_PROJECT
+		where 
+		PPROJECT_CODE=#{PPROJECT_CODE}
+		and PVISIBLE='1'
+	</select>
+	<!--反写删除状态-->
+	<update id="upVisible" parameterType="pd">
+	
+		update
+		<include refid="tableName"></include>
+		set 
+			PVISIBLE = #{PVISIBLE}
+		where 
+			PROJECT_ID = #{PROJECT_ID}				
+		
+	</update>
+	<!-- 获项目列表-可搜索-前100条-->
+	<select id="getProjectList" parameterType="pd" resultType="pd">
+		select
+		top 10 PPROJECT_NAME,PPROJECT_CODE,PROJECT_ID,isnull(PPROJECT_NAME,'无名称')+'/'+isnull(PPROJECT_CODE,'无编号')  FSelectOption
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 项目编号检索 -->
+			and
+				(
+					PPROJECT_CODE LIKE '%'+ #{KEYWORDS}+'%'
+					or
+					PPROJECT_NAME LIKE '%'+ #{KEYWORDS}+'%'
+				)
+		</if>
+		
+		 order by f.PPROJECT_CODE 
+	</select>
+	<!-- 结束-->
+	<update id="over" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		FEND_MAN=#{FEND_MAN},
+		FEND_TIME=#{FEND_TIME},
+		FEND_NOTE=#{FEND_NOTE},
+		FEND_STATE=#{FEND_STATE},
+		FAudit_State=#{FAudit_State}
+		where 
+			PROJECT_ID = #{PROJECT_ID}
+	</update>
+	<!-- v1 管悦 20210902 项目物料成本对比列表 -->
+	<select id="listWLDBlistPage" parameterType="page" resultType="pd">
+		select 
+case 
+when (gy1.FORDERNUMBER is  null or gy1.FORDERNUMBER ='') and (gy2.MAT_SPECS is  null or gy2.MAT_SPECS ='') then '型号为空' 
+when (gy2.MAT_SPECS is not null and gy2.MAT_SPECS !='' and (gy1.FORDERNUMBER is  null or gy1.FORDERNUMBER =''))  then '新增' 
+when ((gy1.FORDERNUMBER is not null and gy1.FORDERNUMBER !='') and (gy2.MAT_SPECS is  null or gy2.MAT_SPECS ='') ) then '删除' when (gy2.BOM_COUNT != gy1.FQUANTITY) then '修改' else '不变' end FChangeState,
+gy1.FNAME MAT_NAME1,gy1.FORDERNUMBER MAT_SPECS1,gy1.FQUANTITY BOM_COUNT1,gy1.MAT_CODE MAT_CODE1,
+gy2.MAT_CODE MAT_CODE2,
+gy2.MAT_NAME MAT_NAME2,
+gy2.MAT_SPECS MAT_SPECS2,
+gy2.BOM_COUNT BOM_COUNT2
+ from
+(
+select FNAME,FORDERNUMBER,MAT_CODE,sum(cast(f1.FQUANTITY as NUMERIC(24,2))) FQUANTITY from DT_PRESALEPLANTWO f1
+left join (select * from MBASE_MAT_BASIC where MAT_SPECS !='' and MAT_SPECS is not null) f2 on f1.FORDERNUMBER=f2.MAT_SPECS
+ LEFT JOIN DT_PRESALEPLANONE f6 ON f1.PRESALEPLANONE_ID = f6.PRESALEPLANONE_ID
+where 1=1 and f1.PRESALEPLAN_ID=(select PRESALEPLAN_ID from DT_PROJECT where 1=1 and PROJECT_ID=#{pd.PROJECT_ID})
+AND
+			(
+				FNAME != '设计工时'
+				AND
+				FNAME != '分料工时'
+				AND
+				FNAME != '装配工时'
+				AND
+				FNAME != '接线工时'
+				AND
+				FNAME != '上电工时'
+				AND
+				FNAME != '终检工时'
+				AND
+				FNAME != '包装工时'
+			)
+AND FCABINETTYPE != '' 
+AND FCABINETTYPE IS NOT NULL
+group by FNAME,FORDERNUMBER,MAT_CODE
+) gy1 
+full OUTER join 
+(
+select 
+bom.MAT_CODE,
+bom.MAT_NAME,
+bom.MAT_SPECS,
+sum(cast(bom.BOM_COUNT as NUMERIC(24,2))) BOM_COUNT
+from PMS_Cabinet_BOM bom
+left join PMS_Cabinet_Assembly_Detail detail on detail.Cabinet_Assembly_Detail_ID = bom.Cabinet_Assembly_Detail_ID
+left join DT_PROJECT project on project.PROJECT_ID =detail.PROJECT_ID
+where 1=1 and project.PROJECT_ID=#{pd.PROJECT_ID} AND detail.FAudit_CabinetDJ_State='通过'
+group by 
+bom.MAT_CODE,
+bom.MAT_NAME,
+bom.MAT_SPECS
+) gy2
+on (gy1.FORDERNUMBER=gy2.MAT_SPECS and ((gy2.MAT_SPECS is not null and gy2.MAT_SPECS !='') or (gy1.FORDERNUMBER is not null and gy1.FORDERNUMBER !='')))
+where 1=1 
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 物料信息检索 -->
+			and
+				(
+					gy1.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy1.FORDERNUMBER LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy1.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy2.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy2.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy2.MAT_SPECS LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+	</select>
+	
+	<!-- v1 管悦 20210902 单柜体物料成本对比列表 -->
+	<select id="listWLDBMXlistPage" parameterType="page" resultType="pd">
+		select 
+case 
+when (gy1.FORDERNUMBER is  null or gy1.FORDERNUMBER ='') and (gy2.MAT_SPECS is  null or gy2.MAT_SPECS ='') then '型号为空' 
+when (gy2.MAT_SPECS is not null and gy2.MAT_SPECS !='' and (gy1.FORDERNUMBER is  null or gy1.FORDERNUMBER =''))  then '新增' 
+when ((gy1.FORDERNUMBER is not null and gy1.FORDERNUMBER !='') and (gy2.MAT_SPECS is  null or gy2.MAT_SPECS ='') ) then '删除' when (gy2.BOM_COUNT != gy1.FQUANTITY) then '修改' else '不变' end FChangeState,
+gy1.FNAME MAT_NAME1,gy1.FORDERNUMBER MAT_SPECS1,gy1.FQUANTITY BOM_COUNT1,gy1.MAT_CODE MAT_CODE1,
+gy2.MAT_CODE MAT_CODE2,
+gy2.MAT_NAME MAT_NAME2,
+gy2.MAT_SPECS MAT_SPECS2,
+gy2.BOM_COUNT BOM_COUNT2
+ from
+(
+select f1.PRESALEPLANONE_ID,f1.FQUANTITY,f2.MAT_BASIC_ID,FNAME,FORDERNUMBER,f1.PRESALEPLAN_ID,f2.MAT_CODE from DT_PRESALEPLANTWO f1
+left join (select * from MBASE_MAT_BASIC where MAT_SPECS !='' and MAT_SPECS is not null) f2 on f1.FORDERNUMBER=f2.MAT_SPECS
+ LEFT JOIN DT_PRESALEPLANONE f6 ON f1.PRESALEPLANONE_ID = f6.PRESALEPLANONE_ID
+where 1=1 and f1.PRESALEPLANONE_ID=(select PRESALEPLANONE_ID from PMS_Cabinet_Assembly_Detail where 1=1 and Cabinet_Assembly_Detail_ID=#{pd.Cabinet_Assembly_Detail_ID})
+AND
+			(
+				FNAME != '设计工时'
+				AND
+				FNAME != '分料工时'
+				AND
+				FNAME != '装配工时'
+				AND
+				FNAME != '接线工时'
+				AND
+				FNAME != '上电工时'
+				AND
+				FNAME != '终检工时'
+				AND
+				FNAME != '包装工时'
+			)
+AND FCABINETTYPE != '' 
+AND FCABINETTYPE IS NOT NULL
+) gy1 
+full OUTER join 
+(
+select bom.*,project.PRESALEPLAN_ID,detail.PRESALEPLANONE_ID from PMS_Cabinet_BOM bom
+left join PMS_Cabinet_Assembly_Detail detail on detail.Cabinet_Assembly_Detail_ID = bom.Cabinet_Assembly_Detail_ID
+left join DT_PROJECT project on project.PROJECT_ID =detail.PROJECT_ID
+where 1=1 and detail.Cabinet_Assembly_Detail_ID=#{pd.Cabinet_Assembly_Detail_ID} AND detail.FAudit_CabinetDJ_State='通过'
+) gy2
+on (gy1.FORDERNUMBER=gy2.MAT_SPECS and ((gy2.MAT_SPECS is not null and gy2.MAT_SPECS !='') or (gy1.FORDERNUMBER is not null and gy1.FORDERNUMBER !='')) and gy1.PRESALEPLAN_ID=gy2.PRESALEPLAN_ID and gy1.PRESALEPLANONE_ID=gy2.PRESALEPLANONE_ID)
+<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 物料信息检索 -->
+			and
+				(
+					gy1.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy1.FORDERNUMBER LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy1.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy2.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy2.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					gy2.MAT_SPECS LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+
+	</select>
+	<!-- v1 管悦 20210902 项目物料工时对比列表 -->
+	<select id="listRGDBlistPage" parameterType="page" resultType="pd">
+	select 
+gy11.FNAME FTYPE,cast(isnull(gy1.FQUANTITY,0) as NUMERIC(24,2)) FPlanHours,
+case when (
+				gy11.FNAME ='装配工时'
+				or
+				gy11.FNAME = '接线工时'
+				or
+				gy11.FNAME = '上电工时'
+				or
+				gy11.FNAME = '终检工时'
+				or
+				gy11.FNAME = '包装工时'
+			)  then 
+
+(case when isnull(gy3.FUseHours,0.00)=0 then isnull(gy2.FUseHours,0.00) else isnull(gy3.FUseHours,0.00) end) 
+WHEN
+(
+
+				gy11.FNAME = '分料工时'
+				
+			)
+then isnull(gy4.FUseHours,0.00)
+WHEN
+(
+
+				gy11.FNAME = '设计工时'
+				
+			)
+then isnull(gy5.FUseHours,0.00)
+
+end FUseHours
+ from
+
+(
+select #{pd.PROJECT_ID} PROJECT_ID,'设计工时' FNAME union ALL
+select #{pd.PROJECT_ID},'分料工时' union ALL
+select #{pd.PROJECT_ID},'装配工时' union ALL
+select #{pd.PROJECT_ID},'接线工时' union ALL
+select #{pd.PROJECT_ID},'上电工时' union ALL
+select #{pd.PROJECT_ID},'终检工时' union ALL
+select #{pd.PROJECT_ID},'包装工时' 
+
+) gy11
+--计划工时
+left join 
+(
+select sum(cast(f1.FQUANTITY as NUMERIC(24,2))) FQUANTITY,FNAME from DT_PRESALEPLANTWO f1
+left join (select * from MBASE_MAT_BASIC where MAT_SPECS !='' and MAT_SPECS is not null) f2 on f1.FORDERNUMBER=f2.MAT_SPECS
+ LEFT JOIN DT_PRESALEPLANONE f6 ON f1.PRESALEPLANONE_ID = f6.PRESALEPLANONE_ID
+where 1=1 
+and f1.PRESALEPLAN_ID=(select PRESALEPLAN_ID from DT_PROJECT where 1=1 and PROJECT_ID=#{pd.PROJECT_ID})
+AND
+			(
+				FNAME = '设计工时'
+				or
+				FNAME = '分料工时'
+				or
+				FNAME ='装配工时'
+				or
+				FNAME = '接线工时'
+				or
+				FNAME = '上电工时'
+				or
+				FNAME = '终检工时'
+				or
+				FNAME = '包装工时'
+			)
+AND FCABINETTYPE != '' 
+AND FCABINETTYPE IS NOT NULL
+group by FNAME
+) gy1 
+on gy11.FNAME=gy1.FNAME
+--生产执行工时
+left join 
+(
+select cast(sum(FUseHours)as NUMERIC(24,2))  FUseHours,WPName from(
+select 
+sum(cast(DATEDIFF( mi, BeginTime, EndTime)*1.0/60 as NUMERIC(24,2))) FUseHours,case when WPName='上电检测' then '上电' else WPName end WPName
+ from PP_O_RECORD h1
+left join PP_ProcessWorkOrderExample h2 on h1.WorkingProcedureExampleID=h2.ProcessWorkOrderExample_ID
+left join PMS_Cabinet_Assembly_Detail h3 
+on h2.ProcessIMaterielCode =h3.Cabinet_No
+where 1=1  and PROJECT_ID =#{pd.PROJECT_ID}
+group by case when WPName='上电检测' then '上电' else WPName end 
+
+union ALL
+select 
+sum(cast(DATEDIFF( mi, BEGIN_TIME, END_TIME)*1.0/60 as NUMERIC(24,2))) FUseHours,case when WP_ID='上电检测' then '上电' else WP_ID end WPName
+ from QM_O_RECORD_QualityTask h1
+left join QM_QualityInspectionPlanExecute h2
+on h1.ASSOCIATED_ID=h2.QualityInspectionPlanExecute_ID
+LEFT JOIN PP_PlanningWorkOrder g on h2.WorkOrderIDRel = g.PlanningWorkOrder_ID
+left join PMS_Cabinet_Assembly_Detail h3 
+on g.WorkOrderNum =h3.Cabinet_No
+where 1=1  and PROJECT_ID =#{pd.PROJECT_ID}
+
+group by case when WP_ID='上电检测' then '上电' else WP_ID end 
+) hhh
+group by WPName 
+
+
+) gy2
+on (gy11.FNAME=gy2.WPName+'工时')
+
+--工时填报工时
+left join 
+(
+select 
+sum(cast(h1.ActualManHour as NUMERIC(24,2))) FUseHours,case when WPName='上电检测' then '上电' else WPName end WPName
+ from PP_WorkingHours h1
+left join PP_ProcessWorkOrderExample h2 on h1.ProcessWorkOrderExample_ID=h2.ProcessWorkOrderExample_ID
+left join PMS_Cabinet_Assembly_Detail h3 
+on h2.ProcessIMaterielCode =h3.Cabinet_No
+where 1=1  and PROJECT_ID =#{pd.PROJECT_ID} AND h1.AuditMark='通过'
+
+group by case when WPName='上电检测' then '上电' else WPName end 
+) gy3
+on (gy11.FNAME=gy3.WPName+'工时')
+--分料工时
+left join
+(select PROJECT_ID,sum(cast(DATEDIFF( mi, MakeTime, FTime1)*1.0/60 as NUMERIC(24,2))) FUseHours from MM_CallMaterialFL h2
+left join PMS_Cabinet_Assembly_Detail h3 
+on h2.PlanningWorkOrderNum =h3.Cabinet_No
+where h2.FState='分料完成' and PROJECT_ID =#{pd.PROJECT_ID}
+
+group by PROJECT_ID) gy4
+on  (gy11.FNAME='分料工时')
+--设计工时
+left join
+
+(
+select PROJECT_ID,sum(cast(DATEDIFF( mi, Distribute_Time, FIs_NeedDJ_Time)*1.0/60 as NUMERIC(24,2))) FUseHours  from PMS_Cabinet_Assembly_Detail 
+where FAudit_CabinetDJ_State='通过' and PROJECT_ID =#{pd.PROJECT_ID}
+group by PROJECT_ID 
+) gy5
+on  (gy11.FNAME='设计工时')
+
+	
+	</select>
+	<!-- v1 管悦 20210902 单柜体物料工时对比列表 -->
+	<select id="listRGDBMXlistPage" parameterType="page" resultType="pd">
+	select 
+gy11.FNAME FTYPE,cast(isnull(gy1.FQUANTITY,0) as NUMERIC(24,2)) FPlanHours,
+case when (
+				gy11.FNAME ='装配工时'
+				or
+				gy11.FNAME = '接线工时'
+				or
+				gy11.FNAME = '上电工时'
+				or
+				gy11.FNAME = '终检工时'
+				or
+				gy11.FNAME = '包装工时'
+			)  then 
+
+(case when isnull(gy3.FUseHours,0.00)=0 then isnull(gy2.FUseHours,0.00) else isnull(gy3.FUseHours,0.00) end) 
+WHEN
+(
+
+				gy11.FNAME = '分料工时'
+				
+			)
+then isnull(gy4.FUseHours,0.00)
+WHEN
+(
+
+				gy11.FNAME = '设计工时'
+				
+			)
+then isnull(gy5.FUseHours,0.00)
+
+end FUseHours
+ from
+
+(
+select #{pd.Cabinet_Assembly_Detail_ID} Cabinet_Assembly_Detail_ID,'设计工时' FNAME union ALL
+select #{pd.Cabinet_Assembly_Detail_ID},'分料工时' union ALL
+select #{pd.Cabinet_Assembly_Detail_ID},'装配工时' union ALL
+select #{pd.Cabinet_Assembly_Detail_ID},'接线工时' union ALL
+select #{pd.Cabinet_Assembly_Detail_ID},'上电工时' union ALL
+select #{pd.Cabinet_Assembly_Detail_ID},'终检工时' union ALL
+select #{pd.Cabinet_Assembly_Detail_ID},'包装工时' 
+
+) gy11
+left join 
+(
+select f1.PRESALEPLANONE_ID,f1.FQUANTITY,f2.MAT_BASIC_ID,FNAME,FORDERNUMBER,f1.PRESALEPLAN_ID,f2.MAT_CODE from DT_PRESALEPLANTWO f1
+left join (select * from MBASE_MAT_BASIC where MAT_SPECS !='' and MAT_SPECS is not null) f2 on f1.FORDERNUMBER=f2.MAT_SPECS
+ LEFT JOIN DT_PRESALEPLANONE f6 ON f1.PRESALEPLANONE_ID = f6.PRESALEPLANONE_ID
+where 1=1 
+and f1.PRESALEPLANONE_ID=(select PRESALEPLANONE_ID from PMS_Cabinet_Assembly_Detail where 1=1 and Cabinet_Assembly_Detail_ID=#{pd.Cabinet_Assembly_Detail_ID})
+--and f1.PRESALEPLAN_ID=(select PRESALEPLAN_ID from DT_PROJECT where 1=1 and PROJECT_ID='2c496f9a19484e37be5aed374baeaae9')
+AND
+			(
+				FNAME = '设计工时'
+				or
+				FNAME = '分料工时'
+				or
+				FNAME ='装配工时'
+				or
+				FNAME = '接线工时'
+				or
+				FNAME = '上电工时'
+				or
+				FNAME = '终检工时'
+				or
+				FNAME = '包装工时'
+			)
+AND FCABINETTYPE != '' 
+AND FCABINETTYPE IS NOT NULL
+) gy1 
+on gy11.FNAME=gy1.FNAME
+--生产执行工时
+left join 
+(
+select cast(sum(FUseHours)as NUMERIC(24,2))  FUseHours,PRESALEPLANONE_ID,WPName from(
+select 
+sum(cast(DATEDIFF( mi, BeginTime, EndTime)*1.0/60 as NUMERIC(24,2))) FUseHours,h3.PRESALEPLANONE_ID,case when WPName='上电检测' then '上电' else WPName end WPName
+ from PP_O_RECORD h1
+left join PP_ProcessWorkOrderExample h2 on h1.WorkingProcedureExampleID=h2.ProcessWorkOrderExample_ID
+left join PMS_Cabinet_Assembly_Detail h3 
+on h2.ProcessIMaterielCode =h3.Cabinet_No
+where 1=1  and Cabinet_Assembly_Detail_ID=#{pd.Cabinet_Assembly_Detail_ID}
+group by h2.ProcessIMaterielCode,h3.PRESALEPLANONE_ID,case when WPName='上电检测' then '上电' else WPName end 
+
+union ALL
+select 
+sum(cast(DATEDIFF( mi, BEGIN_TIME, END_TIME)*1.0/60 as NUMERIC(24,2))) FUseHours,h3.PRESALEPLANONE_ID,case when WP_ID='上电检测' then '上电' else WP_ID end WPName
+ from QM_O_RECORD_QualityTask h1
+left join QM_QualityInspectionPlanExecute h2
+on h1.ASSOCIATED_ID=h2.QualityInspectionPlanExecute_ID
+LEFT JOIN PP_PlanningWorkOrder g on h2.WorkOrderIDRel = g.PlanningWorkOrder_ID
+left join PMS_Cabinet_Assembly_Detail h3 
+on g.WorkOrderNum =h3.Cabinet_No
+where 1=1  and Cabinet_Assembly_Detail_ID=#{pd.Cabinet_Assembly_Detail_ID}
+
+group by g.WorkOrderNum,h3.PRESALEPLANONE_ID,case when WP_ID='上电检测' then '上电' else WP_ID end 
+) hhh
+group by PRESALEPLANONE_ID,WPName 
+
+) gy2
+on (gy11.FNAME=gy2.WPName+'工时')
+
+--工时填报工时
+left join 
+(
+select 
+sum(cast(h1.ActualManHour as NUMERIC(24,2))) FUseHours,h3.PRESALEPLANONE_ID,case when WPName='上电检测' then '上电' else WPName end WPName
+ from PP_WorkingHours h1
+left join PP_ProcessWorkOrderExample h2 on h1.ProcessWorkOrderExample_ID=h2.ProcessWorkOrderExample_ID
+left join PMS_Cabinet_Assembly_Detail h3 
+on h2.ProcessIMaterielCode =h3.Cabinet_No
+where 1=1  and Cabinet_Assembly_Detail_ID=#{pd.Cabinet_Assembly_Detail_ID} AND h1.AuditMark='通过'
+
+group by h2.ProcessIMaterielCode,h3.PRESALEPLANONE_ID,case when WPName='上电检测' then '上电' else WPName end
+) gy3
+on (gy11.FNAME=gy3.WPName+'工时')
+--分料工时
+left join
+(select PlanningWorkOrderNum,h3.PRESALEPLANONE_ID,sum(cast(DATEDIFF( mi, MakeTime, FTime1)*1.0/60 as NUMERIC(24,2))) FUseHours from MM_CallMaterialFL h2
+left join PMS_Cabinet_Assembly_Detail h3 
+on h2.PlanningWorkOrderNum =h3.Cabinet_No
+where h2.FState='分料完成' and Cabinet_Assembly_Detail_ID=#{pd.Cabinet_Assembly_Detail_ID}
+
+group by PlanningWorkOrderNum,h3.PRESALEPLANONE_ID) gy4
+on  (gy11.FNAME='分料工时')
+--设计工时
+left join
+
+(
+select Cabinet_No,PRESALEPLANONE_ID,sum(cast(DATEDIFF( mi, Distribute_Time, FIs_NeedDJ_Time)*1.0/60 as NUMERIC(24,2))) FUseHours  from PMS_Cabinet_Assembly_Detail 
+where FAudit_CabinetDJ_State='通过' and Cabinet_Assembly_Detail_ID=#{pd.Cabinet_Assembly_Detail_ID}
+group by Cabinet_No,PRESALEPLANONE_ID 
+) gy5
+on  (gy11.FNAME='设计工时')
+
+
+	</select>
+	
+	<!-- 生产排程-项目单条修改排产时间-->
+	<update id="editTimeXM" parameterType="pd">
+	
+		update
+		<include refid="tableName"></include>
+		set 
+		PlannedBeginTimeXM=#{PlannedBeginTimeXM},
+		PlannedEndTimeXM=#{PlannedEndTimeXM},
+		progressXM=#{progressXM}
+		where 
+			PROJECT_ID = #{PROJECT_ID}				
+		
+	</update>
+	<!-- v1 管悦 20210929 项目看板-DDP折线图 按年、月、日、周查看项目延时率和正常率
+    -->
+	<select id="listDDP" parameterType="pd" resultType="pd">
+		 <choose>
+          <when test="FTYPE == '年'.toString() ">
+--按年查延期率
+select 
+结束日期 FEND_DATE,
+--延期率
+cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--正常率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2
+  from 
+
+(
+--最近7年（年份结束日期）
+SELECT 
+n,CONVERT(nvarchar(10),DATEADD(YY,n,DATEADD(yy, DATEDIFF(yy,0,getdate()), 0)),121) 开始日期
+from (  select -6 as n union select -5  union select -4 union select -3
+union select -2 union select -1 union select 0) a
+
+)gy1
+left join 
+(--最近7年（年份结束日期）
+SELECT 
+n-1 n,CONVERT(nvarchar(10),DATEADD(DD,-1,DATEADD(YY,n,DATEADD(YY,DATEDIFF(YY,0,GETDATE()),0))),121) 结束日期
+from (select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 union select 1) a
+) gy2
+on gy1.n=gy2.n
+) ff
+         </when >
+          <when test="FTYPE == '月'.toString() ">
+--按月查延期率
+select 
+结束日期 FEND_DATE,
+--延期率
+cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--正常率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2
+  from 
+
+(
+--最近7个月（月份结束日期）
+SELECT 
+n,CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,n,getdate())),121) 开始日期
+from ( select -6 as n union select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 ) a
+) gy1 left join 
+(--最近7个月（月份结束日期）
+SELECT 
+n-1 n ,CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,n,getdate())),121) 结束日期
+from (select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 union select 1) a
+) gy2 on gy1.n=gy2.n
+) ff
+
+         </when >
+          <when test="FTYPE == '周'.toString() ">
+--按周查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--正常率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2
+  from 
+(
+--最近7周（周开始日期）
+SELECT n,CONVERT(nvarchar(10),dateadd(week,n,DATEADD(wk, DATEDIFF(wk,0,DATEADD(dd, -1, getdate()) ), 0)),121) 开始日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy1 left join 
+(
+--最近7周（周结束日期）
+SELECT n,CONVERT(nvarchar(10),dateadd(week,n,CONVERT(nvarchar(10), DATEADD(wk, DATEDIFF(wk,0,DATEADD(dd, -1, getdate()) ), 6),121)),121) 结束日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy2 on gy1.n=gy2.n
+) ff
+
+         </when >
+          <when test="FTYPE == '日'.toString() ">
+--按天查延期率
+select 
+结束日期 FEND_DATE,
+--延期率
+cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--正常率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2
+  from 
+
+(select convert(varchar(10), dateadd(day, n, getdate()), 120) as 开始日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy1
+left join 
+(
+--最近7天
+select convert(varchar(10), dateadd(day, n, getdate()), 120) as 结束日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy2 on gy1.开始日期=gy2.结束日期
+) ff
+
+         </when >
+        <otherwise>
+        	
+       </otherwise>
+   		</choose>
+   		</select>
+   		<!-- v1 管悦 20210929 项目看板-准时交付数量 按年、月、日、周查看准时交货率和准时订单数
+    -->
+	<select id="listZSDDS" parameterType="pd" resultType="pd">
+		 <choose>
+          <when test="FTYPE == '年'.toString() ">
+          --按年查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(--未超期
+select  cast(sum(PCONTRACT_AMOUNT)  as NUMERIC(24,2)) PCONTRACT_AMOUNT
+from DT_PROJECT
+where PROJECT_ID IN
+(
+(select f1.PROJECT_ID
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0)
+)
+and PROJECT_ID not IN
+(
+select PROJECT_ID from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+)
+) 
+ PCONTRACT_AMOUNT
+  from 
+
+(
+--最近7年（年份结束日期）
+SELECT 
+n,CONVERT(nvarchar(10),DATEADD(YY,n,DATEADD(yy, DATEDIFF(yy,0,getdate()), 0)),121) 开始日期
+from (  select -6 as n union select -5  union select -4 union select -3
+union select -2 union select -1 union select 0) a
+
+)gy1
+left join 
+(--最近7年（年份结束日期）
+SELECT 
+n-1 n,CONVERT(nvarchar(10),DATEADD(DD,-1,DATEADD(YY,n,DATEADD(YY,DATEDIFF(YY,0,GETDATE()),0))),121) 结束日期
+from (select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 union select 1) a
+) gy2
+on gy1.n=gy2.n
+) ff
+          </when>
+           <when test="FTYPE == '月'.toString() ">
+           --按月查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(--未超期
+select  cast(sum(PCONTRACT_AMOUNT)  as NUMERIC(24,2)) PCONTRACT_AMOUNT
+from DT_PROJECT
+where PROJECT_ID IN
+(
+(select f1.PROJECT_ID
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0)
+)
+and PROJECT_ID not IN
+(
+select PROJECT_ID from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+)
+) 
+ PCONTRACT_AMOUNT
+  from 
+
+(
+--最近7个月（月份结束日期）
+SELECT 
+n,CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,n,getdate())),121) 开始日期
+from ( select -6 as n union select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 ) a
+) gy1 left join 
+(--最近7个月（月份结束日期）
+SELECT 
+n-1 n ,CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,n,getdate())),121) 结束日期
+from (select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 union select 1) a
+) gy2 on gy1.n=gy2.n
+) ff
+           
+          </when>
+           <when test="FTYPE == '周'.toString() ">
+           --按周查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(--未超期
+select  cast(sum(PCONTRACT_AMOUNT)  as NUMERIC(24,2)) PCONTRACT_AMOUNT
+from DT_PROJECT
+where PROJECT_ID IN
+(
+(select f1.PROJECT_ID
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0)
+)
+and PROJECT_ID not IN
+(
+select PROJECT_ID from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+)
+) 
+ PCONTRACT_AMOUNT
+  from 
+(
+--最近7周（周开始日期）
+SELECT n,CONVERT(nvarchar(10),dateadd(week,n,DATEADD(wk, DATEDIFF(wk,0,DATEADD(dd, -1, getdate()) ), 0)),121) 开始日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy1 left join 
+(
+--最近7周（周结束日期）
+SELECT n,CONVERT(nvarchar(10),dateadd(week,n,CONVERT(nvarchar(10), DATEADD(wk, DATEDIFF(wk,0,DATEADD(dd, -1, getdate()) ), 6),121)),121) 结束日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy2 on gy1.n=gy2.n
+) ff
+           
+          </when>
+           <when test="FTYPE == '日'.toString() ">
+           --按天查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(--未超期
+select  cast(sum(PCONTRACT_AMOUNT)  as NUMERIC(24,2)) PCONTRACT_AMOUNT
+from DT_PROJECT
+where PROJECT_ID IN
+(
+(select f1.PROJECT_ID
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0)
+)
+and PROJECT_ID not IN
+(
+select PROJECT_ID from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+)
+) 
+ PCONTRACT_AMOUNT
+  from 
+
+(select convert(varchar(10), dateadd(day, n, getdate()), 120) as 开始日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy1
+left join 
+(
+--最近7天
+select convert(varchar(10), dateadd(day, n, getdate()), 120) as 结束日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy2 on gy1.开始日期=gy2.结束日期
+) ff
+           
+          </when>
+       <otherwise>
+        	
+       </otherwise>
+   		</choose>
+   		</select>
+   		<!-- v1 管悦 20210929 项目看板-准时交付金额 按年、月、日、周查看准时交货率和准时订单金额
+    -->
+   	<select id="listZSDDJE" parameterType="pd" resultType="pd">
+		 		 <choose>
+          <when test="FTYPE == '年'.toString() ">
+          --按年查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(--未超期
+select  cast(sum(PCONTRACT_AMOUNT)  as NUMERIC(24,2)) PCONTRACT_AMOUNT
+from DT_PROJECT
+where PROJECT_ID IN
+(
+(select f1.PROJECT_ID
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0)
+)
+and PROJECT_ID not IN
+(
+select PROJECT_ID from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+)
+) 
+ PCONTRACT_AMOUNT
+  from 
+
+(
+--最近7年（年份结束日期）
+SELECT 
+n,CONVERT(nvarchar(10),DATEADD(YY,n,DATEADD(yy, DATEDIFF(yy,0,getdate()), 0)),121) 开始日期
+from (  select -6 as n union select -5  union select -4 union select -3
+union select -2 union select -1 union select 0) a
+
+)gy1
+left join 
+(--最近7年（年份结束日期）
+SELECT 
+n-1 n,CONVERT(nvarchar(10),DATEADD(DD,-1,DATEADD(YY,n,DATEADD(YY,DATEDIFF(YY,0,GETDATE()),0))),121) 结束日期
+from (select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 union select 1) a
+) gy2
+on gy1.n=gy2.n
+) ff
+          </when>
+           <when test="FTYPE == '月'.toString() ">
+           --按月查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(--未超期
+select  cast(sum(PCONTRACT_AMOUNT)  as NUMERIC(24,2)) PCONTRACT_AMOUNT
+from DT_PROJECT
+where PROJECT_ID IN
+(
+(select f1.PROJECT_ID
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0)
+)
+and PROJECT_ID not IN
+(
+select PROJECT_ID from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+)
+) 
+ PCONTRACT_AMOUNT
+  from 
+
+(
+--最近7个月（月份结束日期）
+SELECT 
+n,CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,n,getdate())),121) 开始日期
+from ( select -6 as n union select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 ) a
+) gy1 left join 
+(--最近7个月（月份结束日期）
+SELECT 
+n-1 n ,CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,n,getdate())),121) 结束日期
+from (select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 union select 1) a
+) gy2 on gy1.n=gy2.n
+) ff
+           
+          </when>
+           <when test="FTYPE == '周'.toString() ">
+           --按周查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(--未超期
+select  cast(sum(PCONTRACT_AMOUNT)  as NUMERIC(24,2)) PCONTRACT_AMOUNT
+from DT_PROJECT
+where PROJECT_ID IN
+(
+(select f1.PROJECT_ID
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0)
+)
+and PROJECT_ID not IN
+(
+select PROJECT_ID from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+)
+) 
+ PCONTRACT_AMOUNT
+  from 
+(
+--最近7周（周开始日期）
+SELECT n,CONVERT(nvarchar(10),dateadd(week,n,DATEADD(wk, DATEDIFF(wk,0,DATEADD(dd, -1, getdate()) ), 0)),121) 开始日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy1 left join 
+(
+--最近7周（周结束日期）
+SELECT n,CONVERT(nvarchar(10),dateadd(week,n,CONVERT(nvarchar(10), DATEADD(wk, DATEDIFF(wk,0,DATEADD(dd, -1, getdate()) ), 6),121)),121) 结束日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy2 on gy1.n=gy2.n
+) ff
+           
+          </when>
+           <when test="FTYPE == '日'.toString() ">
+           --按天查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(--未超期
+select  cast(sum(PCONTRACT_AMOUNT)  as NUMERIC(24,2)) PCONTRACT_AMOUNT
+from DT_PROJECT
+where PROJECT_ID IN
+(
+(select f1.PROJECT_ID
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0)
+)
+and PROJECT_ID not IN
+(
+select PROJECT_ID from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+)
+) 
+ PCONTRACT_AMOUNT
+  from 
+
+(select convert(varchar(10), dateadd(day, n, getdate()), 120) as 开始日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy1
+left join 
+(
+--最近7天
+select convert(varchar(10), dateadd(day, n, getdate()), 120) as 结束日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy2 on gy1.开始日期=gy2.结束日期
+) ff
+           
+          </when>
+       <otherwise>
+        	
+       </otherwise>
+   		</choose>
+   		</select>
+   			<!-- v1 管悦 20210929 项目看板-财务损失，订单金额*1%*延期天数
+    -->
+	<select id="listCWSS" parameterType="pd" resultType="pd">
+		 <choose>
+          <when test="FTYPE == '年'.toString() ">
+          --按年查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+--cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+--cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(select  cast(sum(PCONTRACT_AMOUNT*FDAY*0.01)  as NUMERIC(24,2)) PCONTRACT_AMOUNT from(--未超期
+select PCONTRACT_AMOUNT,PROJECT_ID,DATEDIFF(day, FDATE2, FDATE1) FDAY from
+(select max(f4.PCONTRACT_AMOUNT) PCONTRACT_AMOUNT,f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),
+convert(VARCHAR(10),GETDATE(),120)) FDATE1,
+convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) gy11)
+ PCONTRACT_AMOUNT
+  from 
+
+(
+--最近7年（年份结束日期）
+SELECT 
+n,CONVERT(nvarchar(10),DATEADD(YY,n,DATEADD(yy, DATEDIFF(yy,0,getdate()), 0)),121) 开始日期
+from (  select -6 as n union select -5  union select -4 union select -3
+union select -2 union select -1 union select 0) a
+
+)gy1
+left join 
+(--最近7年（年份结束日期）
+SELECT 
+n-1 n,CONVERT(nvarchar(10),DATEADD(DD,-1,DATEADD(YY,n,DATEADD(YY,DATEDIFF(YY,0,GETDATE()),0))),121) 结束日期
+from (select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 union select 1) a
+) gy2
+on gy1.n=gy2.n
+) ff
+          </when>
+          <when test="FTYPE == '月'.toString() ">
+          --按月查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+--cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+--cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(select  cast(sum(PCONTRACT_AMOUNT*FDAY*0.01)  as NUMERIC(24,2)) PCONTRACT_AMOUNT from(--未超期
+select PCONTRACT_AMOUNT,PROJECT_ID,DATEDIFF(day, FDATE2, FDATE1) FDAY from
+(select max(f4.PCONTRACT_AMOUNT) PCONTRACT_AMOUNT,f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),
+convert(VARCHAR(10),GETDATE(),120)) FDATE1,
+convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) gy11)
+ PCONTRACT_AMOUNT
+  from 
+(
+--最近7个月（月份结束日期）
+SELECT 
+n,CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,n,getdate())),121) 开始日期
+from ( select -6 as n union select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 ) a
+) gy1 left join 
+(--最近7个月（月份结束日期）
+SELECT 
+n-1 n ,CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,n,getdate())),121) 结束日期
+from (select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 union select 1) a
+) gy2 on gy1.n=gy2.n
+) ff
+          
+          </when>
+          <when test="FTYPE == '周'.toString() ">
+          --按周查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+--cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+--cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(select  cast(sum(PCONTRACT_AMOUNT*FDAY*0.01)  as NUMERIC(24,2)) PCONTRACT_AMOUNT from(--未超期
+select PCONTRACT_AMOUNT,PROJECT_ID,DATEDIFF(day, FDATE2, FDATE1) FDAY from
+(select max(f4.PCONTRACT_AMOUNT) PCONTRACT_AMOUNT,f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),
+convert(VARCHAR(10),GETDATE(),120)) FDATE1,
+convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) gy11)
+ PCONTRACT_AMOUNT
+  from 
+(
+--最近7周（周开始日期）
+SELECT n,CONVERT(nvarchar(10),dateadd(week,n,DATEADD(wk, DATEDIFF(wk,0,DATEADD(dd, -1, getdate()) ), 0)),121) 开始日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy1 left join 
+(
+--最近7周（周结束日期）
+SELECT n,CONVERT(nvarchar(10),dateadd(week,n,CONVERT(nvarchar(10), DATEADD(wk, DATEDIFF(wk,0,DATEADD(dd, -1, getdate()) ), 6),121)),121) 结束日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy2 on gy1.n=gy2.n
+) ff
+          
+          </when>
+          <when test="FTYPE == '日'.toString() ">
+          --按天查延期率
+select
+结束日期 FEND_DATE,
+--延期率
+--cast(case when FNUM!=0 then cast(FNUM1 as NUMERIC(12,2))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM1,
+--准时订单数
+--cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2))) else 0 end as NUMERIC(12,0)) FNUM1,
+--准时交付率
+--case when FNUM!=0 then FNUM2/FNUM*100 else 0 end FNUM2
+--cast(case when FNUM!=0 then (cast(FNUM as NUMERIC(12,2))-cast(FNUM1 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+PCONTRACT_AMOUNT
+
+from(
+select 开始日期,结束日期,
+--时间段项目数
+(select count(*) 
+from DT_PROJECT f1 inner join 
+DT_PROJECTMANAGERVIEW f2
+on f1.PROJECT_ID=f2.PROJECT_ID
+where f2.FTYPENAME='包装' and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段未超期项目数
+(--未超期
+select count(*) from
+(select f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+
+--时间段未超期项目金额
+(select  cast(sum(PCONTRACT_AMOUNT*FDAY*0.01)  as NUMERIC(24,2)) PCONTRACT_AMOUNT from(--未超期
+select PCONTRACT_AMOUNT,PROJECT_ID,DATEDIFF(day, FDATE2, FDATE1) FDAY from
+(select max(f4.PCONTRACT_AMOUNT) PCONTRACT_AMOUNT,f4.PROJECT_ID,isnull(convert(VARCHAR(10),max(f.ActualEndTime),120),
+convert(VARCHAR(10),GETDATE(),120)) FDATE1,
+convert(VARCHAR(10),max(f5.PLAN_END_TIME),120) FDATE2 from PP_ProcessWorkOrderExample f
+inner join
+PP_PlanningWorkOrder f2
+on f2.PlanningWorkOrder_ID =
+f.PlanningWorkOrderID 
+inner join PMS_Cabinet_Assembly_Detail f3 
+on f2.WorkOrderNum =f3.Cabinet_No
+inner join DT_PROJECT f4
+on f3.PROJECT_ID =f4.PROJECT_ID
+inner join 
+DT_PROJECTMANAGERVIEW f5
+on f4.PROJECT_ID=f5.PROJECT_ID
+
+where 1=1 and f.WPName='包装'
+and f5.FTYPENAME='包装'
+and DATEDIFF(day, PLAN_END_TIME, 开始日期)&lt;=0 and DATEDIFF(day, PLAN_END_TIME, 结束日期)>=0
+group by f4.PROJECT_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) gy11)
+ PCONTRACT_AMOUNT
+  from 
+
+(select convert(varchar(10), dateadd(day, n, getdate()), 120) as 开始日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy1
+left join 
+(
+--最近7天
+select convert(varchar(10), dateadd(day, n, getdate()), 120) as 结束日期
+from (select -6 as n union select -5 union select -4 union select -3
+union select -2 union select -1 union select 0) a
+) gy2 on gy1.开始日期=gy2.结束日期
+) ff
+          
+          </when>
+           <otherwise>
+        	
+       </otherwise>
+   		</choose>
+   		</select>
+   	<!-- v1 管悦 20210930 设计看板-设计效率统计
+    -->
+	<select id="listSJXL" parameterType="pd" resultType="pd">
+	--按月查
+select
+convert(varchar(10),(n+9))+'月' FDATE,
+--开始日期,结束日期 FEND_DATE,
+--准时完成数量占比
+cast(case when FNUM!=0 then (cast(FNUM2 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM2,
+--已完成数量占比
+cast(case when FNUM!=0 then (cast(FNUM3 as NUMERIC(12,2)))/cast(FNUM as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM3,
+--convert(varchar(12),FNUM2)+'/'+convert(varchar(10),FNUM) FNUM4,
+--convert(varchar(12),FNUM3)+'/'+convert(varchar(10),FNUM) FNUM5,
+FNUM2 FNUM4,
+FNUM3 FNUM5,
+FNUM FNUM6
+
+
+from(
+select gy1.n,开始日期,结束日期,
+--时间段项目数
+(select count(*)
+from PMS_Cabinet_Assembly_Detail f
+inner join DT_PROJECT f4
+on f.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 and DATEDIFF(day, f5.Project_End_Date, 开始日期)&lt;=0 and DATEDIFF(day, f5.Project_End_Date, 结束日期)>=0
+ ) FNUM,
+
+--时间段超期项目数
+(--超期
+select count(*) from
+(select f.Cabinet_Assembly_Detail_ID,isnull(convert(VARCHAR(10),max(f.FIs_NeedDJ_Time),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),
+max(f5.Project_End_Date),120) FDATE2 from PMS_Cabinet_Assembly_Detail f
+inner join DT_PROJECT f4
+on f.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 and (f.FAudit_CabinetDJ_State='通过' or f.FAudit_CabinetDJ_State='直接通过') and f.FIs_NeedDJ_Time is not null and f.FIs_NeedDJ_Time !=''
+and DATEDIFF(day, f5.Project_End_Date, 开始日期)&lt;=0 and DATEDIFF(day, f5.Project_End_Date, 结束日期)>=0
+group by f.Cabinet_Assembly_Detail_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+union 
+select count(*) from
+(select f.Cabinet_Assembly_Detail_ID,isnull(convert(VARCHAR(10),max(f.FIs_NeedDJ_Time),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),
+max(f5.Project_End_Date),120) FDATE2 from PMS_Cabinet_Assembly_Detail f
+inner join DT_PROJECT f4
+on f.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 
+and DATEDIFF(day, f5.Project_End_Date, 开始日期)&lt;=0 and DATEDIFF(day, f5.Project_End_Date, 结束日期)>=0
+group by f.Cabinet_Assembly_Detail_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)&lt;0
+) FNUM1,
+
+--时间段准时完成柜体数
+(--未超期
+select count(*) from
+(select f.Cabinet_Assembly_Detail_ID,isnull(convert(VARCHAR(10),max(f.FIs_NeedDJ_Time),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),
+max(f5.Project_End_Date),120) FDATE2 from PMS_Cabinet_Assembly_Detail f
+inner join DT_PROJECT f4
+on f.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 and (f.FAudit_CabinetDJ_State='通过' or f.FAudit_CabinetDJ_State='直接通过')
+ and f.FIs_NeedDJ_Time is not null and f.FIs_NeedDJ_Time !=''
+and DATEDIFF(day, f5.Project_End_Date, 开始日期)&lt;=0 and DATEDIFF(day, f5.Project_End_Date, 结束日期)>=0
+group by f.Cabinet_Assembly_Detail_ID
+) gy 
+where 
+DATEDIFF(day, FDATE1, FDATE2)>=0
+) FNUM2,
+--时间段已完成柜体数
+(--未超期
+select count(*) from
+(select f.Cabinet_Assembly_Detail_ID,isnull(convert(VARCHAR(10),max(f.FIs_NeedDJ_Time),120),convert(VARCHAR(10),GETDATE(),120)) FDATE1,convert(VARCHAR(10),
+max(f5.Project_End_Date),120) FDATE2 from PMS_Cabinet_Assembly_Detail f
+inner join DT_PROJECT f4
+on f.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 and (f.FAudit_CabinetDJ_State='通过' or f.FAudit_CabinetDJ_State='直接通过')
+ and f.FIs_NeedDJ_Time is not null and f.FIs_NeedDJ_Time !=''
+and DATEDIFF(day, f5.Project_End_Date, 开始日期)&lt;=0 and DATEDIFF(day, f5.Project_End_Date, 结束日期)>=0
+group by f.Cabinet_Assembly_Detail_ID
+) gy 
+where 
+1=1
+) FNUM3
+  from 
+(
+--最近7个月（月份结束日期）
+SELECT 
+n,CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,n,getdate())),121) 开始日期
+from ( select -6 as n union select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 ) a
+) gy1 left join 
+(--最近7个月（月份结束日期）
+SELECT 
+n-1 n ,CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,n,getdate())),121) 结束日期
+from (select -5 as n union select -4 union select -3
+union select -2 union select -1 union select 0 union select 1) a
+) gy2 on gy1.n=gy2.n
+) ff
+	</select>
+	
+	 	<select id="listJSYDMAIN" parameterType="pd" resultType="pd">
+	 	select *,
+cast(case when FNUM1!=0 then (cast(FNUM2 as NUMERIC(12,2)))/cast(FNUM1 as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM4
+ from(
+
+select 
+(select count(*) from PMS_Cabinet_Assembly_Detail f
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121))&lt;=0 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))>=0) FNUM1,
+(select count(*) from PMS_Cabinet_Assembly_Detail f
+inner join DT_PROJECT f4
+on f.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 and (f.FAudit_CabinetDJ_State='通过' or f.FAudit_CabinetDJ_State='直接通过')
+ and f.FIs_NeedDJ_Time is not null and f.FIs_NeedDJ_Time !=''
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121))&lt;=0 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))>=0
+) FNUM2,
+(select count(distinct f4.FRelation_ID) from PMS_Cabinet_Assembly_Detail f
+inner join PMS_Change f4
+on f.Cabinet_Assembly_Detail_ID =f4.FRelation_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121))&lt;=0 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))>=0
+) FNUM3
+
+) hh
+	 	</select>
+	 	<select id="listJSYDMX" parameterType="pd" resultType="pd">
+	 	select *,
+cast(case when FNUM1!=0 then (cast(FNUM2 as NUMERIC(12,2)))/cast(FNUM1 as NUMERIC(12,2))*100 else 0 end as NUMERIC(12,0)) FNUM3,
+cast(FHOUR2-FHOUR1 as NUMERIC(24,2)) FHOUR3
+ from(
+select 
+Responsible_Technology_Name,
+(select count(*) from PMS_Cabinet_Assembly_Detail f
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121))&lt;=0 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))>=0
+and f.Responsible_Technology=STAFF_ID
+) FNUM1,
+(select count(*) from PMS_Cabinet_Assembly_Detail f
+inner join DT_PROJECT f4
+on f.PROJECT_ID =f4.PROJECT_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 and (f.FAudit_CabinetDJ_State='通过' or f.FAudit_CabinetDJ_State='直接通过')
+ and f.FIs_NeedDJ_Time is not null and f.FIs_NeedDJ_Time !=''
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121))&lt;=0 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))>=0
+and f.Responsible_Technology=STAFF_ID
+) FNUM2,
+(select count(distinct f4.FRelation_ID) from PMS_Cabinet_Assembly_Detail f
+inner join PMS_Change f4
+on f.Cabinet_Assembly_Detail_ID =f4.FRelation_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121))&lt;=0 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))>=0
+and f.Responsible_Technology=STAFF_ID
+) FNUM4,
+
+isnull(
+STUFF(
+(SELECT ',yl,' +Change_Duty
+FROM 
+(select distinct Change_Duty from PMS_Cabinet_Assembly_Detail f
+inner join PMS_Change f4
+on f.Cabinet_Assembly_Detail_ID =f4.FRelation_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where 1=1 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121))&lt;=0 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))>=0
+and f.Responsible_Technology=STAFF_ID
+) tt
+FOR xml path('')
+),1,1,''
+),'') Change_Duty,
+8*(DATEDIFF(day,CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121),CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))+1) FHOUR1,
+isnull((
+select cast(sum(cast(DATEDIFF( mi, Distribute_Time, FIs_NeedDJ_Time)*1.0/60 as NUMERIC(24,2)))as NUMERIC(24,2)) FUseHours  
+from PMS_Cabinet_Assembly_Detail f
+inner join PMS_Change f4
+on f.Cabinet_Assembly_Detail_ID =f4.FRelation_ID
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+where (FAudit_CabinetDJ_State='通过'  or FAudit_CabinetDJ_State='直接通过')
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121))&lt;=0 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))>=0
+and f.Responsible_Technology=STAFF_ID
+),0) FHOUR2,
+(
+select top 1 FNOTE from
+PMS_NOTE f51 where DATEDIFF(month,Relation2,getdate())=0 and f51.Relation1=gy.Responsible_Technology_Name) FNOTE,
+(
+select top 1 NOTE_ID from
+PMS_NOTE f51 where DATEDIFF(month,Relation2,getdate())=0 and f51.Relation1=gy.Responsible_Technology_Name) NOTE_ID
+ from 
+(select distinct staff.STAFF_ID,staff.NAME as Responsible_Technology_Name from PMS_Cabinet_Assembly_Detail f
+inner join PMS_Cabinet_Assembly f5
+on f.Cabinet_Assembly_ID =f5.Cabinet_Assembly_ID
+left join oa_staff staff on staff.STAFF_ID = f.Responsible_Technology
+where 1=1 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(dateadd(month,-1,getdate()))+1,dateadd(month,0,getdate())),121))&lt;=0 
+and DATEDIFF(day, f5.Project_End_Date, CONVERT(nvarchar(10),dateadd(dd,-day(getdate()),dateadd(m,1,getdate())),121))>=0
+) gy
+) hh
+
+	 	
+	 	</select>
+	<!-- yy356703572qq(彬耶) -->
+	
+	
+	
+	
+	
+	
+</mapper>

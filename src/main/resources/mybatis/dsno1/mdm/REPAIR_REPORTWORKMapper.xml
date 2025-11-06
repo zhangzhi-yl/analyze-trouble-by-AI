@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.REPAIR_REPORTWORKMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_REPAIR_REPORTWORK
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.REPORTWORK_ID,	
+		f.REPAIR_WORKORDER_ID,	
+		f.FSTAFF,	
+		f.START_TIME,	
+		f.END_TIME,	
+		f.WORKING_HOURS,	
+		f.FSTATE,	
+		f.FTIME,
+		f.DEDUCT_WORKING_HOURS,
+		f.FREMARK
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		REPORTWORK_ID,	
+		REPAIR_WORKORDER_ID,	
+		FSTAFF,	
+		START_TIME,	
+		END_TIME,	
+		WORKING_HOURS,	
+		FSTATE,	
+		FTIME,
+		DEDUCT_WORKING_HOURS,
+		FREMARK
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{REPORTWORK_ID},	
+		#{REPAIR_WORKORDER_ID},	
+		#{FSTAFF},	
+		#{START_TIME},	
+		#{END_TIME},	
+		#{WORKING_HOURS},	
+		#{FSTATE},	
+		#{FTIME},
+		#{DEDUCT_WORKING_HOURS},
+		#{FREMARK}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			REPORTWORK_ID = #{REPORTWORK_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FSTAFF = #{FSTAFF},
+			START_TIME = #{START_TIME},
+			END_TIME = #{END_TIME},
+			WORKING_HOURS = #{WORKING_HOURS},
+			FSTATE = #{FSTATE},
+			FTIME = #{FTIME},
+			DEDUCT_WORKING_HOURS = #{DEDUCT_WORKING_HOURS},
+			FREMARK = #{FREMARK}
+		where 
+			REPORTWORK_ID = #{REPORTWORK_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.REPORTWORK_ID = #{REPORTWORK_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where
+			f.REPAIR_WORKORDER_ID = #{pd.REPAIR_WORKORDER_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and f.FSTAFF LIKE '%'+ #{pd.KEYWORDS}+'%'  
+		</if>
+		[fhstart] order by f.FTIME DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			REPORTWORK_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			REPAIR_WORKORDER_ID = #{REPAIR_WORKORDER_ID}
+	</select>
+	
+	<!-- 查询维修报工时间段中数据数量 -->
+	<select id="findCountByTime" parameterType="pd" resultType="pd">
+		SELECT count(*) zs FROM MDM_REPAIR_REPORTWORK WHERE (
+		(START_TIME &lt; #{END_TIME} AND START_TIME &gt; #{START_TIME}) 
+		OR (END_TIME &gt; #{START_TIME} AND END_TIME &lt; #{END_TIME}) 
+		OR (START_TIME = #{START_TIME} OR END_TIME = #{END_TIME}) 
+		OR (START_TIME &gt; #{START_TIME} AND END_TIME &lt; #{END_TIME}) 
+		OR (START_TIME &lt; #{START_TIME} AND END_TIME &gt; #{END_TIME})
+		) 
+		AND FSTAFF = #{FSTAFF} 
+		<if test="REPORTWORK_ID!= null and REPORTWORK_ID != ''">
+			AND REPORTWORK_ID &lt;&gt; #{REPORTWORK_ID} 
+		</if>
+	</select>
+		<!-- 手机端列表列表 -->
+	<select id="AppList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where
+			f.REPAIR_WORKORDER_ID = #{pd.REPAIR_WORKORDER_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and f.FSTAFF LIKE '%'+ #{pd.KEYWORDS}+'%'  
+		</if>
+	</select>	<!-- yy356703572qq(彬耶) -->
+</mapper>

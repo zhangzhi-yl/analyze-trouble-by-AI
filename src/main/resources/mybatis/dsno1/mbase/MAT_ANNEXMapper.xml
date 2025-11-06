@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mbase.MAT_ANNEXMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_MAT_ANNEX
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.MAT_BASIC_ID,	
+		f.ANNEX_NAME,	
+		f.ANNEX_PATH,	
+		f.ANNEX_DES,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.MAT_ANNEX_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		MAT_BASIC_ID,	
+		ANNEX_NAME,	
+		ANNEX_PATH,	
+		ANNEX_DES,	
+		FCREATOR,	
+		CREATE_TIME,	
+		MAT_ANNEX_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MAT_BASIC_ID},	
+		#{ANNEX_NAME},	
+		#{ANNEX_PATH},	
+		#{ANNEX_DES},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{MAT_ANNEX_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_ANNEX_ID = #{MAT_ANNEX_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MAT_BASIC_ID = #{MAT_BASIC_ID},
+			ANNEX_NAME = #{ANNEX_NAME},
+			ANNEX_PATH = #{ANNEX_PATH},
+			ANNEX_DES = #{ANNEX_DES},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			MAT_ANNEX_ID = MAT_ANNEX_ID
+		where 
+			MAT_ANNEX_ID = #{MAT_ANNEX_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.MAT_ANNEX_ID = #{MAT_ANNEX_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where MAT_BASIC_ID = #{pd.MAT_BASIC_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.ANNEX_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCREATOR LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_ANNEX_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过基础资料主键删除 -->
+	<delete id="deleteBasic" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_BASIC_ID = #{MAT_BASIC_ID}
+	</delete>
+	
+	<!-- 删除附件 -->
+	<update id="delFj" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ANNEX_NAME = '',
+			ANNEX_PATH = ''
+		where 
+			MAT_ANNEX_ID = #{MAT_ANNEX_ID}
+	</update>
+	<!-- YY 356703572 -->
+</mapper>

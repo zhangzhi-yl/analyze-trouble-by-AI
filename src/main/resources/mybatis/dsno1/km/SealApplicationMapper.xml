@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.SealApplicationMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		KM_SealApplication
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.Fbillno,	
+		f.FType,	
+		f.FSealName,	
+		f.FUseDept,	
+		f.FHandleMan,	
+		f.FFileType,	
+		f.FFileNum,	
+		f.FBorrowTime,	
+		f.FReturnTime,	
+		f.FReason,	
+		f.FNOTE,	
+		f.FCreatePerson,	
+		f.FCreateTime,	
+		f.RUN_STATUS,	
+		f.GENERATE_PROGRESS,	
+		f.FPostTime,	
+		f.FPostMan,	
+		f.PROC_INST_ID_,	
+		f.FCopyMan,	
+		f.SealApplication_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		Fbillno,	
+		FType,	
+		FSealName,	
+		FUseDept,	
+		FHandleMan,	
+		FFileType,	
+		FFileNum,	
+		FBorrowTime,	
+		FReturnTime,	
+		FReason,	
+		FNOTE,	
+		FCreatePerson,	
+		FCreateTime,	
+		RUN_STATUS,	
+		GENERATE_PROGRESS,	
+		FPostTime,	
+		FPostMan,	
+		PROC_INST_ID_,	
+		FCopyMan,	
+		SealApplication_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{Fbillno},	
+		#{FType},	
+		#{FSealName},	
+		#{FUseDept},	
+		#{FHandleMan},	
+		#{FFileType},	
+		#{FFileNum},	
+		#{FBorrowTime},	
+		#{FReturnTime},	
+		#{FReason},	
+		#{FNOTE},	
+		#{FCreatePerson},	
+		#{FCreateTime},	
+		#{RUN_STATUS},	
+		#{GENERATE_PROGRESS},	
+		#{FPostTime},	
+		#{FPostMan},	
+		#{PROC_INST_ID_},	
+		#{FCopyMan},	
+		#{SealApplication_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SealApplication_ID = #{SealApplication_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			Fbillno = #{Fbillno},
+			FType = #{FType},
+			FSealName = #{FSealName},
+			FUseDept = #{FUseDept},
+			FHandleMan = #{FHandleMan},
+			FFileType = #{FFileType},
+			FFileNum = #{FFileNum},
+			FBorrowTime = #{FBorrowTime},
+			FReturnTime = #{FReturnTime},
+			FReason = #{FReason},
+			FNOTE = #{FNOTE},
+			FCreatePerson = #{FCreatePerson},
+			FCreateTime = #{FCreateTime},
+			RUN_STATUS = #{RUN_STATUS},
+			GENERATE_PROGRESS = #{GENERATE_PROGRESS},
+			FPostTime = #{FPostTime},
+			FPostMan = #{FPostMan},
+			PROC_INST_ID_ = #{PROC_INST_ID_},
+			FCopyMan = #{FCopyMan},
+			SealApplication_ID = SealApplication_ID
+		where 
+			SealApplication_ID = #{SealApplication_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,
+		f1.NAME FCreateName,f2.NAME FTypeName,f3.NAME FPostName
+		from 
+		<include refid="tableName"></include> f
+		left join OA_STAFF f1
+		on f.FCreatePerson=f1.STAFF_ID
+		left join SYS_DICTIONARIES f2
+		on f.FType=f2.DICTIONARIES_ID
+		left join OA_STAFF f3
+		on f.FPostMan=f3.STAFF_ID
+		where 
+			f.SealApplication_ID = #{SealApplication_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select * from(
+		select
+		<include refid="Field"></include>,
+		f1.NAME FCreateName,f2.NAME FTypeName
+		from 
+		<include refid="tableName"></include> f
+		left join OA_STAFF f1
+		on f.FCreatePerson=f1.STAFF_ID
+		left join SYS_DICTIONARIES f2
+		on f.FType=f2.DICTIONARIES_ID
+		) gy
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				FCreateName like '%'+ #{pd.KEYWORDS} +'%'
+				or
+				Fbillno like '%'+ #{pd.KEYWORDS} +'%'
+				or
+				FSealName like '%'+ #{pd.KEYWORDS} +'%'
+				or
+				FReason like '%'+ #{pd.KEYWORDS} +'%'
+				or
+				FNOTE like '%'+ #{pd.KEYWORDS} +'%'
+				
+				)
+		</if>
+			[fhstart] order by  FCreateTime desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SealApplication_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+		<!-- 获取抄送人-->
+	<select id="getCopyName" parameterType="pd" resultType="pd">
+		select STUFF(
+(
+select ','+NAME from OA_STAFF where STAFF_ID IN
+<foreach collection="FCopyMan.split(',')" item="pId" index="index" open="(" close=")" separator=",">
+   '${pId}'
+</foreach>
+ FOR xml path(''))
+,1,1,'') FCopyName
+	</select>
+	<!-- 审核 -->
+	<update id="editAudit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RUN_STATUS = #{RUN_STATUS},
+			FPostTime = #{FPostTime},
+			FPostMan = #{FPostMan}
+		where 
+			SealApplication_ID = #{SealApplication_ID}
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

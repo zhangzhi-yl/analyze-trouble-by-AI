@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.ny.NY_EquipmentMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		NY_EQUIPMENT
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FName,	
+		f.FNumber,	
+		f.FDept,	
+		f.FStatus,	
+		f.FCol,	
+		f.FRow,	
+		f.FModel,	
+		f.Manufactor,	
+		f.Remarks,	
+		f.Location,	
+		f.IfWarning,	
+		f.Files,
+		f.CreateTime,
+		f.Creator,
+		f.EQUIPMENT_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FName,	
+		FNumber,	
+		FDept,	
+		FStatus,	
+		FCol,	
+		FRow,	
+		FModel,	
+		Manufactor,	
+		Remarks,	
+		Location,	
+		IfWarning,	
+		Files,
+		CreateTime,
+		Creator,
+		EQUIPMENT_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FName},	
+		#{FNumber},	
+		#{FDept},	
+		#{FStatus},	
+		#{FCol},	
+		#{FRow},	
+		#{FModel},	
+		#{Manufactor},	
+		#{Remarks},	
+		#{Location},	
+		#{IfWarning},	
+		#{Files},
+		#{CreateTime},
+		#{Creator},
+		#{EQUIPMENT_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQUIPMENT_ID = #{EQUIPMENT_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FName = #{FName},
+			FNumber = #{FNumber},
+			FDept = #{FDept},
+			FStatus = #{FStatus},
+			FCol = #{FCol},
+			FRow = #{FRow},
+			FModel = #{FModel},
+			Manufactor = #{Manufactor},
+			Remarks = #{Remarks},
+			Location = #{Location},
+			IfWarning = #{IfWarning},
+			Files = #{Files},
+			EQUIPMENT_ID = EQUIPMENT_ID
+		where 
+			EQUIPMENT_ID = #{EQUIPMENT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3
+		from 
+		<include refid="tableName"></include> f
+		left join NY_Loop l on f.FDept = l.Loop_ID
+		left join MDM_SITE s on f.FDept = s.DM_SITE_ID
+		left join MDM_AREA a on f.FDept = a.AREA_ID
+		where 
+			f.EQUIPMENT_ID = #{EQUIPMENT_ID}
+	</select>
+
+	<select id="findByName" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include> f
+		where
+		f.FName = #{FNAME}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,b.NAME FDeptName, d.NAME DictName
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN OA_DEPARTMENT b on f.FDept = b.DEPARTMENT_ID
+		left join SYS_DICTIONARIES d on f.Files = d.DICTIONARIES_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+				    OR
+					FNumber LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.Files != null and pd.Files != ''"><!-- 关键词检索 -->
+			and Files = #{pd.Files}
+		</if>
+		[fhstart]ORDER BY CreateTime DESC[fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,b.NAME FDeptName, d.NAME DictName
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN OA_DEPARTMENT b on f.FDept = b.DEPARTMENT_ID
+		left join SYS_DICTIONARIES d on f.Files = d.DICTIONARIES_ID
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			FName LIKE '%'+ #{KEYWORDS}+'%'
+			OR
+			FNumber LIKE '%'+ #{KEYWORDS}+'%'
+			)
+		</if>
+		<if test="Files != null and Files != ''"><!-- 关键词检索 -->
+			and Files = #{Files}
+		</if>
+		<if test="IDS != null and IDS != ''"><!-- 关键词检索 -->
+			and EQUIPMENT_ID IN ${IDS}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQUIPMENT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

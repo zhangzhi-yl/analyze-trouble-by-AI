@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.SALESORDERDETAILMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PP_SALESORDERDETAIL
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.RowClose,	
+		f.SalesOrderID,	
+		f.MaterialID,	
+		f.MaterialSPropIF,	
+		f.MaterialSProp,	
+		f.OccupancyID,	
+		f.CustomerPhone,	
+		f.ProjectTeam,	
+		f.TotalCount,	
+		f.ProductionQuantity,	
+		f.FUnit,	
+		f.DeliveryDate,	
+		f.FDescribe,	
+		f.SalesOrderDetail_ID,
+		f.FROWNO,
+		f.FPushCount,
+		f.FPushCountShipping
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		RowClose,	
+		SalesOrderID,	
+		MaterialID,	
+		MaterialSPropIF,	
+		MaterialSProp,	
+		OccupancyID,	
+		CustomerPhone,	
+		ProjectTeam,	
+		TotalCount,	
+		ProductionQuantity,	
+		FUnit,	
+		DeliveryDate,	
+		FDescribe,	
+		SalesOrderDetail_ID,
+		FROWNO,
+		FPushCount,
+		FPushCountShipping
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{RowClose},	
+		#{SalesOrderID},	
+		#{MaterialID},	
+		#{MaterialSPropIF},	
+		#{MaterialSProp},	
+		#{OccupancyID},	
+		#{CustomerPhone},	
+		#{ProjectTeam},	
+		#{TotalCount},	
+		#{ProductionQuantity},	
+		#{FUnit},	
+		#{DeliveryDate},	
+		#{FDescribe},	
+		#{SalesOrderDetail_ID},
+		#{FROWNO},
+		#{FPushCount},
+		#{FPushCountShipping}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SalesOrderDetail_ID = #{SalesOrderDetail_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MaterialID = #{MaterialID},
+			MaterialSPropIF = #{MaterialSPropIF},
+			MaterialSProp = #{MaterialSProp},
+			OccupancyID = #{OccupancyID},
+			CustomerPhone = #{CustomerPhone},
+			ProjectTeam = #{ProjectTeam},
+			TotalCount = #{TotalCount},
+			FUnit = #{FUnit},
+			DeliveryDate = #{DeliveryDate},
+			FDescribe = #{FDescribe},
+			SalesOrderDetail_ID = SalesOrderDetail_ID
+		where 
+			SalesOrderDetail_ID = #{SalesOrderDetail_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f2.FNAME FUnitName,
+		isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') FMatJoint
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_MAT_BASIC f1
+		on f1.MAT_BASIC_ID=f.MaterialID
+		left join MBASE_UNIT_INFO f2
+		on f1.MAT_MAIN_UNIT=f2.UNIT_INFO_ID
+		where 
+			f.SalesOrderDetail_ID = #{SalesOrderDetail_ID}
+			
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f2.FNAME FUnitName,
+		case when 
+		f.MaterialID is null or f.MaterialID='' then '' 
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称')  end FMatJoint
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_MAT_BASIC f1
+		on f1.MAT_BASIC_ID=f.MaterialID
+		left join MBASE_UNIT_INFO f2
+		on f1.MAT_MAIN_UNIT=f2.UNIT_INFO_ID
+		where 1=1
+		and SalesOrderID = #{pd.SalesOrderID} 
+		[fhstart] order by  cast(FROWNO as int)  [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,f2.FNAME FUnitName,c.OrderNum,
+		case when 
+		f.MaterialID is null or f.MaterialID='' then '' 
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称')   end FMatJoint,f1.MAT_CODE FMatCode,
+		cast(isnull(f.TotalCount,'0') as NUMERIC(12,2))-cast(isnull(f.FPushCount,'0') as NUMERIC(12,2)) FCanUseCount
+		from 
+		<include refid="tableName"></include> f
+		left join PP_SalesOrder c
+		on f.SalesOrderID=c.SalesOrder_ID
+		left join MBASE_MAT_BASIC f1
+		on f1.MAT_BASIC_ID=f.MaterialID
+		left join MBASE_UNIT_INFO f2
+		on f1.MAT_MAIN_UNIT=f2.UNIT_INFO_ID
+		where 1=1
+		and SalesOrderID = #{SalesOrderID} 
+		<if test="RowClose != null and RowClose != ''">
+			and f.RowClose = #{RowClose}
+		</if>
+		<if test="KEYWORDS_MaterialNum != null and KEYWORDS_MaterialNum != ''">
+		 and f1.MAT_CODE LIKE '%'+ #{KEYWORDS_MaterialNum}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialName != null and KEYWORDS_MaterialName != ''">
+		 and f1.MAT_NAME LIKE '%'+ #{KEYWORDS_MaterialName}+'%' 
+		</if>
+		order by  cast(FROWNO as int) 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SalesOrderDetail_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 关联行关闭订单明细 -->
+	<update id="deleteMxRelated" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RowClose = #{RowClose}
+		where 
+			SalesOrderID = #{SalesOrderID}
+	</update>
+	<!-- 行关闭/反行关闭订单明细 -->
+	<update id="rowClose" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RowClose = #{RowClose}
+		where 
+			SalesOrderDetail_ID = #{SalesOrderDetail_ID}
+	</update>
+	<!-- 生成订单明细行号 -->
+	<select id="getFROWNO" parameterType="pd" resultType="pd">
+		select
+		isnull(max(cast(isnull(FROWNO,'0') as int)),0)+1 FROWNO
+		from 
+		<include refid="tableName"></include> f
+		where SalesOrderID = #{SalesOrderID}
+	</select>
+	
+	<!-- 销售订单明细-物料列表 -->
+	<select id="listAllMat" parameterType="pd" resultType="pd">
+		select * from
+		(
+		select
+		<include refid="Field"></include>,
+		isnull(h.MAT_CODE,'无编号')+'/'+isnull(h.MAT_NAME,'无名称') FMatJoint,
+		cast(isnull(f.TotalCount,'0') as NUMERIC(12,2))-cast(isnull(f.FPushCount,'0') as NUMERIC(12,2)) FCanUseCount,
+		c.OrderNum,n.FNAME FUnitName,n.UNIT_INFO_ID,
+		h.MAT_CODE,h.MAT_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join PP_SalesOrder c
+		on f.SalesOrderID=c.SalesOrder_ID
+		left join MBASE_MAT_BASIC h
+		on h.MAT_BASIC_ID=f.MaterialID
+		left join MBASE_UNIT_INFO n
+		on h.MAT_MAIN_UNIT=n.UNIT_INFO_ID
+		where 1=1
+		and f.RowClose='N'
+		) gy
+		where 1=1
+		and FCanUseCount>0
+		<if test="KEYWORDS_OrderNum != null and KEYWORDS_OrderNum != ''">
+		and OrderNum = #{KEYWORDS_OrderNum}
+		</if>
+		<if test="KEYWORDS_MaterialNum != null and KEYWORDS_MaterialNum != ''">
+		 and MAT_CODE LIKE '%'+ #{KEYWORDS_MaterialNum}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialName != null and KEYWORDS_MaterialName != ''">
+		 and MAT_NAME LIKE '%'+ #{KEYWORDS_MaterialName}+'%' 
+		</if>
+		order by  OrderNum,cast(FROWNO as int) 
+	</select>
+	<!--批量选择采购请单物料 -->
+	<select id="selectAllSale" parameterType="pd" resultType="pd">
+		select * from 
+		(
+			select 
+			<include refid="Field"></include>,isnull(pwo.WorkOrderNum,'') WorkOrderNum,
+			isnull(h.MAT_CODE,'无编号')+'/'+isnull(h.MAT_NAME,'无名称') FMatJoint,h.MAT_CODE,h.MAT_NAME,h.UNIQUE_CODE_WHETHER,
+			cast(isnull(f.TotalCount,'0') as NUMERIC(12,2))-cast(isnull(f.FPushCount,'0') as NUMERIC(12,2)) FCanUseCount,
+			c.OrderNum,n.FNAME FUnitName,n.UNIT_INFO_ID 
+			from 
+			<include refid="tableName"></include> f 
+			left join PP_PlanningWorkOrderMaster pwo on f.SalesOrderDetail_ID=pwo.SalesOrderDetailID 
+			left join PP_SalesOrder c on f.SalesOrderID=c.SalesOrder_ID 
+			left join MBASE_MAT_BASIC h on h.MAT_BASIC_ID=f.MaterialID 
+			left join MBASE_UNIT_INFO n on h.MAT_MAIN_UNIT=n.UNIT_INFO_ID 
+			where 1=1 
+			and f.RowClose='N'
+			and 
+			SalesOrderDetail_ID in 
+			<foreach item="item" index="index" collection="array" open="(" separator="," close=")"> 
+	        	#{item}
+			</foreach>
+		) gy 
+		where 1=1 
+		and FCanUseCount>0 
+		order by  OrderNum,cast(FROWNO as int) 
+	</select>
+		<!-- 批量选择采购请单物料列表 -->
+	<select id="listAllSelect" parameterType="String" resultType="pd">
+		select * from(
+		select 
+		<include refid="Field"></include>,
+		isnull(h.MAT_CODE,'无编号')+'/'+isnull(h.MAT_NAME,'无名称') FMatJoint,
+		cast(isnull(f.FCount,'0') as NUMERIC(12,2))-cast(isnull(f.FPushCount,'0') as NUMERIC(12,2)) FCanUseCount,
+		m.FNum,a.WorkOrderNum FWorkOrderNum,c.OrderNum FOrderNum ,n.FNAME FUnitName,n.UNIT_INFO_ID,l.MAT_AUXILIARYMX_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join PP_PurchaseList m
+		on f.PurchaseID=m.PurchaseList_ID
+		left join PP_PlanningWorkOrder a
+		on a.PlanningWorkOrder_ID=f.PlanningWorkOrderID
+		left join PP_SalesOrderDetail g
+		on a.SalesOrderDetailID=g.SalesOrderDetail_ID
+		left join PP_SalesOrder c
+		on g.SalesOrderID=c.SalesOrder_ID
+		left join MBASE_MAT_BASIC h
+		on h.MAT_BASIC_ID=f.MaterialID
+		left join MBASE_UNIT_INFO n
+		on h.MAT_MAIN_UNIT=n.UNIT_INFO_ID
+		left join MBASE_MAT_AUXILIARYMX l
+		on f.SPropKey=l.MAT_AUXILIARYMX_ID
+		where 1=1
+		and f.RowClose='N'
+		and m.FStatus='已申请'
+		and
+		
+		PurchaseMaterialDetails_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+		) gy where 1=1 and FCanUseCount>0
+		order by FNum,cast(RowNum as int) 
+	</select>
+	
+	<!-- 计算下推数量 -->
+	<update id="calFPushCount" parameterType="pd">
+		update 
+		f set f.FPushCount=
+		isnull((
+			select 
+				sum(
+					case when 
+						f2.DocumentTypeBlueRed = '红字'  
+					then 
+						f1.MaterialQuantity
+					ELSE
+						f1.MaterialQuantity
+					end
+				) FNUM
+			from MM_StockListDetail f1
+			inner join MM_StockList f2 on f1.StockList_ID=f2.StockList_ID
+			where 1=1 and f2.DocumentTypeInOut='出库'
+			and SourceOrderNum=gy1.OrderNum
+			and SourceRowNum=f.FROWNO
+			and f1.LineCloseIf='N' 
+			and DocumentTypeBlueRed='蓝字'
+		),0)
+		from  PP_SALESORDERDETAIL f
+		inner join PP_SALESORDER gy1 on f.SalesOrderID=gy1.SalesOrder_ID
+		where 1=1 
+		and OrderNum=#{SourceOrderNum}
+		and FROWNO=#{SourceRowNum}
+	</update>
+	<!-- 销售订单明细-物料列表-下推发运申请 -->
+	<select id="listAllMatForward" parameterType="pd" resultType="pd">
+		select * from
+		(
+		select
+		<include refid="Field"></include>,
+		isnull(h.MAT_CODE,'无编号')+'/'+isnull(h.MAT_NAME,'无名称') FMatJoint,
+		cast(isnull(f.TotalCount,'0') as NUMERIC(12,2))-cast(isnull(f.FPushCountShipping,'0') as NUMERIC(12,2)) FCanUseCount,
+		c.OrderNum,n.FNAME FUnitName,n.UNIT_INFO_ID,
+		h.MAT_CODE,h.MAT_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join PP_SalesOrder c
+		on f.SalesOrderID=c.SalesOrder_ID
+		left join MBASE_MAT_BASIC h
+		on h.MAT_BASIC_ID=f.MaterialID
+		left join MBASE_UNIT_INFO n
+		on h.MAT_MAIN_UNIT=n.UNIT_INFO_ID
+		where 1=1
+		and f.RowClose='N'
+		) gy
+		where 1=1
+		and FCanUseCount>0
+		<if test="KEYWORDS_OrderNum != null and KEYWORDS_OrderNum != ''">
+		and OrderNum = #{KEYWORDS_OrderNum}
+		</if>
+		<if test="KEYWORDS_MaterialNum != null and KEYWORDS_MaterialNum != ''">
+		 and MAT_CODE LIKE '%'+ #{KEYWORDS_MaterialNum}+'%'
+		</if>
+		<if test="KEYWORDS_MaterialName != null and KEYWORDS_MaterialName != ''">
+		 and MAT_NAME LIKE '%'+ #{KEYWORDS_MaterialName}+'%' 
+		</if>
+		order by  OrderNum,cast(FROWNO as int) 
+	</select>
+	
+		<!--发运申请-批量选择销售订单物料 -->
+	<select id="selectAllSaleForward" parameterType="pd" resultType="pd">
+		select * from
+		(
+		select
+		<include refid="Field"></include>,
+		isnull(h.MAT_CODE,'无编号')+'/'+isnull(h.MAT_NAME,'无名称') FMatJoint,
+		cast(isnull(f.TotalCount,'0') as NUMERIC(12,2))-cast(isnull(f.FPushCountShipping,'0') as NUMERIC(12,2)) FCanUseCount,
+		c.OrderNum,n.FNAME FUnitName,n.UNIT_INFO_ID,
+		h.MAT_CODE,h.MAT_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join PP_SalesOrder c
+		on f.SalesOrderID=c.SalesOrder_ID
+		left join MBASE_MAT_BASIC h
+		on h.MAT_BASIC_ID=f.MaterialID
+		left join MBASE_UNIT_INFO n
+		on h.MAT_MAIN_UNIT=n.UNIT_INFO_ID
+		where 1=1
+		and f.RowClose='N'
+		and
+		SalesOrderDetail_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+		) gy
+		where 1=1
+		and FCanUseCount>0
+	
+		order by  OrderNum,cast(FROWNO as int) 
+	</select>
+	
+	<!-- 发运申请计算下推数量 -->
+	<update id="calFPushCountForward" parameterType="pd">
+update 
+f set f.FPushCountShipping=
+isnull((
+select 
+sum(
+isnull(ThisExecutionNumber,'0')
+) FNUM
+from MM_ForwardApplicationDetail f1
+inner join MM_ForwardApplication f2
+on f1.ForwardApplication_ID=f2.ForwardApplication_ID
+where 1=1
+and SourceOrderNum=gy1.OrderNum
+and SourceRowNum=f.FROWNO
+and f1.LineClose='N' 
+),0)
+from 
+PP_SALESORDERDETAIL f
+inner join PP_SALESORDER gy1
+on f.SalesOrderID=gy1.SalesOrder_ID
+where 1=1 
+and OrderNum=#{SourceOrderNum}
+and FROWNO=#{SourceRowNum}
+	</update>
+	<!-- 发运申请计算下推数量 -->
+	<update id="calFPushCountForwardAll" parameterType="pd">
+update 
+f set f.FPushCountShipping=
+isnull((
+select 
+sum(
+cast(isnull(ThisExecutionNumber,'0') as NUMERIC(12,2))
+) FNUM
+from MM_ForwardApplicationDetail f1
+inner join MM_ForwardApplication f2
+on f1.ForwardApplication_ID=f2.ForwardApplication_ID
+where 1=1 
+and SourceOrderNum=gy1.OrderNum
+and SourceRowNum=f.FROWNO
+and f1.LineClose='N' 
+),0)
+from 
+PP_SALESORDERDETAIL f
+inner join PP_SALESORDER gy1
+on f.SalesOrderID=gy1.SalesOrder_ID
+inner join MM_ForwardApplicationDetail gy2
+on (gy1.OrderNum=gy2.SourceOrderNum and f.FROWNO=gy2.SourceRowNum)
+inner join MM_ForwardApplication gy3
+on gy2.ForwardApplication_ID=gy3.ForwardApplication_ID
+where 1=1 
+and gy2.ForwardApplication_ID=#{ForwardApplication_ID}
+
+	</update>
+	
+	<!-- 反写源单下推计划工单数量 -->
+	<update id="calProductionQuantity" parameterType="pd">
+
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

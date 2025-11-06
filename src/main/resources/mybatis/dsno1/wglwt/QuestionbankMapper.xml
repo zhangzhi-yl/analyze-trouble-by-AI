@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.wglwt.QuestionbankMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		WT_QUESTIONBANK
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.QUESTION_NUMBER,	
+		f.QUESTION_TITLE,	
+		f.SCOPE_OF_INFLUENCE,	
+		f.PROBLEM_DESCRIPTION,	
+		f.PROBLEM_SOURCE,	
+		f.RESPONSIBILITY_JUDGMENT,	
+		f.SEVERITY,	
+		f.PERSON_LIABLE,	
+		f.PROPOSER,	
+		f.RELEASE_TIME,	
+		f.STATE,	
+		f.QUESTIONBANK_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		QUESTION_NUMBER,	
+		QUESTION_TITLE,	
+		SCOPE_OF_INFLUENCE,	
+		PROBLEM_DESCRIPTION,	
+		PROBLEM_SOURCE,	
+		RESPONSIBILITY_JUDGMENT,	
+		SEVERITY,	
+		PERSON_LIABLE,	
+		PROPOSER,	
+		RELEASE_TIME,	
+		STATE,	
+		QUESTIONBANK_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{QUESTION_NUMBER},	
+		#{QUESTION_TITLE},	
+		#{SCOPE_OF_INFLUENCE},	
+		#{PROBLEM_DESCRIPTION},	
+		#{PROBLEM_SOURCE},	
+		#{RESPONSIBILITY_JUDGMENT},	
+		#{SEVERITY},	
+		#{PERSON_LIABLE},	
+		#{PROPOSER},	
+		#{RELEASE_TIME},	
+		#{STATE},	
+		#{QUESTIONBANK_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QUESTIONBANK_ID = #{QUESTIONBANK_ID}
+	</delete>
+	<select id="getMax" resultType="pd">
+		SELECT MAX(QUESTION_NUMBER) as QUESTION_NUMBER from WT_QUESTIONBANK
+	</select>
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+
+			QUESTION_TITLE = #{QUESTION_TITLE},
+			SCOPE_OF_INFLUENCE = #{SCOPE_OF_INFLUENCE},
+			PROBLEM_DESCRIPTION = #{PROBLEM_DESCRIPTION},
+			PROBLEM_SOURCE = #{PROBLEM_SOURCE},
+			RESPONSIBILITY_JUDGMENT = #{RESPONSIBILITY_JUDGMENT},
+			SEVERITY = #{SEVERITY},
+			PERSON_LIABLE = #{PERSON_LIABLE}
+
+
+		where 
+			QUESTIONBANK_ID = #{QUESTIONBANK_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.QUESTIONBANK_ID = #{QUESTIONBANK_ID}
+	</select>
+	<update id="release" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		STATE = '发布'
+		where 	QUESTIONBANK_ID = #{QUESTIONBANK_ID}
+
+	</update>
+	<update id="goend" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		STATE = '结束'
+		where 	QUESTIONBANK_ID = #{QUESTIONBANK_ID}
+
+	</update>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and PROPOSER=#{pd.Loginperson}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+
+			QUESTION_TITLE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or
+			PROBLEM_DESCRIPTION LIKE '%'+ #{pd.KEYWORDS}+'%'
+
+				)
+		</if>
+		<if test="pd.SCOPE_OF_INFLUENCE != null and pd.SCOPE_OF_INFLUENCE != ''"><!-- 关键词检索 -->
+			and
+			(
+
+			SCOPE_OF_INFLUENCE=#{pd.SCOPE_OF_INFLUENCE}
+
+
+			)
+		</if>
+		<if test="pd.PROBLEM_SOURCE != null and pd.PROBLEM_SOURCE != ''"><!-- 关键词检索 -->
+			and
+			(
+
+			PROBLEM_SOURCE=#{pd.PROBLEM_SOURCE}
+
+
+			)
+		</if>
+		<if test="pd.RESPONSIBILITY_JUDGMENT != null and pd.RESPONSIBILITY_JUDGMENT != ''"><!-- 关键词检索 -->
+			and
+			(
+
+			RESPONSIBILITY_JUDGMENT=#{pd.RESPONSIBILITY_JUDGMENT}
+
+
+			)
+		</if>
+		<if test="pd.SEVERITY != null and pd.SEVERITY != ''"><!-- 关键词检索 -->
+			and
+			(
+
+			SEVERITY=#{pd.SEVERITY}
+
+
+			)
+		</if>
+		<if test="pd.STATE != null and pd.STATE != ''"><!-- 关键词检索 -->
+			and
+			(
+
+			STATE=#{pd.STATE}
+
+
+			)
+		</if>
+		[fhstart] order by f.QUESTION_NUMBER  asc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QUESTIONBANK_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

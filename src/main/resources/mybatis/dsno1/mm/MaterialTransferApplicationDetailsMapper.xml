@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.yy.mapper.dsno1.mm.MaterialTransferApplicationDetailsMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		MM_MaterialTransferApplicationDetails
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.MTADetails_ID,
+		f.LineClose,
+		f.TransferOperator,
+		f.TransferOperationTime,
+		f.SourceRowNum,
+		f.TransferType,
+		f.FStatus,
+		f.DataSources,
+		f.MaterialRequisitionID,
+		f.MTA_ID,
+		f.PlannedWorkOrderNum,
+		f.MaterialNum,
+		f.MaterialName,
+		f.SProp,
+		f.SPropKey,
+		f.DemandQuantity,
+		f.IssuedQuantity,
+		f.DeliveryWarehouse,
+		f.DeliveryPosition,
+		f.TargetWarehouse,
+		f.TargetPosition,
+		f.DemandTime,
+		f.DateBatch,
+		f.WP,
+		f.FCreatePersonID,
+		f.FCreateTime,
+		f.MaterialId,
+		f.SplitQuantity,
+		f.SalesOrder,
+		f.TransitionType,
+		f.METADATA_WHETHER,
+		f.RelationID,
+		f.SplitStatus,
+		f.FIsScan,
+		f.FExplanation
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		MTADetails_ID,
+		LineClose,
+		TransferOperator,
+		TransferOperationTime,
+		SourceRowNum,
+		TransferType,
+		FStatus,
+		DataSources,
+		MaterialRequisitionID,
+		MTA_ID,
+		PlannedWorkOrderNum,
+		MaterialNum,
+		MaterialName,
+		SProp,
+		SPropKey,
+		DemandQuantity,
+		IssuedQuantity,
+		DeliveryWarehouse,
+		DeliveryPosition,
+		TargetWarehouse,
+		TargetPosition,
+		DemandTime,
+		DateBatch,
+		WP,
+		FCreatePersonID,
+		FCreateTime,
+		MaterialId,
+		SplitQuantity,
+		SalesOrder,
+		TransitionType,
+		METADATA_WHETHER,
+		RelationID,
+		SplitStatus,
+		FIsScan,
+		FExplanation
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MTADetails_ID},
+		#{LineClose},
+		#{TransferOperator},
+		#{TransferOperationTime},
+		#{SourceRowNum},
+		#{TransferType},
+		#{FStatus},
+		#{DataSources},
+		#{MaterialRequisitionID},
+		#{MTA_ID},
+		#{PlannedWorkOrderNum},
+		#{MaterialNum},
+		#{MaterialName},
+		#{SProp},
+		#{SPropKey},
+		#{DemandQuantity},
+		#{IssuedQuantity},
+		#{DeliveryWarehouse},
+		#{DeliveryPosition},
+		#{TargetWarehouse},
+		#{TargetPosition},
+		#{DemandTime},
+		#{DateBatch},
+		#{WP},
+		#{FCreatePersonID},
+		#{FCreateTime},
+		#{MaterialId},
+		#{SplitQuantity},
+		#{SalesOrder},
+		#{TransitionType},
+		#{METADATA_WHETHER},
+		#{RelationID},
+		#{SplitStatus},
+		#{FIsScan},
+		#{FExplanation}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		MTADetails_ID = #{MTADetails_ID}
+	</delete>
+
+	<!-- 删除，根据转移申请单id删除 -->
+	<delete id="deleteByMTA_ID" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		MTA_ID = #{MTA_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		LineClose = #{LineClose},
+		TransferOperator = #{TransferOperator},
+		TransferOperationTime = #{TransferOperationTime},
+		SourceRowNum = #{SourceRowNum},
+		TransferType = #{TransferType},
+		FStatus = #{FStatus},
+		DataSources = #{DataSources},
+		MaterialRequisitionID = #{MaterialRequisitionID},
+		MTA_ID = #{MTA_ID},
+		PlannedWorkOrderNum = #{PlannedWorkOrderNum},
+		MaterialNum = #{MaterialNum},
+		MaterialName = #{MaterialName},
+		SProp = #{SProp},
+		SPropKey = #{SPropKey},
+		DemandQuantity = #{DemandQuantity},
+		IssuedQuantity = #{IssuedQuantity},
+		DeliveryWarehouse = #{DeliveryWarehouse},
+		DeliveryPosition = #{DeliveryPosition},
+		TargetWarehouse = #{TargetWarehouse},
+		TargetPosition = #{TargetPosition},
+		DemandTime = #{DemandTime},
+		DateBatch = #{DateBatch},
+		WP = #{WP},
+		FCreatePersonID = #{FCreatePersonID},
+		FCreateTime = #{FCreateTime},
+		MaterialId = #{MaterialId},
+		SplitQuantity = #{SplitQuantity},
+		SalesOrder = #{SalesOrder},
+		METADATA_WHETHER = #{METADATA_WHETHER},
+		RelationID = #{RelationID},
+		SplitStatus = #{SplitStatus},
+		FExplanation = #{FExplanation}
+		where
+		MTADetails_ID = #{MTADetails_ID}
+	</update>
+
+	<!-- 修改行关闭状态 -->
+	<update id="editLineClose" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		LineClose = #{LineClose}
+		where
+		MTADetails_ID = #{MTADetails_ID}
+	</update>
+
+	<!-- 修改状态 -->
+	<update id="editFStatus" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		FStatus = #{FStatus}
+		where
+		MTADetails_ID = #{MTADetails_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		(
+		SELECT COUNT(MTADetails_ID) FROM MM_MaterialTransferApplicationDetails
+		k
+		WHERE 1=1 and FIsScan='N' AND MTA_ID=f.MTA_ID and
+		k.TransitionType=f.TransitionType
+		) as ToBeDone,
+		(select RowNum from
+		(select
+		ROW_NUMBER() OVER (ORDER BY MaterialNum,cast(SourceRowNum as int)
+		desc) RowNum,MTADetails_ID from MM_MaterialTransferApplicationDetails
+		k
+		where MTA_ID=f.MTA_ID and FIsScan='N' and
+		k.TransitionType=f.TransitionType) gy where
+		MTADetails_ID=f.MTADetails_ID) RowNum,
+		a.MAT_AUXILIARY_NAME,a.MAT_AUXILIARY_CODE,
+		am.MAT_AUXILIARYMX_NAME,am.MAT_AUXILIARYMX_CODE,
+		s.name
+		FCreatePersonMx,s1.name TransferOperatorName,
+		w.FNAME
+		DeliveryWarehouseName,w.FCODE DeliveryWarehouseCode,
+		l.FNAME
+		DeliveryPositionName,l.FCODE DeliveryPositionCode,
+		warehouse.FNAME
+		TargetWarehouseName,warehouse.FCODE TargetWarehouseCode,
+		location.FNAME TargetPositionName,location.FCODE TargetPositionCode,
+		p.FName WP_Name,mb.UNIQUE_CODE_WHETHER,mb.MAT_MAIN_UNIT FUnit,
+		<include refid="Field"></include>
+		,
+		ss.name FCreatePerson,
+		c.FName
+		Customer_Name,f2.MaterialTransferApplicationForm_ID,
+		f2.FNum,f5.FNAME FUnitName
+		from
+		<include refid="tableName"></include>
+		f
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id
+		LEFT JOIN OA_STAFF s1 ON f.TransferOperator=s1.staff_id
+		left join MWMS_WH_WAREHOUSE w on f.DeliveryWarehouse=w.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION l on f.DeliveryPosition=l.WH_LOCATION_ID
+		left join MWMS_WH_WAREHOUSE warehouse on
+		f.TargetWarehouse=warehouse.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION location on
+		f.TargetPosition=location.WH_LOCATION_ID
+		left join KM_ProcessDefinition p on p.ProcessDefinition_ID=f.WP
+		left join MBASE_MAT_AUXILIARY a on f.SProp=a.MAT_AUXILIARY_ID
+		left join MBASE_MAT_AUXILIARYMX am on f.SPropKey=am.MAT_AUXILIARYMX_ID
+		left join MBASE_MAT_BASIC mb on f.MaterialId=mb.MAT_BASIC_ID
+		left join MM_MaterialTransferApplicationForm f2 on
+		f.MTA_ID=f2.MaterialTransferApplicationForm_ID
+		LEFT JOIN OA_STAFF ss ON
+		f2.FCreator=ss.staff_id
+		LEFT JOIN KM_Customer c ON c.Customer_ID=f2.FCustomer
+		left join MBASE_UNIT_INFO f5 on mb.MAT_MAIN_UNIT=f5.UNIT_INFO_ID
+		where
+		f.MTADetails_ID = #{MTADetails_ID}
+
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		a.MAT_AUXILIARY_NAME,a.MAT_AUXILIARY_CODE,
+		am.MAT_AUXILIARYMX_NAME,am.MAT_AUXILIARYMX_CODE,
+		s.name
+		FCreatePerson,s1.name TransferOperatorName,
+		isnull(w.FNAME,'仓库名称')
+		DeliveryWarehouseName,w.FCODE DeliveryWarehouseCode,
+		isnull(l.FNAME,'库位名称') DeliveryPositionName,l.FCODE
+		DeliveryPositionCode,
+		isnull(warehouse.FNAME,'仓库名称')
+		TargetWarehouseName,warehouse.FCODE TargetWarehouseCode,
+		isnull(location.FNAME,'库位名称') TargetPositionName,location.FCODE
+		TargetPositionCode,
+		isnull(location.FNAME,'库位名称')+'/'+isnull(location.FCODE,'库位代码')
+		locationOption,
+		p.FName WP_Name,mb.UNIQUE_CODE_WHETHER,mb.MAT_MAIN_UNIT
+		FUnit,
+		isnull(mb.MAT_CODE,'无编号')+'/'+isnull(mb.MAT_NAME,'无名称')
+		FMatJoint,
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id
+		LEFT JOIN OA_STAFF s1 ON f.TransferOperator=s1.staff_id
+		left join MWMS_WH_WAREHOUSE w on f.DeliveryWarehouse=w.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION l on f.DeliveryPosition=l.WH_LOCATION_ID
+		left join MWMS_WH_WAREHOUSE warehouse on
+		f.TargetWarehouse=warehouse.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION location on
+		f.TargetPosition=location.WH_LOCATION_ID
+		left join KM_ProcessDefinition p on p.ProcessDefinition_ID=f.WP
+		left join MBASE_MAT_AUXILIARY a on f.SProp=a.MAT_AUXILIARY_ID
+		left join MBASE_MAT_AUXILIARYMX am on f.SPropKey=am.MAT_AUXILIARYMX_ID
+		left join MBASE_MAT_BASIC mb on f.MaterialId=mb.MAT_BASIC_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.PlannedWorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f.MaterialNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f.MaterialName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		<if test="pd.PlannedWorkOrderNum != null and pd.PlannedWorkOrderNum != ''"><!-- 计划工单单号 -->
+			and f.PlannedWorkOrderNum = #{pd.PlannedWorkOrderNum}
+		</if>
+		<if test="pd.TransferType != null and pd.TransferType != ''"><!-- 转移类型(直接转移,单据转移) -->
+			and f.TransferType = #{pd.TransferType}
+		</if>
+		<if test="pd.FStatus != null and pd.FStatus != ''"><!-- 状态（待转移，已转移） -->
+			and f.FStatus = #{pd.FStatus}
+		</if>
+		<if test="pd.MTA_ID != null and pd.MTA_ID != ''"><!-- 主表id -->
+			and f.MTA_ID = #{pd.MTA_ID}
+		</if>
+		<if test="pd.TransitionType != null and pd.TransitionType != ''"><!-- 运转状态：转出、转入 -->
+			and f.TransitionType = #{pd.TransitionType}
+		</if>
+		<if test="pd.LineClose != null and pd.LineClose != ''"><!-- 行关闭，N/Y -->
+			and f.LineClose = #{pd.LineClose}
+		</if>
+		[fhstart] order by MaterialNum,SourceRowNum desc [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		a.MAT_AUXILIARY_NAME,a.MAT_AUXILIARY_CODE,
+		am.MAT_AUXILIARYMX_NAME,am.MAT_AUXILIARYMX_CODE,
+		s.name
+		FCreatePerson,s1.name TransferOperatorName,
+		w.FNAME
+		DeliveryWarehouseName,w.FCODE DeliveryWarehouseCode,
+		l.FNAME
+		DeliveryPositionName,l.FCODE DeliveryPositionCode,
+		warehouse.FNAME
+		TargetWarehouseName,warehouse.FCODE TargetWarehouseCode,
+		location.FNAME TargetPositionName,location.FCODE TargetPositionCode,
+		p.FName WP_Name,mb.UNIQUE_CODE_WHETHER,mb.MAT_MAIN_UNIT FUnit,
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id
+		LEFT JOIN OA_STAFF s1 ON f.TransferOperator=s1.staff_id
+		left join MWMS_WH_WAREHOUSE w on f.DeliveryWarehouse=w.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION l on f.DeliveryPosition=l.WH_LOCATION_ID
+		left join MWMS_WH_WAREHOUSE warehouse on
+		f.TargetWarehouse=warehouse.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION location on
+		f.TargetPosition=location.WH_LOCATION_ID
+		left join KM_ProcessDefinition p on p.ProcessDefinition_ID=f.WP
+		left join MBASE_MAT_AUXILIARY a on f.SProp=a.MAT_AUXILIARY_ID
+		left join MBASE_MAT_AUXILIARYMX am on f.SPropKey=am.MAT_AUXILIARYMX_ID
+		left join MBASE_MAT_BASIC mb on f.MaterialId=mb.MAT_BASIC_ID
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.PlannedWorkOrderNum LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.MaterialNum LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.MaterialName LIKE '%'+ #{KEYWORDS}+'%'
+			)
+		</if>
+		<if test="PlannedWorkOrderNum != null and PlannedWorkOrderNum != ''"><!-- 计划工单单号 -->
+			and f.PlannedWorkOrderNum = #{PlannedWorkOrderNum}
+		</if>
+		<if test="TransferType != null and TransferType != ''"><!-- 转移类型(直接转移,单据转移) -->
+			and f.TransferType = #{TransferType}
+		</if>
+		<if test="FStatus != null and FStatus != ''"><!-- 状态（待转移，已转移） -->
+			and f.FStatus = #{FStatus}
+		</if>
+		<if test="MTA_ID != null and MTA_ID != ''"><!-- 主表id -->
+			and f.MTA_ID = #{MTA_ID}
+		</if>
+		<if test="TransitionType != null and TransitionType != ''"><!-- 运转状态：转出、转入 -->
+			and f.TransitionType = #{TransitionType}
+		</if>
+		<if test="LineClose != null and LineClose != ''"><!-- 行关闭，N/Y -->
+			and f.LineClose = #{LineClose}
+		</if>
+		order by MaterialNum,SourceRowNum desc
+	</select>
+
+	<!-- 合并转入列表 -->
+	<select id="mergeTransferInlist" parameterType="pd" resultType="pd">
+		SELECT
+		CASE SUM(ISNULL(IssuedQuantity, 0)) WHEN 0 THEN
+		ISNULL(
+		(
+		SELECT SUM(FQuantity) FROM MM_MaterialTransferSplit where FRelatedID in(
+		SELECT MTADetails_ID FROM MM_MaterialTransferApplicationDetails t1
+		LEFT JOIN MBASE_MAT_BASIC t2 on t1.MaterialId=t2.MAT_BASIC_ID
+		WHERE t1.TransitionType='转出'
+		AND t2.UNIQUE_CODE_WHETHER='是'
+		AND t1.MTA_ID=MTA_ID
+		AND t1.SPropKey=SPropKey
+		AND t1.MaterialNum=MaterialNum
+		)
+		), 0)
+		ELSE SUM(ISNULL(IssuedQuantity, 0)) END sjnum,
+		t1.MTA_ID,t2.UNIQUE_CODE_WHETHER,t1.SPropKey,t1.PlannedWorkOrderNum,t1.MaterialNum,t1.MaterialName,
+		t1.SProp,t1.DemandTime,t1.DateBatch,t1.MaterialId,t1.TargetWarehouse,t1.SalesOrder
+		FROM MM_MaterialTransferApplicationDetails t1
+		LEFT JOIN MBASE_MAT_BASIC t2 on t1.MaterialId=t2.MAT_BASIC_ID
+		WHERE
+		t1.TransitionType='转出' AND t1.MTA_ID = #{MTA_ID} AND LineClose='N'
+		GROUP BY
+		t1.MTA_ID,t2.UNIQUE_CODE_WHETHER,t1.SPropKey,t1.PlannedWorkOrderNum,t1.MaterialNum,t1.MaterialName,
+		t1.SProp,t1.DemandTime,t1.DateBatch,t1.MaterialId,t1.TargetWarehouse,t1.SalesOrder
+	</select>
+
+	<!-- 审核转入单据明细列表(全部)，唯一码物料没有目标库位 -->
+	<select id="auditInList" parameterType="pd" resultType="pd">
+		select
+		mb.MAT_BASIC_ID,mb.MAT_SPECS,mb.MAT_MAIN_UNIT,mb.MAT_CODE,mb.MAT_CODE
+		OneThingCode,
+		mb.UNIQUE_CODE_WHETHER,ui.FNAME FUnitName,
+		f.PlannedWorkOrderNum,f.SProp,f.SPropKey,f.IssuedQuantity,f.TargetWarehouse,f.TargetPosition,f.DateBatch
+		from MM_MaterialTransferApplicationDetails f
+		left join MM_MaterialTransferApplicationForm form on
+		f.MTA_ID=form.MaterialTransferApplicationForm_ID
+		left join
+		MBASE_MAT_BASIC mb on mb.MAT_BASIC_ID=f.MaterialId
+		left join MBASE_UNIT_INFO ui on mb.MAT_MAIN_UNIT=ui.UNIT_INFO_ID
+		where f.MTA_ID = #{MTA_ID}
+		and f.LineClose='N' and mb.UNIQUE_CODE_WHETHER='否' AND
+		f.TransitionType='转入'
+		UNION ALL
+		select
+		mb.MAT_BASIC_ID,mb.MAT_SPECS,mb.MAT_MAIN_UNIT,mb.MAT_CODE,ms.FUniqueCode
+		OneThingCode,
+		mb.UNIQUE_CODE_WHETHER,ui.FNAME FUnitName,
+		f.PlannedWorkOrderNum,f.SProp,f.SPropKey,ms.FQuantity IssuedQuantity,
+		ms.WH_WAREHOUSE_ID TargetWarehouse,ms.WH_LOCATION_ID
+		TargetPosition,f.DateBatch
+		from MM_MaterialTransferSplit ms
+		left join MM_MaterialTransferApplicationDetails f on
+		ms.FRelatedID=f.MTADetails_ID
+		left join MM_MaterialTransferApplicationForm form on
+		f.MTA_ID=form.MaterialTransferApplicationForm_ID
+		left join MBASE_MAT_BASIC mb on mb.MAT_BASIC_ID=f.MaterialId
+		left join MBASE_UNIT_INFO ui on mb.MAT_MAIN_UNIT=ui.UNIT_INFO_ID
+		where f.MTA_ID = #{MTA_ID}
+		and f.LineClose='N' AND mb.UNIQUE_CODE_WHETHER='是' AND
+		f.TransitionType='转入'
+	</select>
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+		count(*) zs
+		from
+		<include refid="tableName"></include>
+		where
+		MTA_ID = #{MTA_ID}
+		<if test="FStatus != null and FStatus != ''"><!-- 状态（待转移，已转移） -->
+			and FStatus = #{FStatus}
+		</if>
+	</select>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		MTADetails_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 手机转入转出列表 -->
+	<select id="stockTransferListMx" parameterType="page"
+		resultType="pd">
+		select
+		ROW_NUMBER() OVER (ORDER BY MaterialNum,SourceRowNum desc)
+		RowNUm,
+		a.MAT_AUXILIARY_NAME,a.MAT_AUXILIARY_CODE,
+		am.MAT_AUXILIARYMX_NAME,am.MAT_AUXILIARYMX_CODE,
+		s.name
+		FCreatePerson,s1.name TransferOperatorName,
+		w.FNAME
+		DeliveryWarehouseName,w.FCODE DeliveryWarehouseCode,
+		l.FNAME
+		DeliveryPositionName,l.FCODE DeliveryPositionCode,
+		warehouse.FNAME
+		TargetWarehouseName,warehouse.FCODE TargetWarehouseCode,
+		location.FNAME TargetPositionName,location.FCODE TargetPositionCode,
+		p.FName WP_Name,mb.UNIQUE_CODE_WHETHER,mb.MAT_MAIN_UNIT FUnit,
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id
+		LEFT JOIN OA_STAFF s1 ON f.TransferOperator=s1.staff_id
+		left join MWMS_WH_WAREHOUSE w on f.DeliveryWarehouse=w.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION l on f.DeliveryPosition=l.WH_LOCATION_ID
+		left join MWMS_WH_WAREHOUSE warehouse on
+		f.TargetWarehouse=warehouse.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION location on
+		f.TargetPosition=location.WH_LOCATION_ID
+		left join KM_ProcessDefinition p on p.ProcessDefinition_ID=f.WP
+		left join MBASE_MAT_AUXILIARY a on f.SProp=a.MAT_AUXILIARY_ID
+		left join MBASE_MAT_AUXILIARYMX am on f.SPropKey=am.MAT_AUXILIARYMX_ID
+		left join MBASE_MAT_BASIC mb on f.MaterialId=mb.MAT_BASIC_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.PlannedWorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f.MaterialNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f.MaterialName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		<if test="pd.PlannedWorkOrderNum != null and pd.PlannedWorkOrderNum != ''"><!-- 计划工单单号 -->
+			and f.PlannedWorkOrderNum = #{pd.PlannedWorkOrderNum}
+		</if>
+		<if test="pd.TransferType != null and pd.TransferType != ''"><!-- 转移类型(直接转移,单据转移) -->
+			and f.TransferType = #{pd.TransferType}
+		</if>
+		<if test="pd.FStatus != null and pd.FStatus != ''"><!-- 状态（待转移，已转移） -->
+			and f.FStatus = #{pd.FStatus}
+		</if>
+		<if test="pd.MTA_ID != null and pd.MTA_ID != ''"><!-- 主表id -->
+			and f.MTA_ID = #{pd.MTA_ID}
+		</if>
+		<if test="pd.TransitionType != null and pd.TransitionType != ''"><!-- 运转状态：转出、转入 -->
+			and f.TransitionType = #{pd.TransitionType}
+		</if>
+		<if test="pd.LineClose != null and pd.LineClose != ''"><!-- 行关闭，N/Y -->
+			and f.LineClose = #{pd.LineClose}
+		</if>
+
+	</select>
+	<!-- 通过行号和ID获取数据 -->
+	<select id="findByRowNumAndStockList_ID" parameterType="pd"
+		resultType="pd">
+		select* from(select
+		(
+		SELECT COUNT(MTADetails_ID) FROM MM_MaterialTransferApplicationDetails
+		k
+		WHERE 1=1 and FIsScan='N' AND MTA_ID=f.MTA_ID and
+		k.TransitionType=f.TransitionType
+		) as ToBeDone,
+		ROW_NUMBER() OVER (ORDER BY MaterialNum,cast(SourceRowNum as int) desc) RowNum,
+		a.MAT_AUXILIARY_NAME,a.MAT_AUXILIARY_CODE,
+		am.MAT_AUXILIARYMX_NAME,am.MAT_AUXILIARYMX_CODE,
+		s.name
+		FCreatePersonMx,s1.name TransferOperatorName,
+		w.FNAME
+		DeliveryWarehouseName,w.FCODE DeliveryWarehouseCode,
+		l.FNAME
+		DeliveryPositionName,l.FCODE DeliveryPositionCode,
+		warehouse.FNAME
+		TargetWarehouseName,warehouse.FCODE TargetWarehouseCode,
+		location.FNAME TargetPositionName,location.FCODE TargetPositionCode,
+		p.FName WP_Name,mb.UNIQUE_CODE_WHETHER,mb.MAT_MAIN_UNIT FUnit,
+		<include refid="Field"></include>
+		,
+		ss.name FCreatePerson,
+		c.FName
+		Customer_Name,f2.MaterialTransferApplicationForm_ID,
+		f2.FNum,f5.FNAME FUnitName
+		from
+		MM_MaterialTransferApplicationDetails f
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id
+		LEFT JOIN OA_STAFF s1 ON f.TransferOperator=s1.staff_id
+		left join MWMS_WH_WAREHOUSE w on f.DeliveryWarehouse=w.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION l on f.DeliveryPosition=l.WH_LOCATION_ID
+		left join MWMS_WH_WAREHOUSE warehouse on
+		f.TargetWarehouse=warehouse.WH_WAREHOUSE_ID
+		left join MWMS_WH_LOCATION location on
+		f.TargetPosition=location.WH_LOCATION_ID
+		left join KM_ProcessDefinition p on p.ProcessDefinition_ID=f.WP
+		left join MBASE_MAT_AUXILIARY a on f.SProp=a.MAT_AUXILIARY_ID
+		left join MBASE_MAT_AUXILIARYMX am on f.SPropKey=am.MAT_AUXILIARYMX_ID
+		left join MBASE_MAT_BASIC mb on f.MaterialId=mb.MAT_BASIC_ID
+		left join MM_MaterialTransferApplicationForm f2 on
+		f.MTA_ID=f2.MaterialTransferApplicationForm_ID
+		LEFT JOIN OA_STAFF ss ON
+		f2.FCreator=ss.staff_id
+		LEFT JOIN KM_Customer c ON c.Customer_ID=f2.FCustomer
+		left join MBASE_UNIT_INFO f5 on mb.MAT_MAIN_UNIT=f5.UNIT_INFO_ID
+		where 1=1 and MTA_ID=#{MTA_ID} and f.TransitionType=#{TransitionType} and
+		FIsScan='N'
+		) gy
+		where 1=1
+
+		and RowNum =#{RowNum}
+	</select>
+	<!-- 手机扫码新增记录 -->
+	<insert id="saveJL" parameterType="pd">
+		insert into
+		MM_StockListScanningYK
+		(
+		MAT_BASIC_ID,
+		OneThingCode,
+		ActualCount,
+		MaterialSPropKey,
+		FCreatePersonID,
+		FCreateTime,
+		StockListScanningYK_ID,
+		MAT_SPEC_ID,
+		MTADetails_ID,
+		WarehouseID,
+		PositionID,
+		FTYPE
+		) values (
+		#{MAT_BASIC_ID},
+		#{OneThingCode},
+		#{ActualCount},
+		#{MaterialSPropKey},
+		#{FCreatePersonID},
+		#{FCreateTime},
+		#{StockListScanningYK_ID},
+		#{MAT_SPEC_ID},
+		#{MTADetails_ID},
+		#{WarehouseID},
+		#{PositionID},
+		#{FTYPE}
+		)
+	</insert>
+
+	<select id="GET_WLZY_ZHUISU_listPage" parameterType="page"
+		resultType="pd">
+		select
+		s.name FCreatePerson,s1.name TransferorPerson,s2.name FReviewerPerson,
+		c.FName Customer_Name,f.*
+		from
+		MM_MaterialTransferApplicationForm f
+		LEFT JOIN OA_STAFF s ON f.FCreator=s.staff_id
+		LEFT JOIN OA_STAFF s1 ON f.Transferor=s1.staff_id
+		LEFT JOIN OA_STAFF s2 ON f.FReviewer=s2.staff_id
+		LEFT JOIN KM_Customer c ON c.Customer_ID=f.FCustomer
+		where
+		f.MaterialTransferApplicationForm_ID in(
+		select MTA_ID from MM_MaterialTransferApplicationDetails where
+		PlannedWorkOrderNum = #{pd.PlannedWorkOrderNum}
+		group by MTA_ID
+		)
+	</select>
+
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

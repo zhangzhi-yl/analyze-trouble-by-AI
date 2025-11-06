@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.CallMaterialFLMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_CALLMATERIALFL
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.CallMaterial_ID,	
+		f.DocumentNum,	
+		f.NeedUseTime,	
+		f.SaleOrderNum,	
+		f.PlanningWorkOrderNum,	
+		f.TaskNum,	
+		f.WokNum,	
+		f.MakePersonID,	
+		f.MakeTime,	
+		f.FState,	
+		f.PlanningWorkOrderMasterNum,	
+		f.Associated_ID,	
+		f.FCallTime,	
+		f.FCallMan,	
+		f.FOutTime,	
+		f.FOutMan,	
+		f.FInTime,	
+		f.FInMan,	
+		f.FRecieveTime,	
+		f.FRecieveMan,	
+		f.FTime1,	
+		f.FMan1,	
+		f.CallMaterialFL_ID,
+		f.FIsYL
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		CallMaterial_ID,	
+		DocumentNum,	
+		NeedUseTime,	
+		SaleOrderNum,	
+		PlanningWorkOrderNum,	
+		TaskNum,	
+		WokNum,	
+		MakePersonID,	
+		MakeTime,	
+		FState,	
+		PlanningWorkOrderMasterNum,	
+		Associated_ID,	
+		FCallTime,	
+		FCallMan,	
+		FOutTime,	
+		FOutMan,	
+		FInTime,	
+		FInMan,	
+		FRecieveTime,	
+		FRecieveMan,	
+		FTime1,	
+		FMan1,	
+		CallMaterialFL_ID,
+		FIsYL
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{CallMaterial_ID},	
+		#{DocumentNum},	
+		#{NeedUseTime},	
+		#{SaleOrderNum},	
+		#{PlanningWorkOrderNum},	
+		#{TaskNum},	
+		#{WokNum},	
+		#{MakePersonID},	
+		#{MakeTime},	
+		#{FState},	
+		#{PlanningWorkOrderMasterNum},	
+		#{Associated_ID},	
+		#{FCallTime},	
+		#{FCallMan},	
+		#{FOutTime},	
+		#{FOutMan},	
+		#{FInTime},	
+		#{FInMan},	
+		#{FRecieveTime},	
+		#{FRecieveMan},	
+		#{FTime1},	
+		#{FMan1},	
+		#{CallMaterialFL_ID},
+		#{FIsYL}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CallMaterialFL_ID = #{CallMaterialFL_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			CallMaterial_ID = #{CallMaterial_ID},
+			DocumentNum = #{DocumentNum},
+			NeedUseTime = #{NeedUseTime},
+			SaleOrderNum = #{SaleOrderNum},
+			PlanningWorkOrderNum = #{PlanningWorkOrderNum},
+			TaskNum = #{TaskNum},
+			WokNum = #{WokNum},
+			MakePersonID = #{MakePersonID},
+			MakeTime = #{MakeTime},
+			FState = #{FState},
+			PlanningWorkOrderMasterNum = #{PlanningWorkOrderMasterNum},
+			Associated_ID = #{Associated_ID},
+			FCallTime = #{FCallTime},
+			FCallMan = #{FCallMan},
+			FOutTime = #{FOutTime},
+			FOutMan = #{FOutMan},
+			FInTime = #{FInTime},
+			FInMan = #{FInMan},
+			FRecieveTime = #{FRecieveTime},
+			FRecieveMan = #{FRecieveMan},
+			FTime1 = #{FTime1},
+			FMan1 = #{FMan1},
+			FIsYL=#{FIsYL},
+			CallMaterialFL_ID = CallMaterialFL_ID
+		where 
+			CallMaterialFL_ID = #{CallMaterialFL_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select gy.*,
+(case when FNUM1=FNUM2 then '否' else '是' end) FIsYLNew
+ from
+(select *,
+(select count(*) from MM_CallMaterialDetailsFL where CallMaterialFL_ID=f.CallMaterialFL_ID) FNUM1,
+(select count(*) from MM_CallMaterialDetailsFL where CallMaterialFL_ID=f.CallMaterialFL_ID and DemandNum &lt;= QuantityCount) FNUM2
+ from MM_CallMaterialFL f
+ where 
+f.CallMaterialFL_ID = #{CallMaterialFL_ID}
+) gy
+		
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select * from(select
+		<include refid="Field"></include>,
+		ass.Cabinet_Type,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		f1.DocumentNum DocumentNumMain,f1.FState FStateMain,(case when f1.FState='仓库出库'   then '是'  else '否'  end) FIsState
+		from 
+		<include refid="tableName"></include> f
+		left join MM_CallMaterial f1
+		on f.CallMaterial_ID=f1.CallMaterial_ID 
+		left join PMS_Cabinet_Assembly_Detail f2
+		on f.PlanningWorkOrderNum=f2.Cabinet_No
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f2.Cabinet_Assembly_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.PlanningWorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f1.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		
+		) gy where 1=1
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''">
+			and
+				(
+					FIsState =  #{pd.KEYWORDS1}
+				)
+		</if>
+		<if test="pd.FState != null and pd.FState != ''">
+			and
+				(
+					FState =  #{pd.FState}
+				)
+		</if>
+		[fhstart] order by FCallTime desc [fhend]
+	</select>
+	<!-- 列表 -->
+	<select id="listHislistPage" parameterType="page" resultType="pd">
+		select * from(select
+		<include refid="Field"></include>,
+		ass.Cabinet_Type,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		f1.DocumentNum DocumentNumMain,f1.FState FStateMain,(case when f1.FState='仓库出库'   then '是'  else '否'  end) FIsState
+		from 
+		<include refid="tableName"></include> f
+		left join MM_CallMaterial f1
+		on f.CallMaterial_ID=f1.CallMaterial_ID 
+		left join PMS_Cabinet_Assembly_Detail f2
+		on f.PlanningWorkOrderNum=f2.Cabinet_No
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f2.Cabinet_Assembly_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.PlanningWorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f1.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		
+		) gy where 1=1
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''">
+			and
+				(
+					FIsState =  #{pd.KEYWORDS1}
+				)
+		</if>
+		<if test="pd.FState != null and pd.FState != ''">
+			and
+				(
+					FState =  #{pd.FState}
+				)
+		</if>
+		[fhstart] order by FTime1 desc [fhend]
+	</select>
+	<!--v1 管悦 20210824 车间入库列表 -->
+	<select id="listCJlistPage" parameterType="page" resultType="pd">
+		select * from(select
+		<include refid="Field"></include>,
+		ass.Cabinet_Type,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		f1.DocumentNum DocumentNumMain,f1.FState FStateMain,(case when f1.FState='仓库出库'   then '是'  else '否'  end) FIsState
+		from 
+		<include refid="tableName"></include> f
+		left join MM_CallMaterial f1
+		on f.CallMaterial_ID=f1.CallMaterial_ID 
+		left join PMS_Cabinet_Assembly_Detail f2
+		on f.PlanningWorkOrderNum=f2.Cabinet_No
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f2.Cabinet_Assembly_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.PlanningWorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f1.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		
+		) gy where 1=1
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''">
+			and
+				(
+					FIsState =  #{pd.KEYWORDS1}
+				)
+		</if>
+		<if test="pd.FState != null and pd.FState != ''">
+			and
+				(
+					FState =  #{pd.FState}
+				)
+		</if>
+		[fhstart] order by FTime1 desc [fhend]
+	</select>
+	<!--v1 管悦 20210825 车间入库历史列表 -->
+	<select id="listCJHislistPage" parameterType="page" resultType="pd">
+		select * from(select
+		<include refid="Field"></include>,
+		ass.Cabinet_Type,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		f1.DocumentNum DocumentNumMain,f1.FState FStateMain,(case when f1.FState='仓库出库'   then '是'  else '否'  end) FIsState
+		from 
+		<include refid="tableName"></include> f
+		left join MM_CallMaterial f1
+		on f.CallMaterial_ID=f1.CallMaterial_ID 
+		left join PMS_Cabinet_Assembly_Detail f2
+		on f.PlanningWorkOrderNum=f2.Cabinet_No
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f2.Cabinet_Assembly_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.PlanningWorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f1.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		
+		) gy where 1=1
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''">
+			and
+				(
+					FIsState =  #{pd.KEYWORDS1}
+				)
+		</if>
+		<if test="pd.FState != null and pd.FState != ''">
+			and
+				(
+					FState =  #{pd.FState}
+				)
+		</if>
+		and FIsYL='否'
+		[fhstart] order by FInTime desc [fhend]
+	</select>
+	<!--v1 管悦 20210825 车间入库未领物料列表 -->
+	<select id="listCJHisWLlistPage" parameterType="page" resultType="pd">
+		select * from(select
+		<include refid="Field"></include>,
+		ass.Cabinet_Type,
+		project.PPROJECT_CODE,
+		project.PPROJECT_NAME,
+		f1.DocumentNum DocumentNumMain,f1.FState FStateMain,(case when f1.FState='仓库出库'   then '是'  else '否'  end) FIsState
+		from 
+		<include refid="tableName"></include> f
+		left join MM_CallMaterial f1
+		on f.CallMaterial_ID=f1.CallMaterial_ID 
+		left join PMS_Cabinet_Assembly_Detail f2
+		on f.PlanningWorkOrderNum=f2.Cabinet_No
+		left join PMS_Cabinet_Assembly ass on ass.Cabinet_Assembly_ID =
+		f2.Cabinet_Assembly_ID
+		left join DT_PROJECT project on project.PROJECT_ID =
+		ass.PROJECT_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.PlanningWorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f1.DocumentNum LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		
+		) gy where 1=1
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''">
+			and
+				(
+					FIsState =  #{pd.KEYWORDS1}
+				)
+		</if>
+		<if test="pd.FState != null and pd.FState != ''">
+			and
+				(
+					FState =  #{pd.FState}
+				)
+		</if>
+		and FIsYL='是'
+		[fhstart] order by FInTime desc [fhend]
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			CallMaterialFL_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

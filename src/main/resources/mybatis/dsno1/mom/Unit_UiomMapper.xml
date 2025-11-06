@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.Unit_UiomMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_UNIT_UIOM
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.UNIT_UIOM_ID,	
+		f.FCODE,	
+		f.FNAME,	
+		f.FTYPE,	
+		f.RELATION_UNIT_CODE,	
+		f.RELATION_UNIT_NAME,	
+		f.TRANSFERQUANTITY,	
+		f.FDES
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		UNIT_UIOM_ID,	
+		FCODE,	
+		FNAME,	
+		FTYPE,	
+		RELATION_UNIT_CODE,	
+		RELATION_UNIT_NAME,	
+		TRANSFERQUANTITY,	
+		FDES
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{UNIT_UIOM_ID},	
+		#{FCODE},	
+		#{FNAME},	
+		#{FTYPE},	
+		#{RELATION_UNIT_CODE},	
+		#{RELATION_UNIT_NAME},	
+		#{TRANSFERQUANTITY},	
+		#{FDES}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			UNIT_UIOM_ID = #{UNIT_UIOM_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FTYPE = #{FTYPE},
+			RELATION_UNIT_CODE = #{RELATION_UNIT_CODE},
+			RELATION_UNIT_NAME = #{RELATION_UNIT_NAME},
+			TRANSFERQUANTITY = #{TRANSFERQUANTITY},
+			FDES = #{FDES}
+		where 
+			UNIT_UIOM_ID = #{UNIT_UIOM_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.UNIT_UIOM_ID = #{UNIT_UIOM_ID}
+	</select>
+	
+	<!-- 根据基础计量单位ID查询单位比例转换总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select 
+			count(*) zs 
+		from 
+			<include refid="tableName"></include>
+		where 
+			RELATION_UNIT_CODE  = #{RELATION_UNIT_CODE}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FCODE = #{FCODE} 
+		<if test="UNIT_UIOM_ID != null and UNIT_UIOM_ID != ''"><!-- 单位转换id -->
+			and f.UNIT_UIOM_ID &lt;&gt; #{UNIT_UIOM_ID}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.RELATION_UNIT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.RELATION_UNIT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FNAME != null and pd.FNAME != ''"><!-- 名称 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.FNAME}+'%' 
+				)
+		</if>
+		<if test="pd.FCODE != null and pd.FCODE != ''"><!-- 代码 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{pd.FCODE}+'%' 
+				)
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 类型 -->
+			and
+				(
+					f.FTYPE = #{pd.FTYPE}  
+				)
+		</if>
+		<if test="pd.RELATION_UNIT_CODE != null and pd.RELATION_UNIT_CODE != ''"><!-- 关联单位代码 -->
+			and
+				(
+					f.RELATION_UNIT_CODE LIKE '%'+ #{pd.RELATION_UNIT_CODE}+'%' 
+				)
+		</if>
+		<if test="pd.RELATION_UNIT_NAME != null and pd.RELATION_UNIT_NAME != ''"><!-- 关联单位名称 -->
+			and
+				(
+					f.RELATION_UNIT_NAME LIKE '%'+ #{pd.RELATION_UNIT_NAME}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			UNIT_UIOM_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.PlanInstanceMounthMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		EPM_PLANINSTANCE_MONTH
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PLANINSTANCE_ID,	
+		f.YEAR,
+		f.FHINAME,
+		f.FAINAME,	
+		f.DAY1,
+		f.DAY2,
+		f.DAY3,
+		f.DAY4,
+		f.DAY5,
+		f.DAY6,
+		f.DAY7,
+		f.DAY8,
+		f.DAY9,
+		f.DAY10,
+		f.DAY11,
+		f.DAY12,
+		f.DAY13,
+		f.DAY14,
+		f.DAY15,
+		f.DAY16,
+		f.DAY17,
+		f.DAY18,
+		f.DAY19,
+		f.DAY20,
+		f.DAY21,
+		f.DAY22,
+		f.DAY23,
+		f.DAY24,
+		f.DAY25,
+		f.DAY26,
+		f.DAY27,
+		f.DAY28,
+		f.DAY29,
+		f.DAY30,
+		f.DAY31,
+		f.SCHEDULE,
+		f.ACTUALPROGRESS,
+		f.FREMARK,
+		f.FAILEVEL,
+		f.FHILEVEL,
+		f.PLANINSTANCEMONTH_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PLANINSTANCE_ID,	
+		YEAR,
+		FHINAME,
+		FAINAME,	
+		DAY1,
+		DAY2,
+		DAY3,
+		DAY4,
+		DAY5,
+		DAY6,
+		DAY7,
+		DAY8,
+		DAY9,
+		DAY10,
+		DAY11,
+		DAY12,
+		DAY13,
+		DAY14,
+		DAY15,
+		DAY16,
+		DAY17,
+		DAY18,
+		DAY19,
+		DAY20,
+		DAY21,
+		DAY22,
+		DAY23,
+		DAY24,
+		DAY25,
+		DAY26,
+		DAY27,
+		DAY28,
+		DAY29,
+		DAY30,
+		DAY31,
+		SCHEDULE,
+		ACTUALPROGRESS,
+		FREMARK,
+		FAILEVEL,
+		FHILEVEL,
+		PLANINSTANCEMONTH_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PLANINSTANCE_ID},	
+		#{YEAR},
+		#{FHINAME},
+		#{FAINAME},	
+		#{DAY1},
+		#{DAY2},
+		#{DAY3},
+		#{DAY4},
+		#{DAY5},
+		#{DAY6},
+		#{DAY7},
+		#{DAY8},
+		#{DAY9},
+		#{DAY10},
+		#{DAY11},
+		#{DAY12},
+		#{DAY13},
+		#{DAY14},
+		#{DAY15},
+		#{DAY16},
+		#{DAY17},
+		#{DAY18},
+		#{DAY19},
+		#{DAY20},
+		#{DAY21},
+		#{DAY22},
+		#{DAY23},
+		#{DAY24},
+		#{DAY25},
+		#{DAY26},
+		#{DAY27},
+		#{DAY28},
+		#{DAY29},
+		#{DAY30},
+		#{DAY31},
+		#{SCHEDULE},
+		#{ACTUALPROGRESS},
+		#{FREMARK},
+		#{FAILEVEL},
+		#{FHILEVEL},
+		#{PLANINSTANCEMONTH_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PLANINSTANCEMONTH_ID = #{PLANINSTANCEMONTH_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		FAINAME = #{FAINAME},	
+		DAY1 = #{DAY1},
+		DAY2 = #{DAY2},
+		DAY3 = #{DAY3},
+		DAY4 = #{DAY4},
+		DAY5 = #{DAY5},
+		DAY6 = #{DAY6},
+		DAY7 = #{DAY7},
+		DAY8 = #{DAY8},
+		DAY9 = #{DAY9},
+		DAY10 = #{DAY10},
+		DAY11 = #{DAY11},
+		DAY12 = #{DAY12},
+		DAY13 = #{DAY13},
+		DAY14 = #{DAY14},
+		DAY15 = #{DAY15},
+		DAY16 = #{DAY16},
+		DAY17 = #{DAY17},
+		DAY18 = #{DAY18},
+		DAY19 = #{DAY19},
+		DAY20 = #{DAY20},
+		DAY21 = #{DAY21},
+		DAY22 = #{DAY22},
+		DAY23 = #{DAY23},
+		DAY24 = #{DAY24},
+		DAY25 = #{DAY25},
+		DAY26 = #{DAY26},
+		DAY27 = #{DAY27},
+		DAY28 = #{DAY28},
+		DAY29 = #{DAY29},
+		DAY30 = #{DAY30},
+		DAY31 = #{DAY31},
+		SCHEDULE = #{SCHEDULE},
+		ACTUALPROGRESS = #{ACTUALPROGRESS},
+		FREMARK = #{FREMARK},
+		PLANINSTANCEMONTH_ID =PLANINSTANCEMONTH_ID
+		where 
+			PLANINSTANCEMONTH_ID = #{PLANINSTANCEMONTH_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PLANINSTANCEMONTH_ID = #{PLANINSTANCEMONTH_ID}
+	</select>
+	
+	<select id="list" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		where 1=1  and  f.PLANINSTANCE_ID=#{KEYWORDS} and f.YEAR=#{YEAR}
+		ORDER BY  FHILEVEL,FAILEVEL
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PLANINSTANCEMONTH_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

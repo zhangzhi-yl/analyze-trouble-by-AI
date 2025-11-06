@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.PlineEntityMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_PLINE_ENTITY
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PLINE_ENTITY_ID,	
+		f.PLINE_CLASS_ID,
+		f.FCODE,	
+		f.FNAME,	
+		f.FTYPE,	
+		f.FCAPACITY,	
+		f.AREA_ID,
+		f.FDES
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PLINE_ENTITY_ID,	
+		PLINE_CLASS_ID,
+		FCODE,	
+		FNAME,	
+		FTYPE,	
+		FCAPACITY,	
+		AREA_ID,
+		FDES
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PLINE_ENTITY_ID},	
+		#{PLINE_CLASS_ID},
+		#{FCODE},	
+		#{FNAME},	
+		#{FTYPE},	
+		#{FCAPACITY},	
+		#{AREA_ID},
+		#{FDES}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PLINE_ENTITY_ID = #{PLINE_ENTITY_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PLINE_CLASS_ID = #{PLINE_CLASS_ID},
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FTYPE = #{FTYPE},
+			FCAPACITY = #{FCAPACITY},
+			AREA_ID = #{AREA_ID},
+			FDES = #{FDES}
+		where 
+			PLINE_ENTITY_ID = #{PLINE_ENTITY_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,
+		p.FNAME PLINE_CLASS_NAME,p.FCODE PLINE_CLASS_CODE,a.FNAME AREA_NAME,a.FCODE AREA_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_PLINE_CLASS p ON f.PLINE_CLASS_ID=p.PLINE_CLASS_ID LEFT JOIN MDM_AREA a ON f.AREA_ID=a.AREA_ID 
+		where 
+			f.PLINE_ENTITY_ID = #{PLINE_ENTITY_ID}
+	</select>
+	
+	<!-- 通过FCODE获取数据 -->
+	<select id="findByFCODE" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FCODE = #{pd.FCODE}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FCODE = #{FCODE} 
+		<if test="PLINE_ENTITY_ID != null and PLINE_ENTITY_ID != ''"><!-- 产线id -->
+			and f.PLINE_ENTITY_ID &lt;&gt; #{PLINE_ENTITY_ID}
+		</if>
+	</select>
+	
+	<!-- 根据车间ID查询产线实体总数 -->
+	<select id="findCountByAreaID" parameterType="pd" resultType="pd">
+		select 
+			count(*) sumByArea 
+		from 
+			<include refid="tableName"></include>
+		where 
+			AREA_ID  = #{AREA_ID}
+	</select>
+	
+	<!-- 根据产线类别ID查询产线实体总数 -->
+	<select id="findCountByPlineClassID" parameterType="pd" resultType="pd">
+		select 
+			count(*) sumByPlineClass 
+		from 
+			<include refid="tableName"></include>
+		where 
+			PLINE_CLASS_ID = #{PLINE_CLASS_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		p.FNAME PLINE_CLASS_NAME,p.FCODE PLINE_CLASS_CODE,a.FNAME AREA_NAME,a.FCODE AREA_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_PLINE_CLASS p ON f.PLINE_CLASS_ID=p.PLINE_CLASS_ID LEFT JOIN MDM_AREA a ON f.AREA_ID=a.AREA_ID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FTYPE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FNAME != null and pd.FNAME != ''"><!-- 名称 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.FNAME}+'%' 
+				)
+		</if>
+		<if test="pd.FCODE != null and pd.FCODE != ''"><!-- 代码 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{pd.FCODE}+'%'
+				)
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 类型 -->
+			and
+				(
+					f.FTYPE LIKE '%'+ #{pd.FTYPE}+'%'
+				)
+		</if>
+		<if test="pd.AREA_ID != null and pd.AREA_ID != ''"><!-- 车间ID -->
+			and
+				(
+					f.AREA_ID = #{pd.AREA_ID} 
+				)
+		</if>
+		<if test="pd.PLINE_CLASS_ID != null and pd.PLINE_CLASS_ID != ''"><!-- 产线类别ID -->
+			and
+				(
+					f.PLINE_CLASS_ID = #{pd.PLINE_CLASS_ID} 
+				)
+		</if>
+		[fhstart] ORDER BY f.FCODE [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		p.FNAME PLINE_CLASS_NAME,p.FCODE PLINE_CLASS_CODE,a.FNAME AREA_NAME,a.FCODE AREA_CODE 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_PLINE_CLASS p ON f.PLINE_CLASS_ID=p.PLINE_CLASS_ID LEFT JOIN MDM_AREA a ON f.AREA_ID=a.AREA_ID
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PLINE_ENTITY_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.ny.SnapshotMapper">
+
+    <!--表名 -->
+    <sql id="tableName">
+        NY_SNAPSHOT
+    </sql>
+
+    <!-- 字段 -->
+    <sql id="Field">
+        f.SNAPSHOT_ID,
+		f.PLC_ID,
+		f.FDATE,
+		f.FVALUE,
+		f.CREATOR,
+        f.CREATETIME,
+        f.MODIFIED,
+        f.MODIFIEDTIME
+    </sql>
+
+    <!-- 字段用于新增 -->
+    <sql id="Field2">
+        SNAPSHOT_ID,
+		PLC_ID,
+		FDATE,
+		FVALUE,
+		CREATOR,
+        CREATETIME,
+        MODIFIED,
+        MODIFIEDTIME
+    </sql>
+
+    <!-- 字段值 -->
+    <sql id="FieldValue">
+        #{SNAPSHOT_ID},
+        #{PLC_ID},
+        #{FDATE},
+        #{FVALUE},
+        #{CREATOR},
+        #{CREATETIME},
+        #{MODIFIED},
+        #{MODIFIEDTIME}
+    </sql>
+
+    <select id="runSql" parameterType="pd">
+        ${sql}
+    </select>
+
+    <!-- 新增-->
+    <insert id="save" parameterType="pd">
+        insert into
+        <include refid="tableName"></include>
+        (
+        <include refid="Field2"></include>
+        ) values (
+        <include refid="FieldValue"></include>
+        )
+    </insert>
+
+    <insert id="saveAll" parameterType="list">
+        insert into
+        <include refid="tableName"></include>
+        (
+            SNAPSHOT_ID,
+            PLC_ID,
+            FDATE,
+            FVALUE,
+            CREATOR,
+            CREATETIME
+        )
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.SNAPSHOT_ID},
+            #{item.PLC_ID},
+            #{item.FDATE},
+            #{item.FVALUE},
+            #{item.CREATOR},
+            #{item.CREATETIME}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 删除-->
+    <delete id="delete" parameterType="pd">
+        delete from
+        <include refid="tableName"></include>
+        where
+        YIELD_ID = #{YIELD_ID}
+    </delete>
+
+    <!-- 删除-->
+    <delete id="deleteData" parameterType="pd">
+        delete from
+            T_PatraElectric
+        where
+            substring(TimeStamp,0,8) &lt;= #{deleteMonth}
+        delete from
+            T_PatraWater
+        where
+            substring(TimeStamp,0,8) &lt;= #{deleteMonth}
+        delete from
+            T_PatraGas
+        where
+            substring(TimeStamp,0,8) &lt;= #{deleteMonth}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="pd">
+        update
+        <include refid="tableName"></include>
+        set
+        PLC_ID = #{PLC_ID},
+        FDATE = #{FDATE},
+        FVALUE = #{FVALUE},
+        MODIFIED = #{MODIFIED},
+        MODIFIEDTIME = #{MODIFIEDTIME}
+        where
+        SNAPSHOT_ID = #{SNAPSHOT_ID}
+    </update>
+
+    <select id="querySnapshotInfo" parameterType="list" resultType="pd">
+        <foreach collection="list" item="item" separator=" union ">
+            select ${item.QueryField}
+            from ${item.QueryTable} f
+            where ${item.QueryCondition}
+        </foreach>
+    </select>
+
+    <!-- 通过ID获取数据 -->
+    <select id="findById" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        f
+        where
+        f.SNAPSHOT_ID = #{SNAPSHOT_ID}
+    </select>
+
+    <!-- 列表 -->
+    <select id="datalistPage" parameterType="page" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_PLC p on f.PLC_ID = p.PLC_ID
+        where 1=1
+
+        [fhstart] ORDER BY FDATE DESC [fhend]
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listAll" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_PLC p on f.PLC_ID = p.PLC_ID
+        where 1=1
+        [fhstart] ORDER BY FDATE DESC [fhend]
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="plcList" parameterType="pd" resultType="pd">
+        select
+        *
+        from
+        NY_PLC f
+        where IsSnapshot = '是' and FStatus = '启用'
+    </select>
+
+
+    <select id="queryYearUseEnergy" parameterType="pd" resultType="pd">
+        SELECT d.number as month,ISNULL(CAST(f.FVALUE AS NUMERIC(10,2)),0.0) AS value FROM
+        (
+        SELECT number FROM MASTER..spt_values WHERE type = 'P' AND number &gt;= 1 AND number &lt;= month(GETDATE())
+        ) AS d LEFT JOIN (
+
+        SELECT SUBSTRING(FDATE,6,2) as day,SUM(CAST(FVALUE AS NUMERIC(10,2))) AS FVALUE
+        FROM NY_SNAPSHOT
+        WHERE PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="EnergyType != null and EnergyType != ''"><!-- 关键词检索 -->
+            and ParamType = #{EnergyType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        and Loop IN (
+        SELECT DM_SITE_ID FROM MDM_SITE
+        )
+        )
+        GROUP BY SUBSTRING(FDATE,6,2)
+        )AS f ON d.number = f.day
+    </select>
+
+    <select id="queryYearUseEnergyByIds" parameterType="pd" resultType="pd">
+        SELECT d.number as FTime,ISNULL(CAST(f.FVALUE AS NUMERIC(10,2)),0.0) AS FValue FROM
+        (
+        SELECT number FROM MASTER..spt_values WHERE type = 'P' AND number &gt;= 1 AND number &lt;= month(GETDATE())
+        ) AS d LEFT JOIN (
+
+        SELECT SUBSTRING(FDATE,6,2) as day,SUM(CAST(FVALUE AS NUMERIC(10,2))) AS FVALUE
+        FROM NY_SNAPSHOT
+        WHERE PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{ParamType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        and Loop IN ${IDS}
+        )
+        GROUP BY SUBSTRING(FDATE,6,2)
+        )AS f ON d.number = f.day
+    </select>
+
+    <select id="queryRingdatalistPage" parameterType="page" resultType="pd">
+
+        SELECT a.NowTime,ISNULL(a.NowValue,0) NowValue,ISNULL(b.BeforeTime,YEAR(GETDATE())-1) BeforeTime,ISNULL(b.BeforeValue,0) BeforeValue,a.Extend1,a.FCode1,a.FCode2,a.FCode3,a.DeptName1,a.DeptName2,a.DeptName3,a.SaveTable,a.PLC_ID
+        FROM
+        (
+        SELECT ${pd.queryTimeField} as NowTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS NowValue,p.Extend1,l.FCode FCode1,s.FCODE FCode2,a.FCODE FCode3,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3,p.SaveTable,p.PLC_ID
+        FROM
+        NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        left join NY_Loop l on p.Loop = l.Loop_ID
+        left join MDM_SITE s on p.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on p.Loop = a.AREA_ID
+        WHERE
+        f.PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="pd.ParamType != null and pd.ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{pd.ParamType}
+        </if>
+        <if test="pd.SaveTable != null and pd.SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{pd.SaveTable}
+        </if>
+        <if test="pd.IDS != null and pd.IDS != ''"><!-- 关键词检索 -->
+            and Loop IN ${pd.IDS}
+        </if>
+        )
+        <if test="pd.queryCondition != null and pd.queryCondition != ''"><!-- 关键词检索 -->
+            ${pd.queryCondition}
+        </if>
+        group by ${pd.queryTimeField},p.Extend1,l.FCode,s.FCODE,a.FCODE,l.FName,s.FNAME,a.FNAME,p.SaveTable,p.PLC_ID
+        ) AS a left join (
+
+        SELECT ${pd.queryBeforeTimeField} as BeforeTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS BeforeValue,p.PLC_ID
+        FROM
+        NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        WHERE
+        f.PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="pd.ParamType != null and pd.ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{pd.ParamType}
+        </if>
+        <if test="pd.SaveTable != null and pd.SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{pd.SaveTable}
+        </if>
+        <if test="pd.IDS != null and pd.IDS != ''"><!-- 关键词检索 -->
+            and Loop IN ${pd.IDS}
+        </if>
+        )
+        <if test="pd.beforeQueryCondition != null and pd.beforeQueryCondition != ''"><!-- 关键词检索 -->
+            ${pd.beforeQueryCondition}
+        </if>
+
+        group by ${pd.queryBeforeTimeField},p.PLC_ID
+        ) as b on a.PLC_ID = b.PLC_ID
+
+    </select>
+
+    <select id="queryRing" parameterType="pd" resultType="pd">
+        SELECT a.NowTime,ISNULL(a.NowValue,0) NowValue,ISNULL(b.BeforeTime,YEAR(GETDATE())-1) BeforeTime,ISNULL(b.BeforeValue,0) BeforeValue,a.Extend1,a.FCode1,a.FCode2,a.FCode3,a.DeptName1,a.DeptName2,a.DeptName3,a.SaveTable,a.PLC_ID
+        FROM
+        (
+        SELECT ${queryTimeField} as NowTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS NowValue,p.Extend1,l.FCode FCode1,s.FCODE FCode2,a.FCODE FCode3,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3,p.SaveTable,p.PLC_ID
+        FROM
+        NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        left join NY_Loop l on p.Loop = l.Loop_ID
+        left join MDM_SITE s on p.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on p.Loop = a.AREA_ID
+        WHERE
+        f.PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{ParamType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        <if test="IDS != null and IDS != ''"><!-- 关键词检索 -->
+            and Loop IN ${IDS}
+        </if>
+        )
+        <if test="queryCondition != null and queryCondition != ''"><!-- 关键词检索 -->
+            ${queryCondition}
+        </if>
+        group by ${queryTimeField},p.Extend1,l.FCode,s.FCODE,a.FCODE,l.FName,s.FNAME,a.FNAME,p.SaveTable,p.PLC_ID
+        ) AS a left join (
+
+        SELECT ${queryBeforeTimeField} as BeforeTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS BeforeValue,p.PLC_ID
+        FROM
+        NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        WHERE
+        f.PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{ParamType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        <if test="IDS != null and IDS != ''"><!-- 关键词检索 -->
+            and Loop IN ${IDS}
+        </if>
+        )
+        <if test="beforeQueryCondition != null and beforeQueryCondition != ''"><!-- 关键词检索 -->
+            ${beforeQueryCondition}
+        </if>
+
+        group by ${queryBeforeTimeField},p.PLC_ID
+        ) as b on a.PLC_ID = b.PLC_ID
+    </select>
+
+    <select id="queryGrewdatalistPage" parameterType="page" resultType="pd">
+
+        SELECT ISNULL(a.NowTime,YEAR(GETDATE())-1)  NowTime,ISNULL(a.NowValue,0) NowValue,ISNULL(b.BeforeTime,YEAR(GETDATE())-1) BeforeTime,ISNULL(b.BeforeValue,0) BeforeValue,a.Extend1,a.FCode1,a.FCode2,a.FCode3,a.DeptName1,a.DeptName2,a.DeptName3,a.SaveTable,a.PLC_ID
+        FROM
+        (
+        SELECT year(FDate) as NowTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS NowValue,p.Extend1,l.FCode FCode1,s.FCODE FCode2,a.FCODE FCode3,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3,p.SaveTable,p.PLC_ID
+        FROM
+        NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        left join NY_Loop l on p.Loop = l.Loop_ID
+        left join MDM_SITE s on p.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on p.Loop = a.AREA_ID
+        WHERE
+        f.PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="pd.ParamType != null and pd.ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{pd.ParamType}
+        </if>
+        <if test="pd.SaveTable != null and pd.SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{pd.SaveTable}
+        </if>
+        <if test="pd.IDS != null and pd.IDS != ''"><!-- 关键词检索 -->
+            and Loop IN ${pd.IDS}
+        </if>
+        )
+        <if test="pd.FTime != null and pd.FTime != ''"><!-- 关键词检索 -->
+            and year(FDate) = year(#{pd.FTime})
+        </if>
+
+        and month(FDate) = month(GETDATE())
+        group by year(FDate),p.Extend1,l.FCode,s.FCODE,a.FCODE,l.FName,s.FNAME,a.FNAME,p.SaveTable,p.PLC_ID
+        ) AS a left join (
+
+        SELECT year(FDate) as BeforeTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS BeforeValue,p.PLC_ID
+        FROM
+        NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        WHERE
+        f.PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="pd.ParamType != null and pd.ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{pd.ParamType}
+        </if>
+        <if test="pd.SaveTable != null and pd.SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{pd.SaveTable}
+        </if>
+        <if test="pd.IDS != null and pd.IDS != ''"><!-- 关键词检索 -->
+            and Loop IN ${pd.IDS}
+        </if>
+        )
+        <if test="pd.FTime != null and pd.FTime != ''"><!-- 关键词检索 -->
+            and year(FDate) = year(#{pd.FTime})-1
+        </if>
+        and month(FDate) = month(GETDATE())
+        group by year(FDate),p.PLC_ID
+        ) as b on a.PLC_ID = b.PLC_ID
+
+    </select>
+
+    <select id="queryGrewAll" parameterType="pd" resultType="pd">
+
+        SELECT ISNULL(a.NowTime,YEAR(GETDATE())-1)  NowTime,ISNULL(a.NowValue,0) NowValue,ISNULL(b.BeforeTime,YEAR(GETDATE())-1) BeforeTime,ISNULL(b.BeforeValue,0) BeforeValue,a.Extend1,a.FCode1,a.FCode2,a.FCode3,a.DeptName1,a.DeptName2,a.DeptName3,a.SaveTable,a.PLC_ID
+        FROM
+        (
+        SELECT year(FDate) as NowTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS NowValue,p.Extend1,l.FCode FCode1,s.FCODE FCode2,a.FCODE FCode3,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3,p.SaveTable,p.PLC_ID
+        FROM
+        NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        left join NY_Loop l on p.Loop = l.Loop_ID
+        left join MDM_SITE s on p.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on p.Loop = a.AREA_ID
+        WHERE
+        f.PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{ParamType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        <if test="IDS != null and IDS != ''"><!-- 关键词检索 -->
+            and Loop IN ${IDS}
+        </if>
+        )
+        <if test="FTime != null and FTime != ''"><!-- 关键词检索 -->
+            and year(FDate) = year(#{FTime})
+        </if>
+        and month(FDate) = month(GETDATE())
+        group by year(FDate),p.Extend1,l.FCode,s.FCODE,a.FCODE,l.FName,s.FNAME,a.FNAME,p.SaveTable,p.PLC_ID
+        ) AS a left join (
+
+        SELECT year(FDate) as BeforeTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS BeforeValue,p.PLC_ID
+        FROM
+        NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        WHERE
+        f.PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{ParamType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        <if test="IDS != null and IDS != ''"><!-- 关键词检索 -->
+            and Loop IN ${IDS}
+        </if>
+        )
+        <if test="FTime != null and FTime != ''"><!-- 关键词检索 -->
+            and year(FDate) = year(#{FTime})-1
+        </if>
+        and month(FDate) = month(GETDATE())
+        group by year(FDate),p.PLC_ID
+        ) as b on a.PLC_ID = b.PLC_ID
+
+    </select>
+
+    <select id="queryUseEnergyByIdsdatalistPage" parameterType="page" resultType="pd">
+        SELECT ${pd.queryTimeField} as NowTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS NowValue,p.Extend1,l.FCode FCode1,s.FCODE FCode2,a.FCODE FCode3,l.FName DeptName1,s.FNAME
+        DeptName2,a.FNAME DeptName3,p.SaveTable
+        FROM NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        left join NY_Loop l on p.Loop = l.Loop_ID
+        left join MDM_SITE s on p.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on p.Loop = a.AREA_ID
+        WHERE
+        f.PLC_ID IN (
+            SELECT PLC_ID FROM NY_PLC
+            WHERE 1=1
+            <if test="pd.ParamType != null and pd.ParamType != ''"><!-- 关键词检索 -->
+                and ParamType = #{pd.ParamType}
+            </if>
+            <if test="pd.SaveTable != null and pd.SaveTable != ''"><!-- 关键词检索 -->
+                and SaveTable = #{pd.SaveTable}
+            </if>
+            <if test="pd.IDS != null and pd.IDS != ''"><!-- 关键词检索 -->
+                and Loop IN ${pd.IDS}
+            </if>
+        )
+        <if test="pd.queryCondition != null and pd.queryCondition != ''"><!-- 关键词检索 -->
+            ${pd.queryCondition}
+        </if>
+        group by ${pd.queryTimeField},p.Extend1,l.FCode,s.FCODE,a.FCODE,l.FName,s.FNAME,a.FNAME,p.SaveTable
+        [fhstart] order by NowValue desc [fhend]
+    </select>
+
+    <select id="queryUseEnergyByIds" parameterType="pd" resultType="pd">
+        SELECT ${queryTimeField} as NowTime,SUM(CAST(f.FVALUE AS NUMERIC(10,2))) AS NowValue,p.Extend1,l.FCode FCode1,s.FCODE FCode2,a.FCODE FCode3,l.FName DeptName1,s.FNAME
+        DeptName2,a.FNAME DeptName3,p.SaveTable
+        FROM NY_SNAPSHOT f
+        left join NY_PLC p ON f.PLC_ID = p.PLC_ID
+        left join NY_Loop l on p.Loop = l.Loop_ID
+        left join MDM_SITE s on p.Loop = s.DM_SITE_ID
+        left join MDM_AREA a on p.Loop = a.AREA_ID
+        WHERE
+        f.PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            and ParamType = #{ParamType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        <if test="IDS != null and IDS != ''"><!-- 关键词检索 -->
+            and Loop IN ${IDS}
+        </if>
+        )
+        <if test="queryCondition != null and queryCondition != ''"><!-- 关键词检索 -->
+            ${queryCondition}
+        </if>
+        group by ${queryTimeField},p.Extend1,l.FCode,s.FCODE,a.FCODE,l.FName,s.FNAME,a.FNAME,p.SaveTable
+        order by NowValue desc
+    </select>
+
+    <select id="queryYearYield" parameterType="pd" resultType="pd">
+        SELECT
+            d.number as month,
+            ISNULL(CAST(f.FVALUE AS NUMERIC(10,2)),0.0) AS value,
+            ISNULL(CAST(y.YIELD AS NUMERIC(10,2)),0.0) AS yield
+        FROM
+        (
+        SELECT number FROM MASTER..spt_values WHERE type = 'P' AND number &gt;= 1 AND number &lt;= month(GETDATE())
+        ) AS d LEFT JOIN (
+
+        SELECT SUBSTRING(FDATE,6,2) as day,SUM(CAST(FVALUE AS NUMERIC(10,2))) AS FVALUE
+        FROM NY_SNAPSHOT
+        WHERE PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="EnergyType != null and EnergyType != ''"><!-- 关键词检索 -->
+            AND ParamType = #{EnergyType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        and Loop IN (
+        SELECT DM_SITE_ID FROM MDM_SITE
+        )
+        )
+        GROUP BY SUBSTRING(FDATE,6,2)
+        )AS f ON d.number = f.day
+        LEFT JOIN
+        (
+        SELECT SUBSTRING(FTime,6,2) FTime, SUM(CAST(YIELD AS NUMERIC(10,2))) YIELD FROM NY_YIELD
+        GROUP BY SUBSTRING(FTime,6,2)
+        ) as y ON d.number = y.FTime
+    </select>
+
+    <select id="queryThisYearUserEnergy" parameterType="pd" resultType="pd">
+        SELECT ISNULL(SUM ( CAST ( FVALUE AS NUMERIC ( 10, 2 ) ) ),0) AS FVALUE
+        FROM
+        NY_SNAPSHOT
+        WHERE
+        PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            AND ParamType = #{ParamType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        AND Loop IN (
+        SELECT DM_SITE_ID FROM MDM_SITE )
+        )
+        and year(FDATE) = year(GETDATE())
+    </select>
+
+    <select id="queryBeforeYearThisDayUserEnergy" parameterType="pd" resultType="pd">
+        SELECT ISNULL(SUM ( CAST ( FVALUE AS NUMERIC ( 10, 2 ) ) ),0) AS FVALUE
+        FROM
+        NY_SNAPSHOT
+        WHERE
+        PLC_ID IN (
+        SELECT PLC_ID FROM NY_PLC
+        WHERE 1=1
+        <if test="ParamType != null and ParamType != ''"><!-- 关键词检索 -->
+            AND ParamType = #{ParamType}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and SaveTable = #{SaveTable}
+        </if>
+        AND Loop IN (
+        SELECT DM_SITE_ID FROM MDM_SITE )
+        )
+        and  year(GETDATE())-year(FDATE) = 1
+        and  month(GETDATE())=month(FDATE)
+        and  day(GETDATE())=day(FDATE)
+        and  FDATE &lt;= CONVERT(varchar(100), GETDATE(), 23)
+    </select>
+
+    <!-- yy356703572qq(彬耶) -->
+</mapper>

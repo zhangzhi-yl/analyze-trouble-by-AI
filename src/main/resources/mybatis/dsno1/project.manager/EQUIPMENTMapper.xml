@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.dprojectManager.EQUIPMENTMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		DT_EQUIPMENT
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.EPROJECT_ID,	
+		f.EPROJECT_CODE,	
+		f.EPROJECT_NAME,	
+		f.EEQM_NO,	
+		f.EEQM_NAME,	
+		f.ESIGN_DATE,	
+		f.EDELIVERY_DATE,	
+		f.ETYPE,	
+		f.ESET_NUMBER,	
+		f.ECUSTOMER_NAME,	
+		f.EDELIVERY_PLACE,	
+		f.ECONTRACT_AMOUNT,	
+		f.EPROJECT_PRINCIPAL,	
+		f.EPROJECT_MANAGER,	
+		f.ENOTE,	
+		f.ERUN_STATE,	
+		f.EVISIBLE,	
+		f.ECREATOR,	
+		f.ECREATE_TIME,	
+		f.ELAST_MODIFIER,	
+		f.ELAST_MODIFIED_TIME,	
+		f.EQUIPMENT_ID,
+		f.EENGINEER_DESIGN,
+		f.EELECTRIC_DESIGN
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		EPROJECT_ID,	
+		EPROJECT_CODE,	
+		EPROJECT_NAME,	
+		EEQM_NO,	
+		EEQM_NAME,	
+		ESIGN_DATE,	
+		EDELIVERY_DATE,	
+		ETYPE,	
+		ESET_NUMBER,	
+		ECUSTOMER_NAME,	
+		EDELIVERY_PLACE,	
+		ECONTRACT_AMOUNT,	
+		EPROJECT_PRINCIPAL,	
+		EPROJECT_MANAGER,	
+		ENOTE,	
+		ERUN_STATE,	
+		EVISIBLE,	
+		ECREATOR,	
+		ECREATE_TIME,	
+		ELAST_MODIFIER,	
+		ELAST_MODIFIED_TIME,	
+		EQUIPMENT_ID,
+		EENGINEER_DESIGN,
+		EELECTRIC_DESIGN,
+		EDEPARTMENT_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{EPROJECT_ID},	
+		#{EPROJECT_CODE},	
+		#{EPROJECT_NAME},	
+		#{EEQM_NO},	
+		#{EEQM_NAME},	
+		#{ESIGN_DATE},	
+		#{EDELIVERY_DATE},	
+		#{ETYPE},	
+		#{ESET_NUMBER},	
+		#{ECUSTOMER_NAME},	
+		#{EDELIVERY_PLACE},	
+		#{ECONTRACT_AMOUNT},	
+		#{EPROJECT_PRINCIPAL},	
+		#{EPROJECT_MANAGER},	
+		#{ENOTE},	
+		#{ERUN_STATE},	
+		#{EVISIBLE},	
+		#{ECREATOR},	
+		#{ECREATE_TIME},	
+		#{ELAST_MODIFIER},	
+		#{ELAST_MODIFIED_TIME},	
+		#{EQUIPMENT_ID},
+		#{EENGINEER_DESIGN},
+		#{EELECTRIC_DESIGN},
+		#{EDEPARTMENT_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQUIPMENT_ID = #{EQUIPMENT_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			EPROJECT_ID = #{EPROJECT_ID},
+			EPROJECT_CODE = #{EPROJECT_CODE},
+			EPROJECT_NAME = #{EPROJECT_NAME},
+			EEQM_NO = #{EEQM_NO},
+			EEQM_NAME = #{EEQM_NAME},
+			ESIGN_DATE = #{ESIGN_DATE},
+			EDELIVERY_DATE = #{EDELIVERY_DATE},
+			ETYPE = #{ETYPE},
+			ESET_NUMBER = #{ESET_NUMBER},
+			ECUSTOMER_NAME = #{ECUSTOMER_NAME},
+			EDELIVERY_PLACE = #{EDELIVERY_PLACE},
+			ECONTRACT_AMOUNT = #{ECONTRACT_AMOUNT},
+			EPROJECT_PRINCIPAL = #{EPROJECT_PRINCIPAL},
+			EPROJECT_MANAGER = #{EPROJECT_MANAGER},
+			ENOTE = #{ENOTE},
+			ERUN_STATE = #{ERUN_STATE},
+			EVISIBLE = #{EVISIBLE},
+			ECREATOR = #{ECREATOR},
+			ECREATE_TIME = #{ECREATE_TIME},
+			ELAST_MODIFIER = #{ELAST_MODIFIER},
+			ELAST_MODIFIED_TIME = #{ELAST_MODIFIED_TIME},
+			EENGINEER_DESIGN=#{EENGINEER_DESIGN},
+			EELECTRIC_DESIGN=#{EELECTRIC_DESIGN},
+			EQUIPMENT_ID = EQUIPMENT_ID
+		where 
+			EQUIPMENT_ID = #{EQUIPMENT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.EQUIPMENT_ID = #{EQUIPMENT_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and EVISIBLE='1'
+		and EPROJECT_ID=#{pd.EPROJECT_ID}
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != '' and pd.KEYWORDS3 != 'null'"><!-- 设备号检索 -->
+			and
+				(
+					EEQM_NO LIKE '%'+ #{pd.KEYWORDS3}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != '' and pd.KEYWORDS4 != 'null'"><!-- 设备名称检索 -->
+			and
+				(
+					EEQM_NAME LIKE '%'+ #{pd.KEYWORDS4}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != '' and pd.KEYWORDS5 != 'null'"><!-- 设备状态检索 -->
+			and
+				(
+					ERUN_STATE = #{pd.KEYWORDS5}
+				)
+		</if>
+		[fhstart] order by ECREATE_TIME desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 
+		<if test="EPROJECT_ID != null and EPROJECT_ID != ''">
+			and EPROJECT_ID = #{EPROJECT_ID}
+			and ERUN_STATE='执行中'
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQUIPMENT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!--修改执行状态-->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ERUN_STATE = #{ERUN_STATE}
+		where 
+			EQUIPMENT_ID = #{EQUIPMENT_ID}
+	</update>
+	<select id="getPROID" parameterType="pd" resultType="pd">
+		select EPROJECT_ID from <include refid="tableName"></include> where EQUIPMENT_ID = #{EQUIPMENT_ID}
+	</select>
+	<!--反写删除状态-->
+	<update id="upVisible" parameterType="pd">
+	<choose>
+        <when test="FTYPE != null and FTYPE == 'type1'.toString()">
+		update
+		<include refid="tableName"></include>
+		set 
+			EVISIBLE = #{EVISIBLE}
+		where 
+			EQUIPMENT_ID = #{EQUIPMENT_ID}				
+		</when>
+		<when test="FTYPE != null and FTYPE == 'type2'.toString()">
+		update
+		<include refid="tableName"></include>
+		set 
+			EVISIBLE = #{EVISIBLE}
+		where 
+			EPROJECT_ID = #{PROJECT_ID}			
+		</when>
+        <otherwise>
+        </otherwise>
+     </choose>
+		
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

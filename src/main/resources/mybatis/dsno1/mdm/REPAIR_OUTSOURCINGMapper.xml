@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.REPAIR_OUTSOURCINGMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_REPAIR_OUTSOURCING
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.REPAIR_OUTSOURCING_ID,	
+		f.REPAIR_OUTSOURCING_NO,	
+		f.REPAIR_WORKORDER_ID,	
+		f.EQM_ID,	
+		f.OUTSOURCING_TYPE,	
+		f.OUTSOURCING_DES,	
+		f.OUTSOURCING_MONEY,	
+		f.ACCESSORY_WHETHER,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		REPAIR_OUTSOURCING_ID,	
+		REPAIR_OUTSOURCING_NO,	
+		REPAIR_WORKORDER_ID,	
+		EQM_ID,	
+		OUTSOURCING_TYPE,	
+		OUTSOURCING_DES,	
+		OUTSOURCING_MONEY,	
+		ACCESSORY_WHETHER,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		FEXTEND4,	
+		FEXTEND5
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{REPAIR_OUTSOURCING_ID},	
+		#{REPAIR_OUTSOURCING_NO},	
+		#{REPAIR_WORKORDER_ID},	
+		#{EQM_ID},	
+		#{OUTSOURCING_TYPE},	
+		#{OUTSOURCING_DES},	
+		#{OUTSOURCING_MONEY},	
+		#{ACCESSORY_WHETHER},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{FEXTEND4},	
+		#{FEXTEND5}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			REPAIR_OUTSOURCING_ID = #{REPAIR_OUTSOURCING_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			REPAIR_OUTSOURCING_NO = #{REPAIR_OUTSOURCING_NO},
+			EQM_ID = #{EQM_ID},
+			OUTSOURCING_TYPE = #{OUTSOURCING_TYPE},
+			OUTSOURCING_DES = #{OUTSOURCING_DES},
+			OUTSOURCING_MONEY = #{OUTSOURCING_MONEY},
+			ACCESSORY_WHETHER = #{ACCESSORY_WHETHER}
+		where 
+			REPAIR_OUTSOURCING_ID = #{REPAIR_OUTSOURCING_ID}
+	</update>
+	
+	<!-- 根据报修工单ID查询需要配件的委外信息数量 -->
+	<select id="findNeedAccessoriesCount" parameterType="pd" resultType="pd">
+		SELECT COUNT(*) num FROM MDM_REPAIR_OUTSOURCING 
+		WHERE REPAIR_WORKORDER_ID = #{REPAIR_WORKORDER_ID} 
+		AND ACCESSORY_WHETHER='YES';
+	</select>
+	
+	<!-- 查询最大单号 -->
+	<select id="findMaxNo" resultType="pd">
+		SELECT MAX(REPAIR_OUTSOURCING_NO) OUTSOURCING_NO FROM MDM_REPAIR_OUTSOURCING ;
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.REPAIR_OUTSOURCING_ID = #{REPAIR_OUTSOURCING_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>,e.FNAME EQM_NAME 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_EQM_BASE e ON f.EQM_ID=e.EQM_BASE_ID 
+		where 
+			f.REPAIR_WORKORDER_ID = #{pd.REPAIR_WORKORDER_ID} 
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					e.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] order by f.REPAIR_OUTSOURCING_NO DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			REPAIR_OUTSOURCING_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			REPAIR_WORKORDER_ID = #{REPAIR_WORKORDER_ID}
+	</select>
+		<!-- yy356703572qq(彬耶) -->
+</mapper>

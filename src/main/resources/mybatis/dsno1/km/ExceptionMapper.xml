@@ -1,0 +1,1181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.ExceptionMapper">
+	<!-- 
+		原作者：范贺男
+		时   间：2020-11-09
+			如果有同事需要在文件里面加SQL的话，
+			请写好注释，注明SQL的用途，涉及到的功能等
+	 -->
+	<!--表名 -->
+	<sql id="tableName">
+		KM_Exception
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FPriorityID,	
+		f.FDateSource,	
+		f.FType,	
+		f.FDefinition,	
+		f.FLevel,	
+		f.FExplanation,	
+		f.FIssuedID,	
+		f.ReleaseTime,	
+		f.ProcessingTimeRequired,	
+		f.IfMonitorProcessing,	
+		f.NearTriggerMonitoringTime,	
+		f.MonitoringTimes,	
+		f.DealType,	
+		f.ExceptionPendingParty,	
+		f.InitOperatorID,	
+		f.IssueType,
+		f.Exception_ID,
+		f.PlanningWorkOrder_ID,
+		f.ProcessDefinition_ID,
+		f.EQM_BASE_ID,
+		f.ProcessWorkOrderExample_ID,
+		f.FIs_Read,
+		f.FReadTime,
+		f.FReadMan
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FPriorityID,	
+		FDateSource,	
+		FType,	
+		FDefinition,	
+		FLevel,	
+		FExplanation,	
+		FIssuedID,	
+		ReleaseTime,	
+		ProcessingTimeRequired,	
+		IfMonitorProcessing,	
+		NearTriggerMonitoringTime,	
+		MonitoringTimes,	
+		DealType,	
+		ExceptionPendingParty,	
+		InitOperatorID,	
+		IssueType,
+		Exception_ID,
+		PlanningWorkOrder_ID,
+		ProcessDefinition_ID,
+		EQM_BASE_ID,
+		ProcessWorkOrderExample_ID,
+		FIs_Read,
+		FReadTime,
+		FReadMan
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FPriorityID},	
+		#{FDateSource},	
+		#{FType},	
+		#{FDefinition},	
+		#{FLevel},	
+		#{FExplanation},	
+		#{FIssuedID},	
+		#{ReleaseTime},	
+		#{ProcessingTimeRequired},	
+		#{IfMonitorProcessing},	
+		#{NearTriggerMonitoringTime},	
+		#{MonitoringTimes},	
+		#{DealType},	
+		#{ExceptionPendingParty},	
+		#{InitOperatorID},	
+		#{IssueType},
+		#{Exception_ID},
+		#{PlanningWorkOrder_ID},
+		#{ProcessDefinition_ID},
+		#{EQM_BASE_ID},
+		#{ProcessWorkOrderExample_ID},
+		#{FIs_Read},
+		#{FReadTime},
+		#{FReadMan}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			Exception_ID = #{Exception_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FPriorityID = #{FPriorityID},
+			FDateSource = #{FDateSource},
+			FType = #{FType},
+			FDefinition = #{FDefinition},
+			FLevel = #{FLevel},
+			FExplanation = #{FExplanation},
+			ProcessingTimeRequired = #{ProcessingTimeRequired},
+			IfMonitorProcessing = #{IfMonitorProcessing},
+			NearTriggerMonitoringTime = #{NearTriggerMonitoringTime},
+			MonitoringTimes = #{MonitoringTimes},
+			DealType = #{DealType},
+			ExceptionPendingParty = #{ExceptionPendingParty},
+			InitOperatorID = #{InitOperatorID},
+			Exception_ID = Exception_ID,
+			PlanningWorkOrder_ID=#{PlanningWorkOrder_ID},
+			ProcessDefinition_ID=#{ProcessDefinition_ID},
+			EQM_BASE_ID=#{EQM_BASE_ID},
+			ProcessWorkOrderExample_ID=#{ProcessWorkOrderExample_ID}
+		where 
+			Exception_ID = #{Exception_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+			f.FIs_Read,
+		f.FReadTime,
+		f.FReadMan,
+			f.ProcessWorkOrderExample_ID,
+			f.Exception_ID,
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																				<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																			<!-- 异常待处理部门 -->
+			f.ExceptionPendingParty,    
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			f.FDefinition,
+			e.NAME NAMEExcept,  																			<!-- 异常类型 -->
+			f.FType,   --异常类型
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																			<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			d1.NAME DealTypeNAME,
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType	,																		<!-- 执行状态 -->
+			f.PlanningWorkOrder_ID,
+			f.ProcessDefinition_ID,
+			f.EQM_BASE_ID,
+			g.WorkOrderNum,
+			i.FNAME EQM_BASE_NAME
+			from 
+			KM_Exception f
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN PP_PlanningWorkOrder g on f.PlanningWorkOrder_ID = g.PlanningWorkOrder_ID
+			LEFT JOIN MDM_EQM_BASE i on f.EQM_BASE_ID = i.EQM_BASE_ID
+			left join SYS_DICTIONARIES d1 on f.DealType = d1.DICTIONARIES_ID
+		where 1=1 and
+			f.Exception_ID = #{Exception_ID}
+	</select>
+	
+	<!-- 列表 org.yy.controller.app.AppPage -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select * from(select 
+			(select ExceptionPendingParty from MM_ExceptionHandling gy1
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理') deptID,
+		     (select count(*) from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and gy2.NAME=#{pd.USERNAME}) FNUM11,
+			(select count(*) from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and gy2.NAME=#{pd.USERNAME} and DisposeType='待处理') FNUM1,
+		      case when (select top 1 gy1.FOperator from MM_ExceptionHandling gy1
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理' order by cast(Reorder as int) desc) = 1 then '部门' else '人' end InitOperatorID1,
+		    (select top 1 gy2.NAME from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理' order by cast(Reorder as int) desc) FDEALMAN,
+			f.Exception_ID, 
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource ,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																				<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																			<!-- 异常待处理部门 -->
+			f.ExceptionPendingParty,    
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			f.FDefinition,
+			e.NAME NAMEExcept,  																			<!-- 异常类型 -->
+			f.FType,   --异常类型
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																			<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			d1.NAME DealTypeNAME,
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType	,																		<!-- 执行状态 -->
+			f.PlanningWorkOrder_ID,
+			f.ProcessDefinition_ID,
+			f.EQM_BASE_ID,
+			g.WorkOrderNum,
+			i.FNAME EQM_BASE_NAME,
+				f.FIs_Read,
+		f.FReadTime,
+		f.FReadMan
+			from 
+			KM_Exception f
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN PP_PlanningWorkOrder g on f.PlanningWorkOrder_ID = g.PlanningWorkOrder_ID
+			LEFT JOIN MDM_EQM_BASE i on f.EQM_BASE_ID = i.EQM_BASE_ID
+			left join SYS_DICTIONARIES d1 on f.DealType = d1.DICTIONARIES_ID
+		where 1=1
+		
+		<if test="pd.LastStart != null and pd.LastStart != ''"><!-- 关键词检索：要求处理时间 -->
+			and
+				(
+					f.ProcessingTimeRequired &gt; #{pd.LastStart} and f.ProcessingTimeRequired &lt; #{pd.LastEnd}
+				)
+		</if>
+		<if test="pd.IDS != null and pd.IDS != ''">
+			and
+				(
+					f.Exception_ID in ${pd.IDS}
+				)
+		</if>
+		<if test="pd.IssueType != null and pd.IssueType != ''">
+			and
+				(
+					f.IssueType !='已完成'
+				)
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FType LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.InitOperatorID LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FDefinition LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KeyWords1}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索：异常类型 -->
+			and
+				(
+					f.FType LIKE '%'+ #{pd.KeyWords2}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索:初始移交部门或人 -->
+			and
+				(
+					f.InitOperatorID LIKE '%'+ #{pd.KeyWords3}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索：异常待处理方 -->
+			and
+				(
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KeyWords4}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KeyWords5}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords6 != null and pd.KeyWords6 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.FDefinition LIKE '%'+ #{pd.KeyWords6}+'%'
+				)
+		</if>
+		<if test="pd.Exception_ID != null and pd.Exception_ID != ''">
+			and
+				(
+					f.Exception_ID =#{pd.Exception_ID}
+				)
+		</if>
+		<if test="pd.ProcessWorkOrderExample_ID != null and pd.ProcessWorkOrderExample_ID != ''">
+			and
+				(
+					f.ProcessWorkOrderExample_ID =#{pd.ProcessWorkOrderExample_ID}
+				)
+		</if>
+		) ggy
+		where 1=1
+		 <choose>
+          <when test="pd.NOTICE_TYPE == 'ALL' ">
+
+         </when >
+        <otherwise>
+        and FNUM11>0 or InitOperatorID='部门'
+        </otherwise>
+        </choose>
+		
+		[fhstart] order by ReleaseTime desc[fhend]
+	</select>
+	<select id="AppList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		select 
+			f.Exception_ID,
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																				<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																			<!-- 异常待处理部门 -->
+			f.ExceptionPendingParty,    
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			f.FDefinition,
+			e.NAME NAMEExcept,  																			<!-- 异常类型 -->
+			f.FType,   --异常类型
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																			<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			d1.NAME DealTypeNAME,
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType	,																		<!-- 执行状态 -->
+			f.ProcessDefinition_ID,
+			f.EQM_BASE_ID,
+			g.WorkOrderNum,
+			f.PlanningWorkOrder_ID,
+			i.FNAME EQM_BASE_NAME
+			from 
+			KM_Exception f
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN PP_PlanningWorkOrder g on f.PlanningWorkOrder_ID = g.PlanningWorkOrder_ID
+			LEFT JOIN MDM_EQM_BASE i on f.EQM_BASE_ID = i.EQM_BASE_ID
+			left join SYS_DICTIONARIES d1 on f.DealType = d1.DICTIONARIES_ID
+		where 1=1
+		<if test="pd.LastStart != null and pd.LastStart != ''"><!-- 关键词检索：要求处理时间 -->
+			and
+				(
+					f.ProcessingTimeRequired &gt; #{pd.LastStart} and f.ProcessingTimeRequired &lt; #{pd.LastEnd}
+				)
+		</if>
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KeyWords1}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索：异常类型 -->
+			and
+				(
+					f.FType LIKE '%'+ #{pd.KeyWords2}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索:初始移交部门或人 -->
+			and
+				(
+					f.InitOperatorID LIKE '%'+ #{pd.KeyWords3}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索：异常待处理方 -->
+			and
+				(
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KeyWords4}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KeyWords5}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords6 != null and pd.KeyWords6 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.FDefinition LIKE '%'+ #{pd.KeyWords6}+'%'
+				)
+		</if>
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select 
+			f.Exception_ID,
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																				<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																			<!-- 异常待处理部门 -->
+			f.ExceptionPendingParty,    
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			f.FDefinition,
+			e.NAME NAMEExcept,  																			<!-- 异常类型 -->
+			f.FType,   --异常类型
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																			<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			d1.NAME DealTypeNAME,
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType	,																		<!-- 执行状态 -->
+			f.ProcessDefinition_ID,
+			f.EQM_BASE_ID,
+			g.WorkOrderNum,
+			f.PlanningWorkOrder_ID,
+			i.FNAME EQM_BASE_NAME
+			from 
+			KM_Exception f
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN PP_PlanningWorkOrder g on f.PlanningWorkOrder_ID = g.PlanningWorkOrder_ID
+			LEFT JOIN MDM_EQM_BASE i on f.EQM_BASE_ID = i.EQM_BASE_ID
+			left join SYS_DICTIONARIES d1 on f.DealType = d1.DICTIONARIES_ID
+		where 1=1
+		<if test="LastStart != null and LastStart != ''"><!-- 关键词检索：要求处理时间 -->
+			and
+				(
+					f.ProcessingTimeRequired &gt; #{LastStart} and f.ProcessingTimeRequired &lt; #{LastEnd}
+				)
+		</if>
+		<if test="KeyWords1 != null and KeyWords1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{KeyWords1}+'%'
+				)
+		</if>
+		<if test="KeyWords2 != null and KeyWords2 != ''"><!-- 关键词检索：异常类型 -->
+			and
+				(
+					f.FType LIKE '%'+ #{KeyWords2}+'%'
+				)
+		</if>
+		<if test="KeyWords3 != null and KeyWords3 != ''"><!-- 关键词检索:初始移交部门或人 -->
+			and
+				(
+					f.InitOperatorID LIKE '%'+ #{KeyWords3}+'%'
+				)
+		</if>
+		<if test="KeyWords4 != null and KeyWords4 != ''"><!-- 关键词检索：异常待处理方 -->
+			and
+				(
+					f.ExceptionPendingParty LIKE '%'+ #{KeyWords4}+'%'
+				)
+		</if>
+		<if test="KeyWords5 != null and KeyWords5 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.IfMonitorProcessing LIKE '%'+ #{KeyWords5}+'%'
+				)
+		</if>
+		<if test="KeyWords6 != null and KeyWords6 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.FDefinition LIKE '%'+ #{KeyWords6}+'%'
+				)
+		</if>
+		order by f.ReleaseTime desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			Exception_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 下发异常 -->
+	<update id="goLssue" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+			IssueType = '已下发'
+		where
+			 Exception_ID = #{Exception_ID}
+	</update>
+	<update id="FinishException" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+			IssueType = '已完成'
+		where
+			 Exception_ID = #{Exception_ID}
+	</update>
+	<!-- 异常处理记录列表 -->
+	<select id="datalistPageHandling" parameterType="page" resultType="pd">
+		select 
+			h.Reorder,																			<!-- 排序值 -->
+			f.Exception_ID,
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																	<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																	<!-- 异常待处理部门 -->
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			e.NAME NAMEExcept,  																<!-- 异常类型 -->
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																	<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType,																			<!-- 执行状态 -->
+			h.IfTurnOver, 																		<!-- 是否移交处理 -->
+			h.TurnOverTime,																		<!-- 移交时间 -->
+			h.DisposeType,																		<!-- 处理判别 -->
+			h.FExplanation FExplanationMX,																		<!-- 处理描述 -->
+			i.NAME FOperatorID,																	<!-- 处理人 -->
+			h.FTime,																			<!-- 处理时间 -->
+			h.FStatus, 																			<!-- 处理状态 -->
+			h.ExceptionHandling_ID
+			from 
+			KM_Exception f
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN MM_ExceptionHandling h on f.Exception_ID = h.Exception_ID
+			LEFT JOIN OA_STAFF i on h.FOperatorID = i.NAME
+		where 1=1 and f.IssueType = '已完成'
+		<if test="pd.LastStart != null and pd.LastStart != ''"><!-- 关键词检索：要求处理时间 -->
+			and
+				(
+					f.ProcessingTimeRequired &gt; #{pd.LastStart} and f.ProcessingTimeRequired &lt; #{pd.LastEnd}
+				)
+		</if>
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KeyWords1}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索：异常类型 -->
+			and
+				(
+					f.FType LIKE '%'+ #{pd.KeyWords2}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索:初始移交部门或人 -->
+			and
+				(
+					f.InitOperatorID LIKE '%'+ #{pd.KeyWords3}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索：异常待处理方 -->
+			and
+				(
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KeyWords4}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KeyWords5}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords6 != null and pd.KeyWords6 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.FDefinition LIKE '%'+ #{pd.KeyWords6}+'%'
+				)
+		</if>
+		[fhstart] order by Reorder,f.Exception_ID   [fhend]
+	</select>
+	<!-- 异常处理记录导出 -->
+	<select id="listAllHandling" parameterType="page" resultType="pd">
+		select 
+			h.Reorder,																			<!-- 排序值 -->
+			f.Exception_ID,
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																	<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																	<!-- 异常待处理部门 -->
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			e.NAME NAMEExcept,  																<!-- 异常类型 -->
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																	<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType,																			<!-- 执行状态 -->
+			h.IfTurnOver, 																		<!-- 是否移交处理 -->
+			h.TurnOverTime,																		<!-- 移交时间 -->
+			h.DisposeType,																		<!-- 处理判别 -->
+			h.FExplanation FExplanationMX,																		<!-- 处理描述 -->
+			i.NAME FOperatorID,																	<!-- 处理人 -->
+			h.FTime,																			<!-- 处理时间 -->
+			h.FStatus,																		<!-- 处理状态 -->
+			h.ExceptionHandling_ID
+			from 
+			KM_Exception f
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN MM_ExceptionHandling h on f.Exception_ID = h.Exception_ID
+			LEFT JOIN OA_STAFF i on h.FOperatorID = i.NAME
+		where 1=1
+		<if test="LastStart != null and LastStart != ''"><!-- 关键词检索：要求处理时间 -->
+			and
+				(
+					f.ProcessingTimeRequired &gt; #{LastStart} and f.ProcessingTimeRequired &lt; #{LastEnd}
+				)
+		</if>
+		<if test="KeyWords1 != null and KeyWords1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{KeyWords1}+'%'
+				)
+		</if>
+		<if test="KeyWords2 != null and KeyWords2 != ''"><!-- 关键词检索：异常类型 -->
+			and
+				(
+					f.FType LIKE '%'+ #{KeyWords2}+'%'
+				)
+		</if>
+		<if test="KeyWords3 != null and KeyWords3 != ''"><!-- 关键词检索:初始移交部门或人 -->
+			and
+				(
+					f.InitOperatorID LIKE '%'+ #{KeyWords3}+'%'
+				)
+		</if>
+		<if test="KeyWords4 != null and KeyWords4 != ''"><!-- 关键词检索：异常待处理方 -->
+			and
+				(
+					f.ExceptionPendingParty LIKE '%'+ #{KeyWords4}+'%'
+				)
+		</if>
+		<if test="KeyWords5 != null and KeyWords5 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.IfMonitorProcessing LIKE '%'+ #{KeyWords5}+'%'
+				)
+		</if>
+		<if test="KeyWords6 != null and KeyWords6 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.FDefinition LIKE '%'+ #{KeyWords6}+'%'
+				)
+		</if>
+		order by f.Exception_ID
+	</select>
+	<!-- 异常记录查看 -->
+	<select id="getHandling" parameterType="pd" resultType="pd">
+		select 
+			h.Reorder,																			<!-- 排序值 -->
+			f.Exception_ID,
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																	<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																	<!-- 异常待处理部门 -->
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			e.NAME NAMEExcept,  																<!-- 异常类型 -->
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																	<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType,																			<!-- 执行状态 -->
+			h.IfTurnOver, 																		<!-- 是否移交处理 -->
+			h.TurnOverTime,																		<!-- 移交时间 -->
+			h.DisposeType,																		<!-- 处理判别 -->
+			h.FExplanation FExplanationMX,																		<!-- 处理描述 -->
+			i.NAME FOperatorID,																	<!-- 处理人 -->
+			h.FTime,																			<!-- 处理时间 -->
+			h.FStatus, 																			<!-- 处理状态 -->
+			h.ExceptionHandling_ID
+			from 
+			KM_Exception f
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN MM_ExceptionHandling h on f.Exception_ID = h.Exception_ID
+			LEFT JOIN OA_STAFF i on h.FOperatorID = i.NAME
+		where h.ExceptionHandling_ID = #{ExceptionHandling_ID}
+	</select>
+	<select id="getEQMList" parameterType="pd" resultType="pd">
+		select EQM_BASE_ID,FNAME  from MDM_EQM_BASE where 1=1 
+		<if test="FNAME != null and FNAME != ''">
+		 and  FNAME like '%'+ #{FNAME} +'%'
+		 </if>
+	</select>
+	
+	<!-- 列表 org.yy.controller.app.AppPage -->
+	<select id="listSClistPage" parameterType="page" resultType="pd">
+		select 
+			(select ExceptionPendingParty from MM_ExceptionHandling gy1
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理') deptID,
+			(select count(*) from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and gy2.NAME=#{pd.USERNAME} and DisposeType='待处理') FNUM1,
+		      case when (select top 1 gy1.FOperator from MM_ExceptionHandling gy1
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理' order by cast(Reorder as int) desc) = 1 then '部门' else '人' end InitOperatorID1,
+		    (select top 1 gy2.NAME from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理' order by cast(Reorder as int) desc) FDEALMAN,
+			f.Exception_ID, 
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource ,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																				<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																			<!-- 异常待处理部门 -->
+			f.ExceptionPendingParty,    
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			f.FDefinition,
+			e.NAME NAMEExcept,  																			<!-- 异常类型 -->
+			f.FType,   --异常类型
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																			<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			d1.NAME DealTypeNAME,
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType	,																		<!-- 执行状态 -->
+			f.PlanningWorkOrder_ID,
+			f.ProcessDefinition_ID,
+			f.EQM_BASE_ID,
+			g.WorkOrderNum,
+			i.FNAME EQM_BASE_NAME
+			from 
+			KM_Exception f
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN PP_PlanningWorkOrder g on f.PlanningWorkOrder_ID = g.PlanningWorkOrder_ID
+			LEFT JOIN MDM_EQM_BASE i on f.EQM_BASE_ID = i.EQM_BASE_ID
+			left join SYS_DICTIONARIES d1 on f.DealType = d1.DICTIONARIES_ID
+		where 1=1
+		<if test="pd.LastStart != null and pd.LastStart != ''"><!-- 关键词检索：要求处理时间 -->
+			and
+				(
+					f.ProcessingTimeRequired &gt; #{pd.LastStart} and f.ProcessingTimeRequired &lt; #{pd.LastEnd}
+				)
+		</if>
+		<if test="pd.IDS != null and pd.IDS != ''">
+			and
+				(
+					f.Exception_ID in ${pd.IDS}
+				)
+		</if>
+		
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FType LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.InitOperatorID LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FDefinition LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KeyWords1}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索：异常类型 -->
+			and
+				(
+					f.FType LIKE '%'+ #{pd.KeyWords2}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索:初始移交部门或人 -->
+			and
+				(
+					f.InitOperatorID LIKE '%'+ #{pd.KeyWords3}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索：异常待处理方 -->
+			and
+				(
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KeyWords4}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KeyWords5}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords6 != null and pd.KeyWords6 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.FDefinition LIKE '%'+ #{pd.KeyWords6}+'%'
+				)
+		</if>
+		<if test="pd.ProcessWorkOrderExample_ID != null and pd.ProcessWorkOrderExample_ID != ''">
+			and
+				(
+					f.ProcessWorkOrderExample_ID =#{pd.ProcessWorkOrderExample_ID}
+				)
+		</if>
+			<choose>
+						<when
+							test="pd.FTYPE != null and pd.FTYPE == '异常任务'">
+							AND f.Exception_ID IN (
+								select distinct gy2.Exception_ID from PP_PlanningWorkOrder gy1 
+								inner join KM_Exception gy2 on gy1.PlanningWorkOrder_ID=gy2.PlanningWorkOrder_ID
+								where 1=1 and gy1.FStatus!='结束'
+							)
+						</when>
+					
+						<otherwise>
+						and 1=1 
+						</otherwise>
+					</choose>	
+		[fhstart] order by f.ReleaseTime desc[fhend]
+	</select>
+	<update id="setRead" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+			FIs_Read =  #{FIs_Read},
+			FReadTime =  #{FReadTime},
+			FReadMan =  #{FReadMan}
+		where
+			FIs_Read='未读'
+			and Exception_ID = #{Exception_ID}
+	</update>
+	<select id="listHislistPage" parameterType="page" resultType="pd">
+			select * from(select 
+			(select ExceptionPendingParty from MM_ExceptionHandling gy1
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理') deptID,
+		     (select count(*) from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and gy2.NAME=#{pd.USERNAME}) FNUM11,
+			(select count(*) from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and gy2.NAME=#{pd.USERNAME} and DisposeType='待处理') FNUM1,
+		      case when (select top 1 gy1.FOperator from MM_ExceptionHandling gy1
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理' order by cast(Reorder as int) desc) = 1 then '部门' else '人' end InitOperatorID1,
+		    (select top 1 gy2.NAME from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理' order by cast(Reorder as int) desc) FDEALMAN,
+			f.Exception_ID, 
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource ,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																				<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																			<!-- 异常待处理部门 -->
+			f.ExceptionPendingParty,    
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			f.FDefinition,
+			e.NAME NAMEExcept,  																			<!-- 异常类型 -->
+			f.FType,   --异常类型
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																			<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			d1.NAME DealTypeNAME,
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType	,																		<!-- 执行状态 -->
+			f.PlanningWorkOrder_ID,
+			f.ProcessDefinition_ID,
+			f.EQM_BASE_ID,
+			g.WorkOrderNum,
+			i.FNAME EQM_BASE_NAME,
+				f.FIs_Read,
+		f.FReadTime,
+		f.FReadMan
+			from 
+			KM_Exception f
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN PP_PlanningWorkOrder g on f.PlanningWorkOrder_ID = g.PlanningWorkOrder_ID
+			LEFT JOIN MDM_EQM_BASE i on f.EQM_BASE_ID = i.EQM_BASE_ID
+			left join SYS_DICTIONARIES d1 on f.DealType = d1.DICTIONARIES_ID
+		where 1=1
+		and f.FType = #{pd.FType} 
+	    and f.IssueType='已完成'
+		<if test="pd.LastStart != null and pd.LastStart != ''"><!-- 关键词检索：要求处理时间 -->
+			and
+				(
+					f.ProcessingTimeRequired &gt; #{pd.LastStart} and f.ProcessingTimeRequired &lt; #{pd.LastEnd}
+				)
+		</if>
+		<if test="pd.IDS != null and pd.IDS != ''">
+			and
+				(
+					f.Exception_ID in ${pd.IDS}
+				)
+		</if>
+		
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FType LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.InitOperatorID LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FDefinition LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KeyWords1}+'%'
+				)
+		</if>
+		
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索:初始移交部门或人 -->
+			and
+				(
+					f.InitOperatorID LIKE '%'+ #{pd.KeyWords3}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索：异常待处理方 -->
+			and
+				(
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KeyWords4}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KeyWords5}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords6 != null and pd.KeyWords6 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.FDefinition LIKE '%'+ #{pd.KeyWords6}+'%'
+				)
+		</if>
+
+		) ggy
+
+		[fhstart] order by ReleaseTime desc[fhend]
+		
+	</select>
+	
+	
+	<!-- v1 管悦 20210928 项目异常记录 -->
+	<select id="listXMlistPage" parameterType="page" resultType="pd">
+		select * from(select 
+			(select ExceptionPendingParty from MM_ExceptionHandling gy1
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理') deptID,
+		     (select count(*) from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and gy2.NAME=#{pd.USERNAME}) FNUM11,
+			(select count(*) from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and gy2.NAME=#{pd.USERNAME} and DisposeType='待处理') FNUM1,
+		      case when (select top 1 gy1.FOperator from MM_ExceptionHandling gy1
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理' order by cast(Reorder as int) desc) = 1 then '部门' else '人' end InitOperatorID1,
+		    (select top 1 gy2.NAME from MM_ExceptionHandling gy1
+		    LEFT JOIN OA_STAFF gy2 on gy1.WaitingOperatorID = gy2.STAFF_ID
+		     where Exception_ID=f.Exception_ID and DisposeType='待处理' order by cast(Reorder as int) desc) FDEALMAN,
+			f.Exception_ID, 
+			f.FPriorityID, 																		<!-- 优先级 -->
+			f.FDateSource ,  																	<!-- 数据来源 -->
+			f.FLevel,      																		<!-- 等级 -->
+			a.NAME NAMEStaff,																				<!-- 异常待处理人 -->
+			c.NAME NAMEDept, 																			<!-- 异常待处理部门 -->
+			f.ExceptionPendingParty,    
+			b.ExceptionDefinition,																<!-- 异常定义 -->
+			f.FDefinition,
+			e.NAME NAMEExcept,  																			<!-- 异常类型 -->
+			f.FType,   --异常类型
+			f.FExplanation,																		<!-- 异常描述 -->
+			d.NAME NAMERel,   																			<!-- 发布人 -->
+			f.ReleaseTime, 																		<!-- 发布时间 -->
+			f.ProcessingTimeRequired,															<!-- 要求处理时间 -->
+			case when f.IfMonitorProcessing = 1 then '是' else '否' end IfMonitorProcessing,		<!-- 是否监听 -->
+			f.NearTriggerMonitoringTime,														<!-- 临近触发时间 -->
+			f.MonitoringTimes,																	<!-- 监听次数 -->
+			f.DealType,																			<!-- 处理类型 -->
+			d1.NAME DealTypeNAME,
+			case when f.InitOperatorID = 1 then '部门' else '人' end InitOperatorID, 				<!-- 移交给人，或部门 -->
+			f.IssueType	,																		<!-- 执行状态 -->
+			f.PlanningWorkOrder_ID,
+			f.ProcessDefinition_ID,
+			f.EQM_BASE_ID,
+			g.WorkOrderNum,
+			i.FNAME EQM_BASE_NAME,
+				f.FIs_Read,
+		f.FReadTime,
+		f.FReadMan
+			from 
+			KM_Exception f
+			inner join PP_PlanningWorkOrder f2 on f.PlanningWorkOrder_ID=f2.PlanningWorkOrder_ID
+			inner join PMS_Cabinet_Assembly_Detail f3 on f2.WorkOrderNum=f3.Cabinet_No
+			
+			LEFT JOIN OA_STAFF a on f.ExceptionPendingParty = a.STAFF_ID
+			LEFT JOIN MM_ExceptionDefinition b on f.FDefinition = b.ExceptionDefinition_ID
+			LEFT JOIN OA_DEPARTMENT c on f.ExceptionPendingParty = c.DEPARTMENT_ID
+			LEFT JOIN OA_STAFF d on f.FIssuedID = d.STAFF_ID
+			LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+			LEFT JOIN PP_PlanningWorkOrder g on f.PlanningWorkOrder_ID = g.PlanningWorkOrder_ID
+			LEFT JOIN MDM_EQM_BASE i on f.EQM_BASE_ID = i.EQM_BASE_ID
+			left join SYS_DICTIONARIES d1 on f.DealType = d1.DICTIONARIES_ID
+		where 1=1
+		and f3.PROJECT_ID=#{pd.PROJECT_ID}
+		
+		<if test="pd.LastStart != null and pd.LastStart != ''"><!-- 关键词检索：要求处理时间 -->
+			and
+				(
+					f.ProcessingTimeRequired &gt; #{pd.LastStart} and f.ProcessingTimeRequired &lt; #{pd.LastEnd}
+				)
+		</if>
+		<if test="pd.IDS != null and pd.IDS != ''">
+			and
+				(
+					f.Exception_ID in ${pd.IDS}
+				)
+		</if>
+		<if test="pd.IssueType != null and pd.IssueType != ''">
+			and
+				(
+					f.IssueType !='已完成'
+				)
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FType LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.InitOperatorID LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or
+					f.FDefinition LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KeyWords1}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索：异常类型 -->
+			and
+				(
+					f.FType LIKE '%'+ #{pd.KeyWords2}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索:初始移交部门或人 -->
+			and
+				(
+					f.InitOperatorID LIKE '%'+ #{pd.KeyWords3}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索：异常待处理方 -->
+			and
+				(
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KeyWords4}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KeyWords5}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords6 != null and pd.KeyWords6 != ''"><!-- 关键词检索：是否监听 -->
+			and
+				(
+					f.FDefinition LIKE '%'+ #{pd.KeyWords6}+'%'
+				)
+		</if>
+		<if test="pd.ProcessWorkOrderExample_ID != null and pd.ProcessWorkOrderExample_ID != ''">
+			and
+				(
+					f.ProcessWorkOrderExample_ID =#{pd.ProcessWorkOrderExample_ID}
+				)
+		</if>
+		) ggy
+	
+		[fhstart] order by ReleaseTime desc[fhend]
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

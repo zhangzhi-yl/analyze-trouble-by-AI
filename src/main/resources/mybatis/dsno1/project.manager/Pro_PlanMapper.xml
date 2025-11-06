@@ -1,0 +1,1071 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.Pro_PlanMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		DT_PRO_PLAN
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PROJECT_ID,	
+		f.EQUIPMENT_ID,	
+		f.PLANTEMPLATE_ID,	
+		f.PLAN_START_TIME,	
+		f.PLAN_END_TIME,	
+		f.ETYPE,	
+		f.ECREATER,	
+		f.ECREATTIME,	
+		f.EDITUSER,	
+		f.EDITTIME,	
+		f.YL1,	
+		f.YL2,	
+		f.YL3,	
+		f.YL4,	
+		f.YL5,	
+		f.PRO_PLAN_ID,
+		f.VISIABLE,
+		f.NEW_PLAN_START_TIME,
+		f.NEW_PLAN_END_TIME,
+		f.REAL_SATRT_TIME,
+		f.REAL_END_TIME,
+		f.NOW_PLAN_TYPE,
+		f.PPACTUAL_HOUR,
+		f.PPNORMAL_HOUR,
+		f.PPOVER_HOUR
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PROJECT_ID,	
+		EQUIPMENT_ID,	
+		PLANTEMPLATE_ID,	
+		PLAN_START_TIME,	
+		PLAN_END_TIME,	
+		ETYPE,	
+		ECREATER,	
+		ECREATTIME,	
+		EDITUSER,	
+		EDITTIME,	
+		YL1,	
+		YL2,	
+		YL3,	
+		YL4,	
+		YL5,	
+		PRO_PLAN_ID,
+		VISIABLE,
+		NEW_PLAN_START_TIME,
+		NEW_PLAN_END_TIME,
+		REAL_SATRT_TIME,
+		REAL_END_TIME,
+		NOW_PLAN_TYPE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PROJECT_ID},	
+		#{EQUIPMENT_ID},	
+		#{PLANTEMPLATE_ID},	
+		#{PLAN_START_TIME},	
+		#{PLAN_END_TIME},	
+		#{ETYPE},	
+		#{ECREATER},	
+		#{ECREATTIME},	
+		#{EDITUSER},	
+		#{EDITTIME},	
+		#{YL1},	
+		#{YL2},	
+		#{YL3},	
+		#{YL4},	
+		#{YL5},	
+		#{PRO_PLAN_ID},
+		#{VISIABLE},
+		#{NEW_PLAN_START_TIME},
+		#{NEW_PLAN_END_TIME},
+		#{REAL_SATRT_TIME},
+		#{REAL_END_TIME},
+		#{NOW_PLAN_TYPE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+<!-- 删除
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PRO_PLAN_ID = #{PRO_PLAN_ID}
+	</delete> -->
+	<update id="delete" parameterType="pd">
+		update 
+		<include refid="tableName"></include>
+		set 
+		VISIABLE = '0'
+		where 
+			PRO_PLAN_ID = #{PRO_PLAN_ID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PROJECT_ID = #{PROJECT_ID},
+			EQUIPMENT_ID = #{EQUIPMENT_ID},
+			PLANTEMPLATE_ID = #{PLANTEMPLATE_ID},
+			PLAN_START_TIME = #{PLAN_START_TIME},
+			PLAN_END_TIME = #{PLAN_END_TIME},
+			NEW_PLAN_START_TIME = #{NEW_PLAN_START_TIME},
+			NEW_PLAN_END_TIME = #{NEW_PLAN_END_TIME},
+			ETYPE = #{ETYPE},
+			ECREATER = #{ECREATER},
+			ECREATTIME = #{ECREATTIME},
+			EDITUSER = #{EDITUSER},
+			EDITTIME = #{EDITTIME},
+			YL1 = #{YL1},
+			YL2 = #{YL2},
+			YL3 = #{YL3},
+			YL4 = #{YL4},
+			YL5 = #{YL5},
+			PRO_PLAN_ID = PRO_PLAN_ID
+		where 
+			PRO_PLAN_ID = #{PRO_PLAN_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT
+			b.PPROJECT_CODE,
+			b.PPROJECT_NAME,
+			c.EEQM_NO,
+			c.EEQM_NAME,
+			c.EPROJECT_NAME+'-'+c.EEQM_NAME as PPROJECT_GANTEE_NAME,
+			d.FPTNAME,
+			b.PPROJECT_PRINCIPAL,
+			b.PPROJECT_MANAGER,
+			a.PROJECT_ID,	
+			a.EQUIPMENT_ID,	
+			a.PLANTEMPLATE_ID,	
+			a.PLAN_START_TIME,	
+			a.PLAN_END_TIME,	
+			a.ETYPE,	
+			a.ECREATER,	
+			a.ECREATTIME,	
+			a.EDITUSER,	
+			a.EDITTIME,	
+			a.YL1,	
+			a.YL2,	
+			a.YL3,	
+			a.YL4,	
+			a.YL5,	
+			a.PRO_PLAN_ID,
+			a.VISIABLE,
+			a.NEW_PLAN_START_TIME,
+			a.NEW_PLAN_END_TIME,
+			a.REAL_SATRT_TIME,
+			a.REAL_END_TIME,
+			a.NOW_PLAN_TYPE,
+			c.EENGINEER_DESIGN,
+			c.EELECTRIC_DESIGN,
+			c.EPROJECT_MANAGER,
+			c.ECUSTOMER_NAME
+		FROM
+			DT_PRO_PLAN a
+			LEFT JOIN DT_PROJECT b ON a.PROJECT_ID = b.PROJECT_ID
+			LEFT JOIN DT_EQUIPMENT c ON a.EQUIPMENT_ID = c.EQUIPMENT_ID
+			LEFT JOIN EPM_PLANTEMPLATE d ON a.PLANTEMPLATE_ID = d.PLANTEMPLATE_ID
+			where a.VISIABLE = '1'  and 
+			a.PRO_PLAN_ID = #{PRO_PLAN_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT
+			b.PPROJECT_CODE,
+			b.PPROJECT_NAME,
+			c.EEQM_NO,
+			c.EEQM_NAME,
+			d.FPTNAME,
+			b.PPROJECT_PRINCIPAL,
+			b.PPROJECT_MANAGER,
+			a.PROJECT_ID,	
+			a.EQUIPMENT_ID,	
+			a.PLANTEMPLATE_ID,	
+			a.PLAN_START_TIME,	
+			a.PLAN_END_TIME,	
+			a.ETYPE,	
+			a.ECREATER,	
+			a.ECREATTIME,	
+			a.EDITUSER,	
+			a.EDITTIME,	
+			a.YL1,	
+			a.YL2,	
+			a.YL3,	
+			a.YL4,	
+			a.YL5,	
+			a.PRO_PLAN_ID,
+			a.VISIABLE,
+			a.NEW_PLAN_START_TIME,
+			a.NEW_PLAN_END_TIME,
+			a.REAL_SATRT_TIME,
+			a.REAL_END_TIME,
+			a.NOW_PLAN_TYPE,
+			c.EENGINEER_DESIGN,
+			c.EELECTRIC_DESIGN
+		FROM
+			DT_PRO_PLAN a
+			LEFT JOIN DT_PROJECT b ON a.PROJECT_ID = b.PROJECT_ID
+			LEFT JOIN DT_EQUIPMENT c ON a.EQUIPMENT_ID = c.EQUIPMENT_ID
+			LEFT JOIN EPM_PLANTEMPLATE d ON a.PLANTEMPLATE_ID = d.PLANTEMPLATE_ID
+			where a.VISIABLE = '1'
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 项目编号检索 -->
+			and
+				(
+					b.PPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 项目名称检索 -->
+			and
+				(
+					b.PPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS2}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 设备号和设备名称检索 -->
+			and
+				(
+				c.EEQM_NO LIKE '%'+ #{pd.KEYWORDS3}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 设备名称检索 -->
+			and
+				(
+				c.EEQM_NAME LIKE '%'+ #{pd.KEYWORDS4}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != ''"><!-- 设备状态检索 -->
+			and
+				(
+				a.ETYPE LIKE '%'+ #{pd.KEYWORDS5}+'%'
+				)
+		</if>
+		<if test="pd.PPROJECT_MANAGER != null and pd.PPROJECT_MANAGER != ''">
+		and b.PPROJECT_MANAGER = #{pd.PPROJECT_MANAGER}
+		</if>
+		[fhstart] order by ECREATTIME desc [fhend]
+	</select>
+	
+	
+		<!-- 列表 -->
+	<select id="datalistPageOverview" parameterType="page" resultType="pd">
+		select f1.*,f2.YL2 RUN_STATE,f2.NOW_PLAN_TYPE,f2.PRO_PLAN_ID,f2.PLAN_START_TIME,f2.PLAN_END_TIME,
+isnull(
+STUFF(
+(SELECT ',' +FHTNAME
+FROM 
+(select  FHTNAME  
+from DT_DEPPLAN  a
+where 1=1 
+and a.VISIABLE ='1' 
+and a.RUNTYPE='执行中'
+and a.PRO_PLAN_ID=f2.PRO_PLAN_ID
+) tt
+FOR xml path('')
+),1,1,''
+),'') FHTNAME
+ from 
+DT_EQUIPMENT f1
+left join DT_PRO_PLAN f2
+on f1.EQUIPMENT_ID=f2.EQUIPMENT_ID
+where 1=1
+and f1.EVISIBLE='1'
+<if test="pd.EQUIPMENT_ID != null and pd.EQUIPMENT_ID != ''">
+and f1.EQUIPMENT_ID=#{pd.EQUIPMENT_ID}
+</if>
+
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 项目检索 -->
+			and
+				(
+					EPROJECT_CODE LIKE '%'+ #{pd.KEYWORDS1}+'%'
+					or
+					EPROJECT_NAME LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 设备检索 -->
+			and
+				(
+ 				EEQM_NO LIKE '%'+ #{pd.KEYWORDS2}+'%'
+ 				or
+ 				EEQM_NAME LIKE '%'+ #{pd.KEYWORDS2}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 阶段检索 -->
+			and
+				(
+				FHTNAME LIKE '%'+ #{pd.KEYWORDS3}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != ''"><!-- 项目经理检索 -->
+			and
+				(
+				EPROJECT_MANAGER LIKE '%'+ #{pd.KEYWORDS4}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != ''"><!-- 交货期检索 -->
+			and
+				(
+				EDELIVERY_DATE =#{pd.KEYWORDS5}
+				)
+		</if>
+		<if test="pd.KEYWORDS6 != null and pd.KEYWORDS6 != ''"><!-- 执行状态检索 -->
+			and
+				(
+				f2.YL2 =#{pd.KEYWORDS6}
+				)
+		</if>
+		[fhstart] order by EPROJECT_CODE,EEQM_NO [fhend]
+	</select>
+	<!-- 项目总览-导出到excel -->
+	<select id="excellist" parameterType="pd" resultType="pd">
+		select f1.*,f2.YL2 RUN_STATE,f2.NOW_PLAN_TYPE,f2.PRO_PLAN_ID,f2.PLAN_START_TIME,f2.PLAN_END_TIME,
+		isnull(
+		STUFF(
+		(SELECT ',' +FHTNAME
+		FROM 
+		(select  FHTNAME  
+		from DT_DEPPLAN  a
+		where 1=1 
+		and a.VISIABLE ='1' 
+		and a.RUNTYPE='执行中'
+		and a.PRO_PLAN_ID=f2.PRO_PLAN_ID
+		) tt
+		FOR xml path('')
+		),1,1,''
+		),'') FHTNAME
+		 from 
+		DT_EQUIPMENT f1
+		left join DT_PRO_PLAN f2
+		on f1.EQUIPMENT_ID=f2.EQUIPMENT_ID
+		where 1=1 and f1.EVISIBLE='1'
+		<if test="EQUIPMENT_ID != null and EQUIPMENT_ID != ''">
+		and f1.EQUIPMENT_ID=#{EQUIPMENT_ID}
+		</if>
+		<if test="KEYWORDS1 != null and KEYWORDS1 != ''"><!-- 项目检索 -->
+			and
+				(
+					EPROJECT_CODE LIKE '%'+ #{KEYWORDS1}+'%'
+					or
+					EPROJECT_NAME LIKE '%'+ #{KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="KEYWORDS2 != null and KEYWORDS2 != ''"><!-- 设备检索 -->
+			and
+				(
+ 				EEQM_NO LIKE '%'+ #{KEYWORDS2}+'%'
+ 				or
+ 				EEQM_NAME LIKE '%'+ #{KEYWORDS2}+'%'
+				)
+		</if>
+		<if test="KEYWORDS3 != null and KEYWORDS3 != ''"><!-- 阶段检索 -->
+			and FHTNAME LIKE '%'+ #{KEYWORDS3}+'%'
+		</if>
+		<if test="KEYWORDS4 != null and KEYWORDS4 != ''"><!-- 项目经理检索 -->
+			and EPROJECT_MANAGER LIKE '%'+ #{KEYWORDS4}+'%'
+		</if>
+		<if test="KEYWORDS5 != null and KEYWORDS5 != ''"><!-- 交货期检索 -->
+			and EDELIVERY_DATE =#{KEYWORDS5}
+		</if>
+		<if test="KEYWORDS6 != null and KEYWORDS6 != ''"><!-- 执行状态检索 -->
+			and f2.YL2 =#{KEYWORDS6}
+		</if>
+		 order by EPROJECT_CODE,EEQM_NO 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		SELECT
+			b.PPROJECT_CODE,
+			b.PPROJECT_NAME,
+			c.EEQM_NO,
+			c.EEQM_NAME,
+			d.FPTNAME,
+			b.PPROJECT_PRINCIPAL,
+			b.PPROJECT_MANAGER,
+			a.PROJECT_ID,	
+			a.EQUIPMENT_ID,	
+			a.PLANTEMPLATE_ID,	
+			a.PLAN_START_TIME,	
+			a.PLAN_END_TIME,	
+			a.ETYPE,	
+			a.ECREATER,	
+			a.ECREATTIME,	
+			a.EDITUSER,	
+			a.EDITTIME,	
+			a.YL1,	
+			a.YL2,	
+			a.YL3,	
+			a.YL4,	
+			a.YL5,	
+			a.PRO_PLAN_ID,
+			a.VISIABLE,
+			a.NEW_PLAN_START_TIME,
+			a.NEW_PLAN_END_TIME,
+			a.REAL_SATRT_TIME,
+			a.REAL_END_TIME,
+			a.NOW_PLAN_TYPE
+			
+		FROM
+			DT_PRO_PLAN a
+			LEFT JOIN DT_PROJECT b ON a.PROJECT_ID = b.PROJECT_ID
+			LEFT JOIN DT_EQUIPMENT c ON a.EQUIPMENT_ID = c.EQUIPMENT_ID
+			LEFT JOIN EPM_PLANTEMPLATE d ON a.PLANTEMPLATE_ID = d.PLANTEMPLATE_ID
+			where a.VISIABLE = '1'
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PRO_PLAN_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<update id="updateType" parameterType="pd">
+		update <include refid="tableName"></include>
+		set ETYPE = #{ETYPE}
+		where PRO_PLAN_ID = #{PRO_PLAN_ID}
+	</update>
+	<update id="goXiafa" parameterType="pd">
+		update
+		DT_DEPPLAN
+		set 
+			FTYPE = '已下发'
+		where 1=1 
+		<if test="PRO_PLAN_ID != null and PRO_PLAN_ID != ''">
+			and PRO_PLAN_ID = #{PRO_PLAN_ID}
+		</if>
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+	<update id="updateTime" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		 set 
+		PLAN_START_TIME = #{PLAN_START_TIME},
+		PLAN_END_TIME = #{PLAN_END_TIME},
+		NEW_PLAN_START_TIME = #{NEW_PLAN_START_TIME},
+		NEW_PLAN_END_TIME = #{NEW_PLAN_END_TIME}
+		where  PRO_PLAN_ID = #{PRO_PLAN_ID}
+	</update>
+	<select id="listEQU" parameterType="pd" resultType="pd">
+		select EQUIPMENT_ID from <include refid="tableName"></include> where EQUIPMENT_ID = #{EQUIPMENT_ID}
+	
+	</select>
+	<select id="getData" parameterType="pd" resultType="pd">
+	select f1.*,f2.YL2 RUN_STATE,f2.NOW_PLAN_TYPE,f2.PRO_PLAN_ID,f2.PLAN_START_TIME,f2.PLAN_END_TIME,
+isnull(
+STUFF(
+(SELECT ',' +FHTNAME
+FROM 
+(select  FHTNAME  
+from DT_DEPPLAN  a
+where 1=1 
+and a.VISIABLE ='1' 
+and a.RUNTYPE='执行中'
+and a.PRO_PLAN_ID=f2.PRO_PLAN_ID
+) tt
+FOR xml path('')
+),1,1,''
+),'') FHTNAME
+ from 
+DT_EQUIPMENT f1
+left join DT_PRO_PLAN f2
+on f1.EQUIPMENT_ID=f2.EQUIPMENT_ID
+where 1=1
+and f1.EVISIBLE='1'
+and f1.EQUIPMENT_ID=#{EQUIPMENT_ID}
+	</select>
+	<!-- 项目进度视角-计划变更记录 -->
+	<select id="listChangelistPage" parameterType="page" resultType="pd">
+		select
+		f.*,f6.NAME FDEPT,f5.EPROJECT_NAME+'('+f5.EPROJECT_CODE+')' EPROJECT,f5.EEQM_NAME+'('+f5.EEQM_NO+')' EEQM,
+		f3.FHTNAME,f3.FHTLEVEL,f2.PX,f2.STAFFPLAN_ID,
+		STAFFPLAN_NAME+'（第'+cast(ROW_NUMBER() OVER(PARTITION BY cast(isnull(FHTLEVEL,0) as int),f2.DEPPLAN_ID,cast(isnull(f2.PX,0) as int),f.PCSTAFFPLAN_ID ORDER BY PCCREATE_TIME) as varchar(50))+'次变更）'  FTASK,
+		f3.DEPPLAN_ID,
+		ROW_NUMBER() OVER(PARTITION BY cast(isnull(FHTLEVEL,0) as int),f2.DEPPLAN_ID,cast(isnull(f2.PX,0) as int),f.PCSTAFFPLAN_ID ORDER BY PCCREATE_TIME)  FCHANGE
+		from 
+		DT_PLANCHANGE f
+		left join DT_STAFFPLAN f2
+		on f.PCSTAFFPLAN_ID=f2.STAFFPLAN_ID
+		left join DT_DEPPLAN f3 
+		on f2.DEPPLAN_ID = f3.DEPPLAN_ID 
+		left join DT_PRO_PLAN f4 
+		on f3.PRO_PLAN_ID = f4.PRO_PLAN_ID
+		left join DT_EQUIPMENT f5 
+		on f4.EQUIPMENT_ID = f5.EQUIPMENT_ID
+		left join OA_DEPARTMENT f6 
+		on f.PCDEPT = f6.DEPARTMENT_ID
+		where 1=1
+		and f.PCVISIBLE='1'
+		and f.PCEQUIPMENT_ID = #{pd.PCEQUIPMENT_ID}
+	    [fhstart] order by cast(isnull(FHTLEVEL,0) as int),DEPPLAN_ID,cast(isnull(PX,0) as int),STAFFPLAN_ID,FCHANGE [fhend]
+	</select>
+	<select id="listDeptlistPage" parameterType="page" resultType="pd">
+		SELECT
+			b.PPROJECT_CODE,
+			b.PPROJECT_NAME,
+			b.PPROJECT_MANAGER,
+			b.PPROJECT_PRINCIPAL,
+			c.EEQM_NO,
+			c.EEQM_NAME,
+			g.NAME FDEPT,
+			c.ETYPE EETYPE,
+			c.ESET_NUMBER,
+			c.ECUSTOMER_NAME,
+			c.ESIGN_DATE,
+			c.EDELIVERY_DATE,
+			c.EDELIVERY_PLACE,
+			c.EQUIPMENT_ID,
+			datediff(HOUR,f.REAL_SATRT_TIME,f.REAL_END_TIME) diffHour,
+			f.* 
+		FROM
+			DT_DEPPLAN f 
+			LEFT JOIN DT_PRO_PLAN a ON a.PRO_PLAN_ID = f.PRO_PLAN_ID 
+			LEFT JOIN DT_PROJECT b ON a.PROJECT_ID = b.PROJECT_ID
+			LEFT JOIN DT_EQUIPMENT c ON a.EQUIPMENT_ID = c.EQUIPMENT_ID
+			LEFT JOIN OA_DEPARTMENT g ON f.YL5 = g.DEPARTMENT_ID
+		WHERE
+			1=1
+			and f.FTYPE = '已下发'
+			<if test="pd.FDEPT != null and pd.FDEPT != ''">
+			and
+				(
+					f.YL5 =#{pd.FDEPT}
+				)
+			</if>
+			
+			<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 阶段名称检索 -->
+			and
+				(
+					f.FHTNAME LIKE '%'+ #{pd.KEYWORDS2}+'%'
+				)
+		</if>
+		
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 设备号或设备名称检索 -->
+			and
+				(
+				c.EEQM_NO LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				or
+				c.EEQM_NAME LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 负责人检索 -->
+			and
+				(
+				f.FMANAGER LIKE '%'+ #{pd.KEYWORDS3}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != '' and pd.KEYWORDS5 != null and pd.KEYWORDS5 != ''"><!-- 最新计划时间检索 -->
+			and
+				(
+				f.NEW_PLAN_START_TIME between #{pd.KEYWORDS4} and #{pd.KEYWORDS5}
+				or
+				f.NEW_PLAN_END_TIME between #{pd.KEYWORDS4} and #{pd.KEYWORDS5}
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != '' and (pd.KEYWORDS5 == null or pd.KEYWORDS5 == '')"><!-- 最新计划时间检索 -->
+			and
+				(
+				f.NEW_PLAN_START_TIME &gt;= #{pd.KEYWORDS4} 
+				or
+				f.NEW_PLAN_END_TIME  &gt;= #{pd.KEYWORDS4} 
+				)
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != '' and (pd.KEYWORDS4 == null or pd.KEYWORDS4 == '')"><!-- 最新计划时间检索 -->
+			and
+				(
+				f.NEW_PLAN_START_TIME &lt;= #{pd.KEYWORDS5} 
+				or
+				f.NEW_PLAN_END_TIME  &lt;= #{pd.KEYWORDS5} 
+				)
+		</if>
+		[fhstart]  ORDER BY b.PPROJECT_CODE,EQUIPMENT_ID,cast(isnull(FHTLEVEL,'0') as int) [fhend]
+	</select>
+	<!-- 部门项目视角-导出到excel -->
+	<select id="excelListDept" parameterType="pd" resultType="pd">
+		SELECT
+			b.PPROJECT_CODE,
+			b.PPROJECT_NAME,
+			b.PPROJECT_MANAGER,
+			b.PPROJECT_PRINCIPAL,
+			c.EEQM_NO,
+			c.EEQM_NAME,
+			g.NAME FDEPT,
+			c.ETYPE EETYPE,
+			c.ESET_NUMBER,
+			c.ECUSTOMER_NAME,
+			c.ESIGN_DATE,
+			c.EDELIVERY_DATE,
+			c.EDELIVERY_PLACE,
+			c.EQUIPMENT_ID,
+			datediff(HOUR,f.REAL_SATRT_TIME,f.REAL_END_TIME) diffHour,
+			f.* 
+		FROM
+			DT_DEPPLAN f 
+			LEFT JOIN DT_PRO_PLAN a ON a.PRO_PLAN_ID = f.PRO_PLAN_ID 
+			LEFT JOIN DT_PROJECT b ON a.PROJECT_ID = b.PROJECT_ID
+			LEFT JOIN DT_EQUIPMENT c ON a.EQUIPMENT_ID = c.EQUIPMENT_ID
+			LEFT JOIN OA_DEPARTMENT g ON f.YL5 = g.DEPARTMENT_ID
+		WHERE 1=1 and f.FTYPE = '已下发'
+		<if test="FDEPT != null and FDEPT != ''">
+			and f.YL5 =#{FDEPT}
+		</if>
+		<if test="KEYWORDS2 != null and KEYWORDS2 != ''"><!-- 阶段名称检索 -->
+			and f.FHTNAME LIKE '%'+ #{KEYWORDS2}+'%'
+		</if>
+		<if test="KEYWORDS1 != null and KEYWORDS1 != ''"><!-- 设备号或设备名称检索 -->
+			and
+				(
+				c.EEQM_NO LIKE '%'+ #{KEYWORDS1}+'%'
+				or
+				c.EEQM_NAME LIKE '%'+ #{KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="KEYWORDS3 != null and KEYWORDS3 != ''"><!-- 负责人检索 -->
+			and f.FMANAGER LIKE '%'+ #{KEYWORDS3}+'%'
+		</if>
+		<if test="KEYWORDS4 != null and KEYWORDS4 != '' and KEYWORDS5 != null and KEYWORDS5 != ''"><!-- 最新计划时间检索 -->
+			and
+				(
+				f.NEW_PLAN_START_TIME between #{KEYWORDS4} and #{KEYWORDS5}
+				or
+				f.NEW_PLAN_END_TIME between #{KEYWORDS4} and #{KEYWORDS5}
+				)
+		</if>
+		<if test="KEYWORDS4 != null and KEYWORDS4 != '' and (KEYWORDS5 == null or KEYWORDS5 == '')"><!-- 最新计划时间检索 -->
+			and
+				(
+				f.NEW_PLAN_START_TIME &gt;= #{KEYWORDS4} 
+				or
+				f.NEW_PLAN_END_TIME  &gt;= #{KEYWORDS4} 
+				)
+		</if>
+		<if test="KEYWORDS5 != null and KEYWORDS5 != '' and (KEYWORDS4 == null or KEYWORDS4 == '')"><!-- 最新计划时间检索 -->
+			and
+				(
+				f.NEW_PLAN_START_TIME &lt;= #{KEYWORDS5} 
+				or
+				f.NEW_PLAN_END_TIME  &lt;= #{KEYWORDS5} 
+				)
+		</if>
+		 ORDER BY b.PPROJECT_CODE,EQUIPMENT_ID,cast(isnull(FHTLEVEL,'0') as int) 
+	</select>
+	<select id="listPersonlistPage" parameterType="page" resultType="pd">
+		select 
+		f3.*,
+		f2.EQUIPMENT_ID,
+		f2.EPROJECT_CODE,
+		f2.EPROJECT_NAME,
+    	f2.EEQM_NO,
+		f2.EEQM_NAME,
+		f2.ETYPE EETYPE,
+		f2.ESET_NUMBER,
+		f2.ECUSTOMER_NAME,
+		f2.ESIGN_DATE,
+		f2.EDELIVERY_DATE,
+		f2.EDELIVERY_PLACE,    	
+    	f.PTFINISHPROGRESS,
+    	f4.FHTLEVEL,
+    	f4.FHTNAME,
+		isnull(f5.PRO_PLAN_ID,'') PRO_PLAN_ID
+		from 
+		DT_PROJECTTASK f
+		left join 
+		DT_STAFFPLAN f3
+		on f.PTSTAFFPLAN_ID=f3.STAFFPLAN_ID
+		left join DT_PROJECT f1
+		on f.PTPROJECT_ID=f1.PROJECT_ID
+		left join DT_EQUIPMENT f2
+		on f.PTEQUIPMENT_ID=f2.EQUIPMENT_ID
+		left join DT_DEPPLAN f4 
+		on f3.DEPPLAN_ID = f4.DEPPLAN_ID 
+		left join DT_PRO_PLAN f5
+		on f4.PRO_PLAN_ID = f5.PRO_PLAN_ID 
+		left join OA_DEPARTMENT f6
+		on f.PTDEPT=f6.DEPARTMENT_ID
+		where 1=1
+		and f.PTVISIBLE='1'
+		and f3.FTYPE='已下发'
+		and f3.VISIABLE='1'
+		<if test="pd.ISALL== 'NO'.toString()">
+			<if test="pd.ISBZ== 'NO'.toString()">
+				and f3.STAFFPLAN_MANAGER=#{pd.NAME}
+			</if>
+			<if test="pd.ISBZ== 'YES'.toString()">
+			 and f6.NAME = #{pd.FDEPTNAME}   
+			</if>
+		</if>
+		
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 部门名称检索 -->
+			and
+				(
+					f6.NAME =#{pd.KEYWORDS}
+				)
+		</if>
+		
+			
+			<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 阶段名称检索 -->
+			and
+				(
+					f4.FHTNAME LIKE '%'+ #{pd.KEYWORDS2}+'%'
+				)
+		</if>
+		
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 设备号或设备名称检索 -->
+			and
+				(
+				f2.EEQM_NO LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				or
+				f2.EEQM_NAME LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 负责人检索 -->
+			and
+				(
+				f3.STAFFPLAN_MANAGER LIKE '%'+ #{pd.KEYWORDS3}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != '' and pd.KEYWORDS5 != null and pd.KEYWORDS5 != ''"><!-- 最新计划时间检索 -->
+			and
+				(
+				f3.NEW_PLAN_START_TIME between #{pd.KEYWORDS4} and #{pd.KEYWORDS5}
+				or
+				f3.NEW_PLAN_END_TIME between #{pd.KEYWORDS4} and #{pd.KEYWORDS5}
+				)
+		</if>
+		<if test="pd.KEYWORDS4 != null and pd.KEYWORDS4 != '' and (pd.KEYWORDS5 == null or pd.KEYWORDS5 == '')"><!-- 最新计划时间检索 -->
+			and
+				(
+				f3.NEW_PLAN_START_TIME &gt;= #{pd.KEYWORDS4} 
+				or
+				f3.NEW_PLAN_END_TIME  &gt;= #{pd.KEYWORDS4} 
+				)
+		</if>
+		<if test="pd.KEYWORDS5 != null and pd.KEYWORDS5 != '' and (pd.KEYWORDS4 == null or pd.KEYWORDS4 == '')"><!-- 最新计划时间检索 -->
+			and
+				(
+				f3.NEW_PLAN_START_TIME &lt;= #{pd.KEYWORDS5} 
+				or
+				f3.NEW_PLAN_END_TIME  &lt;= #{pd.KEYWORDS5} 
+				)
+		</if>
+		[fhstart] order by f2.EPROJECT_CODE,EQUIPMENT_ID,cast(FHTLEVEL as int),cast(PX as int) [fhend]
+	</select>
+
+	<!-- 人员项目视角-excel导出 -->
+	<select id="excelListPerson" parameterType="pd" resultType="pd">
+			select 
+		f3.*,
+		f2.EQUIPMENT_ID,
+		f2.EPROJECT_CODE,
+		f2.EPROJECT_NAME,
+    	f2.EEQM_NO,
+		f2.EEQM_NAME,
+		f2.ETYPE EETYPE,
+		f2.ESET_NUMBER,
+		f2.ECUSTOMER_NAME,
+		f2.ESIGN_DATE,
+		f2.EDELIVERY_DATE,
+		f2.EDELIVERY_PLACE,    	
+    	f.PTFINISHPROGRESS,
+    	f4.FHTLEVEL,
+    	f4.FHTNAME,
+		isnull(f5.PRO_PLAN_ID,'') PRO_PLAN_ID
+		from 
+		DT_PROJECTTASK f
+		left join 
+		DT_STAFFPLAN f3
+		on f.PTSTAFFPLAN_ID=f3.STAFFPLAN_ID
+		left join DT_PROJECT f1
+		on f.PTPROJECT_ID=f1.PROJECT_ID
+		left join DT_EQUIPMENT f2
+		on f.PTEQUIPMENT_ID=f2.EQUIPMENT_ID
+		left join DT_DEPPLAN f4 
+		on f3.DEPPLAN_ID = f4.DEPPLAN_ID 
+		left join DT_PRO_PLAN f5
+		on f4.PRO_PLAN_ID = f5.PRO_PLAN_ID 
+		left join OA_DEPARTMENT f6
+		on f.PTDEPT=f6.DEPARTMENT_ID
+		where 1=1
+		and f.PTVISIBLE='1'
+		and f3.FTYPE='已下发'
+		and f3.VISIABLE='1'
+		<if test="ISALL== 'NO'.toString()">
+		<if test="ISBZ== 'NO'.toString()">
+			and f3.STAFFPLAN_MANAGER=#{NAME}
+		</if>
+		<if test="ISBZ== 'YES'.toString()">
+			and f6.NAME = #{FDEPTNAME}   
+		</if>
+		</if>
+		
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 部门名称检索 -->
+			and
+				(
+					f6.NAME =#{KEYWORDS}
+				)
+		</if>
+			
+		<if test="KEYWORDS2 != null and KEYWORDS2 != ''"><!-- 阶段名称检索 -->
+			and
+				(
+					f4.FHTNAME LIKE '%'+ #{KEYWORDS2}+'%'
+				)
+		</if>
+		
+		<if test="KEYWORDS1 != null and KEYWORDS1 != ''"><!-- 设备号或设备名称检索 -->
+			and
+				(
+				f2.EEQM_NO LIKE '%'+ #{KEYWORDS1}+'%'
+				or
+				f2.EEQM_NAME LIKE '%'+ #{KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="KEYWORDS3 != null and KEYWORDS3 != ''"><!-- 负责人检索 -->
+			and
+				(
+				f3.STAFFPLAN_MANAGER LIKE '%'+ #{KEYWORDS3}+'%'
+				)
+		</if>
+		<if test="KEYWORDS4 != null and KEYWORDS4 != '' and KEYWORDS5 != null and KEYWORDS5 != ''"><!-- 最新计划时间检索 -->
+			and
+				(
+				f3.NEW_PLAN_START_TIME between #{KEYWORDS4} and #{KEYWORDS5}
+				or
+				f3.NEW_PLAN_END_TIME between #{KEYWORDS4} and #{KEYWORDS5}
+				)
+		</if>
+		<if test="KEYWORDS4 != null and KEYWORDS4 != '' and (KEYWORDS5 == null or KEYWORDS5 == '')"><!-- 最新计划时间检索 -->
+			and
+				(
+				f3.NEW_PLAN_START_TIME &gt;= #{KEYWORDS4} 
+				or
+				f3.NEW_PLAN_END_TIME  &gt;= #{KEYWORDS4} 
+				)
+		</if>
+		<if test="KEYWORDS5 != null and KEYWORDS5 != '' and (KEYWORDS4 == null or KEYWORDS4 == '')"><!-- 最新计划时间检索 -->
+			and
+				(
+				f3.NEW_PLAN_START_TIME &lt;= #{KEYWORDS5} 
+				or
+				f3.NEW_PLAN_END_TIME  &lt;= #{KEYWORDS5} 
+				)
+		</if>
+		 order by f2.EPROJECT_CODE,EQUIPMENT_ID,cast(FHTLEVEL as int),cast(PX as int) 
+	</select>
+	<select id="getDepts" parameterType="pd" resultType="pd">
+		select NAME from OA_DEPARTMENT order by BIANMA  
+	</select>
+	<select id="getUsers" parameterType="pd" resultType="pd">
+		select a.NAME from OA_STAFF a left join OA_DEPARTMENT b on a.DEPARTMENT_ID=b.DEPARTMENT_ID  
+		where 
+		1=1
+		<if test="ISALL== 'NO'.toString()">
+			<if test="ISBZ== 'NO'.toString()">
+			and b.NAME=#{FDEPTNAME}
+			</if>
+			<if test="ISBZ== 'YES'.toString()">
+			and b.NAME=#{FDEPTNAME} 
+			</if>
+		</if>
+		<if test="ISALL== 'YES'.toString()">
+			<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 部门名称检索 -->
+			and
+				(
+					b.NAME =#{KEYWORDS}
+				)
+			</if>
+			<if test="KEYWORDS == null or KEYWORDS == ''"><!-- 部门名称检索 -->
+			and
+				(
+					1=2
+				)
+			</if>
+		</if>
+	</select>
+	<select id="listAllXMS" parameterType="pd" resultType="pd">
+		select f6.PRO_PLAN_ID from 
+DT_STAFFPLAN f2
+inner join 
+DT_DEPPLAN f3 
+on f2.DEPPLAN_ID = f3.DEPPLAN_ID 
+inner join 
+DT_PRO_PLAN f6 
+on f3.PRO_PLAN_ID = f6.PRO_PLAN_ID 
+inner JOIN DT_PROJECT f4 
+ON f6.PROJECT_ID = f4.PROJECT_ID
+inner JOIN DT_EQUIPMENT f7
+ON f6.EQUIPMENT_ID = f7.EQUIPMENT_ID
+where 
+f2.VISIABLE='1'
+and f2.FTYPE='已下发'
+<if test="KEYWORDS1 != null and KEYWORDS1 != ''"><!-- 项目编号检索 -->
+	and
+		(
+			 f4.PPROJECT_CODE=#{KEYWORDS1}
+		)
+</if>
+<if test="KEYWORDS2 != null and KEYWORDS2 != ''"><!-- 项目名称检索 -->
+	and
+		(
+			 f4.PPROJECT_NAME like '%'+#{KEYWORDS2}+'%'
+		)
+</if>
+<if test="KEYWORDS3 != null and KEYWORDS3 != ''"><!-- 客户名称检索 -->
+	and
+		(
+			 f7.ECUSTOMER_NAME like '%'+#{KEYWORDS3}+'%'
+		)
+</if>
+<if test="KEYWORDS4 != null and KEYWORDS4 != ''"><!-- 设备号检索 -->
+	and
+		(
+			 f7.EEQM_NO =#{KEYWORDS4}
+		)
+</if>
+<if test="KEYWORDS5 != null and KEYWORDS5 != ''"><!-- 设备名称检索 -->
+	and
+		(
+			 f7.EEQM_NAME like '%'+#{KEYWORDS5}+'%'
+		)
+</if>
+<if test="KEYWORDS6 != null and KEYWORDS6 != ''"><!-- 设备类型检索 -->
+	and
+		(
+			 f7.ETYPE =#{KEYWORDS6}
+		)
+</if>
+<if test="KEYWORDS7 != null and KEYWORDS7 != ''"><!-- 交货期开始日期检索 -->
+	and
+		(
+			 f7.EDELIVERY_DATE &gt;=#{KEYWORDS7}
+		)
+</if>
+<if test="KEYWORDS8 != null and KEYWORDS8 != ''"><!-- 交货期截止日期检索 -->
+	and
+		(
+			 f7.EDELIVERY_DATE &lt;=#{KEYWORDS8}
+		)
+</if>
+<if test="KEYWORDS9 != null and KEYWORDS9 != ''"><!-- 当前阶段检索 -->
+	and
+		(
+			 f3.FHTNAME like '%'+#{KEYWORDS9}+'%'
+		)
+</if>
+<if test="KEYWORDS10 != null and KEYWORDS10 != ''"><!-- 执行状态检索 -->
+	and
+		(
+			 f2.STAFFPLAN_TYPE=#{KEYWORDS10}
+		)
+</if>
+<if test="KEYWORDS11 != null and KEYWORDS11 != '' and KEYWORDS11 != '正常'"><!-- 当前计划状态检索 -->
+	and
+		(
+			 f2.NOW_PLAN_TYPE =#{KEYWORDS11}
+		)
+</if>
+<if test="KEYWORDS11 != null and KEYWORDS11 != '' and KEYWORDS11 == '正常' .toString()" ><!-- 当前计划状态检索 -->
+	and
+		(
+			 f2.NOW_PLAN_TYPE ='' or  f2.NOW_PLAN_TYPE is null
+		)
+</if>
+<if test="KEYWORDS12 != null and KEYWORDS12 != ''"><!-- 图样代号检索 -->
+	and
+		(
+			 f2.YL2 like '%'+#{KEYWORDS12}+'%'
+		)
+</if>
+<if test="KEYWORDS13 != null and KEYWORDS13 != ''"><!-- 任务名称检索 -->
+	and
+		(
+			 f2.STAFFPLAN_NAME like '%'+#{KEYWORDS13}+'%'
+		)
+</if>
+<if test="KEYWORDS14 != null and KEYWORDS14 != ''"><!-- 负责人检索 -->
+	and
+		(
+			 f2.STAFFPLAN_MANAGER like '%'+#{KEYWORDS14}+'%'
+		)
+</if>
+<if test="KEYWORDS15 != null and KEYWORDS15 != '' and KEYWORDS16 != null and KEYWORDS16 != ''"><!-- 最新计划时间检索 -->
+	and
+		(
+			f2.NEW_PLAN_START_TIME between #{KEYWORDS15} and #{KEYWORDS16}
+			or
+			f2.NEW_PLAN_END_TIME between #{KEYWORDS15} and #{KEYWORDS16}
+		)
+</if>
+<if test="KEYWORDS15 != null and KEYWORDS15 != '' and (KEYWORDS16 == null or KEYWORDS16 == '')"><!-- 最新计划时间检索 -->
+	and
+		(
+			f2.NEW_PLAN_START_TIME &gt;= #{KEYWORDS15} 
+			or
+			f2.NEW_PLAN_END_TIME  &gt;= #{KEYWORDS15} 
+		)
+</if>
+<if test="KEYWORDS16 != null and KEYWORDS16 != '' and (KEYWORDS15 == null or KEYWORDS15 == '')"><!-- 最新计划时间检索 -->
+	and
+		(
+			f2.NEW_PLAN_START_TIME &lt;= #{KEYWORDS16} 
+			or
+			f2.NEW_PLAN_END_TIME  &lt;= #{KEYWORDS16} 
+	)
+</if>
+
+
+<if test="KEYWORDS17 != null and KEYWORDS17 != '' and KEYWORDS18 != null and KEYWORDS18 != ''"><!-- 实际时间检索 -->
+	and
+		(
+			f2.REAL_SATRT_TIME between #{KEYWORDS17} and #{KEYWORDS18}
+			or
+			f2.REAL_END_TIME between #{KEYWORDS17} and #{KEYWORDS18}
+		)
+</if>
+<if test="KEYWORDS17 != null and KEYWORDS17 != '' and (KEYWORDS18 == null or KEYWORDS18 == '')"><!-- 实际时间检索 -->
+	and
+		(
+			f2.REAL_SATRT_TIME &gt;= #{KEYWORDS17} 
+			or
+			f2.REAL_END_TIME  &gt;= #{KEYWORDS17} 
+		)
+</if>
+<if test="KEYWORDS18 != null and KEYWORDS18 != '' and (KEYWORDS17 == null or KEYWORDS17 == '')"><!-- 实际时间检索 -->
+	and
+		(
+			f2.REAL_SATRT_TIME &lt;= #{KEYWORDS18} 
+			or
+			f2.REAL_END_TIME  &lt;= #{KEYWORDS18} 
+	)
+</if>
+
+group by f6.PRO_PLAN_ID
+	</select>
+</mapper>

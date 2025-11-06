@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.ForwardApplicationMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_ForwardApplication
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ShippingOrderNum,	
+		f.DeliveryWarehouseID,	
+		f.ShippingType,	
+		f.DemandTime,	
+		f.FExplanation,	
+		f.FStatus,	
+		f.Shipper,	
+		f.ReleaseTime,	
+		f.FAddress,	
+		f.FCustomer,	
+		f.AuditMark,	
+		f.FReviewer,	
+		f.AuditTime,	
+		f.ForwardApplication_ID,
+		f.FCreatePersonID,
+		f.FCreateTime,
+		f.BatchNum,
+		f.ShippingTime,
+		f.Receiver,
+		f.ReceiverPhone,
+		f.ReceiverTime,
+		f.FCarrier,
+		f.FCarriage
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		ShippingOrderNum,	
+		DeliveryWarehouseID,	
+		ShippingType,	
+		DemandTime,	
+		FExplanation,	
+		FStatus,	
+		Shipper,	
+		ReleaseTime,	
+		FAddress,	
+		FCustomer,	
+		AuditMark,	
+		FReviewer,	
+		AuditTime,	
+		ForwardApplication_ID,
+		FCreatePersonID,
+		FCreateTime,
+		BatchNum,
+		ShippingTime,
+		Receiver,
+		ReceiverPhone,
+		ReceiverTime,
+		FCarrier,
+		FCarriage
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ShippingOrderNum},	
+		#{DeliveryWarehouseID},	
+		#{ShippingType},	
+		#{DemandTime},	
+		#{FExplanation},	
+		#{FStatus},	
+		#{Shipper},	
+		#{ReleaseTime},	
+		#{FAddress},	
+		#{FCustomer},	
+		#{AuditMark},	
+		#{FReviewer},	
+		#{AuditTime},	
+		#{ForwardApplication_ID},
+		#{FCreatePersonID},
+		#{FCreateTime},
+		#{BatchNum},
+		#{ShippingTime},
+		#{Receiver},
+		#{ReceiverPhone},
+		#{ReceiverTime},
+		#{FCarrier},
+		#{FCarriage}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ForwardApplication_ID = #{ForwardApplication_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ShippingOrderNum = #{ShippingOrderNum},
+			DeliveryWarehouseID = #{DeliveryWarehouseID},
+			ShippingType = #{ShippingType},
+			DemandTime = #{DemandTime},
+			Shipper = #{Shipper},
+			FAddress = #{FAddress},
+			FCustomer = #{FCustomer},
+			BatchNum = #{BatchNum},
+			ShippingTime = #{ShippingTime},
+			Receiver = #{Receiver},
+			ReceiverPhone = #{ReceiverPhone},
+			ReceiverTime = #{ReceiverTime},
+			FCarrier = #{FCarrier},
+			FCarriage = #{FCarriage},
+			FExplanation = #{FExplanation}
+		where 
+			ForwardApplication_ID = #{ForwardApplication_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		f0.FName FCustomerName,f0.FNum FCustomerNum,
+		<include refid="Field"></include>,
+		isnull(f1.FNAME,'无名称')+'/'+isnull(f1.FCODE,'无编号') FWAREHOUSEJoint,
+		f2.NAME FStaffName,f3.NAME FReviewName,f4.NAME ShipperName
+		from 
+		<include refid="tableName"></include> f 
+		left join KM_Customer f0 on f.FCustomer=f0.Customer_ID 
+		left join MWMS_WH_WAREHOUSE f1 on f.DeliveryWarehouseID=f1.WH_WAREHOUSE_ID 
+		left join OA_STAFF f2 on f.FCreatePersonID=f2.STAFF_ID
+		left join OA_STAFF f3 on f.FReviewer=f3.STAFF_ID
+		left join OA_STAFF f4 on f.Shipper=f4.STAFF_ID
+		where 
+			f.ForwardApplication_ID = #{ForwardApplication_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		f0.FName FCustomerName,
+		<include refid="Field"></include>,
+		isnull(f1.FNAME,'无名称')+'/'+isnull(f1.FCODE,'无编号') FWAREHOUSEJoint,
+		f2.NAME FStaffName,f3.NAME FReviewName,f4.NAME ShipperName
+		from 
+		<include refid="tableName"></include> f 
+		left join KM_Customer f0 on f.FCustomer=f0.Customer_ID 
+		left join MWMS_WH_WAREHOUSE f1 on f.DeliveryWarehouseID=f1.WH_WAREHOUSE_ID 
+		left join OA_STAFF f2 on f.FCreatePersonID=f2.STAFF_ID 
+		left join OA_STAFF f3 on f.FReviewer=f3.STAFF_ID 
+		left join OA_STAFF f4 on f.Shipper=f4.STAFF_ID 
+		where 1=1 
+		<if test="pd.KEYWORDS_DeliveryWarehouseID != null and pd.KEYWORDS_DeliveryWarehouseID != ''">
+			and DeliveryWarehouseID  in ${pd.KEYWORDS_DeliveryWarehouseID}
+		</if>
+		<if test="pd.KEYWORDS_ShippingOrderNum != null and pd.KEYWORDS_ShippingOrderNum != ''">
+			and ShippingOrderNum  LIKE '%'+ #{pd.KEYWORDS_ShippingOrderNum}+'%'  
+		</if>
+		<if test="pd.KEYWORDS_FCreateTimeStart != null and pd.KEYWORDS_FCreateTimeStart != ''">
+			and convert(varchar(10), FCreateTime)  &gt;= #{pd.KEYWORDS_FCreateTimeStart}
+		</if>
+		<if test="pd.KEYWORDS_FCreateTimeEnd != null and pd.KEYWORDS_FCreateTimeEnd != ''">
+			and convert(varchar(10), FCreateTime)  &lt;= #{pd.KEYWORDS_FCreateTimeEnd}
+		</if>
+		<if test="pd.KEYWORDS_FStatus != null and pd.KEYWORDS_FStatus != ''">
+			and f.FStatus in ${pd.KEYWORDS_FStatus}
+		</if>
+		[fhstart] order by FCreateTime desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		f0.FName FCustomerName,
+		<include refid="Field"></include>,
+		isnull(f1.FNAME,'无名称')+'/'+isnull(f1.FCODE,'无编号') FWAREHOUSEJoint,
+		f2.NAME FStaffName,f3.NAME FReviewName 
+		from 
+		<include refid="tableName"></include> f 
+		left join KM_Customer f0 on f.FCustomer=f0.Customer_ID 
+		left join MWMS_WH_WAREHOUSE f1 on f.DeliveryWarehouseID=f1.WH_WAREHOUSE_ID 
+		left join OA_STAFF f2 on f.FCreatePersonID=f2.STAFF_ID 
+		left join OA_STAFF f3 on f.FReviewer=f3.STAFF_ID 
+		<if test="KEYWORDS_DeliveryWarehouseID != null and KEYWORDS_DeliveryWarehouseID != ''">
+			and DeliveryWarehouseID  in ${KEYWORDS_DeliveryWarehouseID}
+		</if>
+		<if test="KEYWORDS_ShippingOrderNum != null and KEYWORDS_ShippingOrderNum != ''">
+			and ShippingOrderNum  LIKE '%'+ #{KEYWORDS_ShippingOrderNum}+'%'  
+		</if>
+		<if test="KEYWORDS_FCreateTimeStart != null and KEYWORDS_FCreateTimeStart != ''">
+			and convert(varchar(10), FCreateTime)  &gt;= #{KEYWORDS_FCreateTimeStart}
+		</if>
+		<if test="KEYWORDS_FCreateTimeEnd != null and KEYWORDS_FCreateTimeEnd != ''">
+			and convert(varchar(10), FCreateTime)  &lt;= #{KEYWORDS_FCreateTimeEnd}
+		</if>
+		<if test="KEYWORDS_FStatus != null and KEYWORDS_FStatus != ''">
+			and f.FStatus in ${KEYWORDS_FStatus}
+		</if>
+		 order by FCreateTime desc 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ForwardApplication_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 单号验重 -->
+	<select id="getRepeatNum" parameterType="pd" resultType="pd">
+		select
+		isnull(count(*),0) RepeatNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and ShippingOrderNum=#{ShippingOrderNum}
+		<if test="ForwardApplication_ID != null and ForwardApplication_ID != ''">
+			and f.ForwardApplication_ID != #{ForwardApplication_ID}
+		</if>
+	</select>
+	
+	<!-- 审核或反审核发运申请 -->
+	<update id="editAudit" parameterType="pd">
+		<choose>
+           <when test="AuditMark != null and AuditMark == 'Y'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				AuditTime = #{AuditTime},
+				FReviewer = #{FReviewer},
+				AuditMark = #{AuditMark}
+				where 
+				ForwardApplication_ID = #{ForwardApplication_ID}
+           </when>
+           <when test="AuditMark != null and AuditMark == 'N'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				AuditTime = '',
+				FReviewer = '',
+				AuditMark = #{AuditMark}
+				where 
+				ForwardApplication_ID = #{ForwardApplication_ID}
+           </when>
+           <otherwise>
+           </otherwise>
+         </choose>
+	</update>
+	<!-- 下发或取消下发发运申请 -->
+	<update id="editFStatus" parameterType="pd">
+		<choose>
+           <when test="FStatus != null and FStatus == '已下发'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				ReleaseTime = #{ReleaseTime},
+				FStatus = #{FStatus}
+				where 
+				ForwardApplication_ID = #{ForwardApplication_ID}
+           </when>
+           <when test="FStatus != null and FStatus == '已创建'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				ReleaseTime = '',
+				FStatus = #{FStatus}
+				where 
+				ForwardApplication_ID = #{ForwardApplication_ID}
+           </when>
+           <otherwise>
+           </otherwise>
+         </choose>
+	</update>
+	
+	<!-- 修改FCustomer -->
+	<update id="editFCustomer" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FAddress = #{FAddress},
+			FCustomer = #{FCustomer}
+		where 
+			ForwardApplication_ID = #{ForwardApplication_ID}
+	</update>
+	
+	<select id="GET_FYSQ_ZHUISU_listPage" parameterType="page" resultType="pd" >
+		SELECT
+			f1.*
+		FROM
+			MM_ForwardApplication f1
+		WHERE
+			f1.ForwardApplication_ID IN (
+				SELECT
+					f.ForwardApplication_ID
+				FROM
+					MM_ForwardApplicationDetail f
+				WHERE
+					1 = 1
+				AND f.DataSources = '销售订单'
+				AND f.SourceOrderNum IN (
+					SELECT
+						so.OrderNum
+					FROM
+						PP_PlanningWorkOrder pwo
+					LEFT JOIN PP_SalesOrderDetail sod ON pwo.SalesOrderDetailID = sod.SalesOrderDetail_ID
+					LEFT JOIN PP_SalesOrder so ON sod.SalesOrderID = so.SalesOrder_ID
+					WHERE
+						1 = 1
+					AND pwo.WorkOrderNum = #{pd.KEYWORDS_WorkOrderNum}
+					GROUP BY
+						so.OrderNum
+				)
+				GROUP BY
+					f.ForwardApplication_ID
+			)
+	</select>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

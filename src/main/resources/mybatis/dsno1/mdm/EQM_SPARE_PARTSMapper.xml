@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_SPARE_PARTSMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_SPARE_PARTS
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.EQM_SUPPLIER,	
+		f.SUPPLIER_DATE,	
+		f.USE_DATE,	
+		f.MAT_CODE,	
+		f.SPARE_NAME,	
+		f.SPARE_TYPE,	
+		f.SPARE_AMOUNT,	
+		f.EQM_DEP,	
+		f.EQM_STATION,	
+		f.EQM_SAFETY_STOCK,	
+		f.FIRING_WHETHER,	
+		f.DEPOSIT_LOC,	
+		f.REWORK_QTY,	
+		f.FDES,	
+		f.FCREATOR,	
+		f.CREATE_TIME,
+		f.EQM_BASE_ID,
+		f.EQM_SPARE_PARTS_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		EQM_SUPPLIER,	
+		SUPPLIER_DATE,	
+		USE_DATE,	
+		MAT_CODE,
+		SPARE_NAME,	
+		SPARE_TYPE,	
+		SPARE_AMOUNT,	
+		EQM_DEP,	
+		EQM_STATION,	
+		EQM_SAFETY_STOCK,	
+		FIRING_WHETHER,	
+		DEPOSIT_LOC,	
+		REWORK_QTY,	
+		FDES,
+		FCREATOR,	
+		CREATE_TIME,
+		EQM_BASE_ID,	
+		EQM_SPARE_PARTS_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{EQM_SUPPLIER},	
+		#{SUPPLIER_DATE},	
+		#{USE_DATE},	
+		#{MAT_CODE},
+		#{SPARE_NAME},	
+		#{SPARE_TYPE},	
+		#{SPARE_AMOUNT},	
+		#{EQM_DEP},	
+		#{EQM_STATION},	
+		#{EQM_SAFETY_STOCK},	
+		#{FIRING_WHETHER},	
+		#{DEPOSIT_LOC},	
+		#{REWORK_QTY},	
+		#{FDES},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{EQM_BASE_ID},	
+		#{EQM_SPARE_PARTS_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_SPARE_PARTS_ID = #{EQM_SPARE_PARTS_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			EQM_SUPPLIER = #{EQM_SUPPLIER},
+			SUPPLIER_DATE = #{SUPPLIER_DATE},
+			USE_DATE = #{USE_DATE},
+			MAT_CODE = #{MAT_CODE},
+			SPARE_NAME = #{SPARE_NAME},
+			SPARE_TYPE = #{SPARE_TYPE},
+			SPARE_AMOUNT = #{SPARE_AMOUNT},
+			EQM_DEP = #{EQM_DEP},
+			EQM_STATION = #{EQM_STATION},
+			EQM_SAFETY_STOCK = #{EQM_SAFETY_STOCK},
+			FIRING_WHETHER = #{FIRING_WHETHER},
+			DEPOSIT_LOC = #{DEPOSIT_LOC},
+			REWORK_QTY = #{REWORK_QTY},
+			FDES = #{FDES},
+			FCREATOR = #{FCREATOR},	
+		    CREATE_TIME = #{CREATE_TIME},	
+		    EQM_BASE_ID = #{EQM_BASE_ID},
+			EQM_SPARE_PARTS_ID = EQM_SPARE_PARTS_ID
+		where 
+			EQM_SPARE_PARTS_ID = #{EQM_SPARE_PARTS_ID}
+	</update>
+	
+	<!-- 修改数量 -->
+	<update id="editAmount" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			SPARE_AMOUNT = #{SPARE_AMOUNT}
+		where 
+			EQM_SPARE_PARTS_ID = #{EQM_SPARE_PARTS_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.EQM_SPARE_PARTS_ID = #{EQM_SPARE_PARTS_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where EQM_BASE_ID = #{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.EQM_SUPPLIER LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.SPARE_NAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.SPARE_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_SPARE_PARTS_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过设备基础资料ID删除信息-->
+	<delete id="deleteBase" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</delete>
+	<!-- YY 356703572 -->
+	<!-- 手机端备品备件列表 -->
+	<select id="AppList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		select  DISTINCT b.*,c.FNAME,d.REPAIR_WORKORDER_ID
+		from 
+		MDM_EQM_BASE a 
+		LEFT JOIN MDM_EQM_SPARE_PARTS b on a.EQM_BASE_ID = b.EQM_BASE_ID
+		LEFT JOIN MWMS_WH_WAREHOUSE c on b.DEPOSIT_LOC = c.WH_WAREHOUSE_ID
+		LEFT JOIN MDM_REPAIR_WORKORDER d on a.FIDENTIFY = d.EQM_NO
+		where b.EQM_SPARE_PARTS_ID is not null and d.REPAIR_WORKORDER_ID = #{pd.num}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					b.SPARE_NAME like '%' + #{pd.KEYWORDS}+'%'
+				)
+		</if>
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.MaterialTransferSplitMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_MaterialTransferSplit
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ItemID,	
+		f.FUniqueCode,	
+		f.FRelatedID,	
+		f.FCreatetime,	
+		f.FCreator,	
+		f.FMainUnit,	
+		f.FQuantity,	
+		f.FTargetQuantity,	
+		f.FIsScan,	
+		f.WH_WAREHOUSE_ID,	
+		f.WH_LOCATION_ID,	
+		f.MaterialTransferSplit_ID,
+		f.MaterialSPropKeyCode
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		ItemID,	
+		FUniqueCode,	
+		FRelatedID,	
+		FCreatetime,	
+		FCreator,	
+		FMainUnit,	
+		FQuantity,	
+		FTargetQuantity,	
+		FIsScan,	
+		WH_WAREHOUSE_ID,	
+		WH_LOCATION_ID,	
+		MaterialTransferSplit_ID,
+		MaterialSPropKeyCode
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ItemID},	
+		#{FUniqueCode},	
+		#{FRelatedID},	
+		#{FCreatetime},	
+		#{FCreator},	
+		#{FMainUnit},	
+		#{FQuantity},	
+		#{FTargetQuantity},	
+		#{FIsScan},	
+		#{WH_WAREHOUSE_ID},	
+		#{WH_LOCATION_ID},	
+		#{MaterialTransferSplit_ID},
+		#{MaterialSPropKeyCode}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MaterialTransferSplit_ID = #{MaterialTransferSplit_ID}
+	</delete>
+	
+	<!-- 根据关联id删除-->
+	<delete id="deleteByFRelatedID" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			FRelatedID = #{FRelatedID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ItemID = #{ItemID},
+			FUniqueCode = #{FUniqueCode},
+			FRelatedID = #{FRelatedID},
+			FCreatetime = #{FCreatetime},
+			FCreator = #{FCreator},
+			FMainUnit = #{FMainUnit},
+			FQuantity = #{FQuantity},
+			FTargetQuantity = #{FTargetQuantity},
+			FIsScan = #{FIsScan},
+			WH_WAREHOUSE_ID = #{WH_WAREHOUSE_ID},
+			WH_LOCATION_ID = #{WH_LOCATION_ID},
+			MaterialSPropKeyCode = #{MaterialSPropKeyCode}
+		where 
+			MaterialTransferSplit_ID = #{MaterialTransferSplit_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		w.FNAME WarehouseName,w.FCODE WarehouseCode,
+		l.FNAME PositionName,l.FCODE PositionCode,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MWMS_WH_WAREHOUSE w on f.WH_WAREHOUSE_ID=w.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION l on f.WH_LOCATION_ID=l.WH_LOCATION_ID 
+		where 
+			f.MaterialTransferSplit_ID = #{MaterialTransferSplit_ID}
+	</select>
+	
+	<!-- 通过FUniqueCode和MTADetails_ID获取数据 -->
+	<select id="findByMTADetails_IDAndFUniqueCode" parameterType="pd" resultType="pd">
+		select top 1 
+		w.FNAME WarehouseName,w.FCODE WarehouseCode,
+		l.FNAME PositionName,l.FCODE PositionCode,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MWMS_WH_WAREHOUSE w on f.WH_WAREHOUSE_ID=w.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION l on f.WH_LOCATION_ID=l.WH_LOCATION_ID 
+		where f.FRelatedID = #{FRelatedID}
+		and f.FUniqueCode = #{FUniqueCode}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		f2.FNAME FUnitName,f3.NAME FCreatorName,
+		w.FNAME WarehouseName,w.FCODE WarehouseCode,
+		l.FNAME PositionName,l.FCODE PositionCode,
+		case when 
+		f.ItemID is null or f.ItemID='' then '' 
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称')  end FMatJoint,
+		f1.MAT_CODE,f1.MAT_NAME 
+		from 
+		<include refid="tableName"></include> f 
+		left join MBASE_MAT_BASIC f1 on f1.MAT_BASIC_ID=f.ItemID
+		left join MBASE_UNIT_INFO f2 on f1.MAT_MAIN_UNIT=f2.UNIT_INFO_ID
+		left join OA_STAFF f3 on f.FCreator=f3.STAFF_ID 
+		left join MWMS_WH_WAREHOUSE w on f.WH_WAREHOUSE_ID=w.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION l on f.WH_LOCATION_ID=l.WH_LOCATION_ID 
+		where 1=1 
+		<if test="pd.FRelatedID != null and pd.FRelatedID != ''"><!-- 关联id -->
+			and f.FRelatedID = #{pd.FRelatedID}
+		</if>
+		<if test="pd.FUniqueCode != null and pd.FUniqueCode != ''"><!-- 唯一码 -->
+			and f.FUniqueCode = #{pd.FUniqueCode}
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FUniqueCode LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		[fhstart] order by f.FCreatetime desc  [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		w.FNAME WarehouseName,w.FCODE WarehouseCode,
+		l.FNAME PositionName,l.FCODE PositionCode,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MWMS_WH_WAREHOUSE w on f.WH_WAREHOUSE_ID=w.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION l on f.WH_LOCATION_ID=l.WH_LOCATION_ID 
+		where 1=1 
+		<if test="FRelatedID != null and FRelatedID != ''"><!-- 关联id -->
+			and f.FRelatedID = #{FRelatedID}
+		</if>
+		<if test="FUniqueCode != null and FUniqueCode != ''"><!-- 唯一码 -->
+			and f.FUniqueCode = #{FUniqueCode}
+		</if>
+	</select>
+	
+	<!-- 根据单据主表id、辅助属性值、物料编码查询唯一码物料转出拆分明细 -->
+	<select id="findOutSplitlistByMTA_IDAndSPropKeyAndMaterialNum" parameterType="pd" resultType="pd">
+		SELECT * FROM MM_MaterialTransferSplit where FRelatedID in(
+			SELECT MTADetails_ID FROM MM_MaterialTransferApplicationDetails t1 
+			LEFT JOIN MBASE_MAT_BASIC t2 on t1.MaterialId=t2.MAT_BASIC_ID
+			WHERE t1.TransitionType='转出' 
+			AND t2.UNIQUE_CODE_WHETHER='是' 
+			AND t1.MTA_ID = #{MTA_ID} 
+			AND t1.SPropKey = #{SPropKey} 
+			AND MaterialNum = #{MaterialNum}
+		)
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MaterialTransferSplit_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

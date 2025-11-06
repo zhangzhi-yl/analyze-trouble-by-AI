@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mdm.EQM_OVERHAULMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_EQM_OVERHAUL
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.EQM_BASE_ID,	
+		f.FSORT,	
+		f.FUPKEEP_TYPE,	
+		f.FUPKEEP_MATTER,	
+		f.FTIME_RULE,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FASSIGN_TYPE,
+		f.FASSIGN_CONTENT,
+		f.EQM_OVERHAUL_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		EQM_BASE_ID,	
+		FSORT,	
+		FUPKEEP_TYPE,	
+		FUPKEEP_MATTER,	
+		FTIME_RULE,	
+		FCREATOR,	
+		CREATE_TIME,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,
+		FASSIGN_TYPE,
+		FASSIGN_CONTENT,	
+		EQM_OVERHAUL_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{EQM_BASE_ID},	
+		#{FSORT},	
+		#{FUPKEEP_TYPE},	
+		#{FUPKEEP_MATTER},	
+		#{FTIME_RULE},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},
+		#{FASSIGN_TYPE},	
+		#{FASSIGN_CONTENT},		
+		#{EQM_OVERHAUL_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_OVERHAUL_ID = #{EQM_OVERHAUL_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			EQM_BASE_ID = #{EQM_BASE_ID},
+			FSORT = #{FSORT},
+			FUPKEEP_TYPE = #{FUPKEEP_TYPE},
+			FUPKEEP_MATTER = #{FUPKEEP_MATTER},
+			FTIME_RULE = #{FTIME_RULE},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FASSIGN_TYPE = #{FASSIGN_TYPE},	
+		    FASSIGN_CONTENT = #{FASSIGN_CONTENT},
+			EQM_OVERHAUL_ID = EQM_OVERHAUL_ID
+		where 
+			EQM_OVERHAUL_ID = #{EQM_OVERHAUL_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.EQM_OVERHAUL_ID = #{EQM_OVERHAUL_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where EQM_BASE_ID=#{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FUPKEEP_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FUPKEEP_MATTER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] order by f.FSORT [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="EQM_BASE_ID != null and EQM_BASE_ID != ''">
+			and
+				(
+					EQM_BASE_ID=#{EQM_BASE_ID} 
+					and
+					FEXTEND1='YES'
+				)
+		</if>
+		<if test="FTYPE != null and FTYPE != ''">
+			and
+				(
+					FUPKEEP_TYPE=#{FTYPE} 
+				)
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_OVERHAUL_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 通过设备基础资料ID删除信息-->
+	<delete id="deleteBase" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			EQM_BASE_ID = #{EQM_BASE_ID}
+	</delete>
+	
+	<!-- 更新发布状态 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		    FEXTEND1 = #{FEXTEND1}
+		where 
+			EQM_OVERHAUL_ID = #{EQM_OVERHAUL_ID}
+	</update>
+	
+	<!-- 每日检修待办列表 -->
+	<select id="datalistPageDay" parameterType="page" resultType="pd">
+		SELECT f.*,t.EQM_BASE_ID,t.FASSIGN_TYPE,t.FSORT,t.FUPKEEP_MATTER,t.FUPKEEP_TYPE,t.FASSIGN_CONTENT,t.FTIME_RULE
+        FROM MDM_EQM_OVERHAULMX f LEFT JOIN MDM_EQM_OVERHAUL t ON f.EQM_OVERHAUL_ID=t.EQM_OVERHAUL_ID 
+        WHERE t.FUPKEEP_TYPE='每日'  AND t.FEXTEND1='YES' and t.EQM_BASE_ID=#{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					t.FASSIGN_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					t.FUPKEEP_MATTER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					t.FUPKEEP_MATTER LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					t.FUPKEEP_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					t.FCOUPLE_CONTENT LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.USERNAME!= null and pd.USERNAME != ''"><!-- 待办权限 -->
+		   <if test="pd.DEPTNAME!= null and pd.DEPTNAME != ''">
+			and
+				(
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.USERNAME}+'%'
+					 or 
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.DEPTNAME}+'%' 
+				)
+		   </if>
+		</if>
+		[fhstart] order by FSORT,FDATE desc [fhend] 
+	</select>
+	
+	<!-- 每月检修待办列表 -->
+	<select id="datalistPageMonth" parameterType="page" resultType="pd">
+		SELECT f.*,t.EQM_BASE_ID,t.FASSIGN_TYPE,t.FSORT,t.FUPKEEP_MATTER,t.FUPKEEP_TYPE,t.FASSIGN_CONTENT,t.FTIME_RULE
+        FROM MDM_EQM_OVERHAULMX f LEFT JOIN MDM_EQM_OVERHAUL t ON f.EQM_OVERHAUL_ID=t.EQM_OVERHAUL_ID 
+        WHERE t.FUPKEEP_TYPE='每月'  AND t.FEXTEND1='YES' and t.EQM_BASE_ID=#{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					t.FASSIGN_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					t.FUPKEEP_MATTER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					t.FUPKEEP_MATTER LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					t.FUPKEEP_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					t.FCOUPLE_CONTENT LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.USERNAME!= null and pd.USERNAME != ''"><!-- 待办权限 -->
+		   <if test="pd.DEPTNAME!= null and pd.DEPTNAME != ''">
+			and
+				(
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.USERNAME}+'%'
+					 or 
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.DEPTNAME}+'%' 
+				)
+		   </if>
+		</if>
+		[fhstart] order by FSORT,FDATE desc [fhend] 
+	</select>
+	
+	<!-- 每年检修待办列表 -->
+	<select id="datalistPageYear" parameterType="page" resultType="pd">
+		SELECT f.*,t.EQM_BASE_ID,t.FASSIGN_TYPE,t.FSORT,t.FUPKEEP_MATTER,t.FUPKEEP_TYPE,t.FASSIGN_CONTENT,t.FTIME_RULE
+        FROM MDM_EQM_OVERHAULMX f LEFT JOIN MDM_EQM_OVERHAUL t ON f.EQM_OVERHAUL_ID=t.EQM_OVERHAUL_ID 
+        WHERE t.FUPKEEP_TYPE='每年'  AND t.FEXTEND1='YES' and t.EQM_BASE_ID=#{pd.EQM_BASE_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					t.FASSIGN_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					t.FUPKEEP_MATTER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					t.FUPKEEP_MATTER LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					t.FUPKEEP_TYPE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					t.FCOUPLE_CONTENT LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.USERNAME!= null and pd.USERNAME != ''"><!-- 待办权限 -->
+		   <if test="pd.DEPTNAME!= null and pd.DEPTNAME != ''">
+			and
+				(
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.USERNAME}+'%'
+					 or 
+					t.FASSIGN_CONTENT LIKE '%'+ #{pd.DEPTNAME}+'%' 
+				)
+		   </if>
+		</if>
+		[fhstart] order by FSORT,FDATE desc [fhend] 
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

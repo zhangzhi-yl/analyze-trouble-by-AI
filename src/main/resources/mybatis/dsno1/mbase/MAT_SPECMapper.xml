@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mbase.MAT_SPECMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_MAT_SPEC
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.MAT_BASIC_ID,	
+		f.UNIT_INFO_ID,	
+		f.MAT_SPEC_QTY,	
+		f.FCreatePersonID,	
+		f.FCreateTime,	
+		f.LastModifiedBy,	
+		f.LastModificationTime,	
+		f.MAT_SPEC_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		MAT_BASIC_ID,	
+		UNIT_INFO_ID,	
+		MAT_SPEC_QTY,	
+		FCreatePersonID,	
+		FCreateTime,	
+		LastModifiedBy,	
+		LastModificationTime,	
+		MAT_SPEC_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MAT_BASIC_ID},	
+		#{UNIT_INFO_ID},	
+		#{MAT_SPEC_QTY},	
+		#{FCreatePersonID},	
+		#{FCreateTime},	
+		#{LastModifiedBy},	
+		#{LastModificationTime},	
+		#{MAT_SPEC_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_SPEC_ID = #{MAT_SPEC_ID}
+	</delete>
+	
+	<!-- 通过基础资料主键删除 -->
+	<delete id="deleteBasic" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_BASIC_ID = #{MAT_BASIC_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MAT_BASIC_ID = #{MAT_BASIC_ID},
+			UNIT_INFO_ID = #{UNIT_INFO_ID},
+			MAT_SPEC_QTY = #{MAT_SPEC_QTY},
+			FCreatePersonID = #{FCreatePersonID},
+			FCreateTime = #{FCreateTime},
+			LastModifiedBy = #{LastModifiedBy},
+			LastModificationTime = #{LastModificationTime}
+		where 
+			MAT_SPEC_ID = #{MAT_SPEC_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		f2.NAME FCreatorName, f3.NAME LastModifiedByName,
+		unit.FCODE MAT_AUXILIARY_UNIT_CODE,unit.UNIT_INFO_ID MAT_AUXILIARY_UNIT,unit.FName MAT_AUXILIARY_UNIT_NAME,
+		m.MAT_NAME,m.MAT_CODE,unit1.UNIT_INFO_ID MAT_MAIN_UNIT,unit1.FName MAT_MAIN_UNIT_NAME,unit1.FCODE MAT_MAIN_UNIT_CODE,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN MBASE_MAT_BASIC m ON f.MAT_BASIC_ID = m.MAT_BASIC_ID
+		LEFT JOIN MBASE_UNIT_INFO unit ON unit.UNIT_INFO_ID = f.UNIT_INFO_ID 
+		LEFT JOIN MBASE_UNIT_INFO unit1 ON unit1.UNIT_INFO_ID = m.MAT_MAIN_UNIT 
+		left join OA_STAFF f2 on f.FCreatePersonID=f2.STAFF_ID
+		left join OA_STAFF f3 on f.LastModifiedBy=f3.STAFF_ID
+		where 
+			f.MAT_SPEC_ID = #{MAT_SPEC_ID}
+	</select>
+	
+	<!-- 查询规格单位及数据都相同的总数据量 -->
+	<select id="findCountByUnitAndQty" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.UNIT_INFO_ID = #{UNIT_INFO_ID} 
+			and f.MAT_SPEC_QTY=#{MAT_SPEC_QTY} 
+			and f.MAT_BASIC_ID=#{MAT_BASIC_ID}
+		<if test="MAT_SPEC_ID != null and MAT_SPEC_ID != ''"><!-- 物料规格id -->
+			and f.MAT_SPEC_ID &lt;&gt; #{MAT_SPEC_ID}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		f2.NAME FCreatorName, f3.NAME LastModifiedByName,
+		unit.FCODE MAT_AUXILIARY_UNIT_CODE,unit.UNIT_INFO_ID MAT_AUXILIARY_UNIT,unit.FName MAT_AUXILIARY_UNIT_NAME,
+		m.MAT_NAME,m.MAT_CODE,unit1.UNIT_INFO_ID MAT_MAIN_UNIT,unit1.FName MAT_MAIN_UNIT_NAME,unit1.FCODE MAT_MAIN_UNIT_CODE,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MBASE_MAT_BASIC m ON f.MAT_BASIC_ID = m.MAT_BASIC_ID
+		LEFT JOIN MBASE_UNIT_INFO unit ON unit.UNIT_INFO_ID = f.UNIT_INFO_ID 
+		LEFT JOIN MBASE_UNIT_INFO unit1 ON unit1.UNIT_INFO_ID = m.MAT_MAIN_UNIT 
+		left join OA_STAFF f2 on f.FCreatePersonID=f2.STAFF_ID
+		left join OA_STAFF f3 on f.LastModifiedBy=f3.STAFF_ID
+		where 1=1 
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					unit.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					m.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.MAT_BASIC_ID != null and pd.MAT_BASIC_ID != ''">
+			and f.MAT_BASIC_ID = #{pd.MAT_BASIC_ID}
+		</if>
+		<if test="pd.UNIT_INFO_ID != null and pd.UNIT_INFO_ID != ''">
+			and f.UNIT_INFO_ID = #{pd.UNIT_INFO_ID}
+		</if>
+		[fhstart] ORDER BY f.FCreateTime DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		f2.NAME FCreatorName, f3.NAME LastModifiedByName,
+		unit.FCODE MAT_AUXILIARY_UNIT_CODE,unit.UNIT_INFO_ID MAT_AUXILIARY_UNIT,unit.FName MAT_AUXILIARY_UNIT_NAME,
+		m.MAT_NAME,m.MAT_CODE,unit1.UNIT_INFO_ID MAT_MAIN_UNIT,unit1.FName MAT_MAIN_UNIT_NAME,unit1.FCODE MAT_MAIN_UNIT_CODE,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MBASE_MAT_BASIC m ON f.MAT_BASIC_ID = m.MAT_BASIC_ID 
+		LEFT JOIN MBASE_UNIT_INFO unit ON unit.UNIT_INFO_ID = f.UNIT_INFO_ID 
+		LEFT JOIN MBASE_UNIT_INFO unit1 ON unit1.UNIT_INFO_ID = m.MAT_MAIN_UNIT 
+		left join OA_STAFF f2 on f.FCreatePersonID=f2.STAFF_ID
+		left join OA_STAFF f3 on f.LastModifiedBy=f3.STAFF_ID
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					unit.FName LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					m.MAT_NAME LIKE '%'+ #{KEYWORDS}+'%'
+				)
+		</if>
+		<if test="MAT_BASIC_ID != null and MAT_BASIC_ID != ''">
+			and f.MAT_BASIC_ID = #{MAT_BASIC_ID}
+		</if>
+		<if test="UNIT_INFO_ID != null and UNIT_INFO_ID != ''">
+			and f.UNIT_INFO_ID = #{UNIT_INFO_ID}
+		</if>
+		ORDER BY f.FCreateTime ASC
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_SPEC_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

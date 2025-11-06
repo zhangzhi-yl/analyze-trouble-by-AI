@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.MATSPLITMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_MATSPLIT
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ItemID,	
+		f.FUniqueCode,	
+		f.FQuantity,	
+		f.FRelatedID,	
+		f.FCreatetime,	
+		f.FCreator,	
+		f.MATSPLIT_ID,
+		f.FMainUnit,
+		f.FTargetQuantity,
+		f.FIsScan,
+		f.WH_WAREHOUSE_ID,
+		f.WH_LOCATION_ID,
+		f.MaterialSPropKeyCode
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		ItemID,	
+		FUniqueCode,	
+		FQuantity,	
+		FRelatedID,	
+		FCreatetime,	
+		FCreator,	
+		MATSPLIT_ID,
+		FMainUnit,
+		FTargetQuantity,
+		FIsScan,
+		WH_WAREHOUSE_ID,
+		WH_LOCATION_ID,
+		MaterialSPropKeyCode
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ItemID},	
+		#{FUniqueCode},	
+		#{FQuantity},	
+		#{FRelatedID},	
+		#{FCreatetime},	
+		#{FCreator},	
+		#{MATSPLIT_ID},
+		#{FMainUnit},
+		#{FTargetQuantity},
+		#{FIsScan},
+		#{WH_WAREHOUSE_ID},
+		#{WH_LOCATION_ID},
+		#{MaterialSPropKeyCode}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MATSPLIT_ID = #{MATSPLIT_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FUniqueCode = #{FUniqueCode}
+			
+		where 
+			MATSPLIT_ID = #{MATSPLIT_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		w.FNAME WarehouseName,w.FCODE WarehouseCode,
+		l.FNAME PositionName,l.FCODE PositionCode,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MWMS_WH_WAREHOUSE w on f.WH_WAREHOUSE_ID=w.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION l on f.WH_LOCATION_ID=l.WH_LOCATION_ID 
+		where 
+			f.MATSPLIT_ID = #{MATSPLIT_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		w.FNAME WarehouseName,w.FCODE WarehouseCode,
+		l.FNAME PositionName,l.FCODE PositionCode,
+		<include refid="Field"></include>,
+		f2.FNAME FUnitName,f3.NAME FCreatorName,
+		case when 
+		f.ItemID is null or f.ItemID='' then '' 
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称')  end FMatJoint,
+		f1.MAT_CODE,f1.MAT_NAME
+		from 
+		<include refid="tableName"></include> f 
+		left join MBASE_MAT_BASIC f1 on f1.MAT_BASIC_ID=f.ItemID
+		left join MBASE_UNIT_INFO f2 on f1.MAT_MAIN_UNIT=f2.UNIT_INFO_ID
+		left join OA_STAFF f3 on f.FCreator=f3.STAFF_ID 
+		left join MWMS_WH_WAREHOUSE w on f.WH_WAREHOUSE_ID=w.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION l on f.WH_LOCATION_ID=l.WH_LOCATION_ID 
+		where 1=1
+		<if test="pd.KEYWORDS_FUniqueCode != null and pd.KEYWORDS_FUniqueCode != ''">
+			and f.FUniqueCode like '%'+#{pd.KEYWORDS_FUniqueCode}+'%'
+		</if>
+		<if test="pd.FUniqueCode != null and pd.FUniqueCode != ''"><!-- 唯一码 -->
+			and f.FUniqueCode = #{pd.FUniqueCode}
+		</if>
+		<if test="pd.FRelatedID != null and pd.FRelatedID != ''"><!-- 关联id -->
+			and f.FRelatedID=#{pd.FRelatedID}
+		</if>
+		[fhstart] order by FCreatetime desc  [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		w.FNAME WarehouseName,w.FCODE WarehouseCode,
+		l.FNAME PositionName,l.FCODE PositionCode,
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		left join MWMS_WH_WAREHOUSE w on f.WH_WAREHOUSE_ID=w.WH_WAREHOUSE_ID 
+		left join MWMS_WH_LOCATION l on f.WH_LOCATION_ID=l.WH_LOCATION_ID 
+		where 1=1
+		<if test="FRelatedID != null and FRelatedID != ''"><!-- 关联id -->
+			and f.FRelatedID=#{FRelatedID} 
+		</if>
+		<if test="FUniqueCode != null and FUniqueCode != ''"><!-- 唯一码 -->
+			and f.FUniqueCode = #{FUniqueCode}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MATSPLIT_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 获取拆分数量 -->
+	<select id="getNum" parameterType="pd" resultType="pd">
+		select 
+		count(*) FNum
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FRelatedID = #{FRelatedID}
+	</select>
+	<!-- 获取唯一码数量 -->
+	<select id="getRepeatNum" parameterType="pd" resultType="pd">
+		select 
+		count(*) FNum
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FUniqueCode = #{FUniqueCode}
+			and
+			f.MATSPLIT_ID != #{MATSPLIT_ID}
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

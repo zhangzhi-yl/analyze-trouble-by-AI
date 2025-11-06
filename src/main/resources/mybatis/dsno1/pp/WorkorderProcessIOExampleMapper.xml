@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.WorkorderProcessIOExampleMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		PP_WorkorderProcessIOExample
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ProcessWorkOrderExampleID,
+		f.SerialNum,
+		f.TType,
+		f.ProcessIType,
+		f.ByProduct,
+		f.MaterialID,
+		f.SubstituteMaterialID,
+		f.FormulaQuantity,
+		f.PlannedQuantity,
+		f.FStatus,
+		f.FExplanation,
+		f.IntermediateIF,
+		f.WorkorderProcessIOExample_ID,
+		f.FRemarks
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		ProcessWorkOrderExampleID,
+		SerialNum,
+		TType,
+		ProcessIType,
+		ByProduct,
+		MaterialID,
+		SubstituteMaterialID,
+		FormulaQuantity,
+		PlannedQuantity,
+		FStatus,
+		FExplanation,
+		IntermediateIF,
+		WorkorderProcessIOExample_ID,
+		FRemarks
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ProcessWorkOrderExampleID},
+		#{SerialNum},
+		#{TType},
+		#{ProcessIType},
+		#{ByProduct},
+		#{MaterialID},
+		#{SubstituteMaterialID},
+		#{FormulaQuantity},
+		#{PlannedQuantity},
+		#{FStatus},
+		#{FExplanation},
+		#{IntermediateIF},
+		#{WorkorderProcessIOExample_ID},
+		#{FRemarks}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		WorkorderProcessIOExample_ID = #{WorkorderProcessIOExample_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		ProcessWorkOrderExampleID = #{ProcessWorkOrderExampleID},
+		SerialNum
+		= #{SerialNum},
+		TType = #{TType},
+		ProcessIType = #{ProcessIType},
+		ByProduct = #{ByProduct},
+		MaterialID = #{MaterialID},
+		SubstituteMaterialID = #{SubstituteMaterialID},
+		FormulaQuantity =
+		#{FormulaQuantity},
+		PlannedQuantity = #{PlannedQuantity},
+		FStatus =
+		#{FStatus},
+		FExplanation = #{FExplanation},
+		IntermediateIF =
+		#{IntermediateIF},
+		FRemarks = #{FRemarks}
+		where
+		WorkorderProcessIOExample_ID = #{WorkorderProcessIOExample_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where
+		f.WorkorderProcessIOExample_ID = #{WorkorderProcessIOExample_ID}
+		order by f.SerialNum
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		,
+		f1.MAT_NAME,
+		f1.MAT_CODE,
+		f1.MAT_SPECS,
+		f1.MAT_AUXILIARY_ID,
+		f1.MAT_MAIN_UNIT as fUnit,
+		f1.UNIQUE_CODE_WHETHER AS IFOneCode,
+		f2.FNAME as UNIT_FNAME,
+		isnull((select sum(a.ConsumptionQuantity) from
+		KM_MaterialConsume a where
+		a.ConsumptionDocumentID=f.WorkorderProcessIOExample_ID),0) as
+		ConsumptionQuantity
+		from
+		<include refid="tableName"></include>
+		f LEFT JOIN MBASE_MAT_BASIC f1 on f.MaterialID = f1.MAT_BASIC_ID
+		LEFT
+		JOIN MBASE_UNIT_INFO f2 on f1.MAT_MAIN_UNIT= f2.UNIT_INFO_ID
+		where 1=1
+		<if
+			test="pd.processWorkOrderExample_ID!=null and pd.processWorkOrderExample_ID != ''">
+			and f.ProcessWorkOrderExampleID =
+			#{pd.processWorkOrderExample_ID}
+		</if>
+		<if test="pd.TType!=null and pd.TType != ''">
+			and f.TType = #{pd.TType}
+		</if>
+		<if test="pd.KEYWORDS!=null and pd.KEYWORDS != ''">
+			and f1.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+		</if>
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		,f4.FNAME FUnitName,
+		f1.MAT_NAME,
+		f1.MAT_CODE,
+		f1.MAT_SPECS,
+		f1.MAT_AUXILIARY_ID,
+		f1.MAT_MAIN_UNIT as fUnit,
+		f1.UNIQUE_CODE_WHETHER
+		AS IFOneCode,
+		case when
+		f.MaterialID is null or f.MaterialID='' then ''
+		else isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') end
+		FInMatJoint,
+		case when
+		f.SubstituteMaterialID is null or
+		f.SubstituteMaterialID='' then ''
+		else
+		isnull(f2.MAT_CODE,'无编号')+'/'+isnull(f2.MAT_NAME,'无名称') end
+		FReplaceMatJoint
+		from
+		<include refid="tableName"></include>
+		f
+		left join MBASE_MAT_BASIC f1
+		on f.MaterialID=f1.MAT_BASIC_ID
+		left join
+		MBASE_MAT_BASIC f2
+		on f.SubstituteMaterialID=f2.MAT_BASIC_ID
+		left join
+		MBASE_UNIT_INFO f4
+		on f1.MAT_MAIN_UNIT=f4.UNIT_INFO_ID
+		where 1=1
+
+		<if
+			test="processWorkOrderExample_ID!=null and processWorkOrderExample_ID != ''">
+			and f.ProcessWorkOrderExampleID = #{processWorkOrderExample_ID}
+		</if>
+		<if test="TType!=null and TType != ''">
+			and f.TType = #{TType}
+		</if>
+		<if test="ProcessIType!=null and ProcessIType != ''">
+			and f.ProcessIType = #{ProcessIType}
+		</if>
+		<if test="PositionID != null and PositionID != ''">
+			and f.PositionID = #{PositionID}
+		</if>
+		<if test="array != null and array.size()>0">
+			and
+			f.MaterialID in
+			<foreach collection="array" item="item" index="index" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<!-- 列表(根据工艺工单工序实例ID查询) -->
+	<select id="listByProcessWorkOrderExampleID" parameterType="string"
+		resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where f.ProcessWorkOrderExampleID = #{ProcessWorkOrderExampleID}
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		WorkorderProcessIOExample_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 根据工艺工单工序实例id查询投入产出实例列表 -->
+	<select id="findIOExampleByProcessWorkOrderExampleID"
+		parameterType="pd" resultType="pd">
+		SELECT ISNULL(t.NetWeighted, 0)
+		AcQty,m.MAT_CODE,ISNULL(m.MAT_NAME,'')
+		MAT_NAME,m.MAT_MAIN_UNIT,m.MAT_SPECS_QTY,
+		m1.MAT_CODE
+		SubstituteMaterialCode,ISNULL(m1.MAT_NAME,'') SubstituteMaterialName,
+		unit.FCODE UNIT_CODE,unit.FNAME UNIT_NAME,unit1.FCODE
+		MAT_AUXILIARY_UNIT_CODE,unit1.FNAME MAT_AUXILIARY_UNIT_NAME ,
+		pd.FName
+		ProcessDefinition_Name,example.WP,isnull(example.CheckDoneIF,'否')
+		CheckDoneIF,isnull(example.WeighingDoneIF,'否') WeighingDoneIF,
+		f.ProcessWorkOrderExampleID, f.SerialNum, f.TType, f.ProcessIType,
+		f.ByProduct, f.MaterialID,
+		f.SubstituteMaterialID, f.FormulaQuantity,
+		f.PlannedQuantity, f.FStatus, f.FExplanation,
+		f.IntermediateIF,
+		f.WorkorderProcessIOExample_ID,isnull(f.FRemarks,'')
+		FRemarks
+		FROM
+		PP_WorkorderProcessIOExample f
+		LEFT JOIN PP_ProcessWorkOrderExample
+		example ON
+		f.ProcessWorkOrderExampleID=example.ProcessWorkOrderExample_ID
+		LEFT
+		JOIN KM_ProcessDefinition pd ON example.WP=pd.ProcessDefinition_ID
+		LEFT JOIN MBASE_MAT_BASIC m ON m.MAT_BASIC_ID=f.MaterialID
+		LEFT JOIN
+		MBASE_MAT_BASIC m1 ON m1.MAT_BASIC_ID=f.SubstituteMaterialID
+		LEFT JOIN
+		MBASE_UNIT_INFO unit ON m.MAT_MAIN_UNIT=unit.UNIT_INFO_ID
+		LEFT JOIN
+		MBASE_UNIT_INFO unit1 ON
+		m.MAT_AUXILIARY_UNIT=unit1.UNIT_INFO_ID
+		LEFT
+		JOIN (
+		SELECT WorkorderProcessIOExampleID,SUM(NetWeight) NetWeighted
+		from
+		PP_WeighingMaterial
+		GROUP BY WorkorderProcessIOExampleID
+		) t ON
+		f.WorkorderProcessIOExample_ID=t.WorkorderProcessIOExampleID
+		WHERE
+		f.ProcessWorkOrderExampleID = #{ProcessWorkOrderExampleID}
+		order by
+		f.TType desc
+	</select>
+
+	<!-- 调整投入产出实例数量及描述 -->
+	<update id="editPlannedQuantityAndFRemarks" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		MaterialID = #{MaterialID},
+		SubstituteMaterialID =
+		#{SubstituteMaterialID},
+		PlannedQuantity = #{PlannedQuantity},
+		FRemarks
+		= #{FRemarks}
+		where
+		WorkorderProcessIOExample_ID =
+		#{WorkorderProcessIOExample_ID}
+	</update>
+	<select id="getOutput" parameterType="pd" resultType="pd">
+
+		SELECT
+		*
+		FROM
+		PP_WorkorderProcessIOExample a
+		LEFT JOIN KM_MaterialConsume b ON a.WorkorderProcessIOExample_ID =
+		b.ConsumptionDocumentID
+		LEFT JOIN PP_ProcessWorkOrderExample c on a.ProcessWorkOrderExampleID =
+		c.ProcessWorkOrderExample_ID
+		WHERE 1=1
+		<if
+			test="ProcessWorkOrderExample_ID != null and ProcessWorkOrderExample_ID != ''">
+			and a.ProcessWorkOrderExampleID = #{ProcessWorkOrderExample_ID}
+		</if>
+		<if test="WPTYPE != null and WPTYPE != ''">
+			AND a.TType = #{WPTYPE}
+			and c.WPType like '%'+#{WPTYPE}+'%'
+		</if>
+		<if test="FType != null and FType != ''">
+			and b.FType = #{FType}
+		</if>
+
+
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

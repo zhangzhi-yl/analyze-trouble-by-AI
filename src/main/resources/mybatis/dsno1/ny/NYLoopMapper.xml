@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.ny.NYLoopMapper">
+
+    <!--表名 -->
+    <sql id="tableName">
+        NY_LOOP
+    </sql>
+
+    <!--数据字典表名 -->
+    <sql id="dicTableName">
+        SYS_DICTIONARIES
+    </sql>
+
+    <!-- 字段 -->
+    <sql id="Field">
+        f
+        .
+        FName
+        ,
+		f.FCode,	
+		f.Region,	
+		f.FStatus,	
+		f.Parent_ID,	
+		f.Creator,	
+		f.CreateTime,	
+		f.Modified,	
+		f.ModifiedTime,	
+		f.Workshop,	
+		f.Extend1,	
+		f.Extend2,	
+		f.Extend3,
+        f.FRow,
+        f.FCol,
+		f.LOOP_ID
+    </sql>
+
+    <!-- 字段用于新增 -->
+    <sql id="Field2">
+        FName
+        ,
+		FCode,	
+		Region,	
+		FStatus,	
+		Parent_ID,	
+		Creator,	
+		CreateTime,	
+		Modified,	
+		ModifiedTime,	
+		Workshop,	
+		Extend1,	
+		Extend2,	
+		Extend3,
+        FRow,
+        FCol,
+		LOOP_ID
+    </sql>
+
+    <!-- 字段值 -->
+    <sql id="FieldValue">
+        #{FName}
+        ,
+        #{FCode},
+        #{Region},
+        #{FStatus},
+        #{Parent_ID},
+        #{Creator},
+        #{CreateTime},
+        #{Modified},
+        #{ModifiedTime},
+        #{Workshop},
+        #{Extend1},
+        #{Extend2},
+        #{Extend3},
+        #{FRow},
+        #{FCol},
+        #{LOOP_ID}
+    </sql>
+
+    <!-- 新增-->
+    <insert id="save" parameterType="pd">
+        insert into
+        <include refid="tableName"></include>
+        (
+        <include refid="Field2"></include>
+        ) values (
+        <include refid="FieldValue"></include>
+        )
+    </insert>
+
+    <!-- 删除-->
+    <delete id="delete" parameterType="pd">
+        delete from
+        <include refid="tableName"></include>
+        where
+        LOOP_ID = #{LOOP_ID}
+    </delete>
+
+    <!-- 级联删除-->
+    <delete id="deleteByParent" parameterType="pd">
+        delete from
+        <include refid="tableName"></include>
+        where
+        Parent_ID = #{LOOP_ID}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="edit" parameterType="pd">
+        update
+        <include refid="tableName"></include>
+        set
+        FName = #{FName},
+        FCode = #{FCode},
+        Region = #{Region},
+        FStatus = #{FStatus},
+        Parent_ID = #{Parent_ID},
+        Creator = #{Creator},
+        CreateTime = #{CreateTime},
+        Modified = #{Modified},
+        ModifiedTime = #{ModifiedTime},
+        Workshop = #{Workshop},
+        Extend1 = #{Extend1},
+        Extend2 = #{Extend2},
+        Extend3 = #{Extend3},
+        FRow = #{FRow},
+        FCol = #{FCol},
+        LOOP_ID = LOOP_ID
+        where
+        LOOP_ID = #{LOOP_ID}
+    </update>
+
+    <!-- 通过ID获取数据 -->
+    <select id="findById" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_Loop l on f.Parent_ID = l.Loop_ID
+        left join MDM_SITE s on f.Parent_ID = s.DM_SITE_ID
+        left join MDM_AREA a on f.Parent_ID = a.AREA_ID
+        where
+        f.LOOP_ID = #{LOOP_ID}
+    </select>
+
+    <select id="findByName" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include> f
+        where
+        f.FName = #{FNAME}
+    </select>
+
+    <!-- 通过ID获取数据 -->
+    <select id="findByCode" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        from
+        <include refid="tableName"></include>
+        f
+        where
+        f.FCode = #{FCode}
+    </select>
+
+    <!-- 列表 -->
+    <select id="datalistPage" parameterType="page" resultType="pd">
+        select
+        <include refid="Field"></include>,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_Loop l on f.Parent_ID = l.Loop_ID
+        left join MDM_SITE s on f.Parent_ID = s.DM_SITE_ID
+        left join MDM_AREA a on f.Parent_ID = a.AREA_ID
+        where 1=1
+        <if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+            and
+            (
+            f.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+            or
+            f.FCode LIKE '%'+ #{pd.KEYWORDS}+'%'
+            )
+        </if>
+        <if test="pd.LOOP_ID != null and pd.LOOP_ID != ''"><!-- 关键词检索 -->
+            and f.LOOP_ID in ${pd.LOOP_ID}
+        </if>
+        [fhstart]ORDER BY f.CreateTime DESC[fhend]
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listAll" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>,l.FName DeptName1,s.FNAME DeptName2,a.FNAME DeptName3
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_Loop l on f.Parent_ID = l.Loop_ID
+        left join MDM_SITE s on f.Parent_ID = s.DM_SITE_ID
+        left join MDM_AREA a on f.Parent_ID = a.AREA_ID
+        where 1=1
+        <if test="PID != null and PID != ''"><!-- 关键词检索 -->
+            and f.Parent_ID = #{PID}
+        </if>
+        <if test="LoopId != null and LoopId != ''"><!-- 关键词检索 -->
+            and f.Parent_ID = #{LoopId}
+        </if>
+        <if test="LOOPIDS != null and LOOPIDS != ''"><!-- 关键词检索 -->
+            and f.LOOP_ID IN ${LOOPIDS}
+        </if>
+        <if test="SaveTable != null and SaveTable != ''"><!-- 关键词检索 -->
+            and f.Extend2 = #{SaveTable}
+        </if>
+        <if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+            and
+            (
+            f.FName LIKE '%'+ #{KEYWORDS}+'%'
+            or
+            f.FCode LIKE '%'+ #{KEYWORDS}+'%'
+            )
+        </if>
+    </select>
+    <!-- 列表(全部) -->
+    <select id="loopPlcAll" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>
+        --,l.PLC_ID,l.SaveTable,l.ParamName,l.Address,l.SymbolName,l.Extend1 FUnit
+        from
+        <include refid="tableName"></include>
+        f
+        left join NY_PLC l on f.LOOP_ID = l.Loop
+        --where l.FStatus = '启用'
+    </select>
+
+
+    <select id="goExcel" parameterType="pd" resultType="pd">
+        select
+        <include refid="Field"></include>,p.FName PName
+        from
+        <include refid="tableName"></include>
+        f
+        LEFT JOIN <include refid="tableName"></include> p on f.Parent_ID = p.LOOP_ID
+        where 1=1
+        <if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+            and
+            (
+            FName LIKE '%'+ #{KEYWORDS}+'%'
+            or
+            FCode LIKE '%'+ #{KEYWORDS}+'%'
+            )
+        </if>
+        <if test="LOOP_ID != null and LOOP_ID != ''"><!-- 关键词检索 -->
+            and f.LOOP_ID in ${LOOP_ID}
+        </if>
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="deleteAll" parameterType="String">
+        delete from
+        <include refid="tableName"></include>
+        where
+        LOOP_ID in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <select id="loopCount" parameterType="pd" resultType="pd">
+--         SELECT f.EnergyType, ISNULL(f1.FCOUNT, 0) FCOUNT
+--         FROM (
+--                  select 'T_PatraWater' EnergyType
+--                  UNION ALL
+--                  select 'T_PatraGas' EnergyType
+--                  UNION ALL
+--                  select 'T_PatraElectric' EnergyType
+--              ) AS f
+--                  LEFT JOIN
+--              (
+--                  select COUNT(LOOP_ID) FCOUNT,
+--                         Extend2
+--                  from NY_LOOP f
+--                  where 1 = 1
+--                  GROUP BY Extend2
+--              ) AS f1 ON f.EnergyType = f1.Extend2
+--         UNION ALL
+--         SELECT 'ALL' AS EnergyType, COUNT(LOOP_ID) FCOUNT
+--         from NY_LOOP f
+        SELECT (SELECT COUNT(*) ZMCOUNT FROM ZM_Equipment WHERE FType = '照明') ZMCOUNT,
+       (SELECT COUNT(*) KTCOUNT FROM ZM_Equipment WHERE FType = '空调') KTCOUNT,
+       (SELECT COUNT(*) CZCOUNT FROM ZM_Equipment WHERE FType = '插座') CZCOUNT,
+       (SELECT COUNT(*) ZMLOOPCOUNT FROM ZM_Loop WHERE FType = '照明') ZMLOOPCOUNT,
+       (SELECT COUNT(*) KTLOOPCOUNT FROM ZM_Loop WHERE FType = '空调') KTLOOPCOUNT,
+       (SELECT COUNT(*) CZLOOPCOUNT FROM ZM_Loop WHERE FType = '插座') CZLOOPCOUNT
+    </select>
+
+    <select id="getCodeNumByType" parameterType="pd" resultType="pd">
+        select NowValue from NY_LoopCode where ParamType = #{ParamType}
+    </select>
+    <update id="editCodeNumByType" parameterType="pd" >
+        update NY_LoopCode set NowValue=#{NowValue} where ParamType = #{ParamType}
+    </update>
+    <!-- yy356703572qq(彬耶) -->
+</mapper>

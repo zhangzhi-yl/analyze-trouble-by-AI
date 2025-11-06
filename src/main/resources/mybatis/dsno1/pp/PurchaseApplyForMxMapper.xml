@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.PurchaseApplyForMxMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PP_PurchaseApplyForMx
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.MaterialID,	
+		f.SpecificationsDesc,	
+		f.FigureNum,	
+		f.StandardNum,	
+		f.FProductQuantity,	
+		f.SalesOrder_ID,	
+		f.SalesOrderMaterial_ID,	
+		f.PlanningWorkOrder_ID,	
+		f.FSupplier,	
+		f.FIfCreate,	
+		f.FPushPeopleID,	
+		f.FPushTime,	
+		f.FType,	
+		f.FWorkblank,	
+		f.FRemark,	
+		f.PurchasDetails_ID,
+		f.PurchaseApplyForMx_ID,
+		f.PurchaseApplyFor_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		MaterialID,	
+		SpecificationsDesc,	
+		FigureNum,	
+		StandardNum,	
+		FProductQuantity,	
+		SalesOrder_ID,	
+		SalesOrderMaterial_ID,	
+		PlanningWorkOrder_ID,	
+		FSupplier,	
+		FIfCreate,	
+		FPushPeopleID,	
+		FPushTime,	
+		FType,	
+		FWorkblank,	
+		FRemark,	
+		PurchasDetails_ID,
+		PurchaseApplyForMx_ID,
+		PurchaseApplyFor_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MaterialID},	
+		#{SpecificationsDesc},	
+		#{FigureNum},	
+		#{StandardNum},	
+		#{FProductQuantity},	
+		#{SalesOrder_ID},	
+		#{SalesOrderMaterial_ID},	
+		#{PlanningWorkOrder_ID},	
+		#{FSupplier},	
+		#{FIfCreate},	
+		#{FPushPeopleID},	
+		#{FPushTime},	
+		#{FType},	
+		#{FWorkblank},	
+		#{FRemark},	
+		#{PurchasDetails_ID},	
+		#{PurchaseApplyForMx_ID},
+		#{PurchaseApplyFor_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PurchaseApplyForMx_ID = #{PurchaseApplyForMx_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MaterialID = #{MaterialID},
+			SpecificationsDesc = #{SpecificationsDesc},
+			FigureNum = #{FigureNum},
+			StandardNum = #{StandardNum},
+			FProductQuantity = #{FProductQuantity},
+			SalesOrder_ID = #{SalesOrder_ID},
+			SalesOrderMaterial_ID = #{SalesOrderMaterial_ID},
+			PlanningWorkOrder_ID = #{PlanningWorkOrder_ID},
+			FSupplier = #{FSupplier},
+			FIfCreate = #{FIfCreate},
+			FPushPeopleID = #{FPushPeopleID},
+			FPushTime = #{FPushTime},
+			FType = #{FType},
+			FWorkblank = #{FWorkblank},
+			FRemark = #{FRemark},
+			PurchasDetails_ID = #{PurchasDetails_ID},
+			PurchaseApplyForMx_ID = PurchaseApplyForMx_ID
+		where 
+			PurchaseApplyForMx_ID = #{PurchaseApplyForMx_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PurchaseApplyForMx_ID = #{PurchaseApplyForMx_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.MAT_NAME,f1.MAT_CODE,f1.UnitName,f2.OrderNum,f3.MAT_NAME ORDERMAT_NAME,f4.WorkOrderNum,f5.NAME FPushPeople
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN (SELECT t.MAT_BASIC_ID,t.MAT_NAME,t.MAT_CODE,t1.FNAME UnitName FROM MBASE_MAT_BASIC t LEFT JOIN MBASE_UNIT_INFO t1 ON t.MAT_AUXILIARY_UNIT=t1.UNIT_INFO_ID) f1 
+		ON f.MaterialID = f1.MAT_BASIC_ID
+		LEFT JOIN PP_SalesOrder f2
+		ON f.SalesOrder_ID=f2.SalesOrder_ID
+		LEFT JOIN MBASE_MAT_BASIC f3
+		ON f.SalesOrderMaterial_ID=f3.MAT_BASIC_ID 
+		LEFT JOIN PP_PlanningWorkOrder f4
+		ON f.PlanningWorkOrder_ID=f4.PlanningWorkOrder_ID 
+		LEFT JOIN OA_STAFF f5
+		ON f.FPushPeopleID= f5.STAFF_ID
+		where
+			f.PurchaseApplyFor_ID = #{pd.PurchaseApplyFor_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f1.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f1.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f2.OrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f3.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f4.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f5.NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		[fhstart] order by WorkOrderNum DESC [fhend] 
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPageSeepush" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.MAT_NAME,f1.MAT_CODE,f1.UnitName,f2.OrderNum,f3.MAT_NAME ORDERMAT_NAME,f4.WorkOrderNum,f5.NAME FPushPeople
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN (SELECT t.MAT_BASIC_ID,t.MAT_NAME,t.MAT_CODE,t1.FNAME UnitName FROM MBASE_MAT_BASIC t LEFT JOIN MBASE_UNIT_INFO t1 ON t.MAT_AUXILIARY_UNIT=t1.UNIT_INFO_ID) f1 
+		ON f.MaterialID = f1.MAT_BASIC_ID
+		LEFT JOIN PP_SalesOrder f2
+		ON f.SalesOrder_ID=f2.SalesOrder_ID
+		LEFT JOIN MBASE_MAT_BASIC f3
+		ON f.SalesOrderMaterial_ID=f3.MAT_BASIC_ID 
+		LEFT JOIN PP_PlanningWorkOrder f4
+		ON f.PlanningWorkOrder_ID=f4.PlanningWorkOrder_ID 
+		LEFT JOIN OA_STAFF f5
+		ON f.FPushPeopleID= f5.STAFF_ID
+		where
+			f.FPushPeopleID = #{pd.FPushPeopleID} and FIfCreate='N'
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f1.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f1.MAT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f2.OrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f3.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f4.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+					or 
+					f5.NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		[fhstart] order by WorkOrderNum DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PurchaseApplyForMx_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			PurchaseApplyFor_ID = #{PurchaseApplyFor_ID}
+	</select>
+	
+	<!-- 已选物料列表 -->
+	<select id="listSeepushAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.MAT_NAME,f1.MAT_CODE,f1.UnitName,f2.OrderNum,f3.MAT_NAME ORDERMAT_NAME,f4.WorkOrderNum,f5.NAME FPushPeople
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN (SELECT t.MAT_BASIC_ID,t.MAT_NAME,t.MAT_CODE,t1.FNAME UnitName FROM MBASE_MAT_BASIC t LEFT JOIN MBASE_UNIT_INFO t1 ON t.MAT_AUXILIARY_UNIT=t1.UNIT_INFO_ID) f1 
+		ON f.MaterialID = f1.MAT_BASIC_ID
+		LEFT JOIN PP_SalesOrder f2
+		ON f.SalesOrder_ID=f2.SalesOrder_ID
+		LEFT JOIN MBASE_MAT_BASIC f3
+		ON f.SalesOrderMaterial_ID=f3.MAT_BASIC_ID 
+		LEFT JOIN PP_PlanningWorkOrder f4
+		ON f.PlanningWorkOrder_ID=f4.PlanningWorkOrder_ID 
+		LEFT JOIN OA_STAFF f5
+		ON f.FPushPeopleID= f5.STAFF_ID
+		where
+			f.FPushPeopleID = #{FPushPeopleID} and FIfCreate='N'
+	</select>
+	
+	<!-- 更新主表ID与状态 -->
+	<update id="creact" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PurchaseApplyFor_ID = #{PurchaseApplyFor_ID},
+			FIfCreate = #{FIfCreate}
+		where 
+			PurchaseApplyForMx_ID = #{PurchaseApplyForMx_ID}
+	</update>
+	
+	<!-- 修改数量 -->
+	<update id="editQty" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FProductQuantity = #{FProductQuantity}
+		where 
+			PurchaseApplyForMx_ID = #{PurchaseApplyForMx_ID}
+	</update>	<!-- yy356703572qq(彬耶) -->
+</mapper>

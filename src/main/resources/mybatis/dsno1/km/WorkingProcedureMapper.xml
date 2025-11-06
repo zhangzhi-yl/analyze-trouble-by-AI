@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.WorkingProcedureMapper">
+	
+	<!--工艺路线工序表名 -->
+	<sql id="tableName">
+		KM_WorkingProcedure
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FTestMethod,
+		f.WorkingProcedure_ID,	
+		f.ProcessRouteID,	
+		f.SerialNum,	
+		f.WP,	
+		f.WorkHours,
+		f.WorkHoursUnit,
+		f.ConnectionMode,	
+		f.SingleScan,	
+		f.OneCodeEnd,	
+		f.MaterialTraceability,	
+		f.UnqualifiedProducts,	
+		f.PreparationTime,	
+		f.PreparationTimeUnit,	
+		f.WPOutputRatio,	
+		f.FStation,	
+		f.FrozenIF,	
+		f.ProductionDesc,	
+		f.FAttachment,	
+		f.FCreatePersonID,	
+		f.FCreateTime,
+		f.QIPlanID,
+		f.WPType,
+		f.ProcessDefinition_ID,
+		f.FNum,
+		f.FName,
+		f.FStatus,
+		f.ReportTemplateID,
+		f.FAttachmentName,
+		f.FAttachmentDirect,
+		f.EnableSOP,
+		f.SOP_ID,
+	
+		f.Throughput,
+		f.WokIF,
+		f.WeighingIF,
+			
+		f.NODE_ID,
+		f.EnableTest,
+		f.FTestMethod
+	
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		WorkingProcedure_ID,	
+		ProcessRouteID,	
+		SerialNum,	
+		WP,	
+		WorkHours,
+		WorkHoursUnit,
+		ConnectionMode,	
+		SingleScan,	
+		OneCodeEnd,	
+		MaterialTraceability,	
+		UnqualifiedProducts,	
+		PreparationTime,	
+		PreparationTimeUnit,	
+		WPOutputRatio,	
+		FStation,	
+		FrozenIF,	
+		ProductionDesc,	
+		FAttachment,	
+		FCreatePersonID,	
+		FCreateTime,
+		QIPlanID,
+		WPType,
+		ProcessDefinition_ID,
+		FNum,
+		FName,
+		FStatus,
+		ReportTemplateID,
+		FAttachmentName,
+		FAttachmentDirect,
+		EnableSOP,
+		SOP_ID,
+		Throughput,
+		WokIF,
+		WeighingIF,	
+		NODE_ID,
+		EnableTest,
+		FTestMethod
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WorkingProcedure_ID},	
+		#{ProcessRouteID},	
+		#{SerialNum},	
+		#{WP},	
+		#{WorkHours},
+		#{WorkHoursUnit},
+		#{ConnectionMode},	
+		#{SingleScan},	
+		#{OneCodeEnd},	
+		#{MaterialTraceability},	
+		#{UnqualifiedProducts},	
+		#{PreparationTime},	
+		#{PreparationTimeUnit},	
+		#{WPOutputRatio},	
+		#{FStation},	
+		#{FrozenIF},	
+		#{ProductionDesc},	
+		#{FAttachment},	
+		#{FCreatePersonID},	
+		#{FCreateTime},
+		#{QIPlanID},
+		#{WPType},
+		#{ProcessDefinition_ID},
+		#{FNum},
+		#{FName},
+		#{FStatus},
+		#{ReportTemplateID},
+		#{FAttachmentName},
+		#{FAttachmentDirect},
+		#{EnableSOP},
+		#{SOP_ID},
+		#{Throughput},
+		#{WokIF},
+		#{WeighingIF},
+		#{NODE_ID},
+		#{EnableTest},
+		#{FTestMethod}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WorkingProcedure_ID = #{WorkingProcedure_ID}
+	</delete>
+	
+	<!-- 根据工艺路线id删除-->
+	<delete id="deleteByProcessRouteID" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProcessRouteID = #{ProcessRouteID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ProcessRouteID = #{ProcessRouteID},
+			SerialNum = #{SerialNum},
+			WP = #{WP},
+			WorkHours = #{WorkHours},
+			WorkHoursUnit = #{WorkHoursUnit},
+			ConnectionMode = #{ConnectionMode},
+			SingleScan = #{SingleScan},
+			OneCodeEnd = #{OneCodeEnd},
+			MaterialTraceability = #{MaterialTraceability},
+			UnqualifiedProducts = #{UnqualifiedProducts},
+			PreparationTime = #{PreparationTime},
+			PreparationTimeUnit = #{PreparationTimeUnit},
+			WPOutputRatio = #{WPOutputRatio},
+			FStation = #{FStation},
+			FrozenIF = #{FrozenIF},
+			ProductionDesc = #{ProductionDesc},
+			FAttachment = #{FAttachment},
+			FCreatePersonID = #{FCreatePersonID},
+			FCreateTime = #{FCreateTime},
+			QIPlanID = #{QIPlanID},
+			WPType = #{WPType},
+			ProcessDefinition_ID = #{ProcessDefinition_ID},
+			FNum = #{FNum},
+			FName = #{FName},
+			FStatus = #{FStatus},
+			ReportTemplateID = #{ReportTemplateID},
+			FAttachmentName = #{FAttachmentName},
+			FAttachmentDirect = #{FAttachmentDirect},
+			EnableSOP = #{EnableSOP},
+			SOP_ID = #{SOP_ID},
+			Throughput = #{Throughput},
+			WokIF = #{WokIF},
+			WeighingIF = #{WeighingIF},		
+			NODE_ID = #{NODE_ID},
+			EnableTest=#{EnableTest},
+			FTestMethod=#{FTestMethod}
+		where 
+			WorkingProcedure_ID = #{WorkingProcedure_ID}
+	</update>
+	
+	<!-- 通过工艺路线ID和节点id获取top 1 -->
+	<select id="findByProcessRouteIDAndNodeId" parameterType="pd" resultType="pd">
+		SELECT TOP 1 
+		p.FNum ProcessDefinition_Num,	
+		p.FName ProcessDefinition_Name,
+		a.FName AttachmentName,a.FUrl AttachmentUrl ,soptmp.FName as SOPName,
+		s.name FCreatePerson,<include refid="Field"></include> 
+		FROM 
+		<include refid="tableName"></include> f 
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id 
+		LEFT JOIN KM_ProcessDefinition p ON f.ProcessDefinition_ID=p.ProcessDefinition_ID 
+		left join KM_SopSchemeTemplate soptmp on soptmp.SopSchemeTemplate_ID = f.SOP_ID
+		LEFT JOIN (SELECT TOP 1 * FROM KM_AttachmentSet WHERE AssociationID = #{WorkingProcedure_ID} and FStatus='使用') a 
+		on f.WorkingProcedure_ID=a.AssociationID 
+		where NODE_ID = #{NODE_ID}
+		and ProcessRouteID = #{ProcessRouteID}
+	</select>
+	
+	<!-- 通过工艺路线ID获取最大序号 -->
+	<select id="findMaxSerialNumByProcessRouteID" parameterType="pd" resultType="pd">
+		SELECT isnull(MAX(t.SerialNum),0) maxSerialNum FROM (
+			select cast(isnull(f.SerialNum,'0') as int) SerialNum 
+			from KM_WorkingProcedure f 
+			where f.ProcessRouteID = #{ProcessRouteID} 
+		) t
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		p.FNum ProcessDefinition_Num,	
+		p.FName ProcessDefinition_Name,
+		a.FName AttachmentName,a.FUrl AttachmentUrl ,
+		s.name FCreatePerson,<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id 
+		LEFT JOIN KM_ProcessDefinition p ON f.ProcessDefinition_ID=p.ProcessDefinition_ID 
+		LEFT JOIN (SELECT TOP 1 * FROM KM_AttachmentSet WHERE AssociationID = #{WorkingProcedure_ID} and FStatus='使用') a 
+		on f.WorkingProcedure_ID=a.AssociationID 
+		where 
+			f.WorkingProcedure_ID = #{WorkingProcedure_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		s.name FCreatePerson,<include refid="Field"></include>,a.FName AttachmentName,a.FUrl AttachmentUrl 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id 
+		left join (SELECT * FROM KM_AttachmentSet WHERE FStatus='使用') a on f.WorkingProcedure_ID=a.AssociationID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.SerialNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.ProcessRouteID != null and pd.ProcessRouteID != ''"><!-- 工艺路线id -->
+			and f.ProcessRouteID = #{pd.ProcessRouteID}
+		</if>
+		<if test="pd.WPType != null and pd.WPType != ''"><!-- 工序类型 -->
+			and f.WPType = #{pd.WPType}
+		</if>
+		<if test="pd.NODE_ID != null and pd.NODE_ID != ''"><!-- 节点id -->
+			and f.NODE_ID = #{pd.NODE_ID}
+		</if>
+		[fhstart] ORDER BY f.FCreateTime DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		s.name FCreatePerson,<include refid="Field"></include>,a.FName AttachmentName,a.FUrl AttachmentUrl 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN OA_STAFF s ON f.FCreatePersonID=s.staff_id 
+		left join (SELECT * FROM KM_AttachmentSet WHERE FStatus='使用') a on f.WorkingProcedure_ID=a.AssociationID 
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.SerialNum LIKE '%'+ #{KEYWORDS}+'%'
+				)
+		</if>
+		<if test="ProcessRouteID != null and ProcessRouteID != ''"><!-- 工艺路线id -->
+			and f.ProcessRouteID = #{ProcessRouteID}
+		</if>
+		<if test="WPType != null and WPType != ''"><!-- 工序类型 -->
+			and f.WPType = #{WPType}
+		</if>
+		<if test="NODE_ID != null and NODE_ID != ''"><!-- 节点id -->
+			and f.NODE_ID = #{NODE_ID}
+		</if>
+		 ORDER BY cast(isnull(f.SerialNum,'0') as int) 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WorkingProcedure_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

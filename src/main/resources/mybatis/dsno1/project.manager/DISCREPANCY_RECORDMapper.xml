@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.DISCREPANCY_RECORDMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		DT_DISCREPANCY_RECORD
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PLAN_MATERIALS_NAME,	
+		f.PLAN_MATERIALS_SPECIFICATIONS,	
+		f.PAN_MATERIALS_CODE,	
+		f.PAN_MATERIALS_ID,	
+		f.PAN_MATERIALS_NUMBER,	
+		f.ACTUAL_MATERIALS_NAME,	
+		f.ACTUAL_MATERIALS_SPECIFICATIONS,	
+		f.ACTUAL_MATERIALS_CODE,	
+		f.CHANGE_STATE,	
+		f.ACTUAL_MATERIALS_NUMBER,	
+		f.PROJECT_NAME,	
+		f.PROJECT_NUMBER,	
+		f.CUSTOMER_NAME,	
+		f.PROJECT_ID,	
+		f.FCREATE_TIME,	
+		f.FFOUNDER,	
+		f.FFOUNDER_ID,	
+		f.FMODIFY_TIME,	
+		f.FMODIFY_NAME,	
+		f.FMODIFY_ID,	
+		f.CAUSE_OF_DIFFERENCE,	
+		f.DISCREPANCY_RECORD_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PLAN_MATERIALS_NAME,	
+		PLAN_MATERIALS_SPECIFICATIONS,	
+		PAN_MATERIALS_CODE,	
+		PAN_MATERIALS_ID,	
+		PAN_MATERIALS_NUMBER,	
+		ACTUAL_MATERIALS_NAME,	
+		ACTUAL_MATERIALS_SPECIFICATIONS,	
+		ACTUAL_MATERIALS_CODE,	
+		CHANGE_STATE,	
+		ACTUAL_MATERIALS_NUMBER,	
+		PROJECT_NAME,	
+		PROJECT_NUMBER,	
+		CUSTOMER_NAME,	
+		PROJECT_ID,	
+		FCREATE_TIME,	
+		FFOUNDER,	
+		FFOUNDER_ID,	
+		FMODIFY_TIME,	
+		FMODIFY_NAME,	
+		FMODIFY_ID,	
+		CAUSE_OF_DIFFERENCE,	
+		DISCREPANCY_RECORD_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PLAN_MATERIALS_NAME},	
+		#{PLAN_MATERIALS_SPECIFICATIONS},	
+		#{PAN_MATERIALS_CODE},	
+		#{PAN_MATERIALS_ID},	
+		#{PAN_MATERIALS_NUMBER},	
+		#{ACTUAL_MATERIALS_NAME},	
+		#{ACTUAL_MATERIALS_SPECIFICATIONS},	
+		#{ACTUAL_MATERIALS_CODE},	
+		#{CHANGE_STATE},	
+		#{ACTUAL_MATERIALS_NUMBER},	
+		#{PROJECT_NAME},	
+		#{PROJECT_NUMBER},	
+		#{CUSTOMER_NAME},	
+		#{PROJECT_ID},	
+		#{FCREATE_TIME},	
+		#{FFOUNDER},	
+		#{FFOUNDER_ID},	
+		#{FMODIFY_TIME},	
+		#{FMODIFY_NAME},	
+		#{FMODIFY_ID},	
+		#{CAUSE_OF_DIFFERENCE},	
+		#{DISCREPANCY_RECORD_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROJECT_ID = #{PROJECT_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PLAN_MATERIALS_NAME = #{PLAN_MATERIALS_NAME},
+			PLAN_MATERIALS_SPECIFICATIONS = #{PLAN_MATERIALS_SPECIFICATIONS},
+			PAN_MATERIALS_CODE = #{PAN_MATERIALS_CODE},
+			PAN_MATERIALS_ID = #{PAN_MATERIALS_ID},
+			PAN_MATERIALS_NUMBER = #{PAN_MATERIALS_NUMBER},
+			ACTUAL_MATERIALS_NAME = #{ACTUAL_MATERIALS_NAME},
+			ACTUAL_MATERIALS_SPECIFICATIONS = #{ACTUAL_MATERIALS_SPECIFICATIONS},
+			ACTUAL_MATERIALS_CODE = #{ACTUAL_MATERIALS_CODE},
+			CHANGE_STATE = #{CHANGE_STATE},
+			ACTUAL_MATERIALS_NUMBER = #{ACTUAL_MATERIALS_NUMBER},
+			PROJECT_NAME = #{PROJECT_NAME},
+			PROJECT_NUMBER = #{PROJECT_NUMBER},
+			CUSTOMER_NAME = #{CUSTOMER_NAME},
+			PROJECT_ID = #{PROJECT_ID},
+			FCREATE_TIME = #{FCREATE_TIME},
+			FFOUNDER = #{FFOUNDER},
+			FFOUNDER_ID = #{FFOUNDER_ID},
+			FMODIFY_TIME = #{FMODIFY_TIME},
+			FMODIFY_NAME = #{FMODIFY_NAME},
+			FMODIFY_ID = #{FMODIFY_ID},
+			CAUSE_OF_DIFFERENCE = #{CAUSE_OF_DIFFERENCE},
+			DISCREPANCY_RECORD_ID = DISCREPANCY_RECORD_ID
+		where 
+			DISCREPANCY_RECORD_ID = #{DISCREPANCY_RECORD_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.DISCREPANCY_RECORD_ID = #{DISCREPANCY_RECORD_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		f.PLAN_MATERIALS_NAME,	
+		f.PLAN_MATERIALS_SPECIFICATIONS,	
+		f.PAN_MATERIALS_CODE,	
+		f.PAN_MATERIALS_ID,	
+		f.PAN_MATERIALS_NUMBER,	
+		f.ACTUAL_MATERIALS_NAME,	
+		f.ACTUAL_MATERIALS_SPECIFICATIONS,	
+		f.ACTUAL_MATERIALS_CODE,	
+		f.CHANGE_STATE,	
+		f.ACTUAL_MATERIALS_NUMBER,	
+		f.PROJECT_ID,	
+		ISNULL(f.CAUSE_OF_DIFFERENCE,'') CAUSE_OF_DIFFERENCE,	
+		f.DISCREPANCY_RECORD_ID,
+		p.PPROJECT_CODE,
+		p.PPROJECT_NAME,
+		p.PCUSTOMER_NAME
+		from 
+		<include refid="tableName"></include> f
+		LEFT JOIN 
+		DT_PROJECT p ON f.PROJECT_ID = p.PROJECT_ID
+		where 1=1 AND f.PROJECT_ID = #{pd.PROJECT_ID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where f.PROJECT_ID = #{PROJECT_ID}
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DISCREPANCY_RECORD_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- v1 管悦 20210902 项目物料成本对比列表 -->
+	<select id="getAllListWLDB" parameterType="pd" resultType="pd">
+		SELECT * FROM
+		(
+			select 
+			case 
+			when (gy1.FORDERNUMBER is  null or gy1.FORDERNUMBER ='') and (gy2.MAT_SPECS is  null or gy2.MAT_SPECS ='') then '型号为空' 
+			when (gy2.MAT_SPECS is not null and gy2.MAT_SPECS !='' and (gy1.FORDERNUMBER is  null or gy1.FORDERNUMBER =''))  then '新增' 
+			when ((gy1.FORDERNUMBER is not null and gy1.FORDERNUMBER !='') and (gy2.MAT_SPECS is  null or gy2.MAT_SPECS ='') ) then '删除' when (gy2.BOM_COUNT != gy1.FQUANTITY) then '修改' else '不变' end FChangeState,
+			gy1.FNAME MAT_NAME1,gy1.FORDERNUMBER MAT_SPECS1,gy1.FQUANTITY BOM_COUNT1,gy1.MAT_CODE MAT_CODE1,
+			gy2.MAT_CODE MAT_CODE2,
+			gy2.MAT_NAME MAT_NAME2,
+			gy2.MAT_SPECS MAT_SPECS2,
+			gy2.BOM_COUNT BOM_COUNT2
+			from
+				(
+					select FNAME,FORDERNUMBER,MAT_CODE,sum(cast(f1.FQUANTITY as NUMERIC(24,2))) FQUANTITY from DT_PRESALEPLANTWO f1
+					left join (select * from MBASE_MAT_BASIC where MAT_SPECS !='' and MAT_SPECS is not null) f2 on f1.FORDERNUMBER=f2.MAT_SPECS
+					 LEFT JOIN DT_PRESALEPLANONE f6 ON f1.PRESALEPLANONE_ID = f6.PRESALEPLANONE_ID
+					where 1=1 and f1.PRESALEPLAN_ID=(select PRESALEPLAN_ID from DT_PROJECT where 1=1 and PROJECT_ID=#{PROJECT_ID})
+					AND
+						(
+							FNAME != '设计工时'
+							AND
+							FNAME != '分料工时'
+							AND
+							FNAME != '装配工时'
+							AND
+							FNAME != '接线工时'
+							AND
+							FNAME != '上电工时'
+							AND
+							FNAME != '终检工时'
+							AND
+							FNAME != '包装工时'
+						)
+					AND FCABINETTYPE != '' 
+					AND FCABINETTYPE IS NOT NULL
+					group by FNAME,FORDERNUMBER,MAT_CODE
+				) gy1 
+			full OUTER join 
+			(
+				select 
+				bom.MAT_CODE,
+				bom.MAT_NAME,
+				bom.MAT_SPECS,
+				sum(cast(bom.BOM_COUNT as NUMERIC(24,2))) BOM_COUNT
+				from PMS_Cabinet_BOM bom
+				left join PMS_Cabinet_Assembly_Detail detail on detail.Cabinet_Assembly_Detail_ID = bom.Cabinet_Assembly_Detail_ID
+				left join DT_PROJECT project on project.PROJECT_ID =detail.PROJECT_ID
+				where 1=1 and project.PROJECT_ID=#{PROJECT_ID} AND detail.FAudit_CabinetDJ_State='通过'
+				group by 
+				bom.MAT_CODE,
+				bom.MAT_NAME,
+				bom.MAT_SPECS
+			) gy2
+			on (gy1.FORDERNUMBER=gy2.MAT_SPECS and ((gy2.MAT_SPECS is not null and gy2.MAT_SPECS !='') or (gy1.FORDERNUMBER is not null and gy1.FORDERNUMBER !='')))
+			where 1=1 
+		) k WHERE k.FChangeState != '不变'
+	</select>
+	
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

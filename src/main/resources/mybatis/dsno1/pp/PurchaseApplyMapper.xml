@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.PurchaseApplyMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PP_PurchaseApply
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PurchaseApply_ID,	
+		f.FCustomer,	
+		f.RelationNum,	
+		f.BusinessType,	
+		f.DataSources,	
+		f.FNum,	
+		f.FOrderer,	
+		f.FExplanation,	
+		f.ApplyPerson,	
+		f.FMakeBillsPersoID,	
+		f.FMakeBillsTime,	
+		f.FCheckPersonID,	
+		f.FCheckTime,	
+		f.FCheckFlag,
+		f.SalesOrder_ID,
+		f.MaterialID,
+		f.PlanningWorkOrder_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PurchaseApply_ID,	
+		FCustomer,	
+		RelationNum,	
+		BusinessType,	
+		DataSources,	
+		FNum,	
+		FOrderer,	
+		FExplanation,	
+		ApplyPerson,	
+		FMakeBillsPersoID,	
+		FMakeBillsTime,	
+		FCheckPersonID,	
+		FCheckTime,	
+		FCheckFlag,
+		SalesOrder_ID,
+		MaterialID,
+		PlanningWorkOrder_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PurchaseApply_ID},	
+		#{FCustomer},	
+		#{RelationNum},	
+		#{BusinessType},	
+		#{DataSources},	
+		#{FNum},	
+		#{FOrderer},	
+		#{FExplanation},	
+		#{ApplyPerson},	
+		#{FMakeBillsPersoID},	
+		#{FMakeBillsTime},	
+		#{FCheckPersonID},	
+		#{FCheckTime},	
+		#{FCheckFlag},
+		#{SalesOrder_ID},
+		#{MaterialID},
+		#{PlanningWorkOrder_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PurchaseApply_ID = #{PurchaseApply_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCustomer = #{FCustomer},
+			BusinessType = #{BusinessType},
+			FNum = #{FNum},
+			FOrderer = #{FOrderer},
+			FExplanation = #{FExplanation},
+			ApplyPerson = #{ApplyPerson},
+			SalesOrder_ID = #{SalesOrder_ID},
+			MaterialID = #{MaterialID},
+			PlanningWorkOrder_ID = #{PlanningWorkOrder_ID}
+		where 
+			PurchaseApply_ID = #{PurchaseApply_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,
+		isnull(f2.FName,'无名称')  +'/'+isnull(f2.FNum,'无编号')  FCustomerJoint,
+		f3.NAME FOrdererName,
+		f4.NAME ApplyPersonName,
+		f5.NAME FMakeBillsPersoIDName,
+		f6.NAME FCheckPersonIDName,
+		f7.OrderNum OrderNum,
+		f8.WorkOrderNum WorkOrderNum,
+		f9.MAT_NAME MAT_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join KM_Customer f2
+		on f.FCustomer=f2.Customer_ID
+		left join OA_STAFF f3
+		on f.FOrderer=f3.STAFF_ID
+		left join OA_STAFF f4
+		on f.ApplyPerson=f4.STAFF_ID
+		left join OA_STAFF f5
+		on f.FMakeBillsPersoID=f5.STAFF_ID
+		left join OA_STAFF f6
+		on f.FCheckPersonID=f6.STAFF_ID
+		left join PP_SalesOrder f7
+		on f.SalesOrder_ID = f7.SalesOrder_ID
+		left join PP_PlanningWorkOrder f8
+		on f.PlanningWorkOrder_ID = f8.PlanningWorkOrder_ID
+		left join MBASE_MAT_BASIC f9
+		on f.MaterialID = f9.MAT_BASIC_ID
+		where 
+			f.PurchaseApply_ID = #{PurchaseApply_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		f.PurchaseApply_ID,	
+		f.FCustomer,
+		f2.FName FCustName,	
+		f.RelationNum,	
+		f.BusinessType,	
+		f.DataSources,	
+		f.FNum,	
+		f.FOrderer,	
+		f.FExplanation FExplanationMain,	
+		f.ApplyPerson,	
+		f.FMakeBillsPersoID,	
+		f.FMakeBillsTime,	
+		f.FCheckPersonID,	
+		f.FCheckTime,	
+		f.FCheckFlag,
+		isnull(f2.FName,'无名称')  +'/'+isnull(f2.FNum,'无编号')  FCustomerJoint,
+		f3.NAME FOrdererName,
+		f4.NAME ApplyPersonName,
+		f5.NAME FMakeBillsPersoIDName,
+		f6.NAME FCheckPersonIDName,
+		<!-- f10.NAME FPurchaserName, -->
+		f8.FNAME FUnitName,
+		f7.MAT_CODE,f7.MAT_NAME,
+		isnull(f7.MAT_CODE,'无编号')+'/'+isnull(f7.MAT_NAME,'无名称') FMatJoint,
+		f7.MAT_AUXILIARY_ID,
+		<!-- f9.MAT_AUXILIARYMX_NAME,f9.MAT_AUXILIARYMX_CODE, -->
+		f11.OrderNum OrderNum,
+		f12.WorkOrderNum WorkOrderNum,
+		f14.NAME DENAME
+		from 
+		PP_PurchaseApply f
+		<!-- left join PP_PurchasDetails f1
+		on f.PurchaseApply_ID=f1.PurchaseApplyID -->
+		left join KM_Customer f2
+		on f.FCustomer=f2.Customer_ID
+		left join OA_STAFF f3
+		on f.FOrderer=f3.STAFF_ID
+		left join OA_STAFF f4
+		on f.ApplyPerson=f4.STAFF_ID
+		left join OA_STAFF f5
+		on f.FMakeBillsPersoID=f5.STAFF_ID
+		left join OA_STAFF f6
+		on f.FCheckPersonID=f6.STAFF_ID
+		left join MBASE_MAT_BASIC f7
+		on f7.MAT_BASIC_ID=f.MaterialID
+		left join MBASE_UNIT_INFO f8
+		on f7.MAT_MAIN_UNIT=f8.UNIT_INFO_ID
+		<!-- left join MBASE_MAT_AUXILIARYMX f9
+		on f9.MAT_AUXILIARYMX_ID=f1.SPropKey
+		left join OA_STAFF f10
+		on f1.FPurchaser=f10.STAFF_ID -->
+		left join PP_SalesOrder f11
+		on f.SalesOrder_ID = f11.SalesOrder_ID
+		left join PP_PlanningWorkOrder f12
+		on f.PlanningWorkOrder_ID = f12.PlanningWorkOrder_ID
+		left join SYS_DICTIONARIES f14
+		on f7.MAT_ATTRIBUTE = f14.DICTIONARIES_ID 
+		where 1=1
+		<if test="pd.KEYWORDS_FNum != null and pd.KEYWORDS_FNum != ''">
+			and f.FNum  LIKE '%'+ #{pd.KEYWORDS_FNum}+'%' or f11.OrderNum LIKE '%'+ #{pd.KEYWORDS_FNum}+'%'
+		</if>
+		<if test="pd.KEYWORDS_MaterialNum != null and pd.KEYWORDS_MaterialNum != ''">
+			and f7.MAT_CODE  LIKE '%'+ #{pd.KEYWORDS_MaterialNum}+'%' or f14.NAME LIKE '%'+ #{pd.KEYWORDS_FNum}+'%' 
+		</if>
+		<if test="pd.KEYWORDS_MaterialName != null and pd.KEYWORDS_MaterialName != ''">
+			and f7.MAT_NAME  LIKE '%'+ #{pd.KEYWORDS_MaterialName}+'%'  
+		</if>
+		<if test="pd.KEYWORDS_FMakeBillsTimeStart != null and pd.KEYWORDS_FMakeBillsTimeStart != ''">
+			and convert(varchar(10), f.FMakeBillsTime)  &gt;= #{pd.KEYWORDS_FMakeBillsTimeStart}
+		</if>
+		<if test="pd.KEYWORDS_FMakeBillsTimeEnd != null and pd.KEYWORDS_FMakeBillsTimeEnd != ''">
+			and convert(varchar(10), f.FMakeBillsTime)  &lt;= #{pd.KEYWORDS_FMakeBillsTimeEnd}
+		</if>
+		<if test="pd.KEYWORDS_DemandTimeStart != null and pd.KEYWORDS_DemandTimeStart != ''">
+			and convert(varchar(10), f1.DemandTime)  &gt;= #{pd.KEYWORDS_DemandTimeStart}
+		</if>
+		<if test="pd.KEYWORDS_DemandTimeEnd != null and pd.KEYWORDS_DemandTimeEnd != ''">
+			and convert(varchar(10), f1.DemandTime)  &lt;= #{pd.KEYWORDS_DemandTimeEnd}
+		</if>
+		[fhstart]  order by FMakeBillsTime desc [fhend]
+		<!-- [fhstart]  order by DENAME desc [fhend] -->
+		<!-- [fhstart]  order by FNum,cast(RowNum as int) [fhend] -->
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PurchaseApply_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 单号验重 -->
+	<select id="getRepeatNum" parameterType="pd" resultType="pd">
+		select
+		isnull(count(*),0) RepeatNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and FNum=#{FNum}
+		<if test="PurchaseApply_ID != null and PurchaseApply_ID != ''">
+			and f.PurchaseApply_ID != #{PurchaseApply_ID}
+		</if>
+	</select>
+	
+		<!-- 审核或反审核采购申请 -->
+	<update id="editAudit" parameterType="pd">
+		<choose>
+           <when test="FCheckFlag != null and FCheckFlag == 'Y'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				FCheckTime = #{FCheckTime},
+				FCheckPersonID = #{FCheckPersonID},
+				FCheckFlag = #{FCheckFlag}
+				where 
+				PurchaseApply_ID = #{PurchaseApply_ID}
+           </when>
+           <when test="FCheckFlag != null and FCheckFlag == 'N'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				FCheckTime = '',
+				FCheckPersonID = '',
+				FCheckFlag = #{FCheckFlag}
+				where 
+				PurchaseApply_ID = #{PurchaseApply_ID}
+           </when>
+           <otherwise>
+           </otherwise>
+         </choose>
+		
+	</update>
+	<!-- 获取采购申请编号列表-可搜索-前100条-->
+	<select id="getCGNumList" parameterType="pd" resultType="pd">
+		select
+		top 100 FNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			FNum LIKE '%'+ #{KEYWORDS}+'%'
+			
+			)	
+		</if>
+		<if test="FCustomer != null and FCustomer != ''"><!-- 客户id -->
+			and  f.FCustomer =  #{FCustomer} 	
+		</if>
+		 order by f.FNum 
+	</select>
+	
+	<!-- 根据销售订单ID获取单据下物料-->
+	<select id="getWLNumList" parameterType="pd" resultType="pd">
+		SELECT a.MaterialID,b.MAT_NAME 
+		FROM PP_SalesOrderDetail a 
+		LEFT JOIN MBASE_MAT_BASIC b 
+		ON a.MaterialID = b.MAT_BASIC_ID
+		WHERE 
+		a.SalesOrderID = #{KEYWORDS}
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

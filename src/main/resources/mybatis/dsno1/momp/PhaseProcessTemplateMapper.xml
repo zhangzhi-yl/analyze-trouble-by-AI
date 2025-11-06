@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.PhaseProcessTemplateMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOMP_PHASETEMPLATE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PT_MTCODE,	
+		f.PT_NAME,	
+		f.PT_PHASECODE,	
+		f.PT_INPUTJSON,	
+		f.PT_OUTPUTJSON,	
+		f.PT_CODETYPE,	
+		f.PT_NEXTCODEJSON,	
+		f.PT_CONDITION,	
+		f.PT_CREATOR,	
+		f.PT_CREATETIME,	
+		f.PT_EDITTIME,	
+		f.PT_EDITOR,	
+	    f.PT_CODE
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PT_MTCODE,	
+		PT_NAME,	
+		PT_PHASECODE,	
+		PT_INPUTJSON,	
+		PT_OUTPUTJSON,	
+		PT_CODETYPE,	
+		PT_NEXTCODEJSON,	
+		PT_CONDITION,	
+		PT_CREATOR,	
+		PT_CREATETIME,	
+		PT_EDITTIME,	
+		PT_EDITOR,	
+		PT_CODE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PT_MTCODE},	
+		#{PT_NAME},	
+		#{PT_PHASECODE},	
+		#{PT_INPUTJSON},	
+		#{PT_OUTPUTJSON},	
+		#{PT_CODETYPE},	
+		#{PT_NEXTCODEJSON},	
+		#{PT_CONDITION},	
+		#{PT_CREATOR},	
+		#{PT_CREATETIME},	
+		#{PT_EDITTIME},	
+		#{PT_EDITOR},	
+		#{PT_CODE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PT_CODE = #{PT_CODE}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PT_MTCODE = #{PT_MTCODE},
+			PT_NAME = #{PT_NAME},
+			PT_PHASECODE = #{PT_PHASECODE},
+			PT_INPUTJSON = #{PT_INPUTJSON},
+			PT_OUTPUTJSON = #{PT_OUTPUTJSON},
+			PT_CODETYPE = #{PT_CODETYPE},
+			PT_NEXTCODEJSON = #{PT_NEXTCODEJSON},
+			PT_CONDITION = #{PT_CONDITION},
+			PT_CREATOR = #{PT_CREATOR},
+			PT_CREATETIME = #{PT_CREATETIME},
+			PT_EDITTIME = #{PT_EDITTIME},
+			PT_EDITOR = #{PT_EDITOR},
+			PT_CODE = PT_CODE
+		where 
+			PT_CODE = #{PT_CODE}
+	</update>
+	
+	<update id="updateinputjson" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PT_INPUTJSON = #{PT_INPUTJSON}
+		where 
+			PT_CODE = #{PT_CODE}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PT_CODE = #{PT_CODE}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 and f.PT_MTCODE=#{pd.MT_CODE}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				
+					f.PT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.PT_CODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				
+				)
+		</if>
+	</select>
+	<select id="listAllBASIC" parameterType="pd" resultType="pd">
+		select f.MAT_BASIC_ID,	
+		f.MAT_CLASS_ID,	
+		f.MAT_CODE,	
+		f.MAT_NAME,	
+		f.MAT_ALIAS,	
+		f.MAT_BRAND,	
+		f.MAT_FULL_NAME,	
+		f.FVERIFIER,	
+		f.MAT_ATTRIBUTE,	
+		f.MAT_MAIN_UNIT,	
+		f.MAT_AUXILIARY_UNIT,	
+		f.MAT_SPECS,	
+		f.MAT_CLASS,	
+		f.MAT_SOURCE,	
+		f.MAT_QTY_ACCURACY,	
+		f.MAT_QTY_L,	
+		f.MAT_QTY_H,	
+		f.SAFETY_STOCK_QTY,	
+		f.MAT_STATE,	
+		f.DANGER_LEVEL,	
+		f.ARCHIVE_WHETHER,	
+		f.FICON,	
+		f.FDISCOUNT1,	
+		f.FDISCOUNT2,	
+		f.FDISCOUNT3,	
+		f.FDISCOUNT4,	
+		f.FDISCOUNT5,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,
+		f.ERP_CODE,
+		f.FCREATOR,
+		f.CREATE_TIME
+,t.FCLASS	
+	from  MBASE_MAT_BASIC  f LEFT JOIN MBASE_MAT_CLASS t ON f.MAT_CLASS_ID=t.MAT_CLASS_ID where t.FCLASS='产品'
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	<select id="count" parameterType="pd" resultType="pd">
+			select ISNULL((max(right(PT_CODE,3))+1), 1) number  from MOMP_PHASETEMPLATE	
+			where PT_MTCODE=#{PT_MTCODE}
+			</select>
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PT_CODE in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

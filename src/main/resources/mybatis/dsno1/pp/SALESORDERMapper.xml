@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.SALESORDERMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		PP_SALESORDER
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.OrderNum,	
+		f.FCreateTime,	
+		f.FUpdateTime,	
+		f.FStatus,	
+		f.TType,	
+		f.FCustomer,	
+		f.FExplanation,	
+		f.FMakeBillsPersoID,	
+		f.FMakeBillsTime,	
+		f.FCheckFlag,	
+		f.FCheckPersonID,	
+		f.FCheckTime,	
+		f.SalesOrder_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		OrderNum,	
+		FCreateTime,	
+		FUpdateTime,	
+		FStatus,	
+		TType,	
+		FCustomer,	
+		FExplanation,	
+		FMakeBillsPersoID,	
+		FMakeBillsTime,	
+		FCheckFlag,	
+		FCheckPersonID,	
+		FCheckTime,	
+		SalesOrder_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{OrderNum},	
+		#{FCreateTime},	
+		#{FUpdateTime},	
+		#{FStatus},	
+		#{TType},	
+		#{FCustomer},	
+		#{FExplanation},	
+		#{FMakeBillsPersoID},	
+		#{FMakeBillsTime},	
+		#{FCheckFlag},	
+		#{FCheckPersonID},	
+		#{FCheckTime},	
+		#{SalesOrder_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SalesOrder_ID = #{SalesOrder_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			OrderNum = #{OrderNum},
+			FUpdateTime = #{FUpdateTime},
+			TType = #{TType},
+			FCustomer = #{FCustomer},
+			FExplanation = #{FExplanation},
+			SalesOrder_ID = SalesOrder_ID
+		where 
+			SalesOrder_ID = #{SalesOrder_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include> ,
+		case when 
+		f.FCustomer is null or f.FCustomer='' then '' 
+		else isnull(f1.FName,'无名称')  +'/'+isnull(f1.FNum,'无编号')   end FCustomerJoint
+		,f2.NAME FStaffName,
+		<!-- f3.FUrl,f3.FName FileName, -->
+		f4.NAME FCheckName
+		from 
+		<include refid="tableName"></include> f
+		left join KM_Customer f1
+		on f.FCustomer=f1.Customer_ID
+		left join OA_STAFF f2
+		on f.FMakeBillsPersoID=f2.STAFF_ID
+		left join OA_STAFF f4
+		on f.FCheckPersonID=f4.STAFF_ID
+		<!-- left join
+		(select * from KM_AttachmentSet where 1=1 and FStatus='使用') f3
+		on f.SalesOrder_ID=f3.AssociationID -->
+		where 1=1
+		and	f.SalesOrder_ID = #{SalesOrder_ID}
+	</select>
+	
+	<!-- 通过订单编号查询数据 -->
+	<select id="findByOrderNum" parameterType="pd" resultType="pd">
+		select top 1 
+		<include refid="Field"></include> ,
+		case when 
+		f.FCustomer is null or f.FCustomer='' then '' 
+		else isnull(f1.FName,'无名称')  +'/'+isnull(f1.FNum,'无编号')   end FCustomerJoint ,f1.FAddress,
+		f2.NAME FStaffName,f4.NAME FCheckName 
+		from 
+		<include refid="tableName"></include> f
+		left join KM_Customer f1 on f.FCustomer=f1.Customer_ID
+		left join OA_STAFF f2 on f.FMakeBillsPersoID=f2.STAFF_ID
+		left join OA_STAFF f4 on f.FCheckPersonID=f4.STAFF_ID
+		where  f.OrderNum = #{OrderNum}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		case when 
+		f.FCustomer is null or f.FCustomer='' then '' 
+		else isnull(f1.FName,'无名称')  +'/'+isnull(f1.FNum,'无编号')   end FCustomerJoint,
+		f2.NAME FStaffName,
+		<!-- f3.FUrl,f3.FName FileName, -->
+		f4.NAME FCheckName
+		from 
+		<include refid="tableName"></include> f
+		left join KM_Customer f1
+		on f.FCustomer=f1.Customer_ID
+		left join OA_STAFF f2
+		on f.FMakeBillsPersoID=f2.STAFF_ID
+		left join OA_STAFF f4
+		on f.FCheckPersonID=f4.STAFF_ID
+<!-- 		left join 
+		(select * from KM_AttachmentSet where 1=1 and FStatus='使用') f3
+		on f.SalesOrder_ID=f3.AssociationID -->
+		where 1=1
+		
+		<if test="pd.KEYWORDS_OrderNum != null and pd.KEYWORDS_OrderNum != ''">
+			and f.OrderNum LIKE '%'+ #{pd.KEYWORDS_OrderNum}+'%'
+		</if>
+		<if test="pd.KEYWORDS_FStatus != null and pd.KEYWORDS_FStatus != ''">
+			and f.FStatus in ${pd.KEYWORDS_FStatus}
+		</if>
+		<if test="pd.KEYWORDS_FCustomer != null and pd.KEYWORDS_FCustomer != ''">
+			and 
+			(
+				f1.FName LIKE '%'+ #{pd.KEYWORDS_FCustomer}+'%'
+				or
+				f1.FNum LIKE '%'+ #{pd.KEYWORDS_FCustomer}+'%'
+			)
+		</if>
+		[fhstart] order by  FCreateTime desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			OrderNum LIKE '%'+ #{KEYWORDS}+'%'
+			
+			)	
+		</if>
+		<if test="OrderNum != null and OrderNum != ''"><!-- OrderNum检索 -->
+			and OrderNum = #{OrderNum}
+		</if>
+		 order by f.OrderNum 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SalesOrder_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 审核或反审核销售订单 -->
+	<update id="editAudit" parameterType="pd">
+		<choose>
+           <when test="FCheckFlag != null and FCheckFlag == 'Y'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				FCheckTime = #{FCheckTime},
+				FCheckPersonID = #{FCheckPersonID},
+				FCheckFlag = #{FCheckFlag}
+				where 
+				SalesOrder_ID = #{SalesOrder_ID}
+           </when>
+           <when test="FCheckFlag != null and FCheckFlag == 'N'.toString()">
+                update
+				<include refid="tableName"></include>
+				set 
+				FCheckTime = '',
+				FCheckPersonID = '',
+				FCheckFlag = #{FCheckFlag}
+				where 
+				SalesOrder_ID = #{SalesOrder_ID}
+           </when>
+           <otherwise>
+           </otherwise>
+         </choose>
+		
+	</update>
+	
+	<!-- 订单号验重 -->
+	<select id="getRepeatNum" parameterType="pd" resultType="pd">
+		select
+		isnull(count(*),0) RepeatNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and OrderNum=#{OrderNum}
+		<if test="SalesOrder_ID != null and SalesOrder_ID != ''">
+			and f.SalesOrder_ID !=#{SalesOrder_ID}
+		</if>
+	</select>
+	
+	<!-- 查询-状态列表 -->
+	<select id="getStateList" parameterType="pd" resultType="pd">
+		select
+		distinct FStatus
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+	</select>
+	
+	<!-- 获取订单编号列表-可搜索-前100条-->
+	<select id="getOrderNumList" parameterType="pd" resultType="pd">
+		select
+		top 100 OrderNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			OrderNum LIKE '%'+ #{KEYWORDS}+'%'
+			
+			)	
+		</if>
+		 order by f.OrderNum 
+	</select>
+		<!-- 结束销售订单 -->
+	<update id="over" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FStatus = #{FStatus}
+		where 
+			SalesOrder_ID = #{SalesOrder_ID}
+	</update>
+	<!-- 反写销售订单状态-->
+	<update id="calFStatus" parameterType="pd">
+update 
+c set c.FStatus=
+case when 
+isnull((
+select 
+count(
+*
+) FNUM
+from PP_PlanningWorkOrder f1
+where 1=1
+and SalesOrderDetailID IN
+(
+select SalesOrderDetail_ID from PP_SalesOrderDetail f2 where 1=1 and f2.SalesOrderID=f.SalesOrderID and f2.RowClose='N'
+)
+),0) >0
+then '执行'
+ELSE '新建'
+END
+from 
+PP_SALESORDERDETAIL f
+inner  join PP_SalesOrder c
+on f.SalesOrderID=c.SalesOrder_ID
+where 1=1 
+and f.SalesOrderDetail_ID=#{SalesOrderDetailID}
+	</update>
+		<!-- 计划工单计算投产数量 -->
+	<update id="calFProductionQuantity" parameterType="pd">
+update 
+f set f.ProductionQuantity=
+isnull((
+select 
+sum(
+isnull(FCount,'0')
+) FNUM
+from PP_PlanningWorkOrder f1
+where 1=1
+and SalesOrderDetailID=f.SalesOrderDetail_ID
+),0)
+from 
+PP_SALESORDERDETAIL f
+where 1=1 
+and f.SalesOrderDetail_ID=#{SalesOrderDetailID}
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

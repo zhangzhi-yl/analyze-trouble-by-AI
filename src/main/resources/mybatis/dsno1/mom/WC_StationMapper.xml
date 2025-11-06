@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.WC_StationMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MDM_WC_STATION
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.WC_STATION_ID,	
+		f.WC_WORKCENTER_ID,
+		f.FCODE,	
+		f.FNAME,	
+		f.FTYPE,	
+		f.FINSTRUCTOR_NAME,	
+		f.FINSTRUCTOR_PATH,	
+		f.FDES,	
+		f.FIMG,
+		f.EQM_BASE_ID,	
+		f.MULTI_TASK_STATION,	
+		f.STATION_GROUP,	
+		f.QR_CODE,
+		f.ConsumptionWarehouse,
+		f.ConsumptionLocation,
+		f.ProduceWarehouse,
+		f.ProduceLocation
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		WC_STATION_ID,	
+		WC_WORKCENTER_ID,
+		FCODE,	
+		FNAME,	
+		FTYPE,	
+		FINSTRUCTOR_NAME,	
+		FINSTRUCTOR_PATH,	
+		FDES,	
+		FIMG,
+		EQM_BASE_ID,	
+		MULTI_TASK_STATION,	
+		STATION_GROUP,	
+		QR_CODE,
+		ConsumptionWarehouse,
+		ConsumptionLocation,
+		ProduceWarehouse,
+		ProduceLocation
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{WC_STATION_ID},	
+		#{WC_WORKCENTER_ID},
+		#{FCODE},	
+		#{FNAME},	
+		#{FTYPE},	
+		#{FINSTRUCTOR_NAME},	
+		#{FINSTRUCTOR_PATH},	
+		#{FDES},	
+		#{FIMG},
+		#{EQM_BASE_ID},	
+		#{MULTI_TASK_STATION},	
+		#{STATION_GROUP},	
+		#{QR_CODE},
+		#{ConsumptionWarehouse},
+		#{ConsumptionLocation},
+		#{ProduceWarehouse},
+		#{ProduceLocation}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WC_STATION_ID = #{WC_STATION_ID}
+	</delete>
+	
+	<!-- 删除图片 -->
+	<update id="delTp" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FIMG = ''
+		where 
+			WC_STATION_ID = #{WC_STATION_ID}
+	</update>
+	
+	<!-- 删除作业指导书名称路径字段数据 -->
+	<update id="delFile" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FINSTRUCTOR_NAME = '',
+			FINSTRUCTOR_PATH = ''
+		where 
+			WC_STATION_ID = #{WC_STATION_ID}
+	</update>
+	
+	<!-- 修改作业指导书名称路径字段数据 -->
+	<update id="editFile" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FINSTRUCTOR_NAME = #{FINSTRUCTOR_NAME},
+			FINSTRUCTOR_PATH = #{FINSTRUCTOR_PATH}
+		where 
+			WC_STATION_ID = #{WC_STATION_ID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FTYPE = #{FTYPE},
+			FINSTRUCTOR_NAME = #{FINSTRUCTOR_NAME},
+			FINSTRUCTOR_PATH = #{FINSTRUCTOR_PATH},
+			FDES = #{FDES},
+			FIMG = #{FIMG},
+			EQM_BASE_ID = #{EQM_BASE_ID},	
+			MULTI_TASK_STATION = #{MULTI_TASK_STATION},	
+			STATION_GROUP = #{STATION_GROUP},	
+			QR_CODE = #{QR_CODE},
+			WC_WORKCENTER_ID = #{WC_WORKCENTER_ID},
+			ConsumptionWarehouse = #{ConsumptionWarehouse},
+			ConsumptionLocation = #{ConsumptionLocation},
+			ProduceWarehouse = #{ProduceWarehouse},
+			ProduceLocation = #{ProduceLocation}
+		where 
+			WC_STATION_ID = #{WC_STATION_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,ww.FNAME WC_WORKCENTER_NAME,ww.FCODE WC_WORKCENTER_CODE 
+		from 
+		<include refid="tableName"></include> f LEFT JOIN MDM_WC_WORKCENTER ww ON f.WC_WORKCENTER_ID=ww.WC_WORKCENTER_ID 
+		where 
+			f.WC_STATION_ID = #{WC_STATION_ID}
+	</select>
+	
+	<!-- 通过FCODE获取数据 -->
+	<select id="findByFCODE" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FCODE = #{pd.FCODE}
+	</select>
+	
+	<!-- 根据工作中心ID查询工作站总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select 
+			count(*) zs 
+		from 
+			<include refid="tableName"></include>
+		where 
+			WC_WORKCENTER_ID  = #{WC_WORKCENTER_ID}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FCODE = #{FCODE} 
+		<if test="WC_STATION_ID != null and WC_STATION_ID != ''"><!-- 工位id -->
+			and f.WC_STATION_ID &lt;&gt; #{WC_STATION_ID}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,ww.FNAME WC_WORKCENTER_NAME,ww.FCODE WC_WORKCENTER_CODE 
+		from 
+		<include refid="tableName"></include> f LEFT JOIN MDM_WC_WORKCENTER ww ON f.WC_WORKCENTER_ID=ww.WC_WORKCENTER_ID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FNAME != null and pd.FNAME != ''"><!-- 名称 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.FNAME}+'%' 
+				)
+		</if>
+		<if test="pd.FCODE != null and pd.FCODE != ''"><!-- 代码 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{pd.FCODE}+'%'
+				)
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 类型 -->
+			and
+				(
+					f.FTYPE LIKE '%'+ #{pd.FTYPE}+'%'
+				)
+		</if>
+		<if test="pd.WC_WORKCENTER_ID != null and pd.WC_WORKCENTER_ID != ''"><!-- 工作中心ID -->
+			and
+				(
+					f.WC_WORKCENTER_ID = #{pd.WC_WORKCENTER_ID} 
+				)
+		</if>
+		[fhstart] ORDER BY f.FCODE DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,ww.FNAME WC_WORKCENTER_NAME,ww.FCODE WC_WORKCENTER_CODE,area.FNAME AREA_NAME,area.FCODE AREA_CODE,
+		isnull(ww.FNAME,'无车间名称')+'/'+isnull(f.FNAME,'无工位名称') StationOption 
+		from 
+		<include refid="tableName"></include> f LEFT JOIN MDM_WC_WORKCENTER ww ON f.WC_WORKCENTER_ID=ww.WC_WORKCENTER_ID 
+		LEFT JOIN MDM_AREA area ON ww.AREA_ID=area.AREA_ID 
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="KEYWORDSX != null and KEYWORDSX != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{KEYWORDSX}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{KEYWORDSX}+'%' 
+					 or 
+					ww.FCODE LIKE '%'+ #{KEYWORDSX}+'%' 
+					 or 
+					ww.FNAME LIKE '%'+ #{KEYWORDSX}+'%' 
+				)
+		</if>
+		<if test="FNAME != null and FNAME != ''"><!-- 名称 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{FNAME}+'%' 
+				)
+		</if>
+		<if test="FCODE != null and FCODE != ''"><!-- 代码 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{FCODE}+'%'
+				)
+		</if>
+		<if test="FTYPE != null and FTYPE != ''"><!-- 类型 -->
+			and
+				(
+					f.FTYPE LIKE '%'+ #{FTYPE}+'%'
+				)
+		</if>
+		<if test="WC_WORKCENTER_ID != null and WC_WORKCENTER_ID != ''"><!-- 工作中心ID -->
+			and
+				(
+					f.WC_WORKCENTER_ID = #{WC_WORKCENTER_ID} 
+				)
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WC_STATION_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 获取附件路径 -->
+	<select id="findByPath" parameterType="pd" resultType="pd">
+	    SELECT ISNULL((
+		SELECT top 1 ISNULL(f.FINSTRUCTOR_PATH , '') AS FINSTRUCTOR_PATH FROM MDM_WC_STATION f WHERE RIGHT(f.FINSTRUCTOR_PATH,3) ='pdf'
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME = #{KEYWORDS}
+					 or 
+					f.FCODE = #{KEYWORDS}
+					or 
+					f.WC_STATION_ID = #{KEYWORDS}
+				)
+		</if>
+		), '无') AS FINSTRUCTOR_PATH
+	</select>
+	
+	<!-- 根据车间和工位名称获取工位ID -->
+	<select id="getStationId" parameterType="pd" resultType="pd">
+		select
+		f.*,ww.FNAME WC_WORKCENTER_NAME,ww.FCODE WC_WORKCENTER_CODE
+		from 
+		MDM_WC_STATION f LEFT JOIN MDM_WC_WORKCENTER ww ON f.WC_WORKCENTER_ID=ww.WC_WORKCENTER_ID 
+		WHERE ww.FNAME=#{PLANTNAME} AND f.FNAME=#{STATIONNAME}
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

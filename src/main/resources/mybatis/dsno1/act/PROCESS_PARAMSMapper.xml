@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.act.PROCESS_PARAMSMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		ACT_PROCESS_PARAMS
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PROCESS_PARAMS_ID,	
+		f.PROC_INST_ID_,	
+		f.FIELD_NAME,	
+		f.FIELD_VALUE,	
+		f.IS_CITE,	
+		f.CITE_DEL,	
+		f.YL1,	
+		f.YL2,	
+		f.YL3,	
+		f.YL4
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		PROCESS_PARAMS_ID,	
+		PROC_INST_ID_,	
+		FIELD_NAME,	
+		FIELD_VALUE,	
+		IS_CITE,	
+		CITE_DEL,	
+		YL1,	
+		YL2,	
+		YL3,	
+		YL4
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PROCESS_PARAMS_ID},	
+		#{PROC_INST_ID_},	
+		#{FIELD_NAME},	
+		#{FIELD_VALUE},	
+		#{IS_CITE},	
+		#{CITE_DEL},	
+		#{YL1},	
+		#{YL2},	
+		#{YL3},	
+		#{YL4}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROCESS_PARAMS_ID = #{PROCESS_PARAMS_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PROCESS_PARAMS_ID = #{PROCESS_PARAMS_ID},
+			PROC_INST_ID_ = #{PROC_INST_ID_},
+			FIELD_NAME = #{FIELD_NAME},
+			FIELD_VALUE = #{FIELD_VALUE},
+			IS_CITE = #{IS_CITE},
+			CITE_DEL = #{CITE_DEL},
+			YL1 = #{YL1},
+			YL2 = #{YL2},
+			YL3 = #{YL3},
+			YL4 = #{YL4}
+		where 
+			PROCESS_PARAMS_ID = #{PROCESS_PARAMS_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.PROCESS_PARAMS_ID = #{PROCESS_PARAMS_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					字段2 LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				-->
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			PROCESS_PARAMS_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

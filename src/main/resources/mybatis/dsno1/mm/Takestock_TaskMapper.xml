@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.Takestock_TaskMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_TAKESTOCK_TASK
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.TakeStock_Task_ID,	
+		f.TakeStock_Task_Order,	
+		f.TakeStock_Task_Type,	
+		f.OrderAndWarehouse,	
+		f.TakeStock_Task_Date,	
+		f.FIfCreatOrder,	
+		f.FIfDifferenceOrder,	
+		f.FCheckFlag,	
+		f.FCheckPersonID,	
+		f.FCheckTime,	
+		f.TakeStock_Task_Status,	
+		f.FMakeBillsPersoID,	
+		f.FMakeBillsTime,	
+		f.DifferenceOrder_NUM,	
+		f.TakeStock_Task_Kind,
+		f.FExplanation
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		TakeStock_Task_ID,	
+		TakeStock_Task_Order,	
+		TakeStock_Task_Type,	
+		OrderAndWarehouse,	
+		TakeStock_Task_Date,	
+		FIfCreatOrder,	
+		FIfDifferenceOrder,	
+		FCheckFlag,	
+		FCheckPersonID,	
+		FCheckTime,	
+		TakeStock_Task_Status,	
+		FMakeBillsPersoID,	
+		FMakeBillsTime,	
+		DifferenceOrder_NUM,
+		TakeStock_Task_Kind,	
+		FExplanation
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TakeStock_Task_ID},	
+		#{TakeStock_Task_Order},	
+		#{TakeStock_Task_Type},	
+		#{OrderAndWarehouse},	
+		#{TakeStock_Task_Date},	
+		#{FIfCreatOrder},	
+		#{FIfDifferenceOrder},	
+		#{FCheckFlag},	
+		#{FCheckPersonID},	
+		#{FCheckTime},	
+		#{TakeStock_Task_Status},	
+		#{FMakeBillsPersoID},	
+		#{FMakeBillsTime},	
+		#{DifferenceOrder_NUM},	
+		#{TakeStock_Task_Kind},
+		#{FExplanation}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TakeStock_Task_ID = #{TakeStock_Task_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			TakeStock_Task_Order = #{TakeStock_Task_Order},
+			TakeStock_Task_Type = #{TakeStock_Task_Type},
+			OrderAndWarehouse = #{OrderAndWarehouse},
+			TakeStock_Task_Date = #{TakeStock_Task_Date},
+			FIfCreatOrder = #{FIfCreatOrder},
+			FIfDifferenceOrder = #{FIfDifferenceOrder},
+			TakeStock_Task_Kind = #{TakeStock_Task_Kind},
+			FExplanation = #{FExplanation}
+		where 
+			TakeStock_Task_ID = #{TakeStock_Task_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+			select 
+			f.TakeStock_Task_ID, --盘点任务ID
+			f.TakeStock_Task_Order,-- 盘点任务单号
+			f.TakeStock_Task_Type,-- 盘点任务类型
+			case when f.TakeStock_Task_Kind = 1 then '明盘' else '暗盘' end TakeStock_Task_Kind, -- 盘点方式
+			f.TakeStock_Task_Date,  --盘点日期
+			case when f.FIfCreatOrder = 1 then '已生成' else '未生成' end FIfCreatOrder,-- 是否生成盘盈盘亏单
+			case when f.FIfDifferenceOrder = 1 then '是' else '否' end FIfDifferenceOrder,-- 是否差异单处理
+			f.DifferenceOrder_NUM,-- 差异单编号
+			f.FCheckFlag, --审核状态
+			isnull(a.NAME,'') FCheckPersonID,  -- 审核人
+			f.FCheckTime,--审核时间
+			b.NAME FMakeBillsPersoID,  -- 制单人
+			f.FMakeBillsTime, -- 制单时间
+			isnull(c.FNAME,'') FWarehouse, -- 仓库名称
+			isnull(d.WorkOrderNum,'') FOrder, -- 订单名称
+			f.TakeStock_Task_Status, -- 盘点任务单执行状态
+			f.FExplanation,   -- 描述
+			f.OrderAndWarehouse -- 工单或仓库ID
+			from 
+			MM_TakeStock_Task f
+			LEFT JOIN OA_STAFF a on f.FCheckPersonID = a.STAFF_ID --关联人员表 审核人
+			LEFT JOIN OA_STAFF b on f.FMakeBillsPersoID = b.STAFF_ID --关联人员表 制单人
+			LEFT JOIN MWMS_WH_WAREHOUSE c on f.OrderAndWarehouse = c.WH_WAREHOUSE_ID -- 关联仓库
+			LEFT JOIN PP_PlanningWorkOrderMaster d on f.OrderAndWarehouse = d.PlanningWorkOrderMaster_ID -- 关联工单
+		where 
+			f.TakeStock_Task_ID = #{TakeStock_Task_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select 
+			f.TakeStock_Task_ID, --盘点任务ID
+			f.TakeStock_Task_Order,-- 盘点任务单号
+			f.TakeStock_Task_Type,-- 盘点任务类型
+			case when f.TakeStock_Task_Kind = 1 then '明盘' else '暗盘' end TakeStock_Task_Kind, -- 盘点方式
+			f.TakeStock_Task_Date,  --盘点日期
+			case when f.FIfCreatOrder = 1 then '已生成' else '未生成' end FIfCreatOrder,-- 是否生成盘盈盘亏单
+			case when f.FIfDifferenceOrder = 1 then '是' else '否' end FIfDifferenceOrder,-- 是否差异单处理
+			f.DifferenceOrder_NUM,-- 差异单编号
+			f.FCheckFlag, --审核状态
+			a.NAME FCheckPersonID,  -- 审核人
+			f.FCheckTime,--审核时间
+			b.NAME FMakeBillsPersoID,  -- 制单人
+			f.FMakeBillsTime, -- 制单时间
+			c.FNAME FWarehouse, -- 仓库名称
+			d.WorkOrderNum FOrder, -- 工单名称
+			f.OrderAndWarehouse,
+			f.TakeStock_Task_Status, -- 盘点任务单执行状态
+			f.FExplanation   -- 描述
+			from 
+			MM_TakeStock_Task f
+			LEFT JOIN OA_STAFF a on f.FCheckPersonID = a.STAFF_ID --关联人员表 审核人
+			LEFT JOIN OA_STAFF b on f.FMakeBillsPersoID = b.STAFF_ID --关联人员表 制单人
+			LEFT JOIN MWMS_WH_WAREHOUSE c on f.OrderAndWarehouse = c.WH_WAREHOUSE_ID -- 关联仓库
+			LEFT JOIN PP_PlanningWorkOrderMaster d on f.OrderAndWarehouse = d.PlanningWorkOrderMaster_ID -- 关联订单
+		where 1=1
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索  任务单号 -->
+			and
+				(
+				f.TakeStock_Task_Order like '%'+ #{pd.KeyWords1} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索  任务类型 -->
+			and
+				(
+				f.TakeStock_Task_Type like '%'+ #{pd.KeyWords2} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索  是否生成盘盈盘亏单 -->
+			and
+				(
+				f.FIfCreatOrder like '%'+ #{pd.KeyWords3} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索  是否生成差异单 -->
+			and
+				(
+				f.FIfDifferenceOrder like '%'+ #{pd.KeyWords4} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索  审核状态 -->
+			and
+				(
+				f.FCheckFlag like '%'+ #{pd.KeyWords5} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords6 != null and pd.KeyWords6 != ''"><!-- 关键词检索  盘点方式 -->
+			and
+				(
+				f.TakeStock_Task_Kind like '%'+ #{pd.KeyWords6} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords7 != null and pd.KeyWords7 != ''"><!-- 关键词检索 关联订单或仓库 -->
+			and
+				(
+				f.OrderAndWarehouse like '%'+ #{pd.KeyWords7} +'%'
+				)
+		</if>
+		<if test="pd.LastStart != null and pd.LastEnd != ''"><!-- 关键词检索 盘点日期 -->
+			and
+				(
+				f.TakeStock_Task_Date &gt;= #{pd.LastStart} and f.TakeStock_Task_Date &lt;= #{pd.LastEnd}
+				)
+		</if>
+		[fhstart]order by f.FMakeBillsTime desc[fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+			select 
+			f.TakeStock_Task_ID, --盘点任务ID
+			f.TakeStock_Task_Order,-- 盘点任务单号
+			f.TakeStock_Task_Type,-- 盘点任务类型
+			case when f.TakeStock_Task_Kind = 1 then '明盘' else '暗盘' end TakeStock_Task_Kind, -- 盘点方式
+			f.TakeStock_Task_Date,  --盘点日期
+			case when f.FIfCreatOrder = 1 then '已生成' else '未生成' end FIfCreatOrder,-- 是否生成盘盈盘亏单
+			case when f.FIfDifferenceOrder = 1 then '是' else '否' end FIfDifferenceOrder,-- 是否差异单处理
+			f.DifferenceOrder_NUM,-- 差异单编号
+			f.FCheckFlag, --审核状态
+			a.NAME FCheckPersonID,  -- 审核人
+			f.FCheckTime,--审核时间
+			b.NAME FMakeBillsPersoID,  -- 制单人
+			f.FMakeBillsTime, -- 制单时间
+			c.FNAME FWarehouse, -- 仓库名称
+			d.FNum FOrder, -- 订单名称
+			f.TakeStock_Task_Status, -- 盘点任务单执行状态
+			f.FExplanation   -- 描述
+			from 
+			MM_TakeStock_Task f
+			LEFT JOIN OA_STAFF a on f.FCheckPersonID = a.STAFF_ID --关联人员表 审核人
+			LEFT JOIN OA_STAFF b on f.FMakeBillsPersoID = b.STAFF_ID --关联人员表 制单人
+			LEFT JOIN MWMS_WH_WAREHOUSE c on f.OrderAndWarehouse = c.WH_WAREHOUSE_ID -- 关联仓库
+			LEFT JOIN PP_PurchaseApply d on f.OrderAndWarehouse = d.PurchaseApply_ID -- 关联订单
+		where 1=1
+		<if test="KeyWords1 != null and KeyWords1 != ''"><!-- 关键词检索  任务单号 -->
+			and
+				(
+				f.TakeStock_Task_Order like '%'+ #{KeyWords1} +'%'
+				)
+		</if>
+		<if test="KeyWords2 != null and KeyWords2 != ''"><!-- 关键词检索  任务类型 -->
+			and
+				(
+				f.TakeStock_Task_Type like '%'+ #{KeyWords2} +'%'
+				)
+		</if>
+		<if test="KeyWords3 != null and KeyWords3 != ''"><!-- 关键词检索  是否生成盘盈盘亏单 -->
+			and
+				(
+				f.FIfCreatOrder like '%'+ #{KeyWords3} +'%'
+				)
+		</if>
+		<if test="KeyWords4 != null and KeyWords4 != ''"><!-- 关键词检索  是否生成差异单 -->
+			and
+				(
+				f.FIfDifferenceOrder like '%'+ #{KeyWords4} +'%'
+				)
+		</if>
+		<if test="KeyWords5 != null and KeyWords5 != ''"><!-- 关键词检索  审核状态 -->
+			and
+				(
+				f.FCheckFlag like '%'+ #{KeyWords5} +'%'
+				)
+		</if>
+		<if test="KeyWords6 != null and KeyWords6 != ''"><!-- 关键词检索  盘点类型 -->
+			and
+				(
+				f.TakeStock_Task_Type like '%'+ #{KeyWords6} +'%'
+				)
+		</if>
+		<if test="KeyWords7 != null and KeyWords7 != ''"><!-- 关键词检索 关联订单或仓库 -->
+			and
+				(
+				f.OrderAndWarehouse like '%'+ #{KeyWords7} +'%'
+				)
+		</if>
+		<if test="LastStart != null and LastEnd != ''"><!-- 关键词检索 盘点日期 -->
+			and
+				(
+				f.TakeStock_Task_Date &gt;= #{LastStart} and f.TakeStock_Task_Date &lt;= #{LastEnd}
+				)
+		</if>
+		order by f.FMakeBillsTime desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TakeStock_Task_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<update id="goLssue" parameterType="pd">
+		update 
+			<include refid="tableName"></include>
+		set 
+			TakeStock_Task_Status = '执行中'
+		where 
+			TakeStock_Task_ID = #{TakeStock_Task_ID}
+	</update>
+	<!-- 获取仓库下的物料列表 -->
+	<select id="getAllMaterial" parameterType="pd" resultType="pd">
+		select 
+			ItemID, -- 物料ID
+			count(ActualCount)  ActualCount -- 数量
+		from 
+			MM_Stock
+		where 
+			WarehouseID = #{OrderAndWarehouse} and ActualCount &gt; 0.00
+		group by ItemID
+	</select>
+	<!-- 获取工单下的物料列表 -->
+	<select id="getAllDDMaterial" parameterType="pd" resultType="pd">
+		SELECT
+			b.ItemID,-- 物料ID
+			COUNT ( b.ActualCount ) ActualCount -- 数量
+		FROM
+			MBASE_MAT_AUXILIARYMX a
+			LEFT JOIN MM_Stock b ON a.MAT_AUXILIARYMX_ID = b.MaterialSPropKey
+			LEFT JOIN PP_PlanningWorkOrderMaster c ON a.MAT_AUXILIARYMX_CODE = c.WorkOrderNum 
+		WHERE
+			c.WorkOrderNum LIKE #{workordernum}+'%' 
+		GROUP BY
+		b.ItemID 
+
+	</select>
+	<select id="getWarehouse" parameterType="pd" resultType="pd">
+		select 
+			WH_WAREHOUSE_ID,--仓库ID
+			FNAME  --仓库名称
+		from MWMS_WH_WAREHOUSE 
+		where 1=1 
+		<if test="KeyWords != '' and KeyWords != null">
+		 and FNAME like '%'+ #{KeyWords} +'%'
+		</if>
+	</select>
+	<!-- 盘点任务提交审核 -->
+	<update id="goCheck" parameterType="pd">
+		update
+			<include refid="tableName"></include>
+		set 
+			FCheckFlag = '审批中'
+		where 
+			TakeStock_Task_ID = #{TakeStock_Task_ID}
+			
+	</update>
+	<!-- 修改差异单编号 -->
+	<update id="updateDifferenceOrder_NUM" parameterType="pd">
+		update
+			<include refid="tableName"></include>
+		set
+			DifferenceOrder_NUM = #{DifferenceOrder_NUM},
+			TakeStock_Task_Status = '执行中',
+			FCheckFlag = '驳回重盘',
+			FIfDifferenceOrder = '1',
+			FIfCreatOrder = '0',
+			FCheckTime = #{FCheckTime}
+		where 
+			TakeStock_Task_ID = #{TakeStock_Task_ID}
+	</update>
+	<!-- 审批通过 -->
+	<update id="CheckPass" parameterType="pd">
+		update
+			<include refid="tableName"></include>
+		set
+			FCheckFlag = '通过',
+			FCheckTime = #{FCheckTime}
+		where 
+			TakeStock_Task_ID = #{TakeStock_Task_ID}
+	</update>
+	
+	<!-- 获取盘点执行表中物料的数量 -->
+	<select id="getCount" parameterType="pd" resultType="pd">
+		select count(TakeStock_Task_Material_ID) num from MM_TakeStock_Task_Execute
+		where TakeStock_Task_Material_ID = #{TakeStock_Task_Material_ID}
+	</select>
+	<!-- 获取一条盘点执行表中的数据 -->
+	<select id="findByMaterialId" parameterType="pd" resultType="pd">
+		select top 1 * from MM_TakeStock_Task_Execute
+		where TakeStock_Task_Material_ID = #{TakeStock_Task_Material_ID}
+	</select>
+	
+	<!-- 盘点记录列表   获取审核通过的 -->
+	<select id="datalistPageHIS" parameterType="page" resultType="pd">
+		select 
+			f.TakeStock_Task_ID, --盘点任务ID
+			f.TakeStock_Task_Order,-- 盘点任务单号
+			f.TakeStock_Task_Type,-- 盘点任务类型
+			case when f.TakeStock_Task_Kind = 1 then '明盘' else '暗盘' end TakeStock_Task_Kind, -- 盘点方式
+			f.TakeStock_Task_Date,  --盘点日期
+			case when f.FIfCreatOrder = 1 then '已生成' else '未生成' end FIfCreatOrder,-- 是否生成盘盈盘亏单
+			case when f.FIfDifferenceOrder = 1 then '是' else '否' end FIfDifferenceOrder,-- 是否差异单处理
+			f.DifferenceOrder_NUM,-- 差异单编号
+			f.FCheckFlag, --审核状态
+			a.NAME FCheckPersonID,  -- 审核人
+			f.FCheckTime,--审核时间
+			b.NAME FMakeBillsPersoID,  -- 制单人
+			f.FMakeBillsTime, -- 制单时间
+			c.FNAME FWarehouse, -- 仓库名称
+			d.FNum FOrder, -- 订单名称
+			f.TakeStock_Task_Status, -- 盘点任务单执行状态
+			f.FExplanation   -- 描述
+			from 
+			MM_TakeStock_Task f
+			LEFT JOIN OA_STAFF a on f.FCheckPersonID = a.STAFF_ID --关联人员表 审核人
+			LEFT JOIN OA_STAFF b on f.FMakeBillsPersoID = b.STAFF_ID --关联人员表 制单人
+			LEFT JOIN MWMS_WH_WAREHOUSE c on f.OrderAndWarehouse = c.WH_WAREHOUSE_ID -- 关联仓库
+			LEFT JOIN PP_PurchaseApply d on f.OrderAndWarehouse = d.PurchaseApply_ID -- 关联订单
+		where 1=1 and f.FCheckFlag = '通过'
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索  任务单号 -->
+			and
+				(
+				f.TakeStock_Task_Order like '%'+ #{pd.KeyWords1} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索  任务类型 -->
+			and
+				(
+				f.TakeStock_Task_Type like '%'+ #{pd.KeyWords2} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索  是否生成盘盈盘亏单 -->
+			and
+				(
+				f.FIfCreatOrder like '%'+ #{pd.KeyWords3} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索  是否生成差异单 -->
+			and
+				(
+				f.FIfDifferenceOrder like '%'+ #{pd.KeyWords4} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索  审核状态 -->
+			and
+				(
+				f.FCheckFlag like '%'+ #{pd.KeyWords5} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords6 != null and pd.KeyWords6 != ''"><!-- 关键词检索  盘点方式 -->
+			and
+				(
+				f.TakeStock_Task_Kind like '%'+ #{pd.KeyWords6} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords7 != null and pd.KeyWords7 != ''"><!-- 关键词检索 关联订单或仓库 -->
+			and
+				(
+				f.OrderAndWarehouse like '%'+ #{pd.KeyWords7} +'%'
+				)
+		</if>
+		<if test="pd.LastStart != null and pd.LastEnd != ''"><!-- 关键词检索 盘点日期 -->
+			and
+				(
+				f.TakeStock_Task_Date &gt;= #{pd.LastStart} and f.TakeStock_Task_Date &lt;= #{pd.LastEnd}
+				)
+		</if>
+		[fhstart]order by f.FMakeBillsTime desc[fhend]
+	</select>
+	<!-- 获取盘点任务下生成过几次盘盈盘亏单 -->
+	<select id="DifferenceOrder_Count" parameterType="pd" resultType="pd">
+		select 
+			DifferenceOrder_NUM 
+		from 
+			MM_TakeStock_WinOrLose 
+		where 
+			TakeStock_Task_ID = #{TakeStock_Task_ID} 
+		group by 
+			DifferenceOrder_NUM
+	</select>
+	<!-- 修改主表中是否生成盘盈盘亏单的状态 -->
+	<update id="CreatOrder" parameterType="pd">
+		update
+			MM_TakeStock_Task
+		set
+			FIfCreatOrder = 1
+		where 
+			TakeStock_Task_ID = #{TakeStock_Task_ID} 
+	</update>
+	<!-- 获取盘点任务下单个差异单列表 -->
+	<select id="listResult" parameterType="pd" resultType="pd">
+		SELECT
+			f.TakeStock_WinOrLose_ID,
+			f.TakeStock_Task_ID,
+			f.FEntryID,--行号
+			a.MAT_NAME Material_ID,--物料
+			f.TakeStock_Result,--盘点结果
+			case when f.WinOrLose = 1 then '盘盈' else '盘亏' end WinOrLose,--
+			f.Difference_Count,--差异数量
+			case when f.FOperator = 1 then '是' else '否' end FOperator,--是否处理
+			case when f.IfFEntryClose = 1 then '是' else '否' end IfFEntryClose,--是否行关闭
+			f.FExplanation --描述
+		FROM
+			MM_TakeStock_WinOrLose f
+			left join MBASE_MAT_BASIC a on f.Material_ID = a.MAT_BASIC_ID
+		where 
+			f.DifferenceOrder_NUM = #{DifferenceOrder_NUM} and f.TakeStock_Task_ID = #{TakeStock_Task_ID}
+			
+	</select>
+	<select id="getTakeStocHIS" parameterType="pd" resultType="pd">
+		select 
+			f.TakeStock_Task_ID, --盘点任务ID
+			f.TakeStock_Task_Order,-- 盘点任务单号
+			f.TakeStock_Task_Type,-- 盘点任务类型
+			case when f.TakeStock_Task_Kind = 1 then '明盘' else '暗盘' end TakeStock_Task_Kind, -- 盘点方式
+			f.TakeStock_Task_Date,  --盘点日期
+			case when f.FIfCreatOrder = 1 then '已生成' else '未生成' end FIfCreatOrder,-- 是否生成盘盈盘亏单
+			case when f.FIfDifferenceOrder = 1 then '是' else '否' end FIfDifferenceOrder,-- 是否差异单处理
+			f.DifferenceOrder_NUM,-- 差异单编号
+			f.FCheckFlag, --审核状态
+			a.NAME FCheckPersonID,  -- 审核人
+			f.FCheckTime,--审核时间
+			b.NAME FMakeBillsPersoID,  -- 制单人
+			f.FMakeBillsTime, -- 制单时间
+			c.FNAME FWarehouse, -- 仓库名称
+			d.FNum FOrder, -- 订单名称
+			f.TakeStock_Task_Status, -- 盘点任务单执行状态
+			f.FExplanation   -- 描述
+			from 
+			MM_TakeStock_Task f
+			LEFT JOIN OA_STAFF a on f.FCheckPersonID = a.STAFF_ID --关联人员表 审核人
+			LEFT JOIN OA_STAFF b on f.FMakeBillsPersoID = b.STAFF_ID --关联人员表 制单人
+			LEFT JOIN MWMS_WH_WAREHOUSE c on f.OrderAndWarehouse = c.WH_WAREHOUSE_ID -- 关联仓库
+			LEFT JOIN PP_PurchaseApply d on f.OrderAndWarehouse = d.PurchaseApply_ID -- 关联订单
+		where 1=1 and f.FCheckFlag = '通过' and f.TakeStock_Task_ID = #{TakeStock_Task_ID}
+	</select>
+	<!-- 手机端列表 -->
+	<select id="AppList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		select 
+			f.TakeStock_Task_ID, --盘点任务ID
+			f.TakeStock_Task_Order,-- 盘点任务单号
+			f.TakeStock_Task_Type,-- 盘点任务类型
+			case when f.TakeStock_Task_Kind = 1 then '明盘' else '暗盘' end TakeStock_Task_Kind, -- 盘点方式
+			f.TakeStock_Task_Date,  --盘点日期
+			case when f.FIfCreatOrder = 1 then '已生成' else '未生成' end FIfCreatOrder,-- 是否生成盘盈盘亏单
+			case when f.FIfDifferenceOrder = 1 then '是' else '否' end FIfDifferenceOrder,-- 是否差异单处理
+			f.DifferenceOrder_NUM,-- 差异单编号
+			f.FCheckFlag, --审核状态
+			a.NAME FCheckPersonID,  -- 审核人
+			f.FCheckTime,--审核时间
+			b.NAME FMakeBillsPersoID,  -- 制单人
+			f.FMakeBillsTime, -- 制单时间
+			isnull(c.FNAME,'') FWarehouse, -- 仓库名称
+			isnull(d.WorkOrderNum,'') FOrder, -- 工单名称
+			f.OrderAndWarehouse,
+			f.TakeStock_Task_Status, -- 盘点任务单执行状态
+			f.FExplanation   -- 描述
+			from 
+			MM_TakeStock_Task f
+			LEFT JOIN OA_STAFF a on f.FCheckPersonID = a.STAFF_ID --关联人员表 审核人
+			LEFT JOIN OA_STAFF b on f.FMakeBillsPersoID = b.STAFF_ID --关联人员表 制单人
+			LEFT JOIN MWMS_WH_WAREHOUSE c on f.OrderAndWarehouse = c.WH_WAREHOUSE_ID -- 关联仓库
+			LEFT JOIN PP_PlanningWorkOrder d on f.OrderAndWarehouse = d.PlanningWorkOrder_ID -- 关联订单
+		where 1=1 --and f.TakeStock_Task_Status = '执行中'
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索  任务单号 -->
+			and
+				(
+				f.TakeStock_Task_Order like '%'+ #{pd.KeyWords1} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索  任务类型 -->
+			and
+				(
+				f.TakeStock_Task_Type like '%'+ #{pd.KeyWords2} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords3 != null and pd.KeyWords3 != ''"><!-- 关键词检索  是否生成盘盈盘亏单 -->
+			and
+				(
+				f.FIfCreatOrder like '%'+ #{pd.KeyWords3} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索  是否生成差异单 -->
+			and
+				(
+				f.FIfDifferenceOrder like '%'+ #{pd.KeyWords4} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索  审核状态 -->
+			and
+				(
+				f.FCheckFlag like '%'+ #{pd.KeyWords5} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords6 != null and pd.KeyWords6 != ''"><!-- 关键词检索  盘点方式 -->
+			and
+				(
+				TakeStock_Task_Kind like '%'+ #{pd.KeyWords6} +'%'
+				)
+		</if>
+		<if test="pd.KeyWords7 != null and pd.KeyWords7 != ''"><!-- 关键词检索 关联订单或仓库 -->
+			and
+				(
+				f.OrderAndWarehouse like '%'+ #{pd.KeyWords7} +'%'
+				)
+		</if>
+		<if test="pd.LastStart != null and pd.LastEnd != ''"><!-- 关键词检索 制单时间 -->
+			and
+				(
+				f.FMakeBillsTime &gt;= #{pd.LastStart} and f.FMakeBillsTime &lt;= #{pd.LastEnd}
+				)
+		</if>
+	</select>
+</mapper>

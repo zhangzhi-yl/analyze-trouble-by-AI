@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.SopStepDatabaseMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		KM_SopStepDatabase
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FNumber,	
+		f.FStepName,	
+		f.FShowName,	
+		f.FIsAlarm,	
+		f.FType,	
+		f.FState,	
+		f.FCreatePersonID,	
+		f.FCreateTime,
+		f.FNormalHours,	
+		isnull(f.FAnnex_Name,'') FAnnex_Name,
+		isnull(f.FANNEX_Path,'') FANNEX_Path,
+		f.FPart_Number,
+		f.FPart_Dosage,
+		f.FMotion_Time,
+		f.FSmbol,
+		f.FTool,
+		f.FCraft_Para,
+		f.FKey_Point,
+		f.FCause,
+		f.FSelf_Project,
+		f.SopStepDatabase_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FNumber,	
+		FStepName,	
+		FShowName,	
+		FIsAlarm,	
+		FType,	
+		FState,	
+		FCreatePersonID,	
+		FCreateTime,
+		FNormalHours,	
+		FAnnex_Name,
+		FANNEX_Path,
+		FPart_Number,
+		FPart_Dosage,
+		FMotion_Time,
+		FSmbol,
+		FTool,
+		FCraft_Para,
+		FKey_Point,
+		FCause,
+		FSelf_Project,
+		SopStepDatabase_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FNumber},	
+		#{FStepName},	
+		#{FShowName},	
+		#{FIsAlarm},	
+		#{FType},	
+		#{FState},	
+		#{FCreatePersonID},	
+		#{FCreateTime},
+		#{FNormalHours},
+		#{FAnnex_Name},	
+		#{FANNEX_Path},	
+		#{FPart_Number},	
+		#{FPart_Dosage},	
+		#{FMotion_Time},	
+		#{FSmbol},	
+		#{FTool},	
+		#{FCraft_Para},	
+		#{FKey_Point},	
+		#{FCause},	
+		#{FSelf_Project},		
+		#{SopStepDatabase_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SopStepDatabase_ID = #{SopStepDatabase_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FNumber = #{FNumber},
+			FStepName = #{FStepName},
+			FShowName = #{FShowName},
+			FIsAlarm = #{FIsAlarm},
+			FType = #{FType},
+			FState = #{FState},
+			FCreatePersonID = #{FCreatePersonID},
+			FCreateTime = #{FCreateTime},
+			FNormalHours = #{FNormalHours},
+			FAnnex_Name = #{FAnnex_Name},	
+			FANNEX_Path = #{FANNEX_Path},	
+			FPart_Number = #{FPart_Number},	
+			FPart_Dosage = #{FPart_Dosage},	
+			FMotion_Time = #{FMotion_Time},	
+			FSmbol = #{FSmbol},	
+			FTool = #{FTool},	
+			FCraft_Para = #{FCraft_Para},	
+			FKey_Point = #{FKey_Point},	
+			FCause = #{FCause},	
+			FSelf_Project = #{FSelf_Project},	
+			SopStepDatabase_ID = SopStepDatabase_ID
+		where 
+			SopStepDatabase_ID = #{SopStepDatabase_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.NAME FStaffName,f2.NAME FTypeName
+		from 
+		<include refid="tableName"></include> f
+		left join OA_STAFF f1
+		on f.FCreatePersonID=f1.STAFF_ID
+		left join SYS_DICTIONARIES f2
+		on f.FType=f2.DICTIONARIES_ID
+		where 
+			f.SopStepDatabase_ID = #{SopStepDatabase_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FStaffName,f2.NAME FTypeName
+		from 
+		<include refid="tableName"></include> f
+		left join OA_STAFF f1
+		on f.FCreatePersonID=f1.STAFF_ID
+		left join SYS_DICTIONARIES f2
+		on f.FType=f2.DICTIONARIES_ID
+		where 1=1
+		<if test="pd.FTYPEX != null and pd.FTYPEX == '引用'"><!-- 区分引用或正常列表 -->
+		and f.FState!='禁用'
+		</if>
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNumber LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FStepName LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					or 
+					f.FShowName LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.KEYWORDS_FTYPE != null and pd.KEYWORDS_FTYPE != ''">
+			and
+				(
+					f2.NAME = #{pd.KEYWORDS_FTYPE}
+				
+				)
+		</if>
+		[fhstart] order by FCreateTime desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SopStepDatabase_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 根据ID获取SOP步骤库列表 -->
+	<select id="listAllByIds" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and FState!='禁用'
+		and SopStepDatabase_ID in ${DATA_IDS}
+	</select>
+	<!-- 禁用/启用 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FState = #{FState}
+		where 
+			SopStepDatabase_ID = #{SopStepDatabase_ID}
+	</update>
+	<!-- 单号验重 -->
+	<select id="getRepeatNum" parameterType="pd" resultType="pd">
+		select
+		isnull(count(*),0) RepeatNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and FNumber=#{FNumber}
+		<if test="SopStepDatabase_ID != null and SopStepDatabase_ID != ''">
+			and f.SopStepDatabase_ID !=#{SopStepDatabase_ID}
+		</if>
+	</select>
+	
+	<!-- 删除附件 -->
+	<update id="delFj" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FAnnex_Name = '',
+			FANNEX_Path = ''
+		where 
+			SopStepDatabase_ID = #{SopStepDatabase_ID}
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

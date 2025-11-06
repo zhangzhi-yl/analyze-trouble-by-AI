@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.flow.TECHNOLOGY_FLOWMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		AT_TECHNOLOGY_FLOW
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.NODE_ID,	
+		f.NODE_NAME,	
+		f.NODE_KIND,	
+		f.NODE_TYPE,	
+		f.PHASE_TYPE,	
+		f.JUMP_CONDITION,	
+		f.BEGIN_NODE,	
+		f.END_NODE,	
+		f.FPARTICIPATOR,	
+		f.FDES,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.LAST_MODIFIER,	
+		f.LAST_MODIFIED_TIME,	
+		f.ProcessRoute_ID,	
+		f.TECHNOLOGY_FLOW_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		NODE_ID,	
+		NODE_NAME,	
+		NODE_KIND,	
+		NODE_TYPE,	
+		PHASE_TYPE,	
+		JUMP_CONDITION,	
+		BEGIN_NODE,	
+		END_NODE,	
+		FPARTICIPATOR,	
+		FDES,	
+		FCREATOR,	
+		CREATE_TIME,	
+		LAST_MODIFIER,	
+		LAST_MODIFIED_TIME,	
+		ProcessRoute_ID,	
+		TECHNOLOGY_FLOW_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{NODE_ID},	
+		#{NODE_NAME},	
+		#{NODE_KIND},	
+		#{NODE_TYPE},	
+		#{PHASE_TYPE},	
+		#{JUMP_CONDITION},	
+		#{BEGIN_NODE},	
+		#{END_NODE},	
+		#{FPARTICIPATOR},	
+		#{FDES},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{LAST_MODIFIER},	
+		#{LAST_MODIFIED_TIME},	
+		#{ProcessRoute_ID},	
+		#{TECHNOLOGY_FLOW_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 根据工艺路线id及节点id删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where ProcessRoute_ID = #{ProcessRoute_ID} 
+		<if test="NODE_ID != null and NODE_ID != ''"><!-- 节点id -->
+			and NODE_ID = #{NODE_ID}
+		</if>
+	</delete>
+	
+	<!-- 删除-->
+	<delete id="deleteById" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TECHNOLOGY_FLOW_ID = #{TECHNOLOGY_FLOW_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			NODE_ID = #{NODE_ID},
+			NODE_NAME = #{NODE_NAME},
+			NODE_KIND = #{NODE_KIND},
+			NODE_TYPE = #{NODE_TYPE},
+			PHASE_TYPE = #{PHASE_TYPE},
+			JUMP_CONDITION = #{JUMP_CONDITION},
+			BEGIN_NODE = #{BEGIN_NODE},
+			END_NODE = #{END_NODE},
+			FPARTICIPATOR = #{FPARTICIPATOR},
+			FDES = #{FDES},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			LAST_MODIFIER = #{LAST_MODIFIER},
+			LAST_MODIFIED_TIME = #{LAST_MODIFIED_TIME},
+			ProcessRoute_ID = #{ProcessRoute_ID}
+		where 
+			TECHNOLOGY_FLOW_ID = #{TECHNOLOGY_FLOW_ID}
+	</update>
+	
+	<!-- 通过工艺路线ID获取数据 -->
+	<select id="findByProcessRoute_ID" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.ProcessRoute_ID = #{ProcessRoute_ID} 
+		<if test="NODE_KIND != null and NODE_KIND != ''"><!-- 类型（node/line） -->
+			and f.NODE_KIND = #{NODE_KIND}
+		</if>
+		<if test="NODE_ID != null and NODE_ID != ''"><!-- 节点id -->
+			and f.NODE_ID = #{NODE_ID}
+		</if>
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.TECHNOLOGY_FLOW_ID = #{TECHNOLOGY_FLOW_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.NODE_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+				)
+		</if>
+		<if test="pd.ProcessRoute_ID != null and pd.ProcessRoute_ID != ''"><!-- 工艺路线id -->
+			and f.ProcessRoute_ID LIKE '%'+ #{pd.ProcessRoute_ID}+'%'
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.NODE_NAME LIKE '%'+ #{KEYWORDS}+'%'
+				)
+		</if>
+		<if test="ProcessRoute_ID != null and ProcessRoute_ID != ''"><!-- 工艺路线id -->
+			and f.ProcessRoute_ID LIKE '%'+ #{ProcessRoute_ID}+'%'
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TECHNOLOGY_FLOW_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.DOCUMENTTEMPLATEMxMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOM_DOCUMENTTEMPLATEMX
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FNAME,	
+		f.FDESCRIBE,	
+		f.FTYPE,	
+		f.FORDER,	
+		f.FTYPE1,	
+		f.FDESCRIBETERM,	
+		f.FRIGTHTERM,	
+		f.OTHER_DESCRIPTION_TYPE,	
+		f.FCREATOR,	
+		f.CREATE_TIME,
+		f.FOPERATOR,
+		f.FOPERATION_TIME,
+		f.FSERIAL_NUM,
+		f.FINSEPCTION,
+		f.FEXTEND1,
+		f.FEXTEND2,
+		f.FEXTEND3,
+		f.FEXTEND4,
+		f.FEXTEND5,
+		f.DOCUMENTTEMPLATEMX_ID,
+		f.DOCUMENTTEMPLATE_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		FNAME,	
+		FDESCRIBE,	
+		FTYPE,	
+		FORDER,	
+		FTYPE1,	
+		FDESCRIBETERM,	
+		FRIGTHTERM,	
+		OTHER_DESCRIPTION_TYPE,	
+		FCREATOR,	
+		CREATE_TIME,
+		FOPERATOR,
+		FOPERATION_TIME,
+		FSERIAL_NUM,
+		FINSEPCTION,
+		FEXTEND1,
+		FEXTEND2,
+		FEXTEND3,
+		FEXTEND4,
+		FEXTEND5,	
+		DOCUMENTTEMPLATEMX_ID,
+		DOCUMENTTEMPLATE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FNAME},	
+		#{FDESCRIBE},	
+		#{FTYPE},	
+		#{FORDER},	
+		#{FTYPE1},	
+		#{FDESCRIBETERM},	
+		#{FRIGTHTERM},	
+		#{OTHER_DESCRIPTION_TYPE},	
+		#{FCREATOR},	
+		#{CREATE_TIME},
+		#{FOPERATOR},
+		#{FOPERATION_TIME},
+		#{FSERIAL_NUM},
+		#{FINSEPCTION},
+		#{FEXTEND1},
+		#{FEXTEND2},
+		#{FEXTEND3},
+		#{FEXTEND4},
+		#{FEXTEND5},
+		#{DOCUMENTTEMPLATEMX_ID},
+		#{DOCUMENTTEMPLATE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DOCUMENTTEMPLATEMX_ID = #{DOCUMENTTEMPLATEMX_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			DOCUMENTTEMPLATE_ID = #{DOCUMENTTEMPLATE_ID},
+			FNAME = #{FNAME},
+			FDESCRIBE = #{FDESCRIBE},
+			FTYPE = #{FTYPE},
+			FORDER = #{FORDER},
+			FTYPE1 = #{FTYPE1},
+			FDESCRIBETERM = #{FDESCRIBETERM},
+			FRIGTHTERM = #{FRIGTHTERM},
+			OTHER_DESCRIPTION_TYPE = #{OTHER_DESCRIPTION_TYPE},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			FOPERATOR = #{FOPERATOR},
+			FOPERATION_TIME = #{FOPERATION_TIME},
+			FSERIAL_NUM = #{FSERIAL_NUM},
+			FINSEPCTION = #{FINSEPCTION},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FEXTEND4 = #{FEXTEND4},
+			FEXTEND5 = #{FEXTEND5},
+			DOCUMENTTEMPLATEMX_ID = DOCUMENTTEMPLATEMX_ID
+		where 
+			DOCUMENTTEMPLATEMX_ID = #{DOCUMENTTEMPLATEMX_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.DOCUMENTTEMPLATEMX_ID = #{DOCUMENTTEMPLATEMX_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where
+			f.DOCUMENTTEMPLATE_ID = #{pd.DOCUMENTTEMPLATE_ID}
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCREATOR LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] order by f.FORDER [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 根据主表ID查询列表(全部) -->
+	<select id="listMxAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where f.DOCUMENTTEMPLATE_ID = #{DOCUMENTTEMPLATE_ID} 
+		order by f.FORDER
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DOCUMENTTEMPLATEMX_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 查询明细总数 -->
+	<select id="findCount" parameterType="pd" resultType="pd">
+		select
+			count(*) zs
+		from 
+			<include refid="tableName"></include>
+		where
+			DOCUMENTTEMPLATE_ID = #{DOCUMENTTEMPLATE_ID}
+	</select>
+		<!-- YY 356703572 -->
+</mapper>

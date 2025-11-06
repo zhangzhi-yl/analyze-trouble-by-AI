@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.TeamInfoMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_TEAM_INFO
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.TEAM_INFO_ID,	
+		f.FCODE,	
+		f.FNAME,	
+		f.FDES,	
+		f.AREA_ID,
+		f.SHIFT_SYSTEM,
+		f.FCREATOR,	
+		f.CREATE_TIME
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		TEAM_INFO_ID,	
+		FCODE,	
+		FNAME,	
+		FDES,	
+		AREA_ID,
+		SHIFT_SYSTEM,
+		FCREATOR,	
+		CREATE_TIME
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{TEAM_INFO_ID},	
+		#{FCODE},	
+		#{FNAME},	
+		#{FDES},	
+		#{AREA_ID},
+		#{SHIFT_SYSTEM},
+		#{FCREATOR},	
+		#{CREATE_TIME}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEAM_INFO_ID = #{TEAM_INFO_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FDES = #{FDES},
+			AREA_ID = #{AREA_ID},
+			SHIFT_SYSTEM = #{SHIFT_SYSTEM}
+		where 
+			TEAM_INFO_ID = #{TEAM_INFO_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.TEAM_INFO_ID = #{TEAM_INFO_ID}
+	</select>
+	
+	<!-- 通过FCODE获取数据 -->
+	<select id="findByFCODE" parameterType="page" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.FCODE = #{pd.FCODE}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,area.FNAME as AREANAME 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_AREA area ON f.AREA_ID = area.AREA_ID 
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.TEAM_INFO_ID in (SELECT TEAM_INFO_ID FROM MBASE_TEAM_STAFF WHERE FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' )
+				)
+		</if>
+		<if test="pd.AREA_ID != null and pd.AREA_ID != ''"><!-- 车间ID检索 -->
+			and f.AREA_ID = #{pd.AREA_ID}  
+		</if>
+		<if test="pd.SHIFT_SYSTEM != null and pd.SHIFT_SYSTEM != ''"><!-- 班制检索 -->
+			and f.SHIFT_SYSTEM = #{pd.SHIFT_SYSTEM} 
+		</if>
+		[fhstart] ORDER BY f.CREATE_TIME desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,area.FNAME as AREANAME 
+		from 
+		<include refid="tableName"></include> f 
+		LEFT JOIN MDM_AREA area ON f.AREA_ID = area.AREA_ID 
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+				
+					f.FCODE LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.FNAME LIKE '%'+ #{KEYWORDS}+'%' 
+				
+				)
+		</if>
+		<if test="AREA_ID != null and AREA_ID != ''"><!-- 车间ID检索 -->
+			and
+				(
+					f.AREA_ID = #{AREA_ID} 
+				)
+		</if>
+		<if test="SHIFT_SYSTEM != null and SHIFT_SYSTEM != ''"><!-- 班制检索 -->
+			and
+				(
+					f.SHIFT_SYSTEM = #{SHIFT_SYSTEM} 
+				)
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEAM_INFO_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>

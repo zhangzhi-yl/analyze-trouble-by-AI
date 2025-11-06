@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.QualityInspectionItemsMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		KM_QualityInspectionItems
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FName,	
+		f.FCategory,	
+		f.FExplanation,	
+		f.FAttachment,	
+		f.QualityInspectionItems_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FName,	
+		FCategory,	
+		FExplanation,	
+		FAttachment,	
+		QualityInspectionItems_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FName},	
+		#{FCategory},	
+		#{FExplanation},	
+		#{FAttachment},	
+		#{QualityInspectionItems_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QualityInspectionItems_ID = #{QualityInspectionItems_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FName = #{FName},
+			FCategory = #{FCategory},
+			FExplanation = #{FExplanation},
+			FAttachment = #{FAttachment},
+			QualityInspectionItems_ID = QualityInspectionItems_ID
+		where 
+			QualityInspectionItems_ID = #{QualityInspectionItems_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT 
+		q.FName FName,
+		c.FName CFName,
+		q.FExplanation FExplanation,
+		q.FCategory,
+		q.QualityInspectionItems_ID
+		FROM KM_QualityInspectionItems q 
+		LEFT JOIN KM_ClassificationOfQuality c ON q.FCategory = c.ClassificationOfQuality_ID 
+		WHERE q.QualityInspectionItems_ID = #{QualityInspectionItems_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT 
+		q.FName FName,
+		c.FName CFName,
+		q.FExplanation FExplanation,
+		q.FCategory,
+		q.QualityInspectionItems_ID
+		FROM KM_QualityInspectionItems q 
+		LEFT JOIN KM_ClassificationOfQuality c ON q.FCategory = c.ClassificationOfQuality_ID 
+		WHERE 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					q.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					c.FName LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.CFNum != null and pd.CFNum != ''"><!-- CFNum检索 -->
+			and
+				(					
+					c.ClassificationOfQuality_ID = #{pd.CFNum} 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QualityInspectionItems_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

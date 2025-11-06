@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.SopSchemeTemplateMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		KM_SopSchemeTemplate
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FNumber,	
+		f.FName,	
+		f.FType,	
+		f.FState,	
+		f.FUse,	
+		f.FCreatePersonID,	
+		f.FCreateTime,	
+		f.SopSchemeTemplate_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FNumber,	
+		FName,	
+		FType,	
+		FState,	
+		FUse,	
+		FCreatePersonID,	
+		FCreateTime,	
+		SopSchemeTemplate_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FNumber},	
+		#{FName},	
+		#{FType},	
+		#{FState},	
+		#{FUse},	
+		#{FCreatePersonID},	
+		#{FCreateTime},	
+		#{SopSchemeTemplate_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SopSchemeTemplate_ID = #{SopSchemeTemplate_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FNumber = #{FNumber},
+			FName = #{FName},
+			FType = #{FType},
+			FState = #{FState},
+			FUse = #{FUse},
+			FCreatePersonID = #{FCreatePersonID},
+			FCreateTime = #{FCreateTime},
+			SopSchemeTemplate_ID = SopSchemeTemplate_ID
+		where 
+			SopSchemeTemplate_ID = #{SopSchemeTemplate_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,f1.NAME FStaffName,f2.NAME FTypeName
+		from 
+		<include refid="tableName"></include> f
+		left join OA_STAFF f1
+		on f.FCreatePersonID=f1.STAFF_ID
+		left join SYS_DICTIONARIES f2
+		on f.FType=f2.DICTIONARIES_ID
+		where 
+			f.SopSchemeTemplate_ID = #{SopSchemeTemplate_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,f1.NAME FStaffName,f2.NAME FTypeName
+		from 
+		<include refid="tableName"></include> f
+		left join OA_STAFF f1
+		on f.FCreatePersonID=f1.STAFF_ID
+		left join SYS_DICTIONARIES f2
+		on f.FType=f2.DICTIONARIES_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FNumber LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FName LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				
+				)
+		</if>
+		<if test="pd.KEYWORDS_FTYPE != null and pd.KEYWORDS_FTYPE != ''">
+			and
+				(
+					f2.NAME = #{pd.KEYWORDS_FTYPE}
+				
+				)
+		</if>
+		[fhstart] order by FCreateTime desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			SopSchemeTemplate_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 禁用/启用 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FState = #{FState}
+		where 
+			SopSchemeTemplate_ID = #{SopSchemeTemplate_ID}
+	</update>
+	<!-- 删除-->
+	<delete id="deleteMx" parameterType="pd">
+		delete from
+		KM_SopStep
+		where 
+			SopSchemeTemplate_ID = #{SopSchemeTemplate_ID}
+	</delete>
+	<!-- 单号验重 -->
+	<select id="getRepeatNum" parameterType="pd" resultType="pd">
+		select
+		isnull(count(*),0) RepeatNum
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		and FNumber=#{FNumber}
+		<if test="SopSchemeTemplate_ID != null and SopSchemeTemplate_ID != ''">
+			and f.SopSchemeTemplate_ID !=#{SopSchemeTemplate_ID}
+		</if>
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

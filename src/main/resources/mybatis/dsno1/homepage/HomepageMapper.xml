@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.homepage.HomepageMapper">
+
+	<select id="finishedPlanlistPage" parameterType="page"
+		resultType="pd">
+		SELECT
+		so.OrderNum,
+		sod.FUnit,
+		cust.FName as FCustomerName,
+		pwom.WorkOrderNum
+		WorkOrderNumMaster,
+		pwo.*
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON
+		pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder
+		so ON sod.SalesOrderID
+		=
+		so.SalesOrder_ID
+		left join
+		PP_PlanningWorkOrderMaster pwom on
+		pwo.MasterWorkOrder_ID =
+		pwom.PlanningWorkOrderMaster_ID
+		left join KM_Customer cust on cust.Customer_ID = pwo.FCustomer
+		WHERE
+		1=1
+		and
+		pwo.FStatus = '已完成'
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND so.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.WorkOrderType != null and pd.WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{pd.WorkOrderType}
+		</if>
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			AND pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>
+		[fhstart] order by pwo.PlannedEndTime [fhend]
+	</select>
+
+	<select id="executingPlanlistPage" parameterType="page"
+		resultType="pd">
+		SELECT
+		so.OrderNum,
+		sod.FUnit,
+		cust.FName as FCustomerName,
+		pwom.WorkOrderNum
+		WorkOrderNumMaster,
+		pwo.*
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON
+		pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder
+		so ON sod.SalesOrderID
+		=
+		so.SalesOrder_ID
+		left join
+		PP_PlanningWorkOrderMaster pwom on
+		pwo.MasterWorkOrder_ID =
+		pwom.PlanningWorkOrderMaster_ID
+		left join KM_Customer cust on cust.Customer_ID = pwo.FCustomer
+		WHERE
+		1=1
+		and
+		pwo.FStatus = '执行中'
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND so.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.WorkOrderType != null and pd.WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{pd.WorkOrderType}
+		</if>
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			AND pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>
+		[fhstart] order by pwo.PlannedEndTime [fhend]
+	</select>
+
+	<select id="unexecutedPlanlistPage" parameterType="page"
+		resultType="pd">
+		SELECT
+		so.OrderNum,
+		sod.FUnit,
+		cust.FName as FCustomerName,
+		pwom.WorkOrderNum
+		WorkOrderNumMaster,
+		pwo.*
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON
+		pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder
+		so ON sod.SalesOrderID
+		=
+		so.SalesOrder_ID
+		left join
+		PP_PlanningWorkOrderMaster pwom on
+		pwo.MasterWorkOrder_ID =
+		pwom.PlanningWorkOrderMaster_ID
+		left join KM_Customer cust on cust.Customer_ID = pwo.FCustomer
+		WHERE
+		1=1
+		and
+		pwo.FStatus = '创建'
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND so.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.WorkOrderType != null and pd.WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{pd.WorkOrderType}
+		</if>
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			AND pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>
+		[fhstart] order by pwo.PlannedEndTime [fhend]
+	</select>
+
+	<select id="issueRemindlistPage" parameterType="page"
+		resultType="pd">
+		select * from PP_ProcessWorkOrderExample where
+		PlanningWorkOrderID in (
+		select PlanningWorkOrder_ID from
+		PP_PlanningWorkOrder where
+		DistributionProgress = '已下发')
+		<if test="pd.TaskNum != null and pd.TaskNum != ''">
+			AND TaskNum = #{pd.TaskNum}
+		</if>
+		<if test="pd.WP != null and pd.WP != ''">
+			AND WP = #{pd.WP}
+		</if>
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND OrderNum = #{pd.OrderNum}
+		</if>
+		[fhstart] order
+		by TaskNum ,WokNum [fhend]
+	</select>
+
+	<select id="checkDonelistPage" parameterType="page" resultType="pd">
+		select * from PP_ProcessWorkOrderExample
+		where 1=1 and CheckDoneIF =
+		'是'
+		[fhstart] order by TaskNum ,WokNum [fhend]
+	</select>
+
+	<select id="callQIlistPage" parameterType="page" resultType="pd">
+		SELECT
+			f.QualityInspectionPlanExecute_ID,
+			f.DataSources,						-- 数据来源 
+			f.TaskNum,							-- 任务单号 
+			f.StockListInRel,
+			f.StockListOutRel,
+			f.RowNum,
+			f.ProcessWorkOrderExample_ID,
+			a.QIType QIType,					-- 质检类型
+			a.FName QIPlanID,					-- 质检方案 
+			a.QIMethod QIMethod,				-- 质检方式
+			a.QIMethodValue QIMethodValue,		-- 抽检比例
+			f.QIPlanID QIPlanIDID,
+			unit.FCODE as UnitCode,				-- 物料单位
+			isnull(g.WorkOrderNum,'') WorkOrderNum,           --工单编号
+			f.WorkOrderIDRel,					-- 关联工单 
+			e.MAT_NAME,							--物料名称
+			e.MAT_CODE,							--物料编码
+			f.WP_ID FName,							-- 工序 
+			f.MaterialID,						-- 物料 
+			f.QIPosition,						-- 质检位置 
+			f.FPriorityID,						-- 优先级 
+			c.NAME FMakeBillsPersoID,			-- 制单人 
+			f.FMakeBillsPersoID FMakeBillsPersoIDID,-- 制单人ID
+			f.FMakeBillsTime,					-- 制单时间 
+			b.NAME InspectorIDStaff,			-- 检验人员 
+			d.NAME InspectorIDDept,				-- 检验部门 
+			f.InspectorID, --检验人员或部门ID
+			f.FBeginTime,						-- 开始时间 
+			f.FEndTime,							-- 结束时间 
+			f.JudgmentResults,					-- 判定结果 
+			f.FType FTypeID,							-- 类型 
+			d1.NAME FType,
+			f.ExecutionStatus,					-- 执行状态 
+			f.GenerationType,					-- 生成类型 
+			f.FExplanation,						-- 描述 
+			f.FOperator							,-- 下发给人或部门 
+			f.RequireEndTime,					-- 要求完成日期 
+			f.InspectionWarehouse,				-- 检验仓库 
+			f.InspectionLocation, 				-- 检验仓位 
+			f.FCount 							-- 检验总数
+		FROM
+			QM_QualityInspectionPlanExecute f
+			LEFT JOIN KM_QualityInspectionPlan a on f.QIPlanID = a.QualityInspectionPlan_ID
+			LEFT JOIN OA_STAFF b on f.InspectorID = b.STAFF_ID
+			LEFT JOIN OA_STAFF c on f.FMakeBillsPersoID = c.STAFF_ID
+			LEFT JOIN OA_DEPARTMENT d on f.InspectorID = d.DEPARTMENT_ID
+			LEFT JOIN MBASE_MAT_BASIC e on f.MaterialID = e.MAT_BASIC_ID
+			left join mbase_unit_info unit on unit.unit_info_id = e.MAT_MAIN_UNIT
+			LEFT JOIN PP_PlanningWorkOrder g on f.WorkOrderIDRel = g.PlanningWorkOrder_ID
+			left join SYS_DICTIONARIES d1 on f.FType = d1.DICTIONARIES_ID
+		where  1=1 and
+
+		 f.ExecutionStatus =
+		'已下发'
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+				f.DataSources like '%' + #{pd.KEYWORDS1} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 关键词检索:任务单号 -->
+			and
+				(
+				f.TaskNum like '%' + #{pd.KEYWORDS2} +'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 关键词检索:质检位置 -->
+			and
+				(
+				f.QIPosition like '%' + #{pd.KEYWORDS3} +'%'
+				)
+		</if>
+		[fhstart] order by f.FMakeBillsTime [fhend]
+	</select>
+
+	<select id="processExceptionlistPage" parameterType="page"
+		resultType="pd">
+		SELECT
+			f.Exception_ID,
+			f.FPriorityID,
+			f.FDateSource,
+			f.FLevel,
+			a.NAME NAMEStaff,
+			c.NAME NAMEDept,
+			f.ExceptionPendingParty,
+			b.ExceptionDefinition,
+			f.FDefinition,
+			e.NAME NAMEExcept,
+			f.FType,
+			f.FExplanation,
+			d.NAME NAMERel,
+			f.ReleaseTime,
+			f.ProcessingTimeRequired,
+			CASE
+		WHEN f.IfMonitorProcessing = 1 THEN
+			'是'
+		ELSE
+			'否'
+		END IfMonitorProcessing,
+		 f.NearTriggerMonitoringTime,
+		 f.MonitoringTimes,
+		 f.DealType,
+		 d1.NAME DealTypeNAME,
+		 CASE
+		WHEN f.InitOperatorID = 1 THEN
+			'部门'
+		ELSE
+			'人'
+		END InitOperatorID,
+		 f.IssueType,
+		 f.PlanningWorkOrder_ID,
+		 f.ProcessDefinition_ID,
+		 f.EQM_BASE_ID,
+		 g.WorkOrderNum,
+		 i.FNAME EQM_BASE_NAME
+		FROM
+			KM_Exception f
+		LEFT JOIN OA_STAFF a ON f.ExceptionPendingParty = a.STAFF_ID
+		LEFT JOIN MM_ExceptionDefinition b ON f.FDefinition = b.ExceptionDefinition_ID
+		LEFT JOIN OA_DEPARTMENT c ON f.ExceptionPendingParty = c.DEPARTMENT_ID
+		LEFT JOIN OA_STAFF d ON f.FIssuedID = d.STAFF_ID
+		LEFT JOIN SYS_DICTIONARIES e ON f.FType = e.DICTIONARIES_ID
+		LEFT JOIN PP_PlanningWorkOrder g ON f.PlanningWorkOrder_ID = g.PlanningWorkOrder_ID
+		LEFT JOIN MDM_EQM_BASE i ON f.EQM_BASE_ID = i.EQM_BASE_ID
+		LEFT JOIN SYS_DICTIONARIES d1 ON f.DealType = d1.DICTIONARIES_ID
+		WHERE
+			1 = 1
+		AND f.IssueType IN (
+			'未下发',
+			'已下发',
+			'已完成'
+		)
+		<if test="pd.KeyWords1 != null and pd.KeyWords1 != ''"><!-- 关键词检索:数据来源 -->
+			and
+				(
+					f.FDateSource LIKE '%'+ #{pd.KeyWords1}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords2 != null and pd.KeyWords2 != ''"><!-- 关键词检索：异常类型 -->
+			and
+				(
+					f.FType LIKE '%'+ #{pd.KeyWords2}+'%'
+				)
+		</if>		
+		<if test="pd.KeyWords4 != null and pd.KeyWords4 != ''"><!-- 关键词检索：异常待处理方 -->
+			and
+				(
+					f.ExceptionPendingParty LIKE '%'+ #{pd.KeyWords4}+'%'
+				)
+		</if>
+		<if test="pd.KeyWords5 != null and pd.KeyWords5 != ''"><!-- 关键词检索：初始移交 -->
+			and
+				(
+					f.IfMonitorProcessing LIKE '%'+ #{pd.KeyWords5}+'%'
+				)
+		</if>
+		[fhstart] order by f.ReleaseTime[fhend]
+	</select>
+
+	<select id="reworkTasklistPage" parameterType="page" resultType="pd">
+		SELECT f.*
+		FROM PP_ProcessWorkOrderExample f LEFT JOIN
+		PP_PlanningWorkOrder pwo ON
+		pwo.PlanningWorkOrder_ID =
+		f.PlanningWorkOrderID
+		WHERE 1 = 1 AND f.TaskType = '2'
+		<if test="pd.TaskNum != null and pd.TaskNum != ''">
+			AND f.TaskNum = #{pd.TaskNum}
+		</if>
+		<if test="pd.WP != null and pd.WP != ''">
+			AND f.WP = #{pd.WP}
+		</if>
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND f.OrderNum = #{pd.OrderNum}
+		</if>
+		[fhstart] order
+		by TaskNum [fhend]
+	</select>
+
+	<select id="planDelaylistPage" parameterType="page" resultType="pd">
+		SELECT
+		so.OrderNum,
+		sod.FUnit,
+		pwom.WorkOrderNum WorkOrderNumMaster,
+		pwo.*
+		FROM
+		PP_PlanningWorkOrder pwo
+		LEFT JOIN
+		PP_SalesOrderDetail sod ON
+		pwo.SalesOrderDetailID =
+		sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder
+		so ON sod.SalesOrderID
+		= so.SalesOrder_ID
+		left join
+		PP_PlanningWorkOrderMaster pwom on pwo.MasterWorkOrder_ID =
+		pwom.PlanningWorkOrderMaster_ID
+		where pwo.PlannedEndTime &lt;=
+		CONVERT(nvarchar(50),GETDATE(),20)
+		and
+		pwo.FStatus not in ('创建', '已完成')
+		<if test="pd.OrderNum != null and pd.OrderNum != ''">
+			AND so.OrderNum = #{pd.OrderNum}
+		</if>
+		<if test="pd.WorkOrderType != null and pd.WorkOrderType != ''">
+			AND pwo.WorkOrderType = #{pd.WorkOrderType}
+		</if>
+		<if test="pd.WorkOrderNum != null and pd.WorkOrderNum != ''">
+			AND pwo.WorkOrderNum = #{pd.WorkOrderNum}
+		</if>
+		[fhstart] order by
+		pwo.PlannedEndTime [fhend]
+	</select>
+
+</mapper>

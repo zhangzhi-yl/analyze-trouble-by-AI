@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.ProcessDefinitionFieldMapper">
+	
+	<!--工序自定义字段表名 -->
+	<sql id="tableName">
+		KM_ProcessDefinitionField
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ProcessDefinitionField_ID,	
+		f.WPDefinitionID,	
+		f.CustomFieldName,	
+		f.CustomFieldKey
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		ProcessDefinitionField_ID,	
+		WPDefinitionID,	
+		CustomFieldName,	
+		CustomFieldKey
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ProcessDefinitionField_ID},	
+		#{WPDefinitionID},	
+		#{CustomFieldName},	
+		#{CustomFieldKey}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProcessDefinitionField_ID = #{ProcessDefinitionField_ID}
+	</delete>
+	
+	<!-- 根据工序定义id删除-->
+	<delete id="deleteByProcessDefinition_ID" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			WPDefinitionID = #{WPDefinitionID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			WPDefinitionID = #{WPDefinitionID},
+			CustomFieldName = #{CustomFieldName},
+			CustomFieldKey = #{CustomFieldKey}
+		where 
+			ProcessDefinitionField_ID = #{ProcessDefinitionField_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.ProcessDefinitionField_ID = #{ProcessDefinitionField_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.CustomFieldName LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.CustomFieldKey LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.WPDefinitionID != null and pd.WPDefinitionID != ''"><!-- 工序id -->
+			and f.WPDefinitionID = #{pd.WPDefinitionID}
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		where 1=1 
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.CustomFieldName LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.CustomFieldKey LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="WPDefinitionID != null and WPDefinitionID != ''"><!-- 工序id -->
+			and f.WPDefinitionID = #{WPDefinitionID}
+		</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ProcessDefinitionField_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

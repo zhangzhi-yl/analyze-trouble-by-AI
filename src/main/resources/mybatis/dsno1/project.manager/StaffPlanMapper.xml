@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.project.manager.StaffPlanMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		DT_STAFFPLAN
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.DEPPLAN_ID,	
+		f.STAFFPLAN_NAME,	
+		f.STAFFPLAN_TYPE,	
+		f.PX,	
+		f.STAFFPLAN_MANAGER,	
+		f.IS_OUTPUT,	
+		f.PLAN_START_TIME,	
+		f.PLAN_END_TIME,	
+		f.PLAN_HOURS,	
+		f.OUT_BIANMA,	
+		f.FSOURCE,	
+		f.FTYPE,	
+		f.VISIABLE,	
+		f.YL1,	
+		f.YL2,	
+		f.YL3,	
+		f.YL4,	
+		f.YL5,	
+		f.STAFFPLAN_ID,
+		f.NEW_PLAN_START_TIME,
+		f.NEW_PLAN_END_TIME,
+		f.REAL_SATRT_TIME,
+		f.REAL_END_TIME,
+		f.NOW_PLAN_TYPE,
+		f.SPACTUAL_HOUR,
+		f.SPNORMAL_HOUR,
+		f.SPOVER_HOUR
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		DEPPLAN_ID,	
+		STAFFPLAN_NAME,	
+		STAFFPLAN_TYPE,	
+		PX,	
+		STAFFPLAN_MANAGER,	
+		IS_OUTPUT,	
+		PLAN_START_TIME,	
+		PLAN_END_TIME,	
+		PLAN_HOURS,	
+		OUT_BIANMA,	
+		FSOURCE,	
+		FTYPE,	
+		VISIABLE,	
+		YL1,	
+		YL2,	
+		YL3,	
+		YL4,	
+		YL5,	
+		STAFFPLAN_ID,
+		NEW_PLAN_START_TIME,
+		NEW_PLAN_END_TIME,
+		REAL_SATRT_TIME,
+		REAL_END_TIME,
+		NOW_PLAN_TYPE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{DEPPLAN_ID},	
+		#{STAFFPLAN_NAME},	
+		#{STAFFPLAN_TYPE},	
+		#{PX},	
+		#{STAFFPLAN_MANAGER},	
+		#{IS_OUTPUT},	
+		#{PLAN_START_TIME},	
+		#{PLAN_END_TIME},	
+		#{PLAN_HOURS},	
+		#{OUT_BIANMA},	
+		#{FSOURCE},	
+		#{FTYPE},	
+		#{VISIABLE},	
+		#{YL1},	
+		#{YL2},	
+		#{YL3},	
+		#{YL4},	
+		#{YL5},	
+		#{STAFFPLAN_ID},
+		#{NEW_PLAN_START_TIME},
+		#{NEW_PLAN_END_TIME},
+		#{REAL_SATRT_TIME},
+		#{REAL_END_TIME},
+		#{NOW_PLAN_TYPE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<!-- <delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			STAFFPLAN_ID = #{STAFFPLAN_ID}
+	</delete> -->
+	<update id="delete" parameterType="pd">
+		update  
+		<include refid="tableName"></include>
+		set VISIABLE = '0'
+		where 
+			STAFFPLAN_ID = #{STAFFPLAN_ID}
+	</update>
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			DEPPLAN_ID = #{DEPPLAN_ID},
+			STAFFPLAN_NAME = #{STAFFPLAN_NAME},
+			STAFFPLAN_TYPE = #{STAFFPLAN_TYPE},
+			NEW_PLAN_START_TIME = #{NEW_PLAN_START_TIME},
+			NEW_PLAN_END_TIME = #{NEW_PLAN_END_TIME},
+			PX = #{PX},
+			STAFFPLAN_MANAGER = #{STAFFPLAN_MANAGER},
+			IS_OUTPUT = #{IS_OUTPUT},
+			PLAN_START_TIME = #{PLAN_START_TIME},
+			PLAN_END_TIME = #{PLAN_END_TIME},
+			PLAN_HOURS = #{PLAN_HOURS},
+			OUT_BIANMA = #{OUT_BIANMA},
+			FSOURCE = #{FSOURCE},
+			FTYPE = #{FTYPE},
+			YL2 = #{YL2},
+			YL3= #{YL3},
+			STAFFPLAN_ID = STAFFPLAN_ID
+		where 
+			STAFFPLAN_ID = #{STAFFPLAN_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,
+isnull(f4.PPROJECT_CODE,'') PPROJECT_CODE,
+isnull(f4.PPROJECT_NAME,'') PPROJECT_NAME,
+isnull(f7.ECUSTOMER_NAME,'') ECUSTOMER_NAME,
+isnull(f7.EEQM_NO,'') EEQM_NO,
+isnull(f7.EEQM_NAME,'') EEQM_NAME,
+isnull(f7.ETYPE,'') ETYPEX,
+isnull(f7.EDELIVERY_DATE,'') EDELIVERY_DATE,
+isnull(f3.FHTNAME,'') FHTNAME
+		from 
+		<include refid="tableName"></include> f
+		left join 
+DT_DEPPLAN f3 
+on f.DEPPLAN_ID = f3.DEPPLAN_ID 
+left join 
+DT_PRO_PLAN f6 
+on f3.PRO_PLAN_ID = f6.PRO_PLAN_ID 
+LEFT JOIN DT_PROJECT f4 
+ON f6.PROJECT_ID = f4.PROJECT_ID
+LEFT JOIN DT_EQUIPMENT f7
+ON f6.EQUIPMENT_ID = f7.EQUIPMENT_ID
+		where 
+			f.STAFFPLAN_ID = #{STAFFPLAN_ID} and f.VISIABLE = '1'
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select 
+			<include refid="Field"></include>,
+			b.FHTNAME,
+			b.FHTLEVEL,
+			isnull(f.SPACTUAL_HOUR,0.00) diffHour
+			
+		from 
+			DT_STAFFPLAN f
+		left join 
+			DT_DEPPLAN b 
+			on f.DEPPLAN_ID = b.DEPPLAN_ID 
+		where 
+			f.DEPPLAN_ID = #{pd.DEPPLAN_ID} and f.VISIABLE = '1'
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 项目编号检索 -->
+			and
+				(
+					b.FHTNAME LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 项目名称检索 -->
+			and
+				(
+					f.STAFFPLAN_NAME LIKE '%'+ #{pd.KEYWORDS2}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS3 != null and pd.KEYWORDS3 != ''"><!-- 设备号和设备名称检索 -->
+			and
+				(
+				f.STAFFPLAN_MANAGER LIKE '%'+ #{pd.KEYWORDS3}+'%'
+				)
+		</if>
+		[fhstart] order by cast(isnull(PX,0) as int)  [fhend] 
+	</select>
+	<!-- 列表 -->
+	<select id="listx" parameterType="pd" resultType="pd">
+		select 
+			<include refid="Field"></include>,
+			b.FHTNAME,
+			b.FHTLEVEL,
+			datediff(HOUR,f.REAL_SATRT_TIME,f.REAL_END_TIME) diffHour
+			
+		from 
+			DT_STAFFPLAN f
+		left join 
+			DT_DEPPLAN b 
+			on f.DEPPLAN_ID = b.DEPPLAN_ID 
+		where 
+			f.DEPPLAN_ID = #{DEPPLAN_ID} and f.VISIABLE = '1'
+		<if test="KEYWORDS1 != null and KEYWORDS1 != ''"><!-- 项目编号检索 -->
+			and
+				(
+					b.FHTNAME LIKE '%'+ #{KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="KEYWORDS2 != null and KEYWORDS2 != ''"><!-- 项目名称检索 -->
+			and
+				(
+					f.STAFFPLAN_NAME LIKE '%'+ #{KEYWORDS2}+'%'
+				)
+		</if>
+		<if test="KEYWORDS3 != null and KEYWORDS3 != ''"><!-- 设备号和设备名称检索 -->
+			and
+				(
+				f.STAFFPLAN_MANAGER LIKE '%'+ #{KEYWORDS3}+'%'
+				)
+		</if>
+		order by cast(isnull(PX,0) as int)  
+	</select>
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1 
+		<if test="DEPPLAN_ID != null and DEPPLAN_ID !=''">
+			and f.DEPPLAN_ID = #{DEPPLAN_ID}
+			
+		</if>
+		and f. VISIABLE='1'
+		and f. FTYPE='未下发'
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			STAFFPLAN_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 批量删除 -->
+	<delete id="deleteAllx" parameterType="String">
+		update
+		<include refid="tableName"></include>
+		set VISIABLE='0'
+		where 
+			STAFFPLAN_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<update id="goXiafa" parameterType="pd">
+		update 
+			<include refid="tableName"></include>
+		set
+			FTYPE = '已下发'
+		where 
+			STAFFPLAN_ID = #{STAFFPLAN_ID}
+	</update>
+	<update id="updateType" parameterType="pd">
+		update 
+			<include refid="tableName"></include>
+		set
+			FTYPE = '已下发'
+		where 
+			DEPPLAN_ID = #{DEPPLAN_ID}
+	</update>
+	
+	<select id="getStartTime" parameterType="pd" resultType="pd">
+		select top 1 isnull(PLAN_START_TIME,'') PLAN_START_TIME from <include refid="tableName"></include> 
+		where DEPPLAN_ID = #{DEPPLAN_ID} and PLAN_START_TIME &lt; &gt; ''
+		order by PLAN_START_TIME 
+	</select>
+	<select id="getEndTime" parameterType="pd" resultType="pd">
+		select top 1 isnull(PLAN_END_TIME,'') PLAN_END_TIME from <include refid="tableName"></include> 
+			where DEPPLAN_ID = #{DEPPLAN_ID}
+		order by PLAN_END_TIME desc
+	</select>
+	<select id="getOverList" parameterType="pd" resultType="pd">
+		select top 1 isnull(PLAN_START_TIME,'') PLAN_START_TIME from <include refid="tableName"></include> 
+		where DEPPLAN_ID = #{DEPPLAN_ID} and PLAN_START_TIME &lt; &gt; ''
+		order by PLAN_START_TIME 
+	</select>
+	<select id="getNUM" parameterType="pd" resultType="pd">
+	select * from
+	(select #{STAFFPLAN_MANAGER} STAFFPLAN_MANAGER,
+	cast(cast(        
+	isnull(#{PLAN_HOURS},0)
+	 as NUMERIC(12,2))/24.00 as
+	NUMERIC(12,2)) FPANDAY,#{NEW_PLAN_START_TIME}
+	FSTART,#{NEW_PLAN_END_TIME} FEND,
+	isnull(DATEDIFF(dd, #{NEW_PLAN_START_TIME}, #{NEW_PLAN_END_TIME}),0) FDIFFPLAN,count(*)
+	FTASKNUM,
+	isnull(DATEDIFF(dd, #{NEW_PLAN_START_TIME}, #{NEW_PLAN_END_TIME}),0)-sum(isnull(DATEDIFF(dd,
+	f.PTPLANSTARTDATE, f.PTPLANENDDATE),0)) FDIFFREMAIN
+	from DT_PROJECTTASK f
+	left join DT_PROJECT f1
+	on f.PTPROJECT_ID=f1.PROJECT_ID
+	left join DT_EQUIPMENT f2
+	on f.PTEQUIPMENT_ID=f2.EQUIPMENT_ID
+	left join DT_STAFFPLAN f3
+	on f.PTSTAFFPLAN_ID=f3.STAFFPLAN_ID
+	left join DT_DEPPLAN f4
+	on f3.DEPPLAN_ID = f4.DEPPLAN_ID
+	left join DT_PRO_PLAN f5
+	on f4.PRO_PLAN_ID = f5.PRO_PLAN_ID
+	where
+	1=1
+	and PTPRINCIPAL=#{STAFFPLAN_MANAGER}
+	and PTVISIBLE='1'
+	and PTRUNSTATE!='完成'
+	and
+	(PTPLANSTARTDATE BETWEEN #{NEW_PLAN_START_TIME} AND #{NEW_PLAN_END_TIME}
+	or PTPLANENDDATE BETWEEN #{NEW_PLAN_START_TIME} AND #{NEW_PLAN_END_TIME}
+	or (PTPLANSTARTDATE &lt;= #{NEW_PLAN_START_TIME} AND PTPLANENDDATE
+	&gt;=#{NEW_PLAN_END_TIME})
+	)
+	) gy
+	where FPANDAY >FDIFFREMAIN and #{PLAN_HOURS} !=''
+	</select>
+	<select id="listTest" parameterType="pd" resultType="pd">
+select '' STAFFPLAN_MANAGER,f.PTTASK_NAME,f.PTACTUALSTARTDATE,f.PTACTUALENDDATE,f2.EPROJECT_CODE,
+f2.EPROJECT_NAME,f2.EEQM_NAME,f4.FHTNAME,DATEDIFF(dd, PTPLANSTARTDATE, PTPLANENDDATE) FDIFF,
+f2.EPROJECT_NAME+'('+f2.EPROJECT_CODE+')项目'+f2.EEQM_NAME+'('+f2.EEQM_NO+')设备'+f4.FHTNAME+'阶段'+f.PTTASK_NAME+'任务，占用工时'+cast(DATEDIFF(dd, PTPLANSTARTDATE, PTPLANENDDATE) as varchar(50))+'天'   FTASK
+from DT_PROJECTTASK f
+left join DT_PROJECT f1
+on f.PTPROJECT_ID=f1.PROJECT_ID
+left join DT_EQUIPMENT f2
+on f.PTEQUIPMENT_ID=f2.EQUIPMENT_ID
+left join DT_STAFFPLAN f3
+on f.PTSTAFFPLAN_ID=f3.STAFFPLAN_ID
+left join DT_DEPPLAN f4 
+on f3.DEPPLAN_ID = f4.DEPPLAN_ID 
+left join DT_PRO_PLAN f5
+on f4.PRO_PLAN_ID = f5.PRO_PLAN_ID 
+where 
+1=1
+and PTPRINCIPAL=#{STAFFPLAN_MANAGER}
+and PTVISIBLE='1'
+and PTRUNSTATE!='完成'
+and 
+(PTPLANSTARTDATE BETWEEN  #{NEW_PLAN_START_TIME} AND #{NEW_PLAN_END_TIME}
+or PTPLANENDDATE BETWEEN  #{NEW_PLAN_START_TIME} AND #{NEW_PLAN_END_TIME}
+or (PTPLANSTARTDATE &lt;=  #{NEW_PLAN_START_TIME} AND PTPLANENDDATE &gt;=#{NEW_PLAN_END_TIME})
+)
+order by f2.EPROJECT_CODE,f2.EEQM_NO,cast(isnull(f4.FHTLEVEL,0) as int),cast(isnull(f.PTORDER,0) as int)
+	</select>
+		<!-- 获得最大编号 -->
+	<select id="getOrder" parameterType="pd" resultType="pd">
+		select
+		max(CAST(isnull(f.PX,'0') AS int)) FORDER
+		from 
+		DT_STAFFPLAN f
+		where 1=1 
+		and VISIABLE='1'
+		and f.DEPPLAN_ID=#{DEPPLAN_ID} 
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

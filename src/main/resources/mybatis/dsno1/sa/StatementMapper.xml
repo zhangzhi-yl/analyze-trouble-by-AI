@@ -1,0 +1,1220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.sa.StatementMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		SA_Statement
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.NAME,
+		f.Statement_ID
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		NAME,
+		Statement_ID
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{NAME},
+		#{Statement_ID}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		Statement_ID = #{Statement_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		NAME = #{NAME},
+		Statement_ID = Statement_ID
+		where
+		Statement_ID =
+		#{Statement_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where
+		f.Statement_ID = #{Statement_ID}
+	</select>
+
+	<!-- 项目视角列表 -->
+	<select id="datalistPageXMSJ" parameterType="page" resultType="pd">
+		SELECT
+		Isnull(saleOrder.ttype, '未知') AS '订单类型',
+		Isnull(customer.fname,
+		'未知') AS '客户',
+		Isnull(
+		saleOrder.ordernum,
+		'未知'
+		) AS '销售订单编号',
+		master.fcount AS '计划生产数量',
+		Isnull(t.consumptionquantity, 0) AS
+		'实际生产数量',
+		Isnull(staff.NAME, '未知') AS '制单人',
+		master.workordernum AS
+		'计划工单编号',
+		Isnull(
+		saleOrder.fchecktime,
+		'未知'
+		) AS '审核时间',
+		master.outputmaterial AS '产出品物料',
+		CASE
+		WHEN saleOrderDetail.deliverydate
+		= '' THEN
+		'未知'
+		WHEN saleOrderDetail.deliverydate IS NULL THEN
+		'未知'
+		ELSE
+		saleOrderDetail.deliverydate
+		END AS '交货日期',
+		case when
+		t.consumptionquantity is null then '0%' else
+		CONVERT (
+		VARCHAR,
+		CONVERT
+		(FLOAT,t.consumptionquantity,2) / CONVERT (FLOAT,master.fcount,2) *
+		100
+		) + '%' end AS '项目完成率',
+		CONVERT (VARCHAR, t1.sdr) + '%' AS '计划延迟率'
+		FROM
+		pp_planningworkordermaster master
+		LEFT JOIN pp_salesorderdetail
+		saleOrderDetail ON
+		saleOrderDetail.salesorderdetail_id =
+		master.salesorderdetailid
+		LEFT JOIN pp_salesorder saleOrder ON
+		saleOrder.salesorder_id =
+		saleOrderDetail.salesorderid
+		LEFT JOIN
+		km_customer customer ON saleOrder.fcustomer =
+		customer.customer_id
+		LEFT
+		JOIN oa_staff staff ON staff.staff_id = saleOrder.fmakebillspersoid
+		LEFT JOIN mbase_mat_auxiliarymx auxmx ON auxmx.mat_auxiliarymx_code =
+		master.workordernum
+		LEFT JOIN (
+		SELECT
+		SUM (consumptionquantity) AS
+		ConsumptionQuantity,
+		materialspropkey,
+		materialid
+		FROM
+		km_materialconsume
+		WHERE
+		1 = 1
+		AND ftype = '产出'
+		AND outtype = '正常'
+		GROUP BY
+		materialspropkey,
+		materialid
+		) t ON t.materialspropkey = auxmx.mat_auxiliarymx_id
+		AND
+		t.materialid = master.outputmaterialid
+		LEFT JOIN (
+		SELECT
+		planningworkordermaster_id,
+		CASE
+		WHEN CONVERT (
+		DATETIME,
+		master.plannedendtime
+		) &lt; GETDATE() THEN
+		CASE
+		WHEN CONVERT (
+		DATETIME,
+		master.actualendtime
+		) &lt;= CONVERT (
+		DATETIME,
+		master.plannedendtime
+		)
+		THEN
+		0
+		WHEN master.actualendtime IS NULL THEN
+		100
+		ELSE
+		CASE
+		WHEN Round(
+		CAST
+		(
+		Datediff(
+		DAY,
+		master.actualendtime,
+		master.plannedendtime
+		) AS FLOAT
+		) /
+		CAST (
+		Datediff(
+		HOUR,
+		master.actualendtime,
+		master.actualbegintime
+		) AS
+		FLOAT
+		) * 100,
+		2
+		) &lt; 0 THEN
+		0
+		ELSE
+		Round(
+		CAST (
+		Datediff(
+		DAY,
+		master.actualendtime,
+		master.plannedendtime
+		) AS FLOAT
+		) / CAST (
+		Datediff(
+		HOUR,
+		master.actualendtime,
+		master.actualbegintime
+		) AS FLOAT
+		) *
+		100,
+		2
+		)
+		END
+		END
+		ELSE
+		0
+		END AS sdr
+		FROM
+		pp_planningworkordermaster master
+		) t1
+		ON t1.planningworkordermaster_id =
+		master.planningworkordermaster_id
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			saleOrder.ttype LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			customer.fname LIKE
+			'%'+ #{pd.KEYWORDS}+'%'
+			or
+			saleOrder.ordernum LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			staff.NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			master.workordernum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			master.outputmaterial LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart] ORDER BY 销售订单编号,计划工单编号 DESC [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		Statement_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 销售订单列表 -->
+	<select id="datalistPageXSDD" parameterType="page" resultType="pd">
+		SELECT c.FName customer_name,so.OrderNum,s.NAME
+		STAFF_NAME,mb.MAT_CODE,mb.MAT_NAME,pw.PlannedBeginTime,pw.PlannedEndTime
+		FROM PP_PlanningWorkOrderMaster pw
+		LEFT JOIN PP_SalesOrderDetail sod ON
+		pw.SalesOrderDetailID=sod.SalesOrderDetail_ID
+		LEFT JOIN PP_SalesOrder
+		so ON sod.SalesOrderID=so.SalesOrder_ID
+		LEFT JOIN KM_Customer c ON
+		so.FCustomer=c.Customer_ID
+		LEFT JOIN OA_STAFF s ON
+		so.FMakeBillsPersoID=s.STAFF_ID
+		LEFT JOIN MBASE_MAT_BASIC mb ON
+		pw.OutputMaterialID=mb.MAT_BASIC_ID
+		WHERE 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			c.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			so.OrderNum LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			s.NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			mb.MAT_CODE
+			LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			mb.MAT_NAME LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart] ORDER BY so.OrderNum DESC [fhend]
+	</select>
+
+
+	<!-- 计划工单列表 -->
+	<select id="datalistPageJHGD" parameterType="page" resultType="pd">
+		SELECT masterPlan.OrderNum
+		,planWorkOrder.WorkOrderNum,baseMat.MAT_NAME,processDefinition.FName,
+		planWorkOrder.PlannedBeginTime,planWorkOrder.PlannedEndTime,
+		case when
+		t.consumptionquantity is null then '0%' else
+		CONVERT (
+		VARCHAR,CONVERT
+		(FLOAT,Isnull(t.consumptionquantity, 0),2) / CONVERT
+		(FLOAT,(Isnull(masterPlan.fcount, 0)),2) * 100
+		) + '%' end AS JHWCNum ,
+		CONVERT (VARCHAR, t1.sdr) + '%' AS JHYCNum,
+		CONVERT (VARCHAR, t2.sdr1)
+		+ '%' AS SCRWYCNum
+		FROM PP_ProcessWorkOrderExample processExample
+		LEFT
+		JOIN KM_ProcessDefinition processDefinition ON
+		processExample.WP=processDefinition.ProcessDefinition_ID
+		LEFT JOIN
+		PP_PlanningWorkOrder planWorkOrder ON
+		planWorkOrder.PlanningWorkOrder_ID=processExample.PlanningWorkOrderID
+		LEFT JOIN PP_PlanningWorkOrderMaster masterPlan ON
+		planWorkOrder.MasterWorkOrder_ID=masterPlan.PlanningWorkOrderMaster_ID
+		LEFT JOIN MBASE_MAT_AUXILIARYMX auxmx ON auxmx.mat_auxiliarymx_code =
+		masterPlan.workordernum
+		LEFT JOIN MBASE_MAT_BASIC baseMat ON
+		planWorkOrder.OutputMaterialID=baseMat.MAT_BASIC_ID
+		LEFT JOIN (
+		SELECT
+		SUM (consumptionquantity) AS
+		ConsumptionQuantity,materialspropkey,materialid
+		FROM km_materialconsume
+		WHERE 1 = 1 AND ftype = '产出' AND outtype = '正常'
+		GROUP BY
+		materialspropkey,materialid
+		) t ON t.materialspropkey =
+		auxmx.mat_auxiliarymx_id AND t.materialid =
+		masterPlan.OutputMaterialID
+		LEFT JOIN (
+		SELECT
+		planningworkordermaster_id,
+		CASE
+		WHEN CONVERT
+		(DATETIME,master.plannedendtime) &lt; GETDATE() THEN
+		CASE
+		WHEN CONVERT
+		(DATETIME,master.actualendtime) &lt;= CONVERT
+		(DATETIME,master.plannedendtime) THEN 0
+		WHEN master.actualendtime IS
+		NULL THEN 100
+		ELSE
+		CASE
+		WHEN Round(CAST
+		(Datediff(DAY,master.actualendtime,master.plannedendtime)
+		AS FLOAT)
+		/
+		CAST (Datediff(HOUR,master.actualendtime,master.actualbegintime) AS
+		FLOAT) * 100,2) &lt; 0 THEN 0
+		ELSE Round( CAST ( Datediff(
+		DAY,master.actualendtime,master.plannedendtime) AS FLOAT)
+		/ CAST
+		(Datediff(HOUR,master.actualendtime,master.actualbegintime) AS
+		FLOAT) *
+		100,2)
+		END
+		END
+		ELSE 0
+		END AS sdr
+		FROM pp_planningworkordermaster master
+		) t1
+		ON t1.planningworkordermaster_id =
+		masterPlan.planningworkordermaster_id
+		LEFT JOIN (
+		SELECT
+		ProcessWorkOrderExample_ID,
+		CASE
+		WHEN CONVERT
+		(DATETIME,processExample.PlannedEndTime) &lt; GETDATE() THEN
+		CASE
+		WHEN
+		CONVERT (DATETIME,processExample.ActualEndTime) &lt;= CONVERT
+		(DATETIME,processExample.PlannedEndTime) THEN 0
+		WHEN
+		processExample.ActualEndTime IS NULL THEN 100
+		ELSE
+		CASE
+		WHEN Round(
+		CAST(
+		Datediff(
+		DAY,processExample.ActualEndTime,processExample.PlannedEndTime
+		) AS
+		FLOAT
+		)
+		/ CASE
+		WHEN CAST(
+		Datediff(
+		HOUR,processExample.actualendtime,processExample.actualbegintime
+		) AS
+		FLOAT
+		)=0 THEN 1
+		ELSE CAST(
+		Datediff(
+		HOUR,processExample.actualendtime,processExample.actualbegintime
+		) AS
+		FLOAT
+		) END * 100,2
+		) &lt; 0 THEN 0
+		ELSE Round(CAST(Datediff(
+		DAY,processExample.actualendtime,processExample.plannedendtime) AS
+		FLOAT)
+		/
+		CAST(Datediff(HOUR,processExample.actualendtime,processExample.actualbegintime)
+		AS FLOAT) * 100,2)
+		END
+		END
+		ELSE 0
+		END AS sdr1
+		FROM
+		PP_ProcessWorkOrderExample processExample
+		)t2 ON
+		t2.ProcessWorkOrderExample_ID =
+		processExample.ProcessWorkOrderExample_ID
+		WHERE 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			masterPlan.OrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			planWorkOrder.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			baseMat.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			processDefinition.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+
+			)
+		</if>
+		[fhstart] ORDER BY OrderNum,WorkOrderNum DESC [fhend]
+	</select>
+
+	<!-- 子计划工单列表 -->
+	<select id="datalistPageJHGDMX" parameterType="page" resultType="pd">
+		SELECT planOrder.BatchNum,pd.FName ProcessDefinition_Name,s.FNAME
+		WC_STATION_NAME,
+		processExample.ProcessIMateriel,processExample.PlannedBeginTime,processExample.PlannedEndTime,
+		processExample.ActualBeginTime,processExample.ActualEndTime,
+		processExample.WorkHours+''+processExample.WorkHoursUnit AS
+		planWorkHoursLength,
+		CASE
+		WHEN processExample.ActualEndTime IS NULL AND
+		processExample.ActualBeginTime IS NULL THEN '0分钟'
+		WHEN
+		processExample.ActualEndTime IS NULL AND
+		processExample.ActualBeginTime IS NOT NULL AND
+		processExample.ActualBeginTime!=''
+		THEN
+		CAST (
+		Round(
+		CAST (
+		Datediff(
+		HOUR,processExample.ActualBeginTime,
+		CONVERT (nvarchar, GETDATE(), 20)
+		)
+		AS FLOAT)
+		,2) as VARCHAR)+'分钟'
+		WHEN processExample.ActualEndTime IS NOT
+		NULL AND
+		processExample.ActualBeginTime IS NOT NULL AND
+		processExample.ActualEndTime!='' AND
+		processExample.ActualBeginTime!=''
+		THEN
+		CAST (
+		Round(
+		CAST (
+		Datediff(
+		HOUR,processExample.ActualBeginTime,processExample.ActualEndTime
+		)
+		AS
+		FLOAT)
+		,2) as VARCHAR)+'分钟'
+		ELSE '0分钟'
+		END AS ActualWorkHoursLength
+		FROM
+		PP_ProcessWorkOrderExample processExample
+		LEFT JOIN
+		PP_PlanningWorkOrder planOrder ON planOrder.PlanningWorkOrder_ID
+		=processExample.PlanningWorkOrderID
+		LEFT JOIN KM_ProcessDefinition pd
+		ON
+		processExample.WP=pd.ProcessDefinition_ID
+		LEFT JOIN MDM_WC_STATION s
+		ON s.WC_STATION_ID=processExample.FStation
+		WHERE 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			planOrder.BatchNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			pd.FName LIKE
+			'%'+ #{pd.KEYWORDS}+'%'
+			or
+			s.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			processExample.ProcessIMateriel LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart] ORDER BY planOrder.BatchNum DESC [fhend]
+	</select>
+
+	<!-- 计划工单工时统计列表 -->
+	<select id="datalistPageJHGDTimeWork" parameterType="page"
+		resultType="pd">
+		SELECT f1.WorkOrderNum,f3.OrderNum AS SalesOrderNum,f2.FName AS
+		FCustomerName,f5.NAME AS FPlannerID,f1.OutputMaterial,
+		f4.OutputMaterial AS MXOutputMaterial,f4.WorkOrderNum AS
+		MxWorkOrderNum,f4.ProductionSupervisorName,
+		ISNULL(f4.TotalManHourNum,
+		0) AS TotalManHourNum ,
+		ISNULL(f4.ActualManHourNum, 0) AS
+		ActualManHourNum,
+		ISNULL(f4.TotalManHourNum-f4.ActualManHourNum, 0) AS
+		CE
+		FROM PP_PlanningWorkOrderMaster f1
+		LEFT JOIN KM_Customer f2
+		ON
+		f1.FCustomer= f2.Customer_ID
+		LEFT JOIN (SELECT * FROM PP_SalesOrder t1
+		LEFT JOIN PP_SalesOrderDetail t2
+		ON t1.SalesOrder_ID=t2.SalesOrderID)
+		f3
+		ON f1.SalesOrderDetailID=f3.SalesOrderDetail_ID
+		LEFT JOIN (
+		SELECT
+		p1.PlanningWorkOrder_ID,p1.OutputMaterial,p1.WorkOrderNum,p1.ProductionSupervisorName,p1.MasterWorkOrder_ID,SUM(CAST
+		(p2.TotalManHour AS DECIMAL(10, 1 ))) AS TotalManHourNum,SUM(CAST
+		(p2.ActualManHour AS DECIMAL(10, 1 ))) AS ActualManHourNum FROM
+		PP_PlanningWorkOrder p1
+		LEFT JOIN (SELECT * FROM PP_WorkingHours w
+		WHERE w.AuditMark = 'Y') p2
+		ON p1.PlanningWorkOrder_ID =
+		p2.PlanningWorkOrder_ID
+		GROUP BY
+		p1.PlanningWorkOrder_ID,p1.OutputMaterial,p1.WorkOrderNum,p1.ProductionSupervisorName,p1.MasterWorkOrder_ID
+		)f4
+		ON f1.PlanningWorkOrderMaster_ID = f4.MasterWorkOrder_ID
+		LEFT JOIN
+		OA_STAFF f5
+		ON f1.FPlannerID=f5.STAFF_ID
+		WHERE 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f1.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f3.OrderNum LIKE
+			'%'+ #{pd.KEYWORDS}+'%'
+			or
+			f2.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f5.NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f4.OutputMaterial LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			f4.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f4.ProductionSupervisorName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f1.OutputMaterial LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart] ORDER BY WorkOrderNum,MxWorkOrderNum DESC [fhend]
+	</select>
+
+	<!-- 产品生产数量统计列表 -->
+	<select id="datalistPageCPSCNum" parameterType="page"
+		resultType="pd">
+		SELECT f1.WorkOrderNum,f3.OrderNum AS SalesOrderNum,f2.FName AS
+		FCustomerName,f5.NAME AS FPlannerID,f1.OutputMaterial,
+		f4.OutputMaterial AS MXOutputMaterial,f4.WorkOrderNum AS
+		MxWorkOrderNum,f4.ProductionSupervisorName,f4.FCount,
+		ISNULL(f4.ConsumptionQuantityNum, 0) ConsumptionQuantityNum,
+		ISNULL(f4.BFConsumptionQuantityNum, 0) BFConsumptionQuantityNum
+		,f4.PlanningWorkOrder_ID,f4.OutputMaterialID
+		FROM
+		PP_PlanningWorkOrderMaster f1
+		LEFT JOIN KM_Customer f2
+		ON f1.FCustomer=
+		f2.Customer_ID
+		LEFT JOIN (SELECT * FROM PP_SalesOrder t1 LEFT JOIN
+		PP_SalesOrderDetail t2
+		ON t1.SalesOrder_ID=t2.SalesOrderID) f3
+		ON
+		f1.SalesOrderDetailID=f3.SalesOrderDetail_ID
+		LEFT JOIN (
+		SELECT
+		t1.*,t2.ConsumptionQuantityNum,t3.BFConsumptionQuantityNum FROM
+		PP_PlanningWorkOrder t1
+		LEFT JOIN (
+		SELECT
+		p1.ProcessIMaterielID,p1.PlanningWorkOrderID,
+		ISNULL(SUM(p3.ConsumptionQuantity), 0)AS ConsumptionQuantityNum
+		FROM
+		PP_ProcessWorkOrderExample p1
+		LEFT JOIN PP_WorkorderProcessIOExample p2
+		ON p1.ProcessWorkOrderExample_ID = p2.ProcessWorkOrderExampleID
+		LEFT
+		JOIN (SELECT * FROM KM_MaterialConsume w WHERE w.FType='产出' AND
+		w.DataSources='PP_WorkorderProcessIOExample') p3
+		ON
+		p2.WorkorderProcessIOExample_ID = p3.ConsumptionDocumentID
+		GROUP BY
+		p1.ProcessIMaterielID,p1.PlanningWorkOrderID
+		)t2
+		ON
+		t1.PlanningWorkOrder_ID = t2.PlanningWorkOrderID AND
+		t1.OutputMaterialID=t2.ProcessIMaterielID
+		LEFT JOIN (
+		SELECT
+		p1.ProcessIMaterielID,p1.PlanningWorkOrderID,
+		ISNULL(SUM(p3.ConsumptionQuantity), 0)AS BFConsumptionQuantityNum
+		FROM
+		PP_ProcessWorkOrderExample p1
+		LEFT JOIN PP_WorkorderProcessIOExample p2
+		ON p1.ProcessWorkOrderExample_ID = p2.ProcessWorkOrderExampleID
+		LEFT
+		JOIN (SELECT * FROM KM_MaterialConsume w WHERE w.FType='产出' AND
+		w.OutType='报废' AND w.DataSources='PP_WorkorderProcessIOExample') p3
+		ON
+		p2.WorkorderProcessIOExample_ID = p3.ConsumptionDocumentID
+		GROUP BY
+		p1.ProcessIMaterielID,p1.PlanningWorkOrderID
+		)t3
+		ON
+		t1.PlanningWorkOrder_ID = t3.PlanningWorkOrderID AND
+		t1.OutputMaterialID=t3.ProcessIMaterielID
+		) f4
+		ON
+		f1.PlanningWorkOrderMaster_ID = f4.MasterWorkOrder_ID
+		LEFT JOIN
+		OA_STAFF f5
+		ON f1.FPlannerID=f5.STAFF_ID
+		WHERE 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f1.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f3.OrderNum LIKE
+			'%'+ #{pd.KEYWORDS}+'%'
+			or
+			f2.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f5.NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f1.OutputMaterial LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			f4.OutputMaterial LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f4.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			f4.ProductionSupervisorName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart] ORDER BY WorkOrderNum,MxWorkOrderNum DESC [fhend]
+	</select>
+
+	<!-- 个人工时统计列表 -->
+	<select id="datalistPagestaffWork" parameterType="page"
+		resultType="pd">
+		select SUBSTRING(CONVERT(varchar(100), GETDATE(), 23),1,7) as MonthY,
+		sum(cast(f.TotalManHour as float)) as TotalManHourNum,
+		sum(cast(f.ActualManHour as float)) as ActualManHourNum,
+		f1.NAME as
+		NAME
+		from PP_WorkingHours f
+		LEFT JOIN OA_STAFF f1
+		ON
+		f.FillInThePersonID=f1.STAFF_ID
+		where
+		SUBSTRING(f.ReportingTime,1,7)=SUBSTRING(CONVERT(varchar(100),
+		GETDATE(), 23),1,7) AND f.AuditMark='Y'
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f1.NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		group by f1.NAME
+		[fhstart] ORDER BY MonthY,TotalManHourNum DESC [fhend]
+	</select>
+
+	<!-- 异常情况汇总列表 -->
+	<select id="datalistPageYCQK" parameterType="page" resultType="pd">
+		SELECT
+		ISNULL(pwo.WorkOrderNum, '无') as WorkOrderNum,
+		ISNULL(sa.OrderNum, '无') as OrderNum,
+		ISNULL(pwo.OutputMaterial, '无')
+		as OutputMaterial,
+		ISNULL(pwoe.ProcessIMateriel, '无') as
+		ProcessIMateriel ,
+		ISNULL(exc.ReleaseTime, '无') as ReleaseTime,
+		ISNULL(pwoe.TaskNum, '无') as TaskNum
+		FROM
+		KM_Exception exc
+		LEFT JOIN
+		PP_PlanningWorkOrder pwo ON pwo.PlanningWorkOrder_ID =
+		exc.PlanningWorkOrder_ID
+		LEFT JOIN PP_SalesOrderDetail od on
+		pwo.SalesOrderDetailID =
+		od.SalesOrderDetail_ID
+		left join PP_SalesOrder
+		sa on sa.SalesOrder_ID = od.SalesOrderID
+		LEFT JOIN
+		PP_ProcessWorkOrderExample pwoe ON pwoe.PlanningWorkOrderID =
+		exc.PlanningWorkOrder_ID
+		AND pwoe.WP = exc.ProcessDefinition_ID
+		where
+		1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			pwo.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			sa.OrderNum LIKE
+			'%'+ #{pd.KEYWORDS}+'%'
+			or
+			pwo.OutputMaterial LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			pwoe.ProcessIMateriel LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			pwoe.TaskNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart] order by WorkOrderNum,TaskNum desc [fhend]
+	</select>
+
+	<!-- 产品质量情况汇总列表 -->
+	<select id="datalistPageCPZL" parameterType="page" resultType="pd">
+		select
+		f.产品名称 AS CPName,
+		sum(f.产品总数)CPNum,
+		sum(f.合格数)HGNum,
+		sum(f.报检次数)BJNum,
+		sum(f.一次合格率)OneHGNum,
+		sum(f.不合格数)NoHGNum,
+		sum(f.返工数)FGNum,
+		sum(f.报废数)BFNum,
+		sum(f.报废率) BFNumR
+		from
+		(select
+		a.OutputMaterial 产品名称,
+		a.FCount 产品总数,
+		isnull(c.num,0) 合格数,
+		isnull(b.num,0) 报检次数,
+		CASE WHEN a.FCount=0 THEN '0' ELSE
+		cast(isnull(c.num,0)/a.FCount as
+		decimal(10,2))*100 end AS 一次合格率,
+		a.FCount - isnull(c.num,0) 不合格数,
+		isnull(d.num,0) 返工数,
+		isnull(e.num,0)
+		报废数,
+		CASE WHEN a.FCount=0 THEN '0' ELSE cast(isnull(e.num,0)/a.FCount
+		as
+		decimal(10,2))*100 end AS 报废率
+		from PP_PlanningWorkOrder a
+		LEFT JOIN
+		(select count(WorkOrderIDRel) num,WorkOrderIDRel from
+		QM_QualityInspectionPlanExecute GROUP BY WorkOrderIDRel) b on
+		a.PlanningWorkOrder_ID = b.WorkOrderIDRel
+		LEFT JOIN
+		(select
+		count(WorkOrderIDRel) num,WorkOrderIDRel from
+		QM_QualityInspectionPlanExecute where JudgmentResults = '全部合格' GROUP
+		BY WorkOrderIDRel) c on a.PlanningWorkOrder_ID = c.WorkOrderIDRel
+		LEFT
+		JOIN
+		(select count(WorkOrderIDRel) num,WorkOrderIDRel from
+		QM_QualityInspectionPlanExecute where JudgmentResults = '部分合格' GROUP
+		BY WorkOrderIDRel) d on a.PlanningWorkOrder_ID = d.WorkOrderIDRel
+		LEFT
+		JOIN
+		(select count(WorkOrderIDRel) num,WorkOrderIDRel from
+		QM_QualityInspectionPlanExecute where JudgmentResults = '全部不合格' GROUP
+		BY WorkOrderIDRel) e on a.PlanningWorkOrder_ID = e.WorkOrderIDRel
+		GROUP BY a.OutputMaterial ,c.num,a.FCount,d.num,e.num,b.num) f
+		where
+		1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.产品名称 LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		GROUP BY f.产品名称
+	</select>
+
+	<!-- 报废明细列表 -->
+	<select id="datalistPageBF" parameterType="page" resultType="pd">
+		SELECT
+		master.WorkOrderNum as WorkOrderNum,
+		master.OrderNum as OrderNum,
+		ISNULL(customer.FName , '无')as FName,
+		master.FPlanner as FPlanner,
+		master.OutputMaterial as OutputMaterial,
+		mc.FOperateTime as
+		FOperateTime
+		FROM
+		(
+		SELECT
+		*
+		FROM
+		KM_MaterialConsume
+		WHERE
+		OutType = '报废'
+		AND
+		FType = '产出'
+		) mc
+		LEFT JOIN MBASE_MAT_AUXILIARYMX mx ON
+		mx.MAT_AUXILIARYMX_ID =
+		mc.MaterialSPropKey
+		LEFT JOIN
+		PP_PlanningWorkOrderMaster master ON master.WorkOrderNum =
+		mx.MAT_AUXILIARYMX_CODE
+		left join KM_Customer customer on
+		customer.Customer_ID = master.FCustomer
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			master.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			master.OrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			customer.FName LIKE
+			'%'+ #{pd.KEYWORDS}+'%'
+			or
+			master.FPlanner LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			master.OutputMaterial LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart] order by WorkOrderNum desc [fhend]
+	</select>
+
+	<!-- 返修明细列表 -->
+	<select id="datalistPageFX" parameterType="page" resultType="pd">
+		SELECT
+		master.WorkOrderNum as WorkOrderNum,
+		master.OrderNum as OrderNum,
+		ISNULL(customer.FName , '无')as FName,
+		master.FPlanner as FPlanner,
+		master.OutputMaterial as OutputMaterial,
+		mc.FOperateTime as
+		FOperateTime
+		FROM
+		(
+		SELECT
+		*
+		FROM
+		KM_MaterialConsume
+		WHERE
+		OutType = '返修'
+		AND
+		FType = '产出'
+		) mc
+		LEFT JOIN MBASE_MAT_AUXILIARYMX mx ON
+		mx.MAT_AUXILIARYMX_ID =
+		mc.MaterialSPropKey
+		LEFT JOIN
+		PP_PlanningWorkOrderMaster master ON master.WorkOrderNum =
+		mx.MAT_AUXILIARYMX_CODE
+		left join KM_Customer customer on
+		customer.Customer_ID = master.FCustomer
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			master.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			master.OrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			customer.FName LIKE
+			'%'+ #{pd.KEYWORDS}+'%'
+			or
+			master.FPlanner LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			master.OutputMaterial LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart] order by WorkOrderNum desc [fhend]
+	</select>
+
+	<!-- 个人工时明细统计列表 -->
+	<select id="datalistPagestaffWorkMx" parameterType="page"
+		resultType="pd">
+		SELECT
+		a.WorkOrderNum,
+		b.FName,
+		c.NAME,
+		(SELECT ISNULL(NAME,'') NAME FROM
+		OA_STAFF WHERE STAFF_ID = f.Examiners)
+		ENAME,
+		f.PlanningWorkOrder_ID,
+		f.ProcessWorkOrderExample_ID,
+		f.TaskUnitManHour,
+		f.NumberOfParts,
+		f.RatedManHour,
+		f.StartTime,
+		f.EndTime,
+		f.ActualManHour,
+		f.AdjustManHour,
+		f.TotalManHour,
+		f.GeneratedType,
+		f.FillInTheDescription,
+		f.FillInThePersonID,
+		f.ReportingTime,
+		ISNULL(f.AuditMark,'') AuditMark,
+		f.Examiners,
+		f.AuditTime,
+		f.AuditOpinion,
+		f.WorkingHours_ID
+		FROM
+		PP_WorkingHours f
+		LEFT JOIN PP_PlanningWorkOrder a ON
+		f.PlanningWorkOrder_ID =
+		a.PlanningWorkOrder_ID
+		LEFT JOIN
+		KM_ProcessDefinition b ON f.ProcessWorkOrderExample_ID =
+		b.ProcessDefinition_ID
+		LEFT JOIN OA_STAFF c ON f.FillInThePersonID =
+		c.STAFF_ID
+		where c.NAME=#{pd.NAME} and
+		SUBSTRING(f.ReportingTime,1,7)=#{pd.MonthY}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			b.FName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			c.NAME LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			a.WorkOrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart]ORDER BY f.ReportingTime DESC[fhend]
+	</select>
+
+	<!-- 产品实际生产数量明细统计列表 -->
+	<select id="datalistPageCPSCNumOne" parameterType="page"
+		resultType="pd">
+		SELECT
+		p3.FType,p3.MaterialBarCode,p3.MaterialBatchNum,p3.MaterialSProp,p3.MaterialSPropKey,p3.FUnit,p3.ConsumptionQuantity,p3.WorkOrderRel
+		,p3.FOperatorID,p3.FOperateTime,p3.BatchNum,p3.MaterialName,p3.FOperatorName
+		FROM PP_ProcessWorkOrderExample p1
+		LEFT JOIN
+		PP_WorkorderProcessIOExample p2
+		ON p1.ProcessWorkOrderExample_ID =
+		p2.ProcessWorkOrderExampleID
+		LEFT JOIN (
+		SELECT w.*,w2.NAME AS
+		FOperatorName FROM KM_MaterialConsume w
+		LEFT JOIN OA_STAFF w2
+		ON
+		w.FOperatorID = w2.STAFF_ID
+		WHERE w.FType='产出' AND
+		w.DataSources='PP_WorkorderProcessIOExample'
+		) p3
+		ON
+		p2.WorkorderProcessIOExample_ID = p3.ConsumptionDocumentID
+		WHERE
+		p1.PlanningWorkOrderID=#{pd.PlanningWorkOrder_ID} AND
+		p1.ProcessIMaterielID=#{pd.OutputMaterialID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			p3.FType LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			p3.MaterialBarCode LIKE
+			'%'+ #{pd.KEYWORDS}+'%'
+			or
+			p3.MaterialBatchNum LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			p3.BatchNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart]ORDER BY FOperateTime DESC[fhend]
+	</select>
+
+	<!-- 产品报废生产数量明细统计列表 -->
+	<select id="datalistPageCPSCNumTwo" parameterType="page"
+		resultType="pd">
+		SELECT
+		p3.FType,p3.MaterialBarCode,p3.MaterialBatchNum,p3.MaterialSProp,p3.MaterialSPropKey,p3.FUnit,p3.ConsumptionQuantity,p3.WorkOrderRel
+		,p3.FOperatorID,p3.FOperateTime,p3.BatchNum,p3.MaterialName,p3.FOperatorName
+		FROM PP_ProcessWorkOrderExample p1
+		LEFT JOIN
+		PP_WorkorderProcessIOExample p2
+		ON p1.ProcessWorkOrderExample_ID =
+		p2.ProcessWorkOrderExampleID
+		LEFT JOIN (
+		SELECT w.*,w2.NAME AS
+		FOperatorName FROM KM_MaterialConsume w
+		LEFT JOIN OA_STAFF w2
+		ON
+		w.FOperatorID = w2.STAFF_ID
+		WHERE w.FType='产出' AND w.OutType='报废' AND
+		w.DataSources='PP_WorkorderProcessIOExample'
+		) p3
+		ON
+		p2.WorkorderProcessIOExample_ID = p3.ConsumptionDocumentID
+		WHERE
+		p1.PlanningWorkOrderID=#{pd.PlanningWorkOrder_ID} AND
+		p1.ProcessIMaterielID=#{pd.OutputMaterialID}
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			p3.FType LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			p3.MaterialBarCode LIKE
+			'%'+ #{pd.KEYWORDS}+'%'
+			or
+			p3.MaterialBatchNum LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			p3.BatchNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart]ORDER BY FOperateTime DESC[fhend]
+	</select>
+
+	<!-- 产品报废生产数量明细统计列表 -->
+	<select id="datalistPageRWGS" parameterType="page" resultType="pd">
+		SELECT
+		mm.OPerson,mm.BeginTime,mm.EndTime,mm1.EQMNAME,mm1.WPName,mm1.MAT_NAME,ISNULL(mm1.ConsumptionQuantity,
+		0)NUM ,mm1.WokNum,mm1.OrderNum FROM (
+		SELECT
+		f.OPerson,f.WorkingProcedureExampleID,f.OStation,f.PlanningWorkOrder_ID,MIN(f.BeginTime)
+		BeginTime,MAX(f.EndTime)
+		EndTime,Convert(decimal(18,2),Convert(decimal(18,2),SUM(DATEDIFF(
+		Minute, f.BeginTime, f.EndTime)))/60) NUM
+		FROM PP_O_RECORD f
+		WHERE
+		f.EndTime IS NOT NULL AND f.EndTime!=''
+		GROUP BY
+		f.OPerson,f.WorkingProcedureExampleID,f.OStation,f.PlanningWorkOrder_ID
+		)mm
+		LEFT JOIN(
+		SELECT
+		f.ProcessWorkOrderExample_ID,f.WPName,f2.EQMNAME,f.WokNum,f.OrderNum,f1.*
+		FROM PP_ProcessWorkOrderExample f
+		LEFT JOIN(
+		SELECT
+		t.ProcessWorkOrderExampleID,t.MaterialID,t2.MAT_NAME,SUM(t1.ConsumptionQuantity)
+		ConsumptionQuantity FROM PP_WorkorderProcessIOExample t
+		LEFT JOIN
+		KM_MaterialConsume t1
+		ON t.WorkorderProcessIOExample_ID =
+		t1.ConsumptionDocumentID
+		LEFT JOIN MBASE_MAT_BASIC t2
+		ON t.MaterialID =
+		t2.MAT_BASIC_ID
+		WHERE t.TType='产出'
+		GROUP BY
+		t.ProcessWorkOrderExampleID,t.MaterialID,t2.MAT_NAME
+		) f1
+		ON
+		f.ProcessWorkOrderExample_ID = f1.ProcessWorkOrderExampleID
+		LEFT JOIN (
+		SELECT v.WC_STATION_ID,v2.FNAME EQMNAME FROM MDM_WC_STATION v
+		LEFT JOIN
+		MDM_EQM_BASE v2
+		ON v.EQM_BASE_ID = v2.EQM_BASE_ID
+		) f2
+		ON f.FStation =
+		f2.WC_STATION_ID
+		)mm1
+		ON mm.WorkingProcedureExampleID =
+		mm1.ProcessWorkOrderExample_ID
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+			(
+			mm.OPerson LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			mm1.EQMNAME LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			mm1.WPName LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			mm1.MAT_NAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+			or
+			mm1.WokNum LIKE '%'+
+			#{pd.KEYWORDS}+'%'
+			or
+			mm1.OrderNum LIKE '%'+ #{pd.KEYWORDS}+'%'
+			)
+		</if>
+		[fhstart]ORDER BY EndTime DESC[fhend]
+	</select>
+	<select id="QAStatement" parameterType="pd" resultType="pd">
+		SELECT
+		t2.*, CONVERT (
+		DECIMAL (10, 2),
+		(
+		t2.QualifiedCount + t2.CompromisedCount
+		) / t2.FCount * 100
+		) Perc
+		FROM
+		(
+		SELECT
+		f.DataSources,
+		a.QIType,
+		SUM (
+		CONVERT (DECIMAL(10, 2), f.FCount)
+		) AS FCount,
+		unit.FCODE AS UNIT_CODE,
+		e.MAT_NAME,
+		e.MAT_CODE,
+		SUM (
+		CONVERT (
+		DECIMAL (10, 2),
+		t.QualifiedCount
+		)
+		) AS QualifiedCount,
+		SUM (
+		CONVERT (
+		DECIMAL (10, 2),
+		t.CompromisedCount
+		)
+		) AS CompromisedCount,
+		SUM (
+		CONVERT (
+		DECIMAL (10, 2),
+		t.DisqualifiedCount
+		)
+		) AS DisqualifiedCount
+		FROM
+		QM_QualityInspectionPlanExecute f
+		LEFT JOIN KM_QualityInspectionPlan a ON f.QIPlanID =
+		a.QualityInspectionPlan_ID
+		LEFT JOIN MBASE_MAT_BASIC e ON f.MaterialID = e.MAT_BASIC_ID
+		LEFT JOIN mbase_unit_info unit ON unit.unit_info_id = e.MAT_MAIN_UNIT
+		LEFT JOIN (
+		SELECT
+		QualityInspectionPlanExecute_ID,
+		SUM (
+		CONVERT (
+		DECIMAL (10, 2),
+		isnull(QualifiedCount, 0)
+		)
+		) QualifiedCount,
+		SUM (
+		CONVERT (
+		DECIMAL (10, 2),
+		isnull(CompromisedCount, 0)
+		)
+		) CompromisedCount,
+		SUM (
+		CONVERT (
+		DECIMAL (10, 2),
+		isnull(DisqualifiedCount, 0)
+		)
+		) DisqualifiedCount
+		FROM
+		QM_QualityInspectionPlanExecuteSample
+		GROUP BY
+		QualityInspectionPlanExecute_ID
+		) t ON t.QualityInspectionPlanExecute_ID =
+		f.QualityInspectionPlanExecute_ID
+		WHERE
+		1 = 1
+		<if test="ExecutionStatus != null and ExecutionStatus != '' ">
+			AND ExecutionStatus = #{ExecutionStatus}
+		</if>
+		<if test="DateType != null and DateType != '' and DateType == 'day'">
+			<if test="FBeginTime != null and FBeginTime != ''">
+				AND CONVERT (VARCHAR (10),f.FBeginTime,120) &gt;= #{FBeginTime}
+			</if>
+			<if test="FEndTime != null and FEndTime != ''">
+				AND CONVERT (VARCHAR(10), f.FEndTime, 120) &lt;= #{FEndTime}
+			</if>
+		</if>
+		<if test="DateType != null and DateType != '' and DateType == 'month'">
+			<if test="FBeginTime != null and FBeginTime != ''">
+				AND CONVERT (VARCHAR (7),f.FBeginTime,120) &gt;= #{FBeginTime}
+			</if>
+			<if test="FEndTime != null and FEndTime != ''">
+				AND CONVERT (VARCHAR(7), f.FEndTime, 120) &lt;= #{FEndTime}
+			</if>
+		</if>
+		<if test="DateType != null and DateType != '' and DateType == 'year'">
+			<if test="FBeginTime != null and FBeginTime != ''">
+				AND CONVERT (VARCHAR (4),f.FBeginTime,120) &gt;= #{FBeginTime}
+			</if>
+			<if test="FEndTime != null and FEndTime != ''">
+				AND CONVERT (VARCHAR(4), f.FEndTime, 120) &lt;= #{FEndTime}
+			</if>
+		</if>
+		<if test="DataSources != null and DataSources != ''">
+			AND DataSources = #{DataSources}
+		</if>
+		<if test="QIType != null and QIType != ''">
+			AND QIType = #{QIType}
+		</if>
+		GROUP BY
+		DataSources,
+		QIType,
+		FCODE,
+		MAT_NAME,
+		MAT_CODE
+		) t2
+		ORDER BY
+		t2.MAT_NAME,
+		t2.QIType,
+		t2.DataSources
+	</select>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

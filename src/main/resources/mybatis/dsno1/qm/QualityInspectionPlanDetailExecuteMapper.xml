@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.qm.QualityInspectionPlanDetailExecuteMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		QM_QualityInspectionPlanDetailExecute
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.SortKey,	
+		f.QIPlanID,	
+		f.QIItemID,	
+		f.StandardType,	
+		f.ToleranceType,	
+		f.FRetain,	
+		f.StandardValue,	
+		f.UpperDeviation,	
+		f.LowerDeviation,	
+		f.FMinimum,	
+		f.FMaximum,	
+		f.FUnit,	
+		f.BreakdownOfBadReasons,	
+		f.BadnessReasonLevel,
+		f.FCustomer,	
+		f.FormulaValue,	
+		f.FExplanation,	
+		f.InspecteKey,	
+		f.InspectionAndJudgment,	
+		f.JudgingType,	
+		f.InspectionAndTestTime,	
+		f.InspectorID,	
+		f.TestResultsDesc,	
+		f.FinishOnce,
+		f.BadnessLevel,
+		f.QualityInspectionPlanExecuteSample_ID,
+		f.QualityInspectionPlanDetailExecute_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		SortKey,	
+		QIPlanID,	
+		QIItemID,	
+		StandardType,	
+		ToleranceType,	
+		FRetain,	
+		StandardValue,	
+		UpperDeviation,	
+		LowerDeviation,	
+		FMinimum,	
+		FMaximum,	
+		FUnit,	
+		BreakdownOfBadReasons,	
+		BadnessReasonLevel,
+		FCustomer,	
+		FormulaValue,	
+		FExplanation,	
+		InspecteKey,	
+		InspectionAndJudgment,	
+		JudgingType,	
+		InspectionAndTestTime,	
+		InspectorID,	
+		TestResultsDesc,	
+		FinishOnce,
+		BadnessLevel,
+		QualityInspectionPlanExecute_ID,
+		QualityInspectionPlanExecuteSample_ID,
+		QualityInspectionPlanDetailExecute_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{SortKey},	
+		#{QIPlanID},	
+		#{QIItemID},	
+		#{StandardType},	
+		#{ToleranceType},	
+		#{FRetain},	
+		#{StandardValue},	
+		#{UpperDeviation},	
+		#{LowerDeviation},	
+		#{FMinimum},	
+		#{FMaximum},	
+		#{FUnit},	
+		#{BreakdownOfBadReasons},
+		#{BadnessReasonLevel},	
+		#{FCustomer},	
+		#{FormulaValue},	
+		#{FExplanation},	
+		#{InspecteKey},	
+		#{InspectionAndJudgment},	
+		#{JudgingType},	
+		#{InspectionAndTestTime},	
+		#{InspectorID},	
+		#{TestResultsDesc},	
+		#{FinishOnce},
+		#{BadnessLevel},
+		#{QualityInspectionPlanExecute_ID},
+		#{QualityInspectionPlanExecuteSample_ID},
+		#{QualityInspectionPlanDetailExecute_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QualityInspectionPlanDetailExecute_ID = #{QualityInspectionPlanDetailExecute_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			StandardType = #{StandardType},
+			ToleranceType = #{ToleranceType},
+			FRetain = #{FRetain},
+			StandardValue = #{StandardValue},
+			UpperDeviation = #{UpperDeviation},
+			LowerDeviation = #{LowerDeviation},
+			FMinimum = #{FMinimum},
+			FMaximum = #{FMaximum},
+			BreakdownOfBadReasons = #{BreakdownOfBadReasons},
+			BadnessReasonLevel = #{BadnessReasonLevel},
+			FCustomer = #{FCustomer},
+			BadnessLevel = #{BadnessLevel},
+			FExplanation = #{FExplanation},
+			FUnit = #{FUnit},
+			QualityInspectionPlanExecuteSample_ID = #{QualityInspectionPlanExecuteSample_ID},
+			FormulaValue = #{FormulaValue}
+		where 
+			QualityInspectionPlanDetailExecute_ID = #{QualityInspectionPlanDetailExecute_ID}
+	</update>
+	<!-- 质检任务明细执行，修改剩余的字段 -->
+	<update id="ImplementQI" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			InspecteKey = #{InspecteKey},
+			InspectionAndJudgment = #{InspectionAndJudgment},
+			JudgingType = #{JudgingType},
+			InspectionAndTestTime = #{InspectionAndTestTime},
+			InspectorID = #{InspectorID},
+			TestResultsDesc = #{TestResultsDesc}
+		where 
+			QualityInspectionPlanDetailExecute_ID = #{QualityInspectionPlanDetailExecute_ID}
+	</update>
+	<!-- 修改单条质检任务明细完成状态 -->
+	<update id="goFinish" parameterType="pd">
+		update 
+		<include refid="tableName"></include>
+		set 
+			FinishOnce = 1
+		where 
+			QualityInspectionPlanDetailExecute_ID = #{QualityInspectionPlanDetailExecute_ID}
+	</update>
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT
+			f.QualityInspectionPlanDetailExecute_ID,
+			f.SortKey,--排序值
+			a.FName QIItemID,--质检项
+			b.FName QIPlanID,--质检方案
+			f.StandardType,--标准类型
+			f.ToleranceType,--允差类型
+			f.FRetain,--保留
+			f.StandardValue,--标准值
+			f.UpperDeviation,--上偏差
+			f.LowerDeviation,--下偏差
+			f.FMinimum,--最大值
+			f.FMaximum,--最小值
+			f.FUnit,--单位
+			isnull(d1.NAME,'') BreakdownOfBadReasonsNAME,--不良原因分析
+			isnull(f.BreakdownOfBadReasons,'') BreakdownOfBadReasons,--不良原因ID
+			isnull(f.BadnessReasonLevel,'') BadnessReasonLevel,--不良原因细分ID
+			isnull(d2.NAME,'') BadnessReasonLevelNAME,--不良原因细分
+			isnull(f.FCustomer,'') FCustomer,--客户ID
+			isnull(cu.FNAME,'') FCustomerNAME,--客户名称
+			f.FormulaValue,--公式值
+			f.FExplanation,--备注
+			f.InspecteKey,--检验值
+			f.InspectionAndJudgment,--检验判定
+			f.JudgingType,--判定类型
+			f.InspectionAndTestTime,--检验时间
+			c.NAME InspectorID,--检验人
+			f.TestResultsDesc,--检验结果描述
+			f.BadnessLevel,--不良品等级
+			f.QualityInspectionPlanExecute_ID,--质检任务ID
+			f.QualityInspectionPlanExecuteSample_ID,
+			case when f.FinishOnce = 1 then '已完成' else '未完成' end FinishOnce--单条完成状态
+		FROM
+		QM_QualityInspectionPlanDetailExecute f
+		LEFT JOIN KM_QualityInspectionItems a on f.QIItemID = a.QualityInspectionItems_ID
+		LEFT JOIN KM_QualityInspectionPlan b on f.QIPlanID = b.FName
+		LEFT JOIN OA_STAFF c on f.InspectorID = c.STAFF_ID
+		left join SYS_DICTIONARIES d1 on f.BreakdownOfBadReasons = d1.DICTIONARIES_ID
+		left join SYS_DICTIONARIES d2 on f.BreakdownOfBadReasons = d2.DICTIONARIES_ID
+		left join KM_Customer cu on f.FCustomer = cu.Customer_ID
+		where 
+			f.QualityInspectionPlanDetailExecute_ID = #{QualityInspectionPlanDetailExecute_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT
+			f.QualityInspectionPlanDetailExecute_ID,
+			f.SortKey,--排序值
+			a.FName QIItemID,--质检项
+			b.FName QIPlanID,--质检方案
+			f.StandardType,--标准类型
+			f.ToleranceType,--允差类型
+			f.FRetain,--保留
+			f.StandardValue,--标准值
+			f.UpperDeviation,--上偏差
+			f.LowerDeviation,--下偏差
+			f.FMinimum,--最大值
+			f.FMaximum,--最小值
+			f.FUnit,--单位
+			isnull(d1.NAME,'') BreakdownOfBadReasonsNAME,--不良原因
+			isnull(f.BreakdownOfBadReasons,'') BreakdownOfBadReasons,--不良原因ID
+			isnull(f.BadnessReasonLevel,'') BadnessReasonLevel,--不良原因细分ID
+			isnull(d2.NAME,'') BadnessReasonLevelNAME,--不良原因细分
+			isnull(f.FCustomer,'') FCustomer,--客户ID
+			isnull(cu.FNAME,'') FCustomerNAME,--客户名称
+			f.FormulaValue,--公式值
+			f.FExplanation,--备注
+			f.InspecteKey,--检验值
+			f.InspectionAndJudgment,--检验判定
+			f.JudgingType,--判定类型
+			f.InspectionAndTestTime,--检验时间
+			c.NAME InspectorID,--检验人
+			f.TestResultsDesc,--检验结果描述
+			f.BadnessLevel,--不良品等级
+			f.QualityInspectionPlanExecute_ID,--质检任务ID
+			f.QualityInspectionPlanExecuteSample_ID,
+			case when f.FinishOnce = 1 then '已完成' else '未完成' end FinishOnce--单条完成状态
+		FROM
+		QM_QualityInspectionPlanDetailExecute f
+		LEFT JOIN KM_QualityInspectionItems a on f.QIItemID = a.QualityInspectionItems_ID
+		LEFT JOIN KM_QualityInspectionPlan b on f.QIPlanID = b.FName
+		LEFT JOIN OA_STAFF c on f.InspectorID = c.STAFF_ID
+		left join SYS_DICTIONARIES d1 on f.BreakdownOfBadReasons = d1.DICTIONARIES_ID
+		left join SYS_DICTIONARIES d2 on f.BadnessReasonLevel = d2.DICTIONARIES_ID
+		left join KM_Customer cu on f.FCustomer = cu.Customer_ID
+		where 1=1 and f.QualityInspectionPlanExecute_ID = #{pd.QualityInspectionPlanExecute_ID}
+		<if test="pd.QualityInspectionPlanExecuteSample_ID!=null and pd.QualityInspectionPlanExecuteSample_ID != ''">
+			and f.QualityInspectionPlanExecuteSample_ID = #{pd.QualityInspectionPlanExecuteSample_ID}
+		</if>
+		[fhstart] order by cast(SortKey as int) [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		SELECT
+			f.QualityInspectionPlanDetailExecute_ID,
+			f.SortKey,--排序值
+			a.FName QIItemID,--质检项
+			b.FName QIPlanID,--质检方案
+			f.StandardType,--标准类型
+			f.ToleranceType,--允差类型
+			f.FRetain,--保留
+			f.StandardValue,--标准值
+			f.UpperDeviation,--上偏差
+			f.LowerDeviation,--下偏差
+			f.FMinimum,--最大值
+			f.FMaximum,--最小值
+			f.FUnit,--单位
+			isnull(d1.NAME,'') BreakdownOfBadReasonsNAME,--不良原因分析
+			isnull(f.BreakdownOfBadReasons,'') BreakdownOfBadReasons,--不良原因ID
+			isnull(f.BadnessReasonLevel,'') BadnessReasonLevel,--不良原因细分ID
+			isnull(d2.NAME,'') BadnessReasonLevelNAME,--不良原因细分
+			isnull(f.FCustomer,'') FCustomer,--客户ID
+			isnull(cu.FNAME,'') FCustomerNAME,--客户名称
+			f.FormulaValue,--公式值
+			f.FExplanation,--备注
+			f.InspecteKey,--检验值
+			f.InspectionAndJudgment,--检验判定
+			f.JudgingType,--判定类型
+			f.InspectionAndTestTime,--检验时间
+			c.NAME InspectorID,--检验人
+			f.TestResultsDesc,--检验结果描述
+			f.BadnessLevel,--不良品等级
+			f.QualityInspectionPlanExecute_ID,--质检任务ID
+			f.QualityInspectionPlanExecuteSample_ID,
+			case when f.FinishOnce = 1 then '已完成' else '未完成' end FinishOnce--单条完成状态
+		FROM
+		QM_QualityInspectionPlanDetailExecute f
+		LEFT JOIN KM_QualityInspectionItems a on f.QIItemID = a.QualityInspectionItems_ID
+		LEFT JOIN KM_QualityInspectionPlan b on f.QIPlanID = b.FName
+		LEFT JOIN OA_STAFF c on f.InspectorID = c.STAFF_ID
+		left join SYS_DICTIONARIES d1 on f.BreakdownOfBadReasons = d1.DICTIONARIES_ID
+		left join SYS_DICTIONARIES d2 on f.BreakdownOfBadReasons = d2.DICTIONARIES_ID
+		left join KM_Customer cu on f.FCustomer = cu.Customer_ID
+		where 1=1 
+		<if test="QualityInspectionPlanExecute_ID != null and QualityInspectionPlanExecute_ID != ''">
+		and f.QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID}
+		</if>
+		<if test="QualityInspectionPlanExecuteSample_ID!=null and QualityInspectionPlanExecuteSample_ID != ''">
+			and f.QualityInspectionPlanExecuteSample_ID = #{QualityInspectionPlanExecuteSample_ID}
+		</if>
+		order by cast(f.SortKey as int)
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			QualityInspectionPlanDetailExecute_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<select id="getMaxSortKey" parameterType="pd" resultType="String">
+		select 
+			top 1 SortKey 
+		from 
+			<include refid="tableName"></include>
+	    where 
+	    	QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID} 
+	    order by SortKey desc
+	</select>
+	<!-- 获取上一条质检任务的完成状态 -->
+	<select id="getLastMx" parameterType="pd" resultType="pd">
+		select FinishOnce  from <include refid="tableName"></include>
+		where SortKey = #{SortKey} and QualityInspectionPlanDetailExecute_ID = #{QualityInspectionPlanDetailExecute_ID}
+	</select>
+	<select id="AppList" parameterType="org.yy.controller.app.AppPage" resultType="pd">
+		SELECT
+			f.QualityInspectionPlanDetailExecute_ID,
+			f.SortKey,--排序值
+			a.FName QIItemID,--质检项
+			b.FName QIPlanID,--质检方案
+			f.StandardType,--标准类型
+			f.ToleranceType,--允差类型
+			f.FRetain,--保留
+			f.StandardValue,--标准值
+			f.UpperDeviation,--上偏差
+			f.LowerDeviation,--下偏差
+			f.FMinimum,--最大值
+			f.FMaximum,--最小值
+			f.FUnit,--单位
+			isnull(d1.NAME,'') BreakdownOfBadReasonsNAME,--不良原因分析
+			isnull(f.BreakdownOfBadReasons,'') BreakdownOfBadReasons,--不良原因ID
+			isnull(f.BadnessReasonLevel,'') BadnessReasonLevel,--不良原因细分ID
+			isnull(d2.NAME,'') BadnessReasonLevelNAME,--不良原因细分
+			isnull(f.FCustomer,'') FCustomer,--客户ID
+			isnull(cu.FNAME,'') FCustomerNAME,--客户名称
+			f.FormulaValue,--公式值
+			f.FExplanation,--备注
+			f.InspecteKey,--检验值
+			f.InspectionAndJudgment,--检验判定
+			f.JudgingType,--判定类型
+			f.InspectionAndTestTime,--检验时间
+			c.NAME InspectorID,--检验人
+			f.TestResultsDesc,--检验结果描述
+			f.BadnessLevel,--不良品等级
+			f.QualityInspectionPlanExecute_ID,--质检任务ID
+			f.QualityInspectionPlanExecuteSample_ID,
+			case when f.FinishOnce = 1 then '已完成' else '未完成' end FinishOnce--单条完成状态
+		FROM
+		QM_QualityInspectionPlanDetailExecute f
+		LEFT JOIN KM_QualityInspectionItems a on f.QIItemID = a.QualityInspectionItems_ID
+		LEFT JOIN KM_QualityInspectionPlan b on f.QIPlanID = b.FName
+		LEFT JOIN OA_STAFF c on f.InspectorID = c.STAFF_ID
+		left join SYS_DICTIONARIES d1 on f.BreakdownOfBadReasons = d1.DICTIONARIES_ID
+		left join SYS_DICTIONARIES d2 on f.BreakdownOfBadReasons = d2.DICTIONARIES_ID
+		left join KM_Customer cu on f.FCustomer = cu.Customer_ID
+		where 1=1 and f.QualityInspectionPlanExecute_ID = #{pd.QualityInspectionPlanExecute_ID}
+		<if test="QualityInspectionPlanExecuteSample_ID!=null and QualityInspectionPlanExecuteSample_ID != ''">
+			and f.QualityInspectionPlanExecuteSample_ID = #{QualityInspectionPlanExecuteSample_ID}
+		</if>
+	</select>
+	<select id="findBySortKeyList_ID" parameterType="pd" resultType="pd">
+		SELECT top 1
+			(
+			SELECT COUNT(QualityInspectionPlanDetailExecute_ID) FROM QM_QualityInspectionPlanDetailExecute 
+			WHERE FinishOnce!=1 AND QualityInspectionPlanExecute_ID=f.QualityInspectionPlanExecute_ID
+			) as ToBeDone,
+			f.QualityInspectionPlanDetailExecute_ID,
+			f.SortKey,--排序值
+			a.FName QIItemID,--质检项
+			b.FName QIPlanID,--质检方案
+			f.StandardType,--标准类型
+			f.ToleranceType,--允差类型
+			f.FRetain,--保留
+			f.StandardValue,--标准值
+			f.UpperDeviation,--上偏差
+			f.LowerDeviation,--下偏差
+			f.FMinimum,--最大值
+			f.FMaximum,--最小值
+			f.FUnit,--单位
+			isnull(d1.NAME,'') BreakdownOfBadReasonsNAME,--不良原因分析
+			isnull(f.BreakdownOfBadReasons,'') BreakdownOfBadReasons,--不良原因ID
+			isnull(f.BadnessReasonLevel,'') BadnessReasonLevel,--不良原因细分ID
+			isnull(f.FCustomer,'') FCustomer,--客户ID
+			isnull(cu.FNAME,'') FCustomerNAME,--客户名称
+			f.FormulaValue,--公式值
+			f.FExplanation,--备注
+			f.InspecteKey,--检验值
+			f.InspectionAndJudgment,--检验判定
+			f.JudgingType,--判定类型
+			f.InspectionAndTestTime,--检验时间
+			c.NAME InspectorID,--检验人
+			f.TestResultsDesc,--检验结果描述
+			f.BadnessLevel,--不良品等级
+			f.QualityInspectionPlanExecute_ID,--质检任务ID
+			f.QualityInspectionPlanExecuteSample_ID,
+			case when f.FinishOnce = 1 then '已完成' else '未完成' end FinishOnce--单条完成状态
+		FROM
+		QM_QualityInspectionPlanDetailExecute f
+		LEFT JOIN KM_QualityInspectionItems a on f.QIItemID = a.QualityInspectionItems_ID
+		LEFT JOIN KM_QualityInspectionPlan b on f.QIPlanID = b.FName
+		LEFT JOIN OA_STAFF c on f.InspectorID = c.STAFF_ID
+		left join SYS_DICTIONARIES d1 on f.BreakdownOfBadReasons = d1.DICTIONARIES_ID
+		left join KM_Customer cu on f.FCustomer = cu.Customer_ID
+		where 1=1 and f.QualityInspectionPlanExecute_ID = #{QualityInspectionPlanExecute_ID}
+		and FinishOnce!=1
+		<if test="QualityInspectionPlanExecuteSample_ID!=null and QualityInspectionPlanExecuteSample_ID != ''">
+			and f.QualityInspectionPlanExecuteSample_ID = #{QualityInspectionPlanExecuteSample_ID}
+		</if>
+		<if test="FIRST != null and FIRST != ''">
+			order by SortKey asc
+		</if>
+		<if test="SECOND != null and SECOND != ''">
+			and f.SortKey = #{SortKey}
+		</if>
+		
+	</select>
+	
+	
+	<update id="editSortKey" parameterType="pd">
+		update 
+			<include refid="tableName"></include>
+		set
+			SortKey = #{NewSortKey}
+		where
+			QualityInspectionPlanDetailExecute_ID = #{QualityInspectionPlanDetailExecute_ID} and SortKey = #{SortKey}
+	</update>
+	<update id="editBadness" parameterType="pd">
+		update 
+			<include refid="tableName"></include>
+		set
+			BadnessReasonLevel = #{DATA_IDS}
+		where
+			QualityInspectionPlanDetailExecute_ID = #{QualityInspectionPlanDetailExecute_ID} 
+	</update>
+</mapper>

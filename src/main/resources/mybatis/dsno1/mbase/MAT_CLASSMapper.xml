@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mbase.MAT_CLASSMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_MAT_CLASS
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.FCLASS,	
+		f.FLEVEL,	
+		f.FDES,	
+		f.FCREATOR,	
+		f.CREATE_TIME,
+		f.FNAME,
+		f.MAT_CLASS_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		FCLASS,	
+		FLEVEL,	
+		FDES,	
+		FCREATOR,	
+		CREATE_TIME,
+		FNAME,	
+		MAT_CLASS_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{FCLASS},	
+		#{FLEVEL},	
+		#{FDES},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{FNAME},
+		#{MAT_CLASS_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_CLASS_ID = #{MAT_CLASS_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCLASS = #{FCLASS},
+			FLEVEL = #{FLEVEL},
+			FDES = #{FDES},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			FNAME = #{FNAME},
+			MAT_CLASS_ID = MAT_CLASS_ID
+		where 
+			MAT_CLASS_ID = #{MAT_CLASS_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.MAT_CLASS_ID = #{MAT_CLASS_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FCLASS LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FLEVEL LIKE '%'+ #{pd.KEYWORDS}+'%' 
+					 or 
+					f.FCREATOR LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		 [fhstart] order by f.CREATE_TIME DESC [fhend] 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MAT_CLASS_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 获取物料类列表 -->
+	<select id="classList" parameterType="pd" resultType="pd">
+		SELECT f.FCLASS,f.MAT_CLASS_ID FROM MBASE_MAT_CLASS f
+	</select>
+	
+	<!-- 通过类名称获取数据 -->
+	<select id="findByClassId" parameterType="pd" resultType="pd">
+		SELECT ISNULL(f.MAT_CLASS_ID, '') AS MAT_CLASS_ID 
+		FROM MBASE_MAT_CLASS f 
+		WHERE f.FCLASS=#{MAT_CLASS}
+	</select>
+	
+	<!-- 获取物料类别列表-可搜索-前100条-->
+	<select id="getMatClassList" parameterType="pd" resultType="pd">
+		select
+		top 100 		
+		f.FCLASS,	
+		f.FNAME,
+		f.MAT_CLASS_ID
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键词检索 -->
+			and 
+			(
+			FCLASS LIKE '%'+ #{KEYWORDS}+'%'
+			
+			)	
+		</if>
+		 order by cast(FLEVEL as int)
+	</select>
+	<!-- YY 356703572 -->
+</mapper>

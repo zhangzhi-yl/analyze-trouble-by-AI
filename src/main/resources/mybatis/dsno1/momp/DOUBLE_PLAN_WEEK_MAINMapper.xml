@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.momp.DOUBLE_PLAN_WEEK_MAINMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		EPM_DOUBLE_PLAN_WEEK_MAIN
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PLANINSTANCE_ID,	
+		f.FEPNAME,	
+		f.FEPNUMBER,	
+		f.FIMPLEMENT_SCOPE,	
+		f.FACCEPT_PM,	
+		f.FIMPLEMENT_PM,	
+		f.FIMPLEMENT_EM,	
+		f.FCREATOR,	
+		f.FCTIME,	
+		f.FLASTMODIFY_MAN,	
+		f.FLASTMODIFY_TIME,	
+		f.FBILLNO,	
+		f.DOUBLE_PLAN_WEEK_MAIN_ID,
+		f.FTYPEG
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		PLANINSTANCE_ID,	
+		FEPNAME,	
+		FEPNUMBER,	
+		FIMPLEMENT_SCOPE,	
+		FACCEPT_PM,	
+		FIMPLEMENT_PM,	
+		FIMPLEMENT_EM,	
+		FCREATOR,	
+		FCTIME,	
+		FLASTMODIFY_MAN,	
+		FLASTMODIFY_TIME,	
+		FBILLNO,	
+		DOUBLE_PLAN_WEEK_MAIN_ID,
+		FTYPEG
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PLANINSTANCE_ID},	
+		#{FEPNAME},	
+		#{FEPNUMBER},	
+		#{FIMPLEMENT_SCOPE},	
+		#{FACCEPT_PM},	
+		#{FIMPLEMENT_PM},	
+		#{FIMPLEMENT_EM},	
+		#{FCREATOR},	
+		#{FCTIME},	
+		#{FLASTMODIFY_MAN},	
+		#{FLASTMODIFY_TIME},	
+		#{FBILLNO},	
+		#{DOUBLE_PLAN_WEEK_MAIN_ID},
+		#{FTYPEG}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DOUBLE_PLAN_WEEK_MAIN_ID = #{DOUBLE_PLAN_WEEK_MAIN_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PLANINSTANCE_ID = #{PLANINSTANCE_ID},
+			FEPNAME = #{FEPNAME},
+			FEPNUMBER = #{FEPNUMBER},
+			FIMPLEMENT_SCOPE = #{FIMPLEMENT_SCOPE},
+			FACCEPT_PM = #{FACCEPT_PM},
+			FIMPLEMENT_PM = #{FIMPLEMENT_PM},
+			FIMPLEMENT_EM = #{FIMPLEMENT_EM},
+			FCREATOR = #{FCREATOR},
+			FCTIME = #{FCTIME},
+			FLASTMODIFY_MAN = #{FLASTMODIFY_MAN},
+			FLASTMODIFY_TIME = #{FLASTMODIFY_TIME},
+			FBILLNO = #{FBILLNO},
+			DOUBLE_PLAN_WEEK_MAIN_ID = DOUBLE_PLAN_WEEK_MAIN_ID
+		where 
+			DOUBLE_PLAN_WEEK_MAIN_ID = #{DOUBLE_PLAN_WEEK_MAIN_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.DOUBLE_PLAN_WEEK_MAIN_ID = #{DOUBLE_PLAN_WEEK_MAIN_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		(select top 1 DOUBLE_PLAN_WEEK_STATE_ID from EPM_DOUBLE_PLAN_WEEK_STATE f1 where f1.DOUBLE_PLAN_WEEK_MAIN_ID=f.DOUBLE_PLAN_WEEK_MAIN_ID) DOUBLE_PLAN_WEEK_STATE_ID
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 项目信息 -->
+			and
+				(
+					FEPNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					FEPNUMBER LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.KEYWORDS1!= null and pd.KEYWORDS1 != ''"><!-- 项目经理 -->
+			and
+				(
+					FIMPLEMENT_PM LIKE '%'+ #{pd.KEYWORDS1}+'%'
+					 or 
+					FIMPLEMENT_EM LIKE '%'+ #{pd.KEYWORDS1}+'%' 
+					 or 
+					FACCEPT_PM LIKE '%'+ #{pd.KEYWORDS1}+'%' 
+				)
+		</if>
+		<if test="pd.lastStart!= null and pd.lastStart != ''"><!-- 开始日期 -->
+			and
+				(
+					substring(FCTIME,1,10) &gt;= #{pd.lastStart}
+					
+				)
+		</if>
+		<if test="pd.lastEnd!= null and pd.lastEnd != ''"><!-- 结束日期 -->
+			and
+				(
+					substring(FCTIME,1,10) &lt;= #{pd.lastEnd}
+					
+				)
+		</if>
+		and FCREATOR=#{pd.NAME}
+		[fhstart] ORDER BY FCTIME  DESC  [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		(select top 1 DOUBLE_PLAN_WEEK_STATE_ID from EPM_DOUBLE_PLAN_WEEK_STATE f1 where f1.DOUBLE_PLAN_WEEK_MAIN_ID=f.DOUBLE_PLAN_WEEK_MAIN_ID) DOUBLE_PLAN_WEEK_STATE_ID
+		from 
+		<include refid="tableName"></include> f
+		where 
+		1=1
+		<choose>
+                <when test="TYPEGYX != null and TYPEGYX == 'NEW'.toString()">
+                    and DOUBLE_PLAN_WEEK_MAIN_ID=#{DOUBLE_PLAN_WEEK_MAIN_ID}
+                </when>
+               
+                <otherwise>
+                	
+                </otherwise>
+         </choose> 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			DOUBLE_PLAN_WEEK_MAIN_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 获得项目列表-->
+	<select id="getEPROJECTS" parameterType="pd" resultType="pd">
+		select
+		top 10 *
+		from 
+		EPM_PLANINSTANCE f
+		where 1=1
+		<if test="query!= null and query != ''">
+			and
+				(
+					FPINAME LIKE '%'+ #{query}+'%'
+					 or 
+					FPICONTRACTNAME LIKE '%'+ #{query}+'%' 
+				)
+		</if>
+	</select>
+	<!-- 根据图标显示文字获得id-->
+	<select id="getICON" parameterType="pd" resultType="pd">
+		select 
+		ICONCOLOR_ID
+		from 
+		EPM_ICONCOLOR f
+		where 
+		1=1
+		and	f.FTEXT = #{FTEXT}			
+		<choose>
+                <when test="FUNCTION_ID != null and FUNCTION_ID != ''">
+                    and f.FUNCTION_ID=#{FUNCTION_ID}
+                </when>
+                <otherwise>
+                
+                </otherwise>
+         </choose> 
+	</select>
+	<!-- 查询本周双周计划数-->
+	<select id="findNUM" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) FNUM
+		from
+		<include refid="tableName"></include> f
+		
+		where 
+			f.PLANINSTANCE_ID = #{PLANINSTANCE_ID}
+            and (substring(FCTIME,1,10) BETWEEN DATEADD(wk, DATEDIFF(wk,0,getdate()), 0)  and DATEADD(wk, DATEDIFF(wk,0,getdate()), 6) )
+			and f.FCREATOR = #{FNAME}
+	</select>
+	<!-- 修改 -->
+	<update id="editE" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			
+			FIMPLEMENT_SCOPE = #{FIMPLEMENT_SCOPE},
+			FACCEPT_PM = #{FACCEPT_PM},
+			FIMPLEMENT_PM = #{FIMPLEMENT_PM},
+			FIMPLEMENT_EM = #{FIMPLEMENT_EM},
+			
+			FLASTMODIFY_MAN = #{FLASTMODIFY_MAN},
+			FLASTMODIFY_TIME = #{FLASTMODIFY_TIME}
+			
+		where 
+			DOUBLE_PLAN_WEEK_MAIN_ID = #{DOUBLE_PLAN_WEEK_MAIN_ID}
+	</update>
+	<!-- YY 356703572 -->
+</mapper>

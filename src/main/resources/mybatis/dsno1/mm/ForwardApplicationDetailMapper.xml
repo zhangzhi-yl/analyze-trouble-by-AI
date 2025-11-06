@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mm.ForwardApplicationDetailMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MM_ForwardApplicationDetail
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ForwardApplication_ID,	
+		f.DataSources,	
+		f.SourceOrderNum,	
+		f.ItemID,	
+		f.SpecificationDesc,	
+		f.ThisExecutionNumber,	
+		f.FCount,	
+		f.RowNum,	
+		f.LineClose,	
+		f.FUnit,	
+		f.AvailableStock,	
+		f.SalesOrderID,	
+		f.FCustomer,	
+		f.DeliveryTime,	
+		f.FExplanation,	
+		f.ForwardApplicationDetail_ID,
+		f.SourceRowNum,
+		f.GrossWeight
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		ForwardApplication_ID,	
+		DataSources,	
+		SourceOrderNum,	
+		ItemID,	
+		SpecificationDesc,	
+		ThisExecutionNumber,	
+		FCount,	
+		RowNum,	
+		LineClose,	
+		FUnit,	
+		AvailableStock,	
+		SalesOrderID,	
+		FCustomer,	
+		DeliveryTime,	
+		FExplanation,	
+		ForwardApplicationDetail_ID,
+		SourceRowNum,
+		GrossWeight
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ForwardApplication_ID},	
+		#{DataSources},	
+		#{SourceOrderNum},	
+		#{ItemID},	
+		#{SpecificationDesc},	
+		#{ThisExecutionNumber},	
+		#{FCount},	
+		#{RowNum},	
+		#{LineClose},	
+		#{FUnit},	
+		#{AvailableStock},	
+		#{SalesOrderID},	
+		#{FCustomer},	
+		#{DeliveryTime},	
+		#{FExplanation},	
+		#{ForwardApplicationDetail_ID},
+		#{SourceRowNum},
+		#{GrossWeight}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ForwardApplicationDetail_ID = #{ForwardApplicationDetail_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ItemID = #{ItemID},
+			SpecificationDesc = #{SpecificationDesc},
+			ThisExecutionNumber = #{ThisExecutionNumber},
+			FCustomer = #{FCustomer},
+			DeliveryTime = #{DeliveryTime},
+			FExplanation = #{FExplanation},
+			GrossWeight = #{GrossWeight},
+			FCount = #{FCount},
+			FUnit = #{FUnit}
+		where 
+			ForwardApplicationDetail_ID = #{ForwardApplicationDetail_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,
+		isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') FMatJoint,
+		isnull(f2.FName,'无名称')  +'/'+isnull(f2.FNum,'无编号')  FCustomerJoint
+		from 
+		<include refid="tableName"></include> f
+		left join MBASE_MAT_BASIC f1 on f1.MAT_BASIC_ID=f.ItemID
+		left join KM_Customer f2 on f.FCustomer=f2.Customer_ID 
+		where 
+			f.ForwardApplicationDetail_ID = #{ForwardApplicationDetail_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') FMatJoint,f1.MAT_NAME,
+		isnull(f2.FName,'无名称')  +'/'+isnull(f2.FNum,'无编号')  FCustomerJoint,
+		f3.DeliveryWarehouseID,f3.ShippingType 
+		from 
+		<include refid="tableName"></include> f 
+		left join MBASE_MAT_BASIC f1 on f1.MAT_BASIC_ID=f.ItemID 
+		left join KM_Customer f2 on f.FCustomer=f2.Customer_ID 
+		left join MM_ForwardApplication f3 on f.ForwardApplication_ID=f3.ForwardApplication_ID 
+		where f.ForwardApplication_ID=#{pd.ForwardApplication_ID} 
+	 	[fhstart] order by cast(RowNum as int) desc [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		isnull(f1.MAT_CODE,'无编号')+'/'+isnull(f1.MAT_NAME,'无名称') FMatJoint,f1.MAT_NAME,
+		isnull(f2.FName,'无名称')  +'/'+isnull(f2.FNum,'无编号')  FCustomerJoint,
+		f3.DeliveryWarehouseID,f3.ShippingType 
+		from 
+		<include refid="tableName"></include> f 
+		left join MBASE_MAT_BASIC f1 on f1.MAT_BASIC_ID=f.ItemID 
+		left join KM_Customer f2 on f.FCustomer=f2.Customer_ID 
+		left join MM_ForwardApplication f3 on f.ForwardApplication_ID=f3.ForwardApplication_ID 
+		where 
+			f.ForwardApplication_ID = #{ForwardApplication_ID} 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ForwardApplicationDetail_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 删除发运申请关联行关闭明细-->
+	<update id="rowCloseByForwardId" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			LineClose = #{LineClose}
+		where 
+			ForwardApplication_ID = #{ForwardApplication_ID}
+	</update>
+	
+	<!-- 生成明细行号 -->
+	<select id="getRowNum" parameterType="pd" resultType="pd">
+		select
+		isnull(max(cast(isnull(RowNum,'0') as int)),0)+1 RowNum
+		from 
+		<include refid="tableName"></include> f
+		where ForwardApplication_ID = #{ForwardApplication_ID}
+	</select>
+	
+	<!-- 行关闭/反行关闭发运申请明细 -->
+	<update id="rowClose" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			LineClose = #{LineClose}
+		where 
+			ForwardApplicationDetail_ID = #{ForwardApplicationDetail_ID}
+	</update>
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

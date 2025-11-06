@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno2.windinginserter.WindinginserterMapper">
+
+
+    <!--下线机导线月消耗数量-->
+    <select id="MonthUseLine" resultType="pd">
+        SELECT '导线月消耗数量:' + CAST(MonthlyConsumption AS VARCHAR) + '根' MonthlyConsumption, '导线月消耗数量:37564根' JSJYXH
+        FROM (SELECT COUNT(*) MonthlyConsumption
+              FROM MOM_WINDINGINSERTER
+              WHERE FTYPE = '生产耗材状态'
+                AND DATEDIFF(MONTH, FTIME, GETDATE()) = 0) t
+    </select>
+
+    <!--下线机无故障运行天数-->
+    <select id="NoFaultDayNum" resultType="pd">
+        SELECT '无故障运行天数:' + CAST(TotalDay AS VARCHAR) + '天' TotalDay, '无故障运行天数:214天' JSJYXTS
+        FROM (
+                 SELECT COUNT(FTIME) TotalDay
+                 FROM (
+                          SELECT SUBSTRING(FTIME, 0, 11) FTIME FROM MOM_WINDINGINSERTER GROUP BY SUBSTRING(FTIME, 0, 11)
+                      ) t
+             ) K
+    </select>
+
+    <!--下线机当前产能-->
+    <select id="CurrentCapacity" resultType="pd">
+        SELECT '当前产能:' + CAST(MeanNum AS VARCHAR) + '根/小时' MeanNum, '当前产能:356根/小时' JSJCN
+        FROM (
+                 SELECT CASE
+                            WHEN t.CompleteHour = 0 THEN 0
+                            ELSE
+                                CAST((t.TotalCompleteNum / t.CompleteHour) AS DECIMAL(10, 2)) END MeanNum
+                 FROM (
+                          SELECT ISNULL(SUM(CAST(ISNULL(CompleteNum, '0') AS DECIMAL(10, 2))), 0) TotalCompleteNum,
+                                 ISNULL(DATEDIFF(HOUR, MIN(FTIME), MAX(FTIME)), 0)                CompleteHour
+                          FROM MOM_WINDINGINSERTER
+                          WHERE FTYPE = '任务完成状态'
+                            AND DATEDIFF(DAY,FTIME, GETDATE()) = 0
+                      ) t
+             ) K
+    </select>
+
+    <!--下线机当年生产数-->
+    <select id="CurrentYearProduction" resultType="pd">
+        SELECT '当年生产数量:' + CAST(TotalCompleteNum AS VARCHAR) + '根' TotalCompleteNum, '当年生产数量:245893根' JSJNCL
+        FROM (
+                 SELECT ISNULL(SUM(CAST(ISNULL(CompleteNum, '0') AS DECIMAL(10, 2))), 0) TotalCompleteNum
+                 FROM MOM_WINDINGINSERTER
+                 WHERE FTYPE = '任务完成状态'
+                   AND DATEDIFF(YEAR,FTIME, GETDATE()) = 0
+             ) K
+    </select>
+
+    <!--下线机当月生产数-->
+    <select id="CurrentMonthProduction" resultType="pd">
+        SELECT '当月生产数量:' + CAST(TotalCompleteNum AS VARCHAR) + '根' TotalCompleteNum, '当月生产数量:38892根' JSJDYCL
+        FROM (
+                 SELECT ISNULL(SUM(CAST(ISNULL(CompleteNum, '0') AS DECIMAL(10, 2))), 0) TotalCompleteNum
+                 FROM MOM_WINDINGINSERTER
+                 WHERE FTYPE = '任务完成状态'
+                   AND DATEDIFF(MONTH,FTIME, GETDATE()) = 0
+             ) K
+    </select>
+
+    <!--下线机当天生产数-->
+    <select id="CurrentDayProduction" resultType="pd">
+        SELECT '当天生产数量:' + CAST(TotalCompleteNum AS VARCHAR) + '根' TotalCompleteNum, '当天生产数量:1424根' JSJDTCL
+        FROM (
+                 SELECT ISNULL(SUM(CAST(ISNULL(CompleteNum, '0') AS DECIMAL(10, 2))), 0) TotalCompleteNum
+                 FROM MOM_WINDINGINSERTER
+                 WHERE FTYPE = '任务完成状态'
+                   AND DATEDIFF(DAY,FTIME, GETDATE()) = 0
+             ) K
+    </select>
+
+    <!--下线机总生产数-->
+    <select id="TotalProductionQuantity" resultType="pd">
+        SELECT '总生产数量:' + CAST(TotalCompleteNum AS VARCHAR) + '根' TotalCompleteNum, '总生产数量:245893根' JSJDNCL
+        FROM (
+                 SELECT ISNULL(SUM(CAST(ISNULL(CompleteNum, '0') AS DECIMAL(10, 2))), 0) TotalCompleteNum
+                 FROM MOM_WINDINGINSERTER
+                 WHERE FTYPE = '任务完成状态'
+             ) K
+    </select>
+
+    <!--下线机当前设备状态-->
+    <select id="CurrentEquipmentStatus" resultType="pd">
+        SELECT TOP 1 '当前设备状态:'+STARTORENDTIMES STARTORENDTIMES
+        FROM MOM_WINDINGINSERTER
+        WHERE FTYPE = '设备状态'
+        ORDER BY FTIME DESC
+    </select>
+
+
+    <!-- yy356703572qq(彬耶) -->
+</mapper>

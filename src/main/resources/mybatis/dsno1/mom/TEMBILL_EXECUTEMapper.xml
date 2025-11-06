@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.TEMBILL_EXECUTEMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MOM_TEMBILL_EXECUTE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.PLAN_ID,	
+		f.FBILLNO,	
+		f.PRODUCT_NO,	
+		f.PRODUCT_NAME,	
+		f.PLINE_NAME,	
+		f.FTEAM,	
+		f.FSPECS,	
+		f.FUNIT,	
+		f.PLAN_PRINCIPAL,	
+		f.FDETECT_START,	
+		f.FDETECT_END,	
+		f.FDETECTOR,	
+		f.FDETECT_TIME,	
+		f.FOPERATOR,	
+		f.FOPERAT_TIME,	
+		f.FEFFECT,	
+		f.FDS,	
+		f.FSTATE,	
+		f.FNAME,	
+		f.VERSION,	
+		f.DAYTIME,	
+		f.BELONG_TYPE,	
+		f.FCREATOR,	
+		f.CREATE_TIME,	
+		f.FEXTEND1,	
+		f.FEXTEND2,	
+		f.FEXTEND3,	
+		f.FEXTEND4,	
+		f.FEXTEND5,	
+		f.FVERIFY_ODD,
+		f.DOCUMENTTEMPLATE_ID,
+		f.TEMBILL_EXECUTE_ID
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field2">
+		PLAN_ID,	
+		FBILLNO,	
+		PRODUCT_NO,	
+		PRODUCT_NAME,	
+		PLINE_NAME,	
+		FTEAM,	
+		FSPECS,	
+		FUNIT,	
+		PLAN_PRINCIPAL,	
+		FDETECT_START,	
+		FDETECT_END,	
+		FDETECTOR,	
+		FDETECT_TIME,	
+		FOPERATOR,	
+		FOPERAT_TIME,	
+		FEFFECT,	
+		FDS,	
+		FSTATE,	
+		FNAME,	
+		VERSION,	
+		DAYTIME,	
+		BELONG_TYPE,	
+		FCREATOR,	
+		CREATE_TIME,	
+		FEXTEND1,	
+		FEXTEND2,	
+		FEXTEND3,	
+		FEXTEND4,	
+		FEXTEND5,
+		FVERIFY_ODD,
+		DOCUMENTTEMPLATE_ID,	
+		TEMBILL_EXECUTE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{PLAN_ID},	
+		#{FBILLNO},	
+		#{PRODUCT_NO},	
+		#{PRODUCT_NAME},	
+		#{PLINE_NAME},	
+		#{FTEAM},	
+		#{FSPECS},	
+		#{FUNIT},	
+		#{PLAN_PRINCIPAL},	
+		#{FDETECT_START},	
+		#{FDETECT_END},	
+		#{FDETECTOR},	
+		#{FDETECT_TIME},	
+		#{FOPERATOR},	
+		#{FOPERAT_TIME},	
+		#{FEFFECT},	
+		#{FDS},	
+		#{FSTATE},	
+		#{FNAME},	
+		#{VERSION},	
+		#{DAYTIME},	
+		#{BELONG_TYPE},	
+		#{FCREATOR},	
+		#{CREATE_TIME},	
+		#{FEXTEND1},	
+		#{FEXTEND2},	
+		#{FEXTEND3},	
+		#{FEXTEND4},	
+		#{FEXTEND5},
+		#{FVERIFY_ODD},
+		#{DOCUMENTTEMPLATE_ID},	
+		#{TEMBILL_EXECUTE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PLAN_ID = #{PLAN_ID},
+			FBILLNO = #{FBILLNO},
+			PRODUCT_NO = #{PRODUCT_NO},
+			PRODUCT_NAME = #{PRODUCT_NAME},
+			PLINE_NAME = #{PLINE_NAME},
+			FTEAM = #{FTEAM},
+			FSPECS = #{FSPECS},
+			FUNIT = #{FUNIT},
+			PLAN_PRINCIPAL = #{PLAN_PRINCIPAL},
+			FDETECT_START = #{FDETECT_START},
+			FDETECT_END = #{FDETECT_END},
+			FDETECTOR = #{FDETECTOR},
+			FDETECT_TIME = #{FDETECT_TIME},
+			FOPERATOR = #{FOPERATOR},
+			FOPERAT_TIME = #{FOPERAT_TIME},
+			FEFFECT = #{FEFFECT},
+			FDS = #{FDS},
+			FSTATE = #{FSTATE},
+			FNAME = #{FNAME},
+			VERSION = #{VERSION},
+			DAYTIME = #{DAYTIME},
+			BELONG_TYPE = #{BELONG_TYPE},
+			FCREATOR = #{FCREATOR},
+			CREATE_TIME = #{CREATE_TIME},
+			FEXTEND1 = #{FEXTEND1},
+			FEXTEND2 = #{FEXTEND2},
+			FEXTEND3 = #{FEXTEND3},
+			FEXTEND4 = #{FEXTEND4},
+			FEXTEND5 = #{FEXTEND5},
+			FVERIFY_ODD = #{FVERIFY_ODD},
+			DOCUMENTTEMPLATE_ID = #{DOCUMENTTEMPLATE_ID},	
+			TEMBILL_EXECUTE_ID = TEMBILL_EXECUTE_ID
+		where 
+			TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS!= null and pd.KEYWORDS != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.FBILLNO LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		[fhstart] order by f.CREATE_TIME DESC [fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TEMBILL_EXECUTE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	
+	<!-- 根据工单关键字查询数据 -->
+	<select id="getPlan" parameterType="pd" resultType="pd">
+		SELECT 
+		   f.FBILLNO+'-->'+f.PRODUCT_NAME as FNAME,
+           ISNULL(f.PLAN_ID, '')PLAN_ID, 
+           ISNULL(f.FBILLNO, '')FBILLNO,
+           ISNULL(f.PRODUCT_NO, '')PRODUCT_NO,
+           ISNULL(f.PRODUCT_NAME, '')PRODUCT_NAME,
+           ISNULL(f.PLINE_NAME, '')PLINE_NAME,
+           ISNULL(f.FTEAM, '')FTEAM,
+           ISNULL(f.FSPECS, '')FSPECS,
+           ISNULL(f.FUNIT, '')FUNIT,
+           ISNULL(f.PLAN_PRINCIPAL, '')PLAN_PRINCIPAL
+        FROM MPOT_PLAN f WHERE 1=1
+        <if test="inputName!= null and inputName != ''"><!-- 关键词检索 -->
+		  and(
+		     f.FBILLNO LIKE '%'+#{inputName}+'%'<!-- 生产工单单号 -->
+		     or
+		     f.PRODUCT_NAME LIKE '%'+#{inputName}+'%'<!-- 产品名称 -->
+		  )
+		</if>
+	</select>
+	
+	<!-- 修改检验状态 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FSTATE = #{FSTATE},
+			FEXTEND1 = #{FEXTEND1}
+		where 
+			TEMBILL_EXECUTE_ID = #{TEMBILL_EXECUTE_ID}
+	</update>
+	<!-- YY 356703572 -->
+</mapper>

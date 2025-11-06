@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.pp.PlanningGanttMapper">
+
+	<select id="getAllMasterPlanningWorkOrder" parameterType="pd"
+		resultType="pd">
+		SELECT
+		m.PlanningWorkOrderMaster_ID AS id,
+		m.WorkOrderNum AS num,
+		m.WorkOrderNum AS text,
+		m.WorkOrderType AS type,
+		CASE
+		WHEN c.FName IS
+		NULL THEN
+		''
+		ELSE
+		c.FName
+		END AS customer,
+		CASE
+		WHEN m.OutputMaterial IS
+		NULL THEN
+		''
+		ELSE
+		m.OutputMaterial
+		END AS material,
+		m.PlannedBeginTime AS
+		start_date,
+		m.PlannedEndTime AS end_date,
+		m.FPlanner AS principal,
+		'' AS
+		wpName,
+		'A' as FTYPE
+		FROM
+		PP_PlanningWorkOrderMaster m
+		LEFT JOIN
+		KM_Customer c ON c.Customer_ID = m.FCustomer
+		WHERE
+		1 = 1
+		AND
+		m.PlannedBeginTime IS NOT NULL
+
+		<if test="null != WorkOrderNum and  '' != WorkOrderNum ">
+			and m.WorkOrderNum = #{WorkOrderNum}
+		</if>
+		<if test="null != customer and  '' != customer ">
+			and c.FName = #{customer}
+		</if>
+		<if test="null != PlannedBeginTime and  '' != PlannedBeginTime ">
+			and m.PlannedBeginTime &gt;= #{PlannedBeginTime}
+		</if>
+		<if test="null != PlannedEndTime and  '' != PlannedEndTime ">
+			and m.PlannedEndTime &lt;= #{PlannedEndTime}
+		</if>
+		ORDER BY
+		m.PlannedBeginTime
+	</select>
+
+	<select id="getAllSubPlanningWorkOrder" parameterType="pd"
+		resultType="pd">
+		SELECT
+		m.PlanningWorkOrder_ID AS id,
+		m.MasterWorkOrder_ID as
+		parent,
+		m.WorkOrderNum as num,
+		m.WorkOrderNum as text,
+		m.WorkOrderType as
+		type,
+		
+		'' AS customer,
+
+		case
+		when m.OutputMaterial is null then '' else m.OutputMaterial end AS
+		material,
+		m.PlannedBeginTime AS start_date,
+		m.PlannedEndTime AS
+		end_date,
+		m.FPlanner AS principal,
+		'' AS wpName,
+		'B' as FTYPE
+		FROM
+		PP_PlanningWorkOrder m
+		
+		where 1 =1 and m.PlannedBeginTime is not null
+		and
+		m.MasterWorkOrder_ID = #{MasterWorkOrder_ID}
+		order by
+		m.PlannedBeginTime
+	</select>
+
+	<select id="getAllTask" parameterType="pd" resultType="pd">
+		SELECT
+		pwoe.ProcessWorkOrderExample_ID AS id,
+		pwoe.PlanningWorkOrderID AS
+		parent,
+		pwoe.TaskNum AS num,
+		pwoe.TaskNum AS text,
+		pwoe.WPName AS wpName,
+		pwo.WorkOrderType AS
+		type,
+		
+		''
+		 AS customer,
+		CASE
+		WHEN pwoe.ProcessIMateriel IS NULL THEN
+		''
+		ELSE
+		pwoe.ProcessIMateriel
+		END
+		AS material,
+		pwoe.PlannedBeginTime AS start_date,
+		pwoe.PlannedEndTime AS
+		end_date,
+		CASE
+		WHEN staff.NAME IS NULL THEN
+		''
+		ELSE
+		staff.NAME
+		END AS
+		principal,
+		
+		'C' as FTYPE
+		FROM
+		PP_ProcessWorkOrderExample pwoe
+
+		LEFT JOIN OA_STAFF staff ON
+		staff.STAFF_ID = pwoe.ExecutorID
+		LEFT JOIN PP_PlanningWorkOrder pwo ON
+		pwo.PlanningWorkOrder_ID =
+		pwoe.PlanningWorkOrderID
+		
+		WHERE
+		1 = 1
+		AND
+		pwoe.PlannedBeginTime IS NOT NULL
+		and pwoe.PlanningWorkOrderID =
+		#{PlanningWorkOrderID}
+		ORDER BY
+		pwoe.PlannedBeginTime
+	</select>
+
+</mapper>

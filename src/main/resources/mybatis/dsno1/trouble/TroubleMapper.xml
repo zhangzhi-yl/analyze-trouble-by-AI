@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.trouble.TroubleMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		HSE_TROUBLE
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.DEFINE_ID,	
+		f.LOCAL_ID,	
+		f.IMG_URL,	
+		f.IMG_UPLOAD_TYPE,	
+		f.STATUS,	
+		f.LEVEL,	
+		f.ANALYSIS_START_TIME,	
+		f.ANALYSIS_END_TIME,	
+		f.ANALYSIS_DESCRIB,	
+		f.ANALYSIS_RESULT,	
+		f.SUGGESTION,	
+		f.RESULT_STATUS,	
+		f.ANALYSIS_TEXT,	
+		f.PUSH_MSG,	
+		f.CREATE_BY,	
+		f.CREATE_TIME,	
+		f.UPDATE_BY,	
+		f.UPDATE_TIME,	
+		f.REMARK,	
+		f.ANALYSIS_INTERVAL,	
+		f.PUSH_INTERVAL,	
+		f.REPORT_TIME,	
+		f.DEFINE_NAMES,	
+		f.IS_ERROR,	
+		f.TROUBLE_ID
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		DEFINE_ID,	
+		LOCAL_ID,	
+		IMG_URL,	
+		IMG_UPLOAD_TYPE,	
+		STATUS,	
+		LEVEL,	
+		ANALYSIS_START_TIME,	
+		ANALYSIS_END_TIME,	
+		ANALYSIS_DESCRIB,	
+		ANALYSIS_RESULT,	
+		SUGGESTION,	
+		RESULT_STATUS,	
+		ANALYSIS_TEXT,	
+		PUSH_MSG,	
+		CREATE_BY,	
+		CREATE_TIME,	
+		UPDATE_BY,	
+		UPDATE_TIME,	
+		REMARK,	
+		ANALYSIS_INTERVAL,	
+		PUSH_INTERVAL,	
+		REPORT_TIME,	
+		DEFINE_NAMES,	
+		IS_ERROR,	
+		TROUBLE_ID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{DEFINE_ID},	
+		#{LOCAL_ID},	
+		#{IMG_URL},	
+		#{IMG_UPLOAD_TYPE},	
+		#{STATUS},	
+		#{LEVEL},	
+		#{ANALYSIS_START_TIME},	
+		#{ANALYSIS_END_TIME},	
+		#{ANALYSIS_DESCRIB},	
+		#{ANALYSIS_RESULT},	
+		#{SUGGESTION},	
+		#{RESULT_STATUS},	
+		#{ANALYSIS_TEXT},	
+		#{PUSH_MSG},	
+		#{CREATE_BY},	
+		#{CREATE_TIME},	
+		#{UPDATE_BY},	
+		#{UPDATE_TIME},	
+		#{REMARK},	
+		#{ANALYSIS_INTERVAL},	
+		#{PUSH_INTERVAL},	
+		#{REPORT_TIME},	
+		#{DEFINE_NAMES},	
+		#{IS_ERROR},	
+		#{TROUBLE_ID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TROUBLE_ID = #{TROUBLE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			DEFINE_ID = #{DEFINE_ID},
+			LOCAL_ID = #{LOCAL_ID},
+			IMG_URL = #{IMG_URL},
+			IMG_UPLOAD_TYPE = #{IMG_UPLOAD_TYPE},
+			STATUS = #{STATUS},
+			LEVEL = #{LEVEL},
+			ANALYSIS_START_TIME = #{ANALYSIS_START_TIME},
+			ANALYSIS_END_TIME = #{ANALYSIS_END_TIME},
+			ANALYSIS_DESCRIB = #{ANALYSIS_DESCRIB},
+			ANALYSIS_RESULT = #{ANALYSIS_RESULT},
+			SUGGESTION = #{SUGGESTION},
+			RESULT_STATUS = #{RESULT_STATUS},
+			ANALYSIS_TEXT = #{ANALYSIS_TEXT},
+			PUSH_MSG = #{PUSH_MSG},
+			CREATE_BY = #{CREATE_BY},
+			CREATE_TIME = #{CREATE_TIME},
+			UPDATE_BY = #{UPDATE_BY},
+			UPDATE_TIME = #{UPDATE_TIME},
+			REMARK = #{REMARK},
+			ANALYSIS_INTERVAL = #{ANALYSIS_INTERVAL},
+			PUSH_INTERVAL = #{PUSH_INTERVAL},
+			REPORT_TIME = #{REPORT_TIME},
+			DEFINE_NAMES = #{DEFINE_NAMES},
+			IS_ERROR = #{IS_ERROR},
+			TROUBLE_ID = TROUBLE_ID
+		where 
+			TROUBLE_ID = #{TROUBLE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>,g.FNAME as LOCAL_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join HSE_TROUBLELOCAL g on f.LOCAL_ID = g.TROUBLELOCAL_ID
+		where 
+			f.TROUBLE_ID = #{TROUBLE_ID}
+	</select>
+	<select id="selectHseTroubleByCatchIntervalMinute" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include> f
+		where f.LOCAL_ID = #{LOCAL_ID}  and
+		f.CREATE_TIME &gt;= DATEADD(MINUTE, -#{catchIntervalMinute}, GETDATE())
+	</select>
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,g.FNAME as LOCAL_NAME
+		from 
+		<include refid="tableName"></include> f
+		left join HSE_TROUBLELOCAL g on f.LOCAL_ID = g.TROUBLELOCAL_ID
+		where 1=1
+		<if test="pd.KEYWORDS1 != null and pd.KEYWORDS1 != ''"><!-- 关键词检索 -->
+			and
+				(
+					f.STATUS LIKE '%'+ #{pd.KEYWORDS1}+'%'
+				)
+		</if>
+		<if test="pd.KEYWORDS2 != null and pd.KEYWORDS2 != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.LOCAL_ID LIKE '%'+ #{pd.KEYWORDS2}+'%'
+			)
+		</if>
+		<if test="pd.startDate != null and pd.startDate != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.CREATE_TIME >= #{pd.startDate} and f.CREATE_TIME &lt;= #{pd.endDate}
+			)
+		</if>
+		[fhstart]order by f.CREATE_TIME desc[fhend]
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select top 10
+		<include refid="Field"></include>,g.FNAME as LOCAL_NAME,g.FACTORY_AREA
+		from 
+		<include refid="tableName"></include> f
+		left join HSE_TROUBLELOCAL g on f.LOCAL_ID = g.TROUBLELOCAL_ID
+		where 1=1
+		<if test="STATUS != null and STATUS != ''"><!-- 关键词检索 -->
+			and
+				(
+				f.STATUS = #{STATUS} and f.IMG_URL is not null
+				)
+		</if>
+		<if test="RESULT_STATUS != null and RESULT_STATUS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.RESULT_STATUS = #{RESULT_STATUS}
+			)
+		</if>
+		<if test="dateStart != null and dateStart != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.CREATE_TIME >= #{dateStart} and f.CREATE_TIME &lt;= #{dateEnd}
+			)
+		</if>
+		<if test="IS_ERROR != null and IS_ERROR != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.IS_ERROR = #{IS_ERROR}
+			)
+		</if>
+		<if test="RESULT_STATUS != null and RESULT_STATUS != ''"><!-- 关键词检索 -->
+			and
+			(
+			f.RESULT_STATUS = #{RESULT_STATUS}
+			)
+		</if>
+		<if test="deleteFile != null and deleteFile != ''"><!-- 状态检索 -->
+			and
+			(
+			f.CREATE_TIME &lt;= DATEADD(month, -3, GETDATE())
+			)
+		</if>
+		order by f.CREATE_TIME
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			TROUBLE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

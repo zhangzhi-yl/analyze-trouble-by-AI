@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.km.MaterialConsumeMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		KM_MaterialConsume
+	</sql>
+
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		f.ConsumptionDocumentID,
+		f.DataSources,
+		f.MaterialID,
+		f.MaterialName,
+		f.OneThingCode,
+		f.MaterialBarCode,
+		f.MaterialBatchNum,
+		f.SpecificationsAndModels,
+		f.MaterialSProp,
+		f.MaterialSPropKey,
+		f.FUnit,
+		f.ConsumptionQuantity,
+		f.WorkOrderRel,
+		f.FOperatorID,
+		f.FOperateTime,
+		f.FType,
+		f.BatchNum,
+		f.OutType,
+		f.MaterialConsume_ID
+	</sql>
+
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		ConsumptionDocumentID,
+		DataSources,
+		MaterialID,
+		MaterialName,
+		OneThingCode,
+		MaterialBarCode,
+		MaterialBatchNum,
+		SpecificationsAndModels,
+		MaterialSProp,
+		MaterialSPropKey,
+		FUnit,
+		ConsumptionQuantity,
+		WorkOrderRel,
+		FOperatorID,
+		FOperateTime,
+		FType,
+		BatchNum,
+		OutType,
+		MaterialConsume_ID
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ConsumptionDocumentID},
+		#{DataSources},
+		#{MaterialID},
+		#{MaterialName},
+		#{OneThingCode},
+		#{MaterialBarCode},
+		#{MaterialBatchNum},
+		#{SpecificationsAndModels},
+		#{MaterialSProp},
+		#{MaterialSPropKey},
+		#{FUnit},
+		#{ConsumptionQuantity},
+		#{WorkOrderRel},
+		#{FOperatorID},
+		#{FOperateTime},
+		#{FType},
+		#{BatchNum},
+		#{OutType},
+		#{MaterialConsume_ID}
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="pd">
+		insert into
+		<include refid="tableName"></include>
+		(
+		<include refid="Field2"></include>
+		) values (
+		<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除 -->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+		MaterialConsume_ID = #{MaterialConsume_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		ConsumptionDocumentID = #{ConsumptionDocumentID},
+		DataSources = #{DataSources},
+		MaterialID = #{MaterialID},
+		MaterialName = #{MaterialName},
+		OneThingCode= #{OneThingCode},
+		MaterialBarCode = #{MaterialBarCode},
+		MaterialBatchNum = #{MaterialBatchNum},
+		SpecificationsAndModels = #{SpecificationsAndModels},
+		MaterialSProp = #{MaterialSProp},
+		MaterialSPropKey = #{MaterialSPropKey},
+		FUnit = #{FUnit},
+		ConsumptionQuantity = #{ConsumptionQuantity},
+		WorkOrderRel = #{WorkOrderRel},
+		FOperatorID = #{FOperatorID},
+		FOperateTime = #{FOperateTime},
+		FType = #{FType},
+		BatchNum = #{BatchNum},
+		OutType = #{OutType},
+		MaterialConsume_ID = MaterialConsume_ID
+		where
+		MaterialConsume_ID = #{MaterialConsume_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		where
+		f.MaterialConsume_ID = #{MaterialConsume_ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>,
+		f1.MAT_NAME,
+		f1.MAT_CODE,
+		f1.MAT_SPECS,
+		f2.FNAME as UNIT_FNAME,
+		f3.FormulaQuantity,
+		f3.PlannedQuantity
+		from
+		<include refid="tableName"></include>
+		f LEFT JOIN MBASE_MAT_BASIC f1 on f.MaterialID = f1.MAT_BASIC_ID
+		LEFT JOIN MBASE_UNIT_INFO f2 on f.FUnit= f2.UNIT_INFO_ID
+		LEFT JOIN PP_WorkorderProcessIOExample f3 on f.ConsumptionDocumentID = f3.WorkorderProcessIOExample_ID
+		WHERE
+		1 = 1
+		<if test="pd.ConsumptionDocumentID != null and pd.ConsumptionDocumentID != ''">
+			AND f.ConsumptionDocumentID = #{pd.ConsumptionDocumentID}
+		</if>
+		<if test="pd.FType != null and pd.FType != ''">
+			AND f.FType = #{pd.FType}
+		</if>
+		<if test="pd.DataSources != null and pd.DataSources != ''">
+			AND f.DataSources = #{pd.DataSources}
+		</if>
+		<if test="pd.MaterialID != null and pd.MaterialID != ''">
+			AND f.MaterialID = #{pd.MaterialID}
+		</if>
+		<if test="pd.BatchNum != null and pd.BatchNum != ''">
+			AND f.BatchNum = #{BatchNum}
+		</if>
+		<if test="pd.WorkOrderRel != null and pd.WorkOrderRel != ''">
+			AND f.WorkOrderRel = #{pd.WorkOrderRel}
+		</if>
+		<if test="pd.FOperatorID != null and pd.FOperatorID != ''">
+			AND f.FOperatorID = #{pd.FOperatorID}
+		</if> 
+		[fhstart] order by f.ConsumptionDocumentID [fhend]
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		f
+		WHERE
+		1 = 1
+		<if test="ConsumptionDocumentID != null and ConsumptionDocumentID != ''">
+			AND f.ConsumptionDocumentID = #{ConsumptionDocumentID}
+		</if>
+		<if test="FType != null and FType != ''">
+			AND f.FType = #{FType}
+		</if>
+		<if test="DataSources != null and DataSources != ''">
+			AND f.DataSources = #{DataSources}
+		</if>
+		<if test="MaterialID != null and MaterialID != ''">
+			AND f.MaterialID = #{MaterialID}
+		</if>
+		<if test="BatchNum != null and BatchNum != ''">
+			AND f.BatchNum = #{BatchNum}
+		</if>
+		<if test="WorkOrderRel != null and WorkOrderRel != ''">
+			AND f.WorkOrderRel = #{WorkOrderRel}
+		</if>
+		<if test="FOperatorID != null and FOperatorID != ''">
+			AND f.FOperatorID = #{FOperatorID}
+		</if>
+		order by f.ConsumptionDocumentID
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+		MaterialConsume_ID in
+		<foreach item="item" index="index" collection="array" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<!-- yy356703572qq(彬耶) -->
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<typeAliases>
+		<typeAlias type="org.yy.entity.PageData" alias="pd"/>
+		<typeAlias type="org.yy.entity.Page" alias="page"/>
+		<typeAlias type="org.yy.entity.system.User" alias="user"/>
+		<typeAlias type="org.yy.entity.system.Menu" alias="menu"/>
+		<typeAlias type="org.yy.entity.system.Role" alias="role"/>
+		<typeAlias type="org.yy.entity.system.Dictionaries" alias="dictionaries"/>
+		<typeAlias type="org.yy.entity.fhoa.Department" alias="Department"/>
+		<typeAlias type="org.yy.entity.fhoa.Mfolder" alias="Mfolder"/>
+		<typeAlias type="org.yy.entity.mdm.PBOM" alias="PBOM"/>
+		<typeAlias type="org.yy.entity.mdm.PBOMNew" alias="PBOMNew"/>
+	</typeAliases>
+	
+	<plugins>
+		<plugin interceptor="org.yy.plugins.PagePlugin">
+			<property name="dialect" value="sqlserver"/><!-- sqlserver or sqlserver2012-->
+			<property name="pageSqlId" value=".*listPage.*"/>
+		</plugin>
+	</plugins>
+	
+</configuration>

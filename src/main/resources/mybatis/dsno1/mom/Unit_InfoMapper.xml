@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.yy.mapper.dsno1.mom.Unit_InfoMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		MBASE_UNIT_INFO
+	</sql>
+	
+	<!--数据字典表名 -->
+	<sql id="dicTableName">
+		SYS_DICTIONARIES
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		f.UNIT_INFO_ID,	
+		f.FCODE,	
+		f.FNAME,	
+		f.FTYPE,	
+		f.FDES
+	</sql>
+	
+	<!-- 字段用于新增 -->
+	<sql id="Field2">
+		UNIT_INFO_ID,	
+		FCODE,	
+		FNAME,	
+		FTYPE,	
+		FDES
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{UNIT_INFO_ID},	
+		#{FCODE},	
+		#{FNAME},	
+		#{FTYPE},	
+		#{FDES}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field2"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			UNIT_INFO_ID = #{UNIT_INFO_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			FCODE = #{FCODE},
+			FNAME = #{FNAME},
+			FTYPE = #{FTYPE},
+			FDES = #{FDES}
+		where 
+			UNIT_INFO_ID = #{UNIT_INFO_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 
+			f.UNIT_INFO_ID = #{UNIT_INFO_ID}
+	</select>
+	
+	<!-- 通过类名称获取数据 -->
+	<select id="findByUnitCode" parameterType="pd" resultType="pd">
+		SELECT 
+		<include refid="Field"></include> 
+		FROM 
+		<include refid="tableName"></include> f 
+		WHERE f.FCODE=#{FCODE}
+	</select>
+	
+	<!-- 查询编号数据数量 -->
+	<select id="findCountByCode" parameterType="pd" resultType="pd">
+		select isnull(count(*),0) zs from 
+		<include refid="tableName"></include> f 
+		where f.FCODE = #{FCODE} 
+		<if test="UNIT_INFO_ID != null and UNIT_INFO_ID != ''"><!-- 基础单位id -->
+			and f.UNIT_INFO_ID &lt;&gt; #{UNIT_INFO_ID}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f
+		where 1=1
+		<if test="pd.KEYWORDS != null and pd.KEYWORDS != ''"><!-- 关键字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{pd.KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="pd.FNAME != null and pd.FNAME != ''"><!-- 名字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{pd.FNAME}+'%' 
+				)
+		</if>
+		<if test="pd.FCODE != null and pd.FCODE != ''"><!-- 代码 -->
+			and
+				(
+					f.FCODE LIKE '%'+ #{pd.FCODE}+'%' 
+				)
+		</if>
+		<if test="pd.FTYPE != null and pd.FTYPE != ''"><!-- 类型 -->
+			and
+				(
+					f.FTYPE = #{pd.FTYPE} 
+				)
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include> f 
+		where 1=1
+		<if test="KEYWORDS != null and KEYWORDS != ''"><!-- 关键字 -->
+			and
+				(
+					f.FNAME LIKE '%'+ #{KEYWORDS}+'%'
+					 or 
+					f.FCODE LIKE '%'+ #{KEYWORDS}+'%' 
+				)
+		</if>
+		<if test="FNAME != null and FNAME != ''"><!-- 名字 -->
+			and
+				(
+					f.FNAME = #{FNAME} 
+				)
+		</if>
+		<if test="FCODE != null and FCODE != ''"><!-- 代码 -->
+			and
+				(
+					f.FCODE = #{FCODE} 
+				)
+		</if>
+		<if test="FTYPE != null and FTYPE != ''"><!-- 类型 -->
+			and
+				(
+					f.FTYPE = #{FTYPE} 
+				)
+		</if>
+	</select>
+	
+	<!-- 获取单位列表-可搜索-前100条 -->
+	<select id="getUnitList" parameterType="pd" resultType="pd">
+		select top 100 
+		<include refid="Field"></include>,isnull(FCODE,'无编号')+'/'+isnull(FNAME,'无名称') FSelectOption 
+		from 
+		<include refid="tableName"></include> f 
+		where 1=1
+		<if test="KEYWORDS!= null and KEYWORDS != ''">
+			and
+			(
+			f.FNAME LIKE '%'+ #{KEYWORDS}+'%'
+			or
+			f.FCODE LIKE '%'+ #{KEYWORDS}+'%'
+			)
+		</if>
+		order by f.FCODE
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			UNIT_INFO_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- YY 356703572 -->
+</mapper>
