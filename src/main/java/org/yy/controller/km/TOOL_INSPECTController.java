@@ -1,0 +1,201 @@
+package org.yy.controller.km;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+
+import org.yy.controller.base.BaseController;
+import org.yy.entity.Page;
+import org.yy.util.DateUtil;
+import org.yy.util.Jurisdiction;
+import org.yy.util.ObjectExcelView;
+import org.yy.util.Tools;
+import org.yy.entity.PageData;
+import org.yy.service.km.TOOL_INSPECTService;
+
+/** 
+ * 说明：工器具检验记录
+ * 作者：YuanYes QQ356703572
+ * 时间：2021-03-09
+ * 官网：356703572@qq.com
+ */
+@Controller
+@RequestMapping("/TOOL_INSPECT")
+public class TOOL_INSPECTController extends BaseController {
+	
+	@Autowired
+	private TOOL_INSPECTService TOOL_INSPECTService;
+	
+	/**保存
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/add")
+	//@RequiresPermissions("TOOL_INSPECT:add")
+	@ResponseBody
+	public Object add() throws Exception{
+		Map<String,Object> map = new HashMap<String,Object>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("TOOL_INSPECT_ID", this.get32UUID());	//主键
+		pd.put("FCreatePerson", Jurisdiction.getName());//创建人
+		pd.put("FCreateTime", Tools.date2Str(new Date()));//创建时间
+		TOOL_INSPECTService.save(pd);
+		map.put("result", errInfo);
+		return map;
+	}
+	
+	/**删除
+	 * @param out
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/delete")
+	//@RequiresPermissions("TOOL_INSPECT:del")
+	@ResponseBody
+	public Object delete() throws Exception{
+		Map<String,String> map = new HashMap<String,String>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		TOOL_INSPECTService.delete(pd);
+		map.put("result", errInfo);				//返回结果
+		return map;
+	}
+	
+	/**修改
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/edit")
+	//@RequiresPermissions("TOOL_INSPECT:edit")
+	@ResponseBody
+	public Object edit() throws Exception{
+		Map<String,Object> map = new HashMap<String,Object>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		TOOL_INSPECTService.edit(pd);
+		map.put("result", errInfo);
+		return map;
+	}
+	
+	/**列表
+	 * @param page
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/list")
+	//@RequiresPermissions("TOOL_INSPECT:list")
+	@ResponseBody
+	public Object list(Page page) throws Exception{
+		Map<String,Object> map = new HashMap<String,Object>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String KEYWORDS = pd.getString("KEYWORDS");						//关键词检索条件
+		if(Tools.notEmpty(KEYWORDS))pd.put("KEYWORDS", KEYWORDS.trim());
+		page.setPd(pd);
+		List<PageData>	varList = TOOL_INSPECTService.list(page);	//列出TOOL_INSPECT列表
+		map.put("varList", varList);
+		map.put("page", page);
+		map.put("result", errInfo);
+		return map;
+	}
+	
+	 /**去修改页面获取数据
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/goEdit")
+	//@RequiresPermissions("TOOL_INSPECT:edit")
+	@ResponseBody
+	public Object goEdit() throws Exception{
+		Map<String,Object> map = new HashMap<String,Object>();
+		String errInfo = "success";
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd = TOOL_INSPECTService.findById(pd);	//根据ID读取
+		map.put("pd", pd);
+		map.put("result", errInfo);
+		return map;
+	}	
+	
+	 /**批量删除
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/deleteAll")
+	//@RequiresPermissions("TOOL_INSPECT:del")
+	@ResponseBody
+	public Object deleteAll() throws Exception{
+		Map<String,Object> map = new HashMap<String,Object>();
+		String errInfo = "success";
+		PageData pd = new PageData();		
+		pd = this.getPageData();
+		String DATA_IDS = pd.getString("DATA_IDS");
+		if(Tools.notEmpty(DATA_IDS)){
+			String ArrayDATA_IDS[] = DATA_IDS.split(",");
+			TOOL_INSPECTService.deleteAll(ArrayDATA_IDS);
+			errInfo = "success";
+		}else{
+			errInfo = "error";
+		}
+		map.put("result", errInfo);				//返回结果
+		return map;
+	}
+	
+	 /**导出到excel
+	 * @param
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/excel")
+	//@RequiresPermissions("toExcel")
+	public ModelAndView exportExcel() throws Exception{
+		ModelAndView mv = new ModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		Map<String,Object> dataMap = new HashMap<String,Object>();
+		List<String> titles = new ArrayList<String>();
+		titles.add("工器具管理ID");	//1
+		titles.add("检验类型");	//2
+		titles.add("检验日期");	//3
+		titles.add("状态");	//4
+		titles.add("描述");	//5
+		titles.add("创建人");	//6
+		titles.add("创建时间");	//7
+		titles.add("预留1");	//8
+		titles.add("预留2");	//9
+		titles.add("预留3");	//10
+		dataMap.put("titles", titles);
+		List<PageData> varOList = TOOL_INSPECTService.listAll(pd);
+		List<PageData> varList = new ArrayList<PageData>();
+		for(int i=0;i<varOList.size();i++){
+			PageData vpd = new PageData();
+			vpd.put("var1", varOList.get(i).getString("TOOL_BASICS_ID"));	    //1
+			vpd.put("var2", varOList.get(i).getString("FType"));	    //2
+			vpd.put("var3", varOList.get(i).getString("FAS_Date"));	    //3
+			vpd.put("var4", varOList.get(i).getString("FInspect_State"));	    //4
+			vpd.put("var5", varOList.get(i).getString("FDESCRIBE"));	    //5
+			vpd.put("var6", varOList.get(i).getString("FCreatePerson"));	    //6
+			vpd.put("var7", varOList.get(i).getString("FCreateTime"));	    //7
+			vpd.put("var8", varOList.get(i).getString("FReservedOne"));	    //8
+			vpd.put("var9", varOList.get(i).getString("FReservedTwo"));	    //9
+			vpd.put("var10", varOList.get(i).getString("FReservedThree"));	    //10
+			varList.add(vpd);
+		}
+		dataMap.put("varList", varList);
+		ObjectExcelView erv = new ObjectExcelView();
+		mv = new ModelAndView(erv,dataMap);
+		return mv;
+	}
+	
+}
